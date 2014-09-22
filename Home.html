@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Easyway Ordering</title>
+<link rel="stylesheet" type="text/css" href="Styles/GlobalStyles.css" />
+<link rel="stylesheet" type="text/css" href="Styles/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="Styles/menu.css">
+<script type="text/javascript" src="Scripts/jquery.js"></script>
+<script type="text/javascript" src="Scripts/function.js"></script>
+<script src="Scripts/modernizr.custom.js"></script>
+<script src="Scripts/jquery-1.9.0.min.js"></script>
+<link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="Images/favicon.ico" type="image/x-icon">
+<script src="Scripts/jquery-1.9.0.min.js"></script>
+<script src="Scripts/Misc.js"></script>
+
+<script>
+$(document).ready(function(){
+var flag = 0;
+var $scrollingDiv = $("#aerobot");
+        /*$(window).scroll(function(){            
+            $scrollingDiv
+                .stop()
+                .animate({"margin-left": ($(window).scrollTop() + 30) + "px"}, "slow" );          
+        });*/
+		
+        $(window).scroll(function(){
+			if ($(window).scrollTop()> 1030 && $(window).scrollTop() <= 1530){console.log(1);
+			flag = 1;
+				$("#aerobot").animate({"left": "400px"}, "fast" ); 
+				$("#aerobot1").animate({"right": "362.5px"}, "fast"); 
+    			}	
+			else {
+			flag = 0;
+				$("#aerobot").animate({"left": "0px"}, "fast"); 
+				$("#aerobot1").animate({"right": "0px"}, "fast"); 
+    			}	
+			
+            
+     });
+});
+</script>
+<!--<script>
+var num = 136; //number of pixels before modifying styles
+  $(window).bind('scroll', function () {
+	  if ($(window).scrollTop() > num) {
+		  
+		  $('#navigation').addClass('fixed');
+	  } else {
+		  $('#navigation').removeClass('fixed');
+	  }
+  });
+</script>-->
+</head>
+
+<body class="BodyMainPage">
+<div id="MainPagePagewrap">
+	<div id="InnerPagewrap">
+    	<div id="LoginDiv">
+        	<a href="#" class="Login">
+            	<span class="LoginImg"><img src="Images/LoginIcon.PNG" /></span>
+            	<span class="LoginSpan">LOGIN</span>
+            </a>
+        </div>
+    	<div id="SocialIconsDiv">
+        	<div id="FacebookIcon"><a href="https://www.facebook.com/EasywayOrdering" target="_blank"><img src="Images/FbIcon.png" /></a></div>
+            <div id="TwitterIcon"><a href="http://www.twitter.com/EasyWayInc" target="_blank"><img src="Images/TwitterIcon.png" /></a></div>
+            <div id="GooglePlusIcon"><a href="https://plus.google.com/u/1/b/117596371910744353409/117596371910744353409" target="_blank"><img src="Images/GooglePlusIcon.png" /></a></div>
+            <div id="YoutbueIcon"><a href="http://www.youtube.com/user/EasyWayOrdering/" target="_blank"><img src="Images/YoutubeIcon.png" /></a></div>
+            <div id="InstagramIcon"><a href="http://instagram.com/easywayordering#" target="_blank"><img src="Images/InstagramIcon.png" /></a></div>
+            <div id="LinkedInIcon"><a href="http://www.linkedin.com/in/easywayordering/" target="_blank"><img src="Images/LinkedInIcon.png" /></a></div>
+        </div>
+        <div class="clear"></div>
+        <!--Responsive Menu Strats-->
+        <div id="RespinsiveMenu">
+            <div id="wrap">
+                <header>
+                    <div class="inner relative">
+                        <a class="logo" href=""><img src="Images/EasywayLogo.png" alt="Easyway Ordering"></a>
+                        <a id="menu-toggle" class="button dark" href="#"><i style="color:#000;" class="icon-reorder"></i></a>
+                        <nav id="navigation">
+                            <ul id="main-menu">
+                                <li><a href="">FEATURES</a></li>
+                                <li><a href="">PRICING</a></li>
+                                <li><a href="">ABOUT</a></li>
+                                <li><a href="">BLOG</a></li>
+                                <li><a href="" style="color:#282d30;">RESELLER?</a></li>
+                                <li><a href="" style="color:#282d30;">FREE DEMO!</a></li>
+                            </ul>
+                        </nav>
+                        <div class="clear"></div>
+                    </div>
+                </header>	
+            </div>  
+         </div>  
+        <!-- REsponsive Menu Ends-->
+        <div class="clear"></div>
+        <div id="BannerDiv">
+        	<div id="BannerPara">Let Customers Order Their Way, The EasyWay</div>
+            <div id="LetsBuuton"><a href="#"><img src="Images/LetSetupButton.png" /></a></div>
+        </div>
+        <div id="YellowDiv">Your Business, Your Customers, Your Terms</div>
+        <div id="WhiteDivWhatWeOffer">
+        	<div id="WhatWeOfferHeading">What We Offer</div>
+            <div id="WhatWeOfferPara">
+            	<b>Edit</b> menus anytime, from any device<br />
+                <b>Receive</b> orders your way, through POS, fax or email<br />
+                <b>Get</b> your money when you want it – within 1-2 days <br /> 
+                <b>Protect</b> your brand identity through reputation management  <br />
+                <b>Build</b> your customer database and reward your loyal fans
+            </div>
+            <div id="ComputerImg"><!--<img src="Images/ComputerImg.png" />-->
+            	<div id ="checkScroll" style="position:relative" >
+<img title="" src="Images/iPhone.png" id="aerobot" align="left" style="position:relative;  z-index:1;margin-top: 270px;"/>
+<img title="" src="Images/iMac.png" id="aerobot1" align="right" style="position:relative;z-index:0;"/>
+</div>
+            </div>
+        </div>
+        <div id="IfYouAreBlueDiv">
+        	<span class="ArrowRight"><img src="Images/InvitedCommaLeft.png" /></span>If you're not on EasyWay, you're in trouble, as far as restaurants go.<span class="ArrowLeft"><img src="Images/InvitedCommaRight.png" /></span><br />
+            <span class="Antonella"><b>Antonella</b>, Owner, Forno Siciliano</span>
+        </div>
+        <div id="WhiteDivEasyWayOrdering">
+        	<div id="WhyEasyWayHeading">Why EasyWay Ordering?</div>
+            <div id="NoRisk">No Risk, but So Much Reward!</div>
+            <div id="GrayBox"><img src="Images/GreyBox.png" /></div>
+            <div id="Connect">Connect</div>
+            <div id="WithCustomers">With Customers</div>
+            <div id="WeProvide">We provide you with extensive, trackable data so you can reach your customers, study their purchase habits and 
+analyze your ROI.</div>
+			<div id="EmpowerGrowBigDiv">
+            	<div id="EmpowerBigDiv">
+                	<div id="EmpowerImg"><img src="Images/ControlIcon1.png" /></div>
+                    <div id="EmpowerHeading">Empower</div>
+                    <div id="Yourself">Yourself</div>
+                    <div id="EmpowerPara">Retain control of your brand, and prevent 3rd party sites from profiting off of your hard work! <br />
+Control your menus, customer data and money. Open and close your online ordering when you choose.</div>
+                </div>
+                <div id="GrowBigDiv">
+                	<div id="VisitorsToYourWebsite">Visitors To Your Website: </div>
+                	<div id="GrayImg"><img src="Images/VisitorsIcon.png" /></div>
+                    <div id="GrowHeading">Grow</div>
+                    <div id="YourBusiness">Your Business</div>
+                    <div id="GrowPara">Increase your profits up to 20% with online ordering.
+We help you take control of your digital reputation, which in turn increases visibility - leading to more sales! Turn your website into your biggest business asset with our powerful tools. </div>
+                </div>
+            </div>
+            <div id="SeeAllButton"><a href="#"><img src="Images/SeeAllButton.png" /></a></div>
+        </div>
+        <div id="GrayBigDiv">
+        	<div id="GrayInnerDiv">
+            	<div id="GrayInnerLeftDiv">
+                    <div id="GettingStarted">Getting Stared Is Easy!</div>
+                    <div id="GiveUs15">Give Us 15 Minutes.</div>
+                </div>
+                <div id="GrayInnerRightDiv">
+                	<div id="SetupFreeDemo"><a href="#"><img src="Images/SetupAFreeDemo.png" /></a></div>
+                </div>
+            </div>
+        </div>
+        <div id="WhiteDivRecommended">
+        	<div id="WhiteDivRecommendedInnerDiv">
+            	<div id="WhiteDivRecommendedInnerLeftDiv">
+                        <marquee behavior="scroll" direction="left">
+                        <table>
+                        <tr><td>
+                        
+                        <table>
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/1682.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/GianniPizza.png"  alt="Natural" /></td>
+                        <td colspan="2" class="MarqueePadding MarqueeText">“There’s more interaction <br />with the customer.”</td>
+                        </tr>
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/Bistrochin.png"  alt="Natural" /></td>
+                        
+                        </tr>
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/Ray.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/Taproom.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/MumbyGrill.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/Zaytoons.png"  alt="Natural" /></td>
+                        </tr>
+                        </table>
+                        </td>
+                        
+                        <td>
+                        
+                        <table class="MarqueePadding">
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/tastyafrican.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/Samorgas.png"  alt="Natural" /></td>
+                        <td colspan="2" class="MarqueePadding"><img src="Images/planetwings.png"  alt="Natural" /></td>
+                        </tr>
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/astorbakeshop.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding MarqueeText">“I’d definitely<br /> reccommend it!”</td>
+                        <td colspan="2" class="Padding"><img src="Images/squeeze.png"  alt="Natural" /></td>
+                        </tr>
+                        <tr>
+                        <td class="MarqueePadding"><img src="Images/Box.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/malaimarke.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/burgerburger.png"  alt="Natural" /></td>
+                        <td class="MarqueePadding"><img src="Images/tequilascantina.png"  alt="Natural" /></td>
+                        </tr>
+                        </table>
+                        
+                        </td></tr>
+                        
+                        </table>
+                        </marquee>
+                </div>
+                <div id="WhiteDivRecommendedInnerLRightDiv">1000s of Restaurants <br />Can’t Be Wrong!</div>
+            </div>
+        </div>
+        
+        <div id="FooterBigDiv">
+        	<div id="FooterInnerDiv">
+            	<div id="FooterInnerLeft">
+                	<div id="Navigation">
+                        <div id="Careers"><a href="#" style="color:#FFF; text-decoration:none;">Careers</a></div>
+                        <div id="Press"><a href="#" style="color:#FFF; text-decoration:none;">Press</a></div>
+                        <div id="Privacy"><a href="#" style="color:#FFF; text-decoration:none;">Privacy</a></div>
+                        <div id="Support"><a href="#" style="color:#FFF; text-decoration:none;">Support</a></div>
+                    </div>
+                    <div id="AddressDiv">
+                    	<div id="FirstAddress">50 Broad Street   Suite 1701</div>
+                        <div id="SecondAddress">New York, NY 10004 United States of America. </div>
+                        <div id="Telephone">T: (800) 648-6238</div>
+                        <div id="Fax">F: (800) 356-1510</div>
+                        
+                    </div>
+                    
+                </div>
+                <div id="FooterInnerRight">
+               		<div id="ArrowDiv"><a href="#top"><img src="Images/UpArrow.png" /></a></div>
+                	<div id="NewsletterDiv">
+                    	<div id="TextBoxDiv">
+                        	<form action="http://easywayordering.us7.list-manage.com/subscribe/post" method="POST"> 
+                            <input type="hidden" name="u" value="b833067e17d155a7b4f915d2e"> 
+                            <input type="hidden" name="id" value="4e87551cd3">
+							<input type="email" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0" size="25" value="" class="Text" placeholder="Enter email address">
+                            
+                        </div>
+                        <div id="ButtonDiv">
+                            <input type="submit" class="Submit" value="SIGN ME UP!" />
+                            </form>
+                        </div>
+                    </div>
+                    <div id="JoinOurNewsLetter">JOIN OUR NEWSLETTER</div>
+                    <div id="GetTheLattest">Get the latest industry news, plus valuable <br /> business tips and tricks, FOR FREE! - subscribe now</div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+</body>
+</html>

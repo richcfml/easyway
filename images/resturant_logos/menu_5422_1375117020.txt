@@ -1,0 +1,26 @@
+{
+	"status": true, 
+	"results": "
+				<h4>Locations</h4>
+				<ul class="locations">
+					<li>
+						<a href="" class="pan-to-bounds" rel="{lat:37.783178,lng:-122.417846,zoom:6,sw:{lat:37.778023,lng:-122.42212},ne:{lat:37.784317,lng:-122.41582}}">Chambers (San Francisco, United States)</a>
+					</li>
+				</ul>
+				<h4>Markers</h4>
+				<ul class="markers">
+					<li>
+						<a href="" class="pan-to" rel="{lat:41.027830,lng:-73.786969,zoom:16,pk:22165}">My first time. It was super hot. Especially when he ...</a>
+					</li>
+					<li>
+						<a href="" class="pan-to" rel="{lat:44.676335,lng:17.314453,zoom:16,pk:27372}">it was super and it was raining!!!!</a>
+					</li>
+					<li>
+						<a href="" class="pan-to" rel="{lat:44.676335,lng:17.314453,zoom:16,pk:27373}">it was super and it was raining!!!!</a>
+					</li>
+					<li>
+						<a href="" class="pan-to" rel="{lat:44.676335,lng:17.314453,zoom:16,pk:27374}">it was super and it was raining!!!!</a>
+					</li>
+				</ul>
+			"
+}

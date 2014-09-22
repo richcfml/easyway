@@ -1,0 +1,15 @@
+
+
+survey/ImportContact2.aspx [do formating]
+survey/Export.aspx [added check on export button to not allow empty fields check]
+survey/customFields.aspx [removed bg bar from from title bar]
+survey/AddNewContactList.aspx [removed bg bar from from title bar]
+survey/EmailListDetail.aspx [added jQuery and fixed check all]
+survey/SearchContact.aspx [resized operator select box]
+survey/elists.aspx [increased first column width from 4% to 6%, added jQuery]
+survey/ImageUploadManager.aspx
+survey/SendInvitation.aspx
+
+survey/ImageUploadManager.aspx [reduced width from 101% to 100%] --
+survey/idl.aspx -- 
+assetmanager/assetmanageer.asp [remove &nbsp;&nbsp;] --

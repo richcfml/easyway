@@ -1,0 +1,92 @@
+	ul.tabs {
+		margin: 0;
+		padding: 0;
+		float: right;
+		list-style: none;
+		height: 32px;
+		border-bottom: 1px solid #F4F4F4;
+		color: #A09F9F;
+		/*width: 100%;*/
+	}
+	ul.tabs li {
+		float: left;
+		margin: 0;
+		cursor: pointer;
+		padding: 0px 21px ;
+		height: 49px;
+		font-weight: bold;
+		background: #EEEEEE;
+		overflow: hidden;
+		position: relative;
+	}
+	ul.tabs li:hover {
+		
+	}
+	ul.tabs li.active{
+		background: #FFFFFF;
+		border-bottom: 1px solid #FFFFFF;
+	}
+	.tab_container {
+		border-top: none;
+		clear: both;
+		float: right;
+		/*width: 100%;*/
+                width: 219px;
+		background: #FFFFFF;
+                height:400px;
+	}
+	.tab_content {
+		padding: 20px;
+		font-size: 1.2em;
+		display: none;
+	}
+        
+        
+        
+        ul.tabs_product {
+		margin: 0;
+		padding: 0;
+		float: right;
+		list-style: none;
+		height: 32px;
+		border-bottom: 1px solid #F4F4F4;
+		
+	}
+	ul.tabs_product li {
+		float: left;
+		margin: 0;
+		cursor: pointer;
+		padding: 0px 21px ;
+		height: 49px;
+		
+		/*border: 1px solid #999999;*/
+		border-left: none;
+		font-weight: bold;
+		background:#FFFFFF ;
+		overflow: hidden;
+		position: relative;
+                color: #A09F9F;
+	}
+	ul.tabs_product li:hover {
+		
+	}
+	ul.tabs_product li.active_product{
+		background: #E9EAEA;
+		/*border-bottom: 1px solid #FFFFFF;*/
+	}
+        .tab_container_product {
+		
+		border-top: none;
+		clear: both;
+		float: right;
+		/*width: 100%;*/
+                width: 219px;
+		background: #FFFFFF;
+                height:400px;
+	}
+	.tab_content_product {
+		padding: 20px;
+		font-size: 1.2em;
+		display: none;
+	}
+

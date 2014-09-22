@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script src="Scripts/jquery-1.9.0.min.js"></script>
+<script>
+
+
+$(document).ready(function(){
+var flag = 0;
+var $scrollingDiv = $("#aerobot");
+        /*$(window).scroll(function(){            
+            $scrollingDiv
+                .stop()
+                .animate({"margin-left": ($(window).scrollTop() + 30) + "px"}, "slow" );          
+        });*/
+		
+        $(window).scroll(function(){
+			if ($(window).scrollTop()> 30 && flag ==0 && $(window).scrollTop() <= 600){console.log(1);
+			flag = 1;
+       			$scrollingDiv
+                .stop()
+				$("#aerobot1").animate({"margin-right": "160px"}, "slow" ); 
+				$("#aerobot").animate({"margin-left": "160px"}, "slow" ); 
+    			}	
+			else if ($(window).scrollTop()< 30  || $(window).scrollTop() > 500){console.log(3);
+			flag = 0;
+       			$scrollingDiv
+                .stop()
+				$("#aerobot1").animate({"margin-right": "0px"}, "slow" ); 
+				$("#aerobot").animate({"margin-left": "0px"}, "slow" ); 
+    			}	
+			
+            
+     });
+});
+
+
+</script>
+<style>
+
+
+
+input[type='radio'] 
+{
+    margin: 0;
+    clear: none;
+    
+    /* Left padding makes room for image */
+    padding: 5px 0 4px 24px;
+
+    /* Make look clickable because they are */
+    cursor: pointer;
+    
+    background:url(images/RadioBox1.png) left center no-repeat; 
+}
+
+/*
+    Change from unchecked to checked graphic
+*/
+input[type='radio']:checked  {
+    background-image: url(images/RadioBox2.png);
+}
+
+</style>
+</head>
+
+<body>
+<div id ="checkScroll" style="position:relative" >
+<img title="" src="images/iPhone.png" id="aerobot" align="left" style="position:absolute;  z-index:1"/>
+<img title="" src="images/iMac.png" id="aerobot1" align="right" style=" z-index:0"/>
+</div>
+<div style="clear:both"></div>
+<div align="center"><input type="radio" value="zohaib" />
+
+
+
+<div style="clear:both"></div>
+
+<div class="tabs-7">
+                    <section class="tab_content_wrapper">
+                        <article class="tab_content ArticleWidth" id="tab25">
+                            <div class="TabHeading">About EasyWay Ordering</div>
+                            <div id="BookAndParaBigDiv">
+                            	<div id="BookAndParaLeftDiv"><img src="images/AboutUsBookImg.png" /></div>
+                                <div id="BookAndParaRightDiv">Our Mission Statement: Empowering small and medium size 
+                                                              restaurants to offer their customers the same online ordering 
+                                                              convenience as their larger counterparts.
+                                                              <br /><br />
+                                                              EasyWay Ordering is leading an online-ordering revolution. 
+                                                              We are reconnecting  restaurants with their customers, and 
+                                                              providing them with the same tools as their
+                                                               big-brand competitors. 
+                                                              <br /><br />
+                                                              Our clients want to strengthen their brand identity, streamline 
+                                                              their ordering processes and increase customer loyalty.
+                              	</div>
+                            </div>
+                            <div class="clear"></div>
+                        </article>
+                        <article class="tab_content ArticleWidth" id="tab26">
+                            <div class="TabHeading">EasyWay In The News!</div>
+                            <div id="CheckOut">Check out the latest buzz on EasyWay Ordering.</div>
+                            <div id="PressBigDiv">
+                            	<div id="PressLeftDiv">
+                                	
+                                </div>
+                                <div id="PressRightDiv">
+                                	<div class="PressRightPara">EasyWay Ordering and Heartland Payment Systems Partner to Offer Transparent E-Commerce 
+Solutions for Restaurant Owners<span class="SpanDate"> - 01/14/2014</span></div>
+                                </div>
+                                	<div class="PressRightPara">EasyWay Ordering and Heartland Payment Systems Partner to Offer Transparent E-Commerce 
+Solutions for Restaurant Owners<span class="SpanDate"> - 01/14/2014</span></div>
+                                </div>
+                                	<div class="PressRightPara">EasyWay Ordering and Heartland Payment Systems Partner to Offer Transparent E-Commerce 
+Solutions for Restaurant Owners<span class="SpanDate"> - 01/14/2014</span></div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="tab_content ArticleWidth" id="tab27">
+                            <p>Copyright eurus supplex undae fulgura congestaque locis. Gravitate ante nabataeaque sua naturae satus ad. <a href="#tab2">Copyright</a> madescit pugnabant effervescere abscidit altae. Parte norant principio vultus reparabat omni rapidisque.</p>
+                            <p>Copyright flamma erectos tempora sorbentur illas foret ambitae. Sata locavit triones. Terrarum tuti diversa formas diffundi prima quod regio premuntur. Ipsa pluviaque toto valles conversa quinta.</p>
+                        </article>
+                    </section>
+                    <ul class="tabs">
+                        <li><a href="#tab25" style="text-decoration:none;">ABOUT</a></li>
+                        <li><a href="#tab26" style="text-decoration:none;">PRESS</a></li>
+                        <li><a href="#tab27" style="text-decoration:none;">CARRERS</a></li>
+                    </ul>
+			</div>
+<script src="Scripts/jquery-1.9.0.min.js"></script>
+<script src="Scripts/jQueryTab.js"></script> 
+<script type="text/javascript">
+$('.tabs-7').jQueryTab({
+    initialTab: 2,
+    tabInTransition: 'fadeIn',
+    tabOutTransition: 'fadeOut',
+    cookieName: 'active-tab-7'
+});
+</script>
+
+</body>
+</html>
