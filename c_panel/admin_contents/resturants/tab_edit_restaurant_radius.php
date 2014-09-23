@@ -399,7 +399,7 @@ if (isset($_POST['submit'])) {
         if ($_SESSION['admin_type'] == 'admin') {
             mysql_query(
                     "UPDATE resturants 
-					SET name= '" . addslashes(trim($catname)) . "'
+					SET name= '" . prepareStringForMySQL(trim($catname)) . "'
 						,email= '" . addslashes($email) . "'
 						,fax= '" . addslashes($fax) . "'
 						,phone= '" . addslashes($phone) . "'
@@ -454,7 +454,7 @@ if (isset($_POST['submit'])) {
         } else if ($_SESSION['admin_type'] == 'store owner' || $_SESSION['admin_type'] == 'reseller') {
             mysql_query(
                     "UPDATE resturants 
-					SET name= '" . addslashes($catname) . "'
+					SET name= '" . prepareStringForMySQL($catname) . "'
 						,email= '" . addslashes($email) . "'
 						,fax= '" . addslashes($fax) . "'
 						,phone= '" . addslashes($phone) . "'
@@ -483,7 +483,7 @@ if (isset($_POST['submit'])) {
             );
             mysql_query(
                     "UPDATE analytics 
-					SET name= '" . addslashes($catname) . "'
+					SET name= '" . prepareStringForMySQL($catname) . "'
 						,optionl_logo='$name1'
 					where resturant_id = $catid"
             );

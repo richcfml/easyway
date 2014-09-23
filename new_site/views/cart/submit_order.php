@@ -174,9 +174,23 @@
 
 	if ( $objRestaurant->order_destination == "POS" ) 
 	{ 
-		//Create a function object and call to posttoORDRSRVR function
-		$fun=new clsFunctions();
-		$fun->posttoORDRSRVR($cart->order_id);
+            // Saad Changes - 22-Sept-2014 --- Need to send credit card type(VISA/AMEX...) to order server for POS.
+            $creditCardProfileId = 0;
+            if($gateway_token!=''){
+                // If new card and user also saved in db
+                $creditCardProfileId = $gateway_token;
+            }else if(isset($card_token) && $card_token > 0) {
+                //Exisiting card selected by user
+                $creditCardProfileId = $card_token;
+            }else if(isset($creditCardType) && $creditCardType > 0){
+                // If new card and (user do not wish to save) or (restaurant not allowed to save(tokenization))in db
+                $typeForOrderServerOnly = 1;
+                $creditCardProfileId = $creditCardType;
+            }
+            //Create a function object and call to posttoORDRSRVR function
+            $fun=new clsFunctions();
+            //$fun->posttoORDRSRVR($cart->order_id);
+            $fun->posttoORDRSRVR($cart->order_id,$creditCardProfileId,$typeForOrderServerOnly);
 	}
 		
 	/*********************************************************************************

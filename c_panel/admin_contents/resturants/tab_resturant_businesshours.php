@@ -36,7 +36,7 @@ if(isset($_REQUEST['update'])) {
         Log::write("Update restaurant business hours - tab_resturant_add.php", "QUERY --UPDATE business_hours SET open='$open_time', close='$close_time' WHERE id=".$update_id, 'menu', 1 , 'cpanel');
         mysql_query("UPDATE business_hours SET open='$open_time', close='$close_time' WHERE id=".$update_id);
     }
-    $updateMessage = "Update buisness hours successful";
+    $updateMessage = "Business hours updated successfully";
 }
 if(isset($_GET['action'])){
     $action = $_GET['action'];
@@ -45,7 +45,7 @@ if(isset($_GET['action'])){
         if(isset($_GET['deleteid'])){
             $deleteid = $_GET['deleteid'];
             mysql_query("DELETE  FROM  business_hours WHERE id = $deleteid");
-            $updateMessage = "Delete buisness hours successful";
+            $updateMessage = "Business hours deleted successfully";
         }
         
     }else if($action == "InsertBusinessHours"){
@@ -56,7 +56,7 @@ if(isset($_GET['action'])){
             $buninessHrRs = mysql_fetch_array($buninessHrQry);
             Log::write("Add restaurant business hours - tab_add_businesshours.php", "QUERY --INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open=".$buninessHrRs['open'].", close=".$buninessHrRs['close'], 'menu', 1 , 'cpanel');
             mysql_query("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'");
-            $updateMessage = "Insert buisness hours successful";
+            $updateMessage = "Business hours inserted successfully";
         }
     }
 }

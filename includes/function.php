@@ -484,13 +484,23 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 	$qry= "UPDATE ordertbl SET pay_load_json='". mysql_escape_string(json_encode($order)) ."' , json_sent=". $json_sent .", faxid=".$faxid." WHERE OrderID=".$orderId;
 	mysql_query ($qry);
 }
-	
-function posttoORDRSRVR($orderId) 
+	// Parameters added by Saad 22Sept2014
+function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 {
 	$qryresult =  mysql_query("SELECT pos_json,pos_json_sent FROM ordertbl WHERE OrderID=".$orderId);
 	$pos_jason_result=mysql_fetch_object($qryresult);
 	if($pos_jason_result->pos_json_sent==0)  
 	{
+            if($creditCardProfileId == 0){ // Cash delievery
+                $creditCardType = "0";
+            }else if($typeForOrderServerOnly){ // New card and not saved in db
+                $creditCardType = $creditCardProfileId;
+            }else{ // Card information stored in db
+                $cardTypeQuery = mysql_query("SELECT data_type FROM general_detail where data_2 = '".$creditCardProfileId."'");
+                $cardType = mysql_fetch_object($cardTypeQuery);
+                $creditCardType = $cardType->data_type;
+            }
+
 		$order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
 								submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used  FROM ordertbl WHERE OrderID =".$orderId);
 	
@@ -592,13 +602,15 @@ function posttoORDRSRVR($orderId)
 					"date_of_order"  => date("Y-m-d",strtotime($order_rs['submit_time'])),
 				 	"asap_order" =>$order_rs['asap_order'],
 					"transaction_type"    => $order_rs['payment_method'],
+					"credit_card_type"    => $creditCardType,
 					"delivery_instructions" =>  $this->replaceSpecial($order_rs['DelSpecialReq']) ,
 					"delivery_address" => $this->replaceSpecial($order_rs['DeliveryAddress']), 
 					"street" => $this->replaceSpecial($mTmpAdd), 
 					"city" => $this->replaceSpecial($mTmpCity), 
 					"state" => $this->replaceSpecial($mTmpState), 
 					"zip" => $this->replaceSpecial($mTmpZip), 
-					"customer_name"=>$this->replaceSpecial($cust_rs['cust_your_name']), 
+					"customer_name"=>$this->replaceSpecial($cust_rs['cust_your_name']),
+					"customer_last_name"=>$this->replaceSpecial($cust_rs['LastName']),
 					"customer_phone" => $cust_rs['cust_phone1'],  
 					"special_instructions" => $this->replaceSpecial($order_rs['DelSpecialReq']),
 					"cat_id" => $order_rs['cat_id'],
@@ -623,7 +635,7 @@ function posttoORDRSRVR($orderId)
 		  	"retry_delay"=>"300", 
 		  	"wait_time"=>"45",
 		  	"restid"=> $rest_rs['restid'],
-		  	"restname" =>$rest_rs['restname']
+		  	"restname" =>str_replace('\'','&#39;',$rest_rs['restname'])
 		);
  
 		$order["FAXINFO"]=array( 

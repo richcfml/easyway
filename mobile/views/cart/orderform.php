@@ -30,6 +30,12 @@ if (isset($_POST['btnconfirmorder1'])) {
             $secure_data = $_POST['x_card_num'];
             $type = substr($secure_data, 0, 1);
         }
+        // Added by Saad 22-Sept-2014 -- if user do not wish to save card info.. i.e tokenization checkbox not selected
+        $creditCardType = 0;
+        if(!isset($gateway_token))
+        {
+            $creditCardType = substr($secure_data, 0,1);
+        }
         //Modified01082013
         $cc = substr($secure_data, -4, 4);
 
@@ -211,7 +217,10 @@ if (isset($_POST['btnconfirmorder1'])) {
                 <div class="clear"></div>
             </div>
 
-<? if (is_numeric($loggedinuser->id) && $objRestaurant->tokenization == 1) { ?>
+<? //if (is_numeric($loggedinuser->id) && $objRestaurant->tokenization == 1)
+    // Changed by Saad 22-Sept-2014 --> Allow guest user to save credit card for first time during registration.
+    if($objRestaurant->tokenization==1)
+    { ?>
                 <div class="margintop normal">
                     <div  class="left" >
                         <u> I would like to save my credit card token for next purchase</u>
