@@ -36,16 +36,16 @@ $total_cats = $arr['count'];
 $half = round($total_cats / 2);
 $mColumn1Count = -1;
 $mSQLMenu = "SELECT IFNULL(Column1Count, -1) AS Column1Count FROM menus WHERE id=".$menuid;
-$mSQLMenuRes = mysql_query($mSQLMenu);
-if (mysql_num_rows($mSQLMenuRes)>0)
-{
-	$mSQLMenuRow = mysql_fetch_object($mSQLMenuRes);
-	if ($mSQLMenuRow->Column1Count>=0)
-	{
-		$mColumn1Count = $mSQLMenuRow->Column1Count;
-	}
+if($mSQLMenuRes = mysql_query($mSQLMenu)){
+    if (mysql_num_rows($mSQLMenuRes)>0)
+    {
+            $mSQLMenuRow = mysql_fetch_object($mSQLMenuRes);
+            if ($mSQLMenuRow->Column1Count>=0)
+            {
+                    $mColumn1Count = $mSQLMenuRow->Column1Count;
+            }
+    }
 }
-
 $mDivider = $half;
 
 if ($mColumn1Count>=0)
@@ -58,8 +58,17 @@ $mDivider = $mDivider + 1;
 $index = 0;
 $loop_index = 0;
 $loop_index_check = FALSE;
-?>
 
+?>
+<?php 
+    $attributeCount=0;
+    if(empty($attributes_result)){
+        $attributes_result=array();
+    }else{
+        $attributeCount=count($attributes_result);
+    }
+    
+?>
 <script>
 /*------------------------------Naveed Start---------------------------------------------------*/
         var attributeRequired;
@@ -133,7 +142,7 @@ $loop_index_check = FALSE;
         $('#retail_price').html('$' + matchingResults['0'].retail_price);
         $('#product_id_field').val(productId);
         $('#product_sale_price').val(matchingResults['0'].sale_price);
-        $('#totalattributes').val(<?php echo count($attributes_result) ?>);
+        $('#totalattributes').val(<?php echo $attributeCount; ?>);
         $('#hasAssociates').val(hasAssociates);
         $('#hasAttributes').val(hasAttribute);
 		$('#cartItemIndex').val(cartItemIndex);
@@ -1021,6 +1030,7 @@ $.each(attributeRequired, function(index, value) {
     <?php
     $firstindex = 0;
     $current_cat1 = 0;
+    $current_cat = 0;
     while ($loop_index < 1) 
 	{
         foreach ($menus_details as $menulist) 

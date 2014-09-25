@@ -1,5 +1,4 @@
 <?php
-//ini_set("display_errors", 1);
 
 if($cart->order_created===0) {
 	if(empty($_SESSION["user_session_duration"])) {

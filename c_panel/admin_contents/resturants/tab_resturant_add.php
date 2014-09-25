@@ -1,7 +1,3 @@
-<?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING);
-?>
 <!--Start script for dependent list-->
 <script language="javascript" type="text/javascript">
 // Roshan's Ajax dropdown code with php

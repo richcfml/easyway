@@ -1,5 +1,5 @@
 <?
-	include("../../../includes/config.php");
+	require_once("../../../includes/config.php");
 	
 	 $id 		= $_GET['id'];
 	 $catid		= $_REQUEST['cid'];

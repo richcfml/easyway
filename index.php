@@ -1,4 +1,5 @@
 <?php
+require_once "includes/config.php";
 if(isset($_GET['session_id']))
 {
 	$currents_session_id = $_GET['session_id'];
@@ -10,19 +11,16 @@ else if(isset($_POST['x_sid']))
  	session_id($currents_session_id);
 }
 
-	session_start();
 	header('Access-Control-Allow-Origin: *.easywayordering.com'); 
     define("AMEX",3);
 	define("VISA",4);
 	define("MASTER",5);
 	define("DISCOVER",6);
-	error_reporting(0);
 	
  	require_once('lib/nusoap.php');
-	include "includes/config.php";
+	
 	include "classes/restaurant.php";
 	include "classes/users.php";
-	include "includes/function.php";
 	include "classes/validater.php";
 	require_once("classes/trackers.php"); 
 	require	"includes/class.phpmailer.php";
@@ -35,7 +33,6 @@ else if(isset($_POST['x_sid']))
  	require_once('lib/cdyne/cdyne.php');
 	require_once('classes/abandoned_carts.php');
 	require_once('classes/chargify.php');
-	require_once('classes/Log.php');
 	
 	require_once('lib/device_detection/Mobile_Detect.php');
 	$function_obj = new clsFunctions();

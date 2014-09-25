@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors',0);
 	$mobile_root_path = "mobile/";
 	$mobile_css_path = "../css/mobile/";
 	$css_root_path = "../css/";

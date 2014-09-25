@@ -1,6 +1,5 @@
 <?
-	include("../includes/config.php");
-	include("includes/function.php");
+require_once("../includes/config.php");
 	$function_obj = new clsFunctions();
 	
 	@$admin_err = 0;

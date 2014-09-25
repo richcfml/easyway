@@ -1,8 +1,6 @@
 <?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING);
-ini_set('max_execution_time', 120);
-set_time_limit(120);
+require_once("includes/config.php");
+include_once("c_panel/classes/chargifyApi.php");
 
 $mResultDiv = " style='display: none;' ";
 $mdvTwenty = " style='display: block;' ";
@@ -10,9 +8,6 @@ $mRestaurantID = -1;
 $mDupError = "";
 $mDupShowHide = " style='display: none;' ";
 
-include("includes/config.php");
-include_once("includes/function.php");
-include_once("c_panel/classes/chargifyApi.php");
 						   
 $mGoogleAPIKey = "AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo";
 
@@ -687,7 +682,7 @@ $(function(){
                             <p class="TextBoxHeading">Address</p>
                         </div>
                         <div class="AccCountrySelectDiv">
-                        	<input type="text" style="width:150px; !important" class="AccCityZipTextBox" id="txtState" name="txtState" placeholder="NY" value="<?=(isset($mRestaurantDetails)?$mRestaurantDetails->State:'')?>" maxlength="15"/>
+                        	<input type="text" style="width:150px !Important;" class="AccCityZipTextBox" id="txtState" name="txtState" placeholder="NY" value="<?=(isset($mRestaurantDetails)?$mRestaurantDetails->State:'')?>" maxlength="15"/>
                             <p class="TextBoxHeading" id="pStateProvince">State</p>
                         </div>
                       </div>

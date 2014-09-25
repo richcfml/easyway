@@ -1,10 +1,4 @@
 <? 
-/*include("../../../includes/config.php");
-require("../../includes/SimpleImage.php");
-require("../../includes/snapshot.class.php"); 
-include("../../admin_includes/function.php");*/
-//print_r($_REQUEST); die();
-
 if($_SESSION['admin_session_user_name']==''){ header("location:login.php");	} 
 
 

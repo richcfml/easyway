@@ -1,11 +1,5 @@
 <?
-session_start();
-
-include("../includes/config.php");
-
-ini_set('display_errors', 1);
-
-ini_set('max_execution_time', 0);
+require_once("../includes/config.php");
 
 if($_REQUEST["type"] == "compare_last_two_months_count") {
 	mysql_query("

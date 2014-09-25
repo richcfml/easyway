@@ -1,21 +1,7 @@
 <?
-
-
-//extract($_GET);
-
-//header("Location: https://accounts.google.com/o/oauth2/auth?scope=$scope&redirect_uri=$redirect_uri&response_type=code&client_id=$client_id&access_type=$access_type");
-//header("Location: https://accounts.google.com/o/oauth2/auth?scope=$scope&redirect_uri=$redirect_uri&response_type=code&client_id=$client_id&access_type=$access_type");
-//code=4%2FbrquYzvZmpzJuDPz5VI-i_omNx9r.Ivi3eCA_HqESOl05ti8ZT3bZFh8JfwI&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground&client_id=668969395261-lpo61q1sjfm2fr4ihoe9d151jvmdpupi.apps.googleusercontent.com&scope=&client_secret=ZEaTFWyxGwTJ8di1TqJslbkQ&grant_type=authorization_code
-//die(0);
-session_start();
-
-include("../includes/config.php");
+require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 include("../includes/function.php");
-
-ini_set('display_errors', 0);
-
-ini_set('max_execution_time', 0);
 
 require_once 'google-api/Google_Client.php';
 require_once 'google-api/contrib/Google_AnalyticsService.php';

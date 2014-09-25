@@ -1,16 +1,4 @@
 <?php
-if (file_exists("../classes/Log.php"))
-{
-	include("../classes/Log.php");
-}
-else if (file_exists("../../classes/Log.php"))
-{
-	include("../../classes/Log.php");
-}
-else if (file_exists("../../../classes/Log.php"))
-{
-	include("../../../classes/Log.php");
-}
 /**
  * Description of chargifyApi
  *

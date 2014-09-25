@@ -1,8 +1,5 @@
 <? 
-
-include("../../../includes/function.php");
-include("../../../includes/config.php");
-require_once ("../../../classes/Log.php");
+require_once("../../../includes/config.php");
 
 	if( $_REQUEST['deleteid'] != '') {
 		$catid = $_REQUEST['catid'];

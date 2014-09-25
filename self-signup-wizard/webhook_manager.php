@@ -1,9 +1,6 @@
 <?
-	session_start();
-	ini_set("display_errors", 1);
-	include("../includes/config.php");
+	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
-	include("../includes/function.php");
 	$function_obj = new clsFunctions();
 	$objMail = new testmail();
 

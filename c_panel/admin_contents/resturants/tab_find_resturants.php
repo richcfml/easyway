@@ -1,7 +1,5 @@
 <?
-session_start();
-include("../../../includes/config.php");
-include("../../admin_includes/function.php");
+require_once("../../../includes/config.php");
 $clientId=$_REQUEST['clientId'];
 
 $qry	= "select * from resturants where owner_id ='".$clientId."' ";

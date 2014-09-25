@@ -1,13 +1,7 @@
 <?
-	if(empty($_REQUEST["action"])) exit(0);
-	
-	session_start();
-	
-	ini_set("display_errors", 1);
-	include("../includes/config.php");
+	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
-	include("../includes/function.php");
-	
+	if(empty($_REQUEST["action"])) exit(0);
 	$hook = "ajax_" . $_REQUEST["action"];
 	
 	if(function_exists($hook)) {

@@ -1,5 +1,4 @@
-<? require("../../../includes/config.php");
-include("../../admin_includes/function.php");
+<? require_once("../../../includes/config.php");
 
 					$s_date	=	@$_REQUEST['sd'];
 					$e_date	=	@$_REQUEST['ed'];

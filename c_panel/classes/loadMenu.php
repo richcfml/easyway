@@ -1,5 +1,5 @@
 <?php
-include("../classes/config.php");
+require_once("../classes/config.php");
 /**
  * Description of loadMenu
  *

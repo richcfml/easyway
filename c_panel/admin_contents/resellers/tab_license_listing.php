@@ -1,6 +1,5 @@
 <?
-
-session_start();
+require_once("../../../includes/config.php");
 ?>
 <link href="../../css/adminMain.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
@@ -60,11 +59,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 <?
 	if($_SESSION['admin_type'] != 'admin'  && $_SESSION['admin_type'] != 'reseller') {die("Invalid access");}
 	
-		
-include("../../../includes/config.php");
 require("../../classes/chargifyApi.php");
 require("../../../includes/class.phpmailer.php");
-include_once("../../../includes/function.php");
 $chargify = new chargifyApi();
 $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']);
 	 

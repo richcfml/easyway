@@ -254,8 +254,6 @@ $(document).ready(function()
 });
 </script>
 <?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE );
 
 $id = $_GET['id'];
 if (!is_numeric($id) || $id <= 0) 

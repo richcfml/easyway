@@ -1,7 +1,4 @@
 <?php
-include("../../../includes/config.php");
- ?>
-<?php
 
 $catid = $Objrestaurant->id;
 

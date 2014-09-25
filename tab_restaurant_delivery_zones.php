@@ -1,6 +1,5 @@
 <?php
-ini_set('display_errors',1);
-require("includes/config.php");
+require_once("includes/config.php");
 ?>
 
 <style>

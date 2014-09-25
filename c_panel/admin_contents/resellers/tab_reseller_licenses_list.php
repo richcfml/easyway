@@ -1,9 +1,5 @@
 <?
-session_start();
-?>
-<link href="../../css/adminMain.css" rel="stylesheet" type="text/css" />
-<?
-include("../../../includes/config.php");
+require_once("../../../includes/config.php");
  $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']);
  
 	 
@@ -19,6 +15,7 @@ include("../../../includes/config.php");
  
 $counter = 0;
 ?>
+<link href="../../css/adminMain.css" rel="stylesheet" type="text/css" />
 <body style="background-color:#FFFFFF">
 <div id="main_heading">
 <span>Licenses List</span>

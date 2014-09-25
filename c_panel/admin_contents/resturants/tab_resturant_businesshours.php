@@ -1,9 +1,5 @@
-<!--Saad Change 12-Sept-2014-->
-<!--<link href="css/adminMain.css" rel="stylesheet" type="text/css"  />-->
 <?
-include("../../../includes/function.php");
 include("../../../includes/config.php");
-require_once ("../../../classes/Log.php");
 $func_obj = new clsFunctions();
 
 

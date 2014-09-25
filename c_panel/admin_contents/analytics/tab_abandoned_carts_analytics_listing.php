@@ -1,5 +1,4 @@
 <?
-	//ini_set("display_errors", 1);
 	//$resturant_id = 141;
 	$abandoned_carts = new abandoned_carts();
 	$abandoned_cartss = $abandoned_carts->get_abandoned_carts($resturant_id);

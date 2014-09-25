@@ -1,3 +1,4 @@
+<?php require_once("../includes/config.php");?>
 <script src="js/fancybox.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/fancy.css">
 <style type="text/css">
@@ -60,7 +61,6 @@ function getXMLHTTP() { //fuction to return the xml http object
 
 </script>
 <? 
-	include("../includes/config.php");
 	$old_username_pass_qry = mysql_query("select * from users WHERE username = '".$_SESSION['admin_session_user_name']."'");
 	$old_username_pass_qry_rs = mysql_fetch_array($old_username_pass_qry, MYSQL_BOTH);
 	$oldpass_db = $old_username_pass_qry_rs['password'];

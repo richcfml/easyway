@@ -1,8 +1,5 @@
 <?
-session_start();
-ini_set('display_errors',1);
-
-require("../includes/config.php");
+require_once("../includes/config.php");
 $ajax=1;
 
 if(isset($_GET['savedata'])){

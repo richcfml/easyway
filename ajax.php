@@ -1,10 +1,6 @@
 <?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING);
-
-include("includes/config.php");
+require_once("includes/config.php");
 include_once("includes/class.phpmailer.php");
-include_once("includes/function.php");
 include_once("c_panel/classes/chargifyApi.php");
 
 function prepareStringForMySQL($string){

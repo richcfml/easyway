@@ -1,7 +1,9 @@
-<?php           require_once('../classes/users.php');
-                include("../includes/function.php");
+<?php           
+require_once("../includes/config.php");
+require_once('../classes/users.php');
+
                 require	"../includes/class.phpmailer.php";
-                include("../includes/config.php");
+                
                 include "../classes/restaurant.php";
                 $objMail = new testmail();
                 $loggedinuser = new users();

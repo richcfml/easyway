@@ -1,7 +1,4 @@
 <?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE);
-
 require_once("../includes/config.php"); 
 /* Insert orders older than 60 days from ordertable into order_table_archive */
 $insertQuery = "INSERT INTO order_table_archive

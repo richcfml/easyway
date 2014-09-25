@@ -72,9 +72,6 @@ tipobj.style.width=''
 document.onmousemove=positiontip
 </script>
 <?php
-ini_set( "display_errors", "1" );
-ini_set('max_execution_time', 240);
-error_reporting( E_ALL & ~E_NOTICE);
 $mSRID = $Objrestaurant->srid;
 ?>
 <style type="text/css">

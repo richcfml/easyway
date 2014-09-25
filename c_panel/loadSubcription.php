@@ -1,4 +1,5 @@
- <link href="css/adminMain.css" rel="stylesheet" type="text/css" />
+<?php require_once("../includes/config.php");?> 
+<link href="css/adminMain.css" rel="stylesheet" type="text/css" />
  <style type="text/css">
      body
      {
@@ -6,9 +7,6 @@
      }
  </style>
 <?php
-	
-    include("../includes/config.php");
-    include("../includes/function.php");
 
     $license_id = $_GET['license_id'];
     $subcription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)"));

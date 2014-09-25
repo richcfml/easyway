@@ -1,5 +1,4 @@
 <?            // Add your MD5 Setting.
-//ini_set('display_errors', 1);
 	if($cart->isempty()) {
 		@mysql_close($mysql_conn);
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu&wp_api=load_resturant" );exit;

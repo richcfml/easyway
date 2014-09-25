@@ -1,5 +1,4 @@
 <?php
-	ini_set('display_errors', 0);
     $site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";

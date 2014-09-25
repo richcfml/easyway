@@ -1,4 +1,4 @@
-<? session_start();
+<? 
 include("../../../includes/config.php");
 require("../../includes/SimpleImage.php");
 require("../../includes/snapshot.class.php"); 

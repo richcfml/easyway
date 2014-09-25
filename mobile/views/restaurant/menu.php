@@ -1,6 +1,5 @@
 <section class="menu_list_wrapper" >
     <?php
-    ini_set('display_errors', 0);
     if (isset($_GET['category']))
         $categoryid = $_GET['category'];
     ?>

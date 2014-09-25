@@ -1,6 +1,5 @@
 <?php
-	
-	include("../includes/config.php");
+	require_once("../includes/config.php");
 	
 	if(!empty($_REQUEST["subscription_id"]) && !empty($_REQUEST["product_id"])) {
 		

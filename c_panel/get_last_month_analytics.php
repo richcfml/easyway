@@ -1,12 +1,6 @@
 <?
-
-include("../includes/config.php");
+require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
-include("../includes/function.php");
-
-ini_set('display_errors', 1);
-
-ini_set('max_execution_time', 0);
 
 //place this before any script you want to calculate time
 $time_start = microtime(true); 

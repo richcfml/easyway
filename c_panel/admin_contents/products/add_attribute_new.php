@@ -1,7 +1,6 @@
-<?php require_once ("../../../classes/Log.php");
-      
+<?php 
 require_once ("../../../includes/config.php");
-//echo "<pre>";print_r($_SERVER);
+
 if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
     $scat_id = $_REQUEST['subcat_id'];
     $attribute_id = $_GET['itemcheckAttribute'];
