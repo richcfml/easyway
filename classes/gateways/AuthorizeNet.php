@@ -12,12 +12,9 @@ if (isset($api) && $api == true) {
 } else {
     require_once 'lib/authorize_api/AuthorizeNet.php';
 }
-require_once 'tokenization/AuthTransaction.php';
+require_once 'classes/gateways/tokenization/Auth_Transaction.php';
 
-
-
-//$gw = new AuthorizeNetTokenizationModel('62XAQ6temv3', '9nM359LD3Uh48Gq8');
-$gw = new AuthorizeNetTokenizationModel($objRestaurant->authoriseLoginID, $objRestaurant->transKey);
+$gw = new AuthNetTokenizationModel($objRestaurant->authoriseLoginID, $objRestaurant->transKey);
 extract($_POST);
 
 if(!isset($card_token)) $card_token=0;
@@ -28,19 +25,19 @@ if(!isset($tokenization))
 //extract($_POST);
 		define("AUTHORIZENET_API_LOGIN_ID",$objRestaurant->authoriseLoginID);    // Add your API LOGIN ID
 		define("AUTHORIZENET_TRANSACTION_KEY",$objRestaurant->transKey); // Add your API transaction key
-		define("AUTHORIZENET_SANDBOX",true);       // Set to false to test against production
-		define("TEST_REQUEST", "true");           // You may want to set to true if testing against production
+		define("AUTHORIZENET_SANDBOX",false);       // Set to false to test against production
+		define("TEST_REQUEST", "false");           // You may want to set to true if testing against production
 		define("AUTHORIZENET_MD5_SETTING","");
-
+		
 		 extract($_POST);
-
+		$auth_defined = true;		
 		$transaction = new AuthorizeNetAIM;
 		$transaction->setSandbox(AUTHORIZENET_SANDBOX);
 
 		$transaction->setFields(
 			array(
-			'amount' => $cart_total,
-			'card_num' => $x_card_num,
+			'amount' => $cart_total, 
+			'card_num' => $x_card_num, 
 			'exp_date' => $x_exp_date,
 			'first_name' => $x_first_name,
 			'last_name' => $x_last_name,
@@ -56,25 +53,15 @@ if(!isset($tokenization))
 			'ship_to_city' => $x_city,
 			'ship_to_state' => $x_state,
 			'ship_to_zip' => $x_zip,
-                        'ship_to_country' => "USA",
-			'invoice_num' => date('YmdHis'),
-                       // 'test_request' => 'TRUE'
+		    'ship_to_country' => "USA",
+			'invoice_num' => date('YmdHis')			
 			)
 		);
 
 		$_POST['x_exp_date']='';
 		
 		$response = $transaction->authorizeAndCapture();
-    $response_array = array();
-    foreach($response as $key => $value){
-        $response_array[$key] = $value;        
-    }
-    
-    $result = ($response->approved == 1 ? 'Approved' : 'Not approved');
-    
-    Log::write("AuthorizeNet Response Array - Tokenization not set \nResult: ".$result, print_r($response_array, true), 'AuthorizeNet');
-		
-                if ($response->approved) {
+		 if ($response->approved) {
 				$_POST['payment_method']=1;
 				$_POST['invoice_number']=$response->invoice_number;
 				$_POST['transaction_id']=$response->transaction_id;

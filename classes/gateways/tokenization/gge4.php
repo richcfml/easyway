@@ -1,6 +1,6 @@
 <?php
-$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
-//$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
+//$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
 $mXML ="";
 	
 $card_token=0; 

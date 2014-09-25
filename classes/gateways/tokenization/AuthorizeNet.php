@@ -8,8 +8,8 @@
     require_once 'lib/authorize_api/AuthorizeNet.php';
     }
 
-    require_once 'AuthTransaction.php';
-    $gw = new AuthorizeNetTokenizationModel($objRestaurant->authoriseLoginID, $objRestaurant->transKey);
+    require_once 'Auth_Transaction.php';
+    $gw = new AuthNetTokenizationModel($objRestaurant->authoriseLoginID, $objRestaurant->transKey);
     extract($_POST);
     
     $profile=$gw->loadProfile($loggedinuser->cust_email, $objRestaurant->id);
