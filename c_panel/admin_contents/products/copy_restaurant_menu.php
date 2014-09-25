@@ -66,5 +66,5 @@ foreach($rest_ids as $id )
 
 ?>
 <script type="text/javascript" language="javascript">
-        window.location.href = "<?=$client_path?>?mod=new_menu";
+        window.location.href = "<?=$AdminSiteUrl?>?mod=new_menu";
         </script>
