@@ -13,7 +13,7 @@ require_once('../classes/Log.php');
 
 $function_obj = new clsFunctions();
 $chargify = new chargifyApi();
-ini_set('display_errors',0);
+ini_set('display_errors',1);
 $ajax=0;
 
 //echo 'user'.$_SESSION['admin_session_user_name'];
