@@ -1,15 +1,17 @@
 <?php
-ini_set("display_errors", 0);
 class Log {
 
     public static function write($message_name, $message, $log_name , $c_panel = 0 , $menu = '') {
         
         if($menu != ''){
-            @define('LOGFILENAME', dirname(__FILE__) . '/logs/' . $log_name . "/".$menu."/". @date('d-m-y') . '-log-file.log');
+            @define('LOGFILEDIR', dirname(dirname(__FILE__)) . '/logs/' . $log_name . "/".$menu);
         } else {
-            @define('LOGFILENAME', dirname(__FILE__) . '/logs/' . $log_name . "/" . @date('d-m-y') . '-log-file.log');
+            @define('LOGFILEDIR', dirname(dirname(__FILE__)) . '/logs/' . $log_name);
         }
-        
+        if (!file_exists(LOGFILEDIR)) {
+            mkdir(LOGFILEDIR, 0777, true);
+        }
+        define('LOGFILENAME',LOGFILEDIR."/". @date('d-m-y') . '-log-file.log');
         $handle = fopen(LOGFILENAME, 'a');
         if (!$handle){
             $handle = fopen(LOGFILENAME, 'w');

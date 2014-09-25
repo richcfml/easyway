@@ -1,4 +1,4 @@
-<? include("../../../includes/config.php");?>
+<? require_once("../../../includes/config.php");?>
 <? 
   $ID = $_GET['scid'];
   $catid	=	$_REQUEST['cid'];

@@ -1,6 +1,5 @@
 <?php
-include("../../../includes/config.php");
-include_once("../../../includes/function.php");
+require_once("../../../includes/config.php");
 
 if (isset($_GET["mentionid"]))
 {

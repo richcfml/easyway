@@ -1,6 +1,5 @@
 <?
- 
-include("../../../includes/config.php");
+require_once("../../../includes/config.php");
 $resturantId=$_POST['rest_id'];
 $Status=$_POST['status'];
 $admin_type=$_POST['admin_type'];

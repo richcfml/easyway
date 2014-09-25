@@ -1,14 +1,11 @@
- <link href="css/adminMain.css" rel="stylesheet" type="text/css" />
 <?
- ini_set('display_errors',0);
+require_once("../includes/config.php");
 require_once ("../classes/menu.php");
-require_once ("../classes/Log.php");
  
  $menu=new menu();
  $menu->id=$_GET['menuid'];
  $updateMessage="";
  
- include("../includes/function.php");
  
 $func_obj = new clsFunctions();
 
@@ -47,6 +44,7 @@ if(isset($_POST['update'])) {
  $arrhours=$menu->arr_hours_list;
  
 ?>
+<link href="css/adminMain.css" rel="stylesheet" type="text/css" />
  <? if ($updateMessage != "" ) { ?>
 <div style="background:#A7B6BD; border: 1px solid #1A1B1A; padding: 10px 10px 10px 10px; margin: 0px 10px 0px 10px; color: #FFFFFF; font-size: 15px; margin-bottom: 20px; margin-top: 10px;">
   <?=$updateMessage?>

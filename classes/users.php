@@ -600,7 +600,7 @@ public function get_delivery_address($formated=1)
 	/* Gulfam QualityClix End*/
         
         public static function loggedinUserEmail(){
-            if($_SESSION['loggedinuser']){
+            if(isset($_SESSION['loggedinuser'])){
                 $user = unserialize($_SESSION['loggedinuser']); 
                 return $user->cust_email;
             } else {

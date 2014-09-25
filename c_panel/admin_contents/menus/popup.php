@@ -1,5 +1,5 @@
 <? 
-include("../../../includes/config.php");
+require_once("../../../includes/config.php");
 	
 ?>
 <script language="javascript">	

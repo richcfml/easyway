@@ -1,5 +1,4 @@
 <?
-//int_set("display_errors", 1);
 if(isset($_GET['item'])) $item = $_GET['item']; else $item = 'orders';
 
 if($item == "orders") { $admin_subcontent = "admin_contents/analytics/tab_orders_analytics_listing.php"; }

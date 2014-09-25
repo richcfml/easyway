@@ -1,5 +1,5 @@
 <?
-session_start();
+include("../../../includes/config.php");
 ?>
 <link href="../../css/adminMain.css" rel="stylesheet" type="text/css" />
 
@@ -8,7 +8,7 @@ if ($_SESSION['admin_type'] != 'admin' && $_SESSION['admin_type'] != 'reseller')
     die("Invalid access");
 }
 
-include("../../../includes/config.php");
+
 if (empty($_REQUEST['reseller_id'])) {
     die("Please select a reseller");
 }

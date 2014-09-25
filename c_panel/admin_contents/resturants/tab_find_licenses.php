@@ -1,5 +1,5 @@
 <?
-include("../../../includes/config.php");
+require_once("../../../includes/config.php");
 $value="";
 $resellerId=intval($_GET['resellerId']);
 if(isset($_GET['license_id']))

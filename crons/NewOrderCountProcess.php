@@ -1,7 +1,4 @@
 <?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE);
-
 require_once("../includes/config.php"); 
 $ordersCountFor1To30Days = mysql_query("SELECT cat_id, count( * ) as order_count
     FROM ordertbl

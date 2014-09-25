@@ -1,4 +1,4 @@
-<? require("../../../includes/config.php");
+<? require_once("../../../includes/config.php");
  $OrderID = @$_GET['OrderID'];
  
  $prdQuery="select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName,c.cust_phone1,c.cust_odr_address DeliveryAddress from customer_registration c,ordertbl o where o.UserID=c.id  and

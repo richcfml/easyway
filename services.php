@@ -1,9 +1,8 @@
 <?php
-
+require_once "includes/config.php";
 if(isset($_GET['op'])){
 
-    include "includes/config.php";
-    include "includes/function.php";
+    
     
     $op = $_GET['op'];
     $message = array();

@@ -21,7 +21,7 @@ class cydne
 	 	$objfun=new clsFunctions();
 		$message= $objfun->_esc_xmlchar(str_replace("!","",str_replace("'","",$message)));
 		$to= $objfun->esc_special($to);
-		include("includes/config.php");
+		
 		$json='{
 			   		"LicenseKey":"'. $this->APIkey .'",
 			   		"SMSRequests":[{

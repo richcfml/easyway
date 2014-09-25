@@ -1,6 +1,4 @@
 <?php
-//print_r($_POST);
-ini_set("display_errors", 1);
 $options = array(
 	"easyway_active_menu_link_color" => "",
 	"easyway_appearence" => "1",

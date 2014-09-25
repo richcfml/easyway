@@ -1,14 +1,6 @@
 <?
-session_start();
-
-include("../includes/config.php");
+require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
-include("../includes/function.php");
-require_once ("../classes/Log.php");
-
-//ini_set('display_errors', 1);
-
-ini_set('max_execution_time', 0);
 
 // delete all abandoned carts whose orders were placed
 $abandoned_carts = mysql_query("SELECT * FROM abandoned_carts WHERE status=0");

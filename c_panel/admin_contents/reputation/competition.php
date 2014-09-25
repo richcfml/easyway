@@ -15,8 +15,6 @@ $srid = $Objrestaurant->srid;
 </div>
 
 <?php
-ini_set("display_errors", "1");
-error_reporting(E_ALL & ~E_NOTICE);
 
 $mCompError = "";
 $srid = $Objrestaurant->srid;

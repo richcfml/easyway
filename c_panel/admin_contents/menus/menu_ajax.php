@@ -1,10 +1,7 @@
 <?php
-
-include("../../../includes/config.php");
-include("../../../includes/function.php");
+require_once("../../../includes/config.php");
 require("../../includes/SimpleImage.php");
 require("../../includes/snapshot.class.php");
-require("../../../classes/Log.php");
 
 if (!function_exists('json_encode')) {
     function json_encode($data) {

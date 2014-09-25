@@ -1,6 +1,4 @@
 <?php include('nav.php'); ?>
-<?php ini_set("display_errors", "1"); ?>
-<?php error_reporting(E_ALL & ~E_NOTICE); ?>
 <?php $srid = $Objrestaurant->srid; ?>
 <?php $country_obj = new clscountry(); ?>
 <script>

@@ -1,8 +1,5 @@
 <?
-	session_start();
-	ini_set("display_errors", 0);
-	include("../includes/config.php");
-	include("includes/function.php");
+	require_once("../includes/config.php");
 	$function_obj = new clsFunctions();
 	
 	@$admin_err = 0;

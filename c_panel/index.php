@@ -1,19 +1,17 @@
-<? session_start();
-include("../includes/config.php");
+<? 
+require_once("../includes/config.php");
 require("includes/SimpleImage.php");
 require("includes/snapshot.class.php");
-include("../includes/function.php"); 
 include("admin_includes/function.php");
 require("classes/clscountry.php");
 require("classes/chargifyApi.php");
 include("../includes/class.phpmailer.php"); 
 include("../includes/class.smtp.php");
 require_once('../classes/abandoned_carts.php');
-require_once('../classes/Log.php');
 
 $function_obj = new clsFunctions();
 $chargify = new chargifyApi();
-ini_set('display_errors',0);
+
 $ajax=0;
 
 //echo 'user'.$_SESSION['admin_session_user_name'];

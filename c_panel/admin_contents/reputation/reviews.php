@@ -1,7 +1,3 @@
-<?php
-ini_set( "display_errors", "1" );
-error_reporting( E_ALL & ~E_NOTICE);
-?>
 <link href="../css/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
 <script src="../js/facebox.js" type="text/javascript"></script>
 <style type="text/css">

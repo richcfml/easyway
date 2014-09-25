@@ -10,7 +10,6 @@ else if($item == "order_delete") { $admin_subcontent = "admin_contents/orders/ta
 else if($item == "editorder") { $admin_subcontent = "admin_contents/orders/tab_exist_order_detail.php"; }
 else if($item == "refund") { $admin_subcontent = "admin_contents/orders/tab_refund.php"; }
 
- ini_set('display_errors',1);
 ?>
 
 <div id="BodyContainer">

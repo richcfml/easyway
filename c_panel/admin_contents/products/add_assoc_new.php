@@ -1,5 +1,5 @@
-<?php	include_once ("../../../classes/Log.php");
-include("../../../includes/config.php");	
+<?php	
+require_once("../../../includes/config.php");	
 	//echo "<pre>";print_r($_SERVER);exit;
 //	if(isset($_REQUEST['apply_subcat'])) {
 	if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {

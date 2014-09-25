@@ -1,5 +1,4 @@
 <?php
-ini_set("display_errors", 0);
           // Add your MD5 Setting.
 if($cart->isempty()) 
 {

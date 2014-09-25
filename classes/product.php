@@ -85,63 +85,68 @@ class product{
         $cat_qry = mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id IN (" . $prd_id_list . ")");
     }
 
-   public function getproductsbyallcategories($menuid) 
+   public static function getproductsbyallcategories($menuid) 
 	{
 //		$mTime1 = time();
-        $query = "SELECT categories.cat_ordering, categories.cat_id, categories.cat_name, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(categories.cat_des, '\'', '&#39;'), '\r\n', '<br />'),'\n\r','<br />'), '\r', '<br />'), '\n', '<br />'), '\t', '') AS cat_des"
+        $query = "SELECT categories.cat_ordering, categories.cat_id, categories.cat_name, categories.cat_des AS cat_des"
                 ." FROM menus INNER JOIN categories ON menus.id = categories.menu_id"
                 ." WHERE menus.status=1 AND menus.id =".$menuid." Order by categories.cat_ordering";
         $catResult = mysql_query($query);
-		$cat_count = mysql_num_rows($catResult);
+        $cat_count = mysql_num_rows($catResult);
+        //echo $query;
 
-		$prd_id_list = "";
-		$arrCats=array();
-		$subCatIDs="";
+        $prd_id_list = "";
+        $arrCats=array();
+        $subCatIDs="";
         while ($cat = mysql_fetch_object($catResult)) 
-		{
-			$arrCats[$cat->cat_id]=$cat;
+        {
+            $cat->cat_des = preg_replace( "/\r|\n/", " ", $cat->cat_des);
+            $cat->cat_des = str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$cat->cat_des)));
+            $arrCats[$cat->cat_id]=$cat;
             $subCatIDs.=$cat->cat_id.",";
         }
+        //echo '<pre>';print_r($arrCats);echo '</pre>';
 		
         $subCatIDs=  substr($subCatIDs, 0,-1);//remove last ,
 		
-		$queryProducts= "SELECT SortOrder, prd_id,product.status, product.HasAssociates, product.HasAttributes, product.sub_cat_id, product.item_title,"
-							." product.item_type,product.prd_id, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(product.item_des, '\'', '&#39;'), '\r\n', '<br />'),'\n\r','<br />'), '\r', '<br />'), '\n', '<br />'), '\t', '') AS item_des,product.retail_price,product.sale_price,product.item_image"
-			                ." FROM product "
-							." WHERE sub_cat_id in (".$subCatIDs.") Order by SortOrder";
-        
+        $queryProducts= "SELECT SortOrder, prd_id,product.status, product.HasAssociates, product.HasAttributes, product.sub_cat_id, product.item_title,"
+                        ." product.item_type,product.prd_id, product.item_des AS item_des,product.retail_price,product.sale_price,product.item_image"
+                        ." FROM product "
+                        ." WHERE sub_cat_id in (".$subCatIDs.") Order by SortOrder";
         $prodResult = mysql_query($queryProducts);
 
-		$arrProductList=array();
-		$mIndex = 0;
-		
-		$subCatIDsLoop = "";
+        $arrProductList=array();
+        $mIndex = 0;
+
+        $subCatIDsLoop = "";
         while ($prodRow = mysql_fetch_object($prodResult)) 
-		{
-			if (strpos($subCatIDsLoop, ",".$prodRow->sub_cat_id.",")===false)
-			{
-				$subCatIDsLoop.=$prodRow->sub_cat_id.",";
-			}
-			
+        {
+            if (strpos($subCatIDsLoop, ",".$prodRow->sub_cat_id.",")===false)
+            {
+                    $subCatIDsLoop.=$prodRow->sub_cat_id.",";
+            }
             $prd_id_list.=$prodRow->prd_id.',';
-			$arrProductList[$mIndex]->status=$prodRow->status;
-			$arrProductList[$mIndex]->cat_name =$arrCats[$prodRow->sub_cat_id]->cat_name;
+            $arrProductList[$mIndex]=new stdClass;
+            $arrProductList[$mIndex]->status=$prodRow->status;
+            $arrProductList[$mIndex]->cat_name =$arrCats[$prodRow->sub_cat_id]->cat_name;
             $arrProductList[$mIndex]->cat_des = $arrCats[$prodRow->sub_cat_id]->cat_des;
-			$arrProductList[$mIndex]->HasAssociates=$prodRow->HasAssociates;
-			$arrProductList[$mIndex]->HasAttributes = $prodRow->HasAttributes;
-			$arrProductList[$mIndex]->sub_cat_id = $prodRow->sub_cat_id;
-			$arrProductList[$mIndex]->item_title = $prodRow->item_title;
-			$arrProductList[$mIndex]->item_type = $prodRow->item_type;
-			$arrProductList[$mIndex]->prd_id=$prodRow->prd_id;
-			$arrProductList[$mIndex]->item_des = $prodRow->item_des;
-			$arrProductList[$mIndex]->retail_price = $prodRow->retail_price;
-			$arrProductList[$mIndex]->sale_price = $prodRow->sale_price;
-			$arrProductList[$mIndex]->item_image = $prodRow->item_image;
-			$arrProductList[$mIndex]->cat_ordering = $arrCats[$prodRow->sub_cat_id]->cat_ordering;
-			$arrProductList[$mIndex]->SortOrder = $prodRow->SortOrder;
-			$arrProductList[$mIndex]->display = "";
+            $arrProductList[$mIndex]->HasAssociates=$prodRow->HasAssociates;
+            $arrProductList[$mIndex]->HasAttributes = $prodRow->HasAttributes;
+            $arrProductList[$mIndex]->sub_cat_id = $prodRow->sub_cat_id;
+            $arrProductList[$mIndex]->item_title = $prodRow->item_title;
+            $arrProductList[$mIndex]->item_type = $prodRow->item_type;
+            $arrProductList[$mIndex]->prd_id=$prodRow->prd_id;
+            $itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
+            $itemDesc=  str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)));
+            $arrProductList[$mIndex]->item_des = $itemDesc;
+            $arrProductList[$mIndex]->retail_price = $prodRow->retail_price;
+            $arrProductList[$mIndex]->sale_price = $prodRow->sale_price;
+            $arrProductList[$mIndex]->item_image = $prodRow->item_image;
+            $arrProductList[$mIndex]->cat_ordering = $arrCats[$prodRow->sub_cat_id]->cat_ordering;
+            $arrProductList[$mIndex]->SortOrder = $prodRow->SortOrder;
+            $arrProductList[$mIndex]->display = "";
         	//set rest of the fields
-			$mIndex++;
+            $mIndex++;
         }
 		
 		$subCatIDsLoop =  substr($subCatIDsLoop, 0,-1);//remove last ,

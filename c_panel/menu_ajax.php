@@ -1,7 +1,5 @@
 <?php
-
-include("../includes/config.php");
-include("includes/function.php");
+require_once("../includes/config.php");
 require("includes/SimpleImage.php");
 require("includes/snapshot.class.php");
 // Delete sub menu item

@@ -1,7 +1,5 @@
 <?php
-	ini_set('display_errors', 1);
-	include("../includes/config.php");
-	include("../includes/function.php");
+	require_once("../includes/config.php");
 	
 	$url = "https://[@subdomain].chargify.com/subscriptions/[@subscription.id]/components/[@component.id]/usages.json";
 	

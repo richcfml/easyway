@@ -1,5 +1,4 @@
 <?
-
 class abandoned_carts {
 	public $id
 		,$user_id
@@ -15,17 +14,17 @@ class abandoned_carts {
 		,$status;
 
 	function __construct() {
-		$tihs->user_id = 0;
-		$tihs->resturant_id = 0;
-		$tihs->cart = null;
-		$tihs->date_added = date("Y-m-d H:i:s");
-		$tihs->referral_source = "";
-		$tihs->session_duration_in_seconds = 0;
-		$tihs->last_user_action = "";
-		$tihs->cart_total_amount = 0.00;
-		$tihs->reason = "";
-		$tihs->platform_used = 1;
-		$tihs->status = 0;
+		$this->user_id = 0;
+		$this->resturant_id = 0;
+		$this->cart = null;
+		$this->date_added = date("Y-m-d H:i:s");
+		$this->referral_source = "";
+		$this->session_duration_in_seconds = 0;
+		$this->last_user_action = "";
+		$this->cart_total_amount = 0.00;
+		$this->reason = "";
+		$this->platform_used = 1;
+		$this->status = 0;
 	}
 	
 	public function get_abandoned_carts($resturant_id) {

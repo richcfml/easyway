@@ -1,5 +1,4 @@
 <?
-//	ini_set("display_errors", 1);
 	//$resturant_id = 210;
 	$analytics = mysql_query("SELECT * FROM analytics WHERE resturant_id=$resturant_id");
 	if(!empty($analytics) && mysql_num_rows($analytics) > 0) {

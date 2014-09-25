@@ -1,6 +1,4 @@
 <?  
-ini_set('display_errors',0);
-  
 if(isset($_POST['SMSSent']) && $_POST['SMSSent'])
 {
 	//outgoing message has been queued for sending

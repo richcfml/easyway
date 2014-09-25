@@ -13,7 +13,6 @@
 	});
 </script>
 <?php 
-ini_set('display_errors',0);
 if (is_numeric($loggedinuser->id))
 {
 	$clone=$cart->myclone();
@@ -64,7 +63,6 @@ else
 		extract($_POST);
 		if($_POST['x_response_reason_code']==1)
 		{
-			ini_set('display_errors',0);
 			$file_name = "pdffiles/pdf".$cart->order_id.".pdf";
 			include $site_root_path. "views/cart/views/notify_customers.php";
 			mysql_query("UPDATE ordertbl SET payment_approv=1 WHERE OrderID=".$cart->order_id); 	
