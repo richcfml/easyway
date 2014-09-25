@@ -1,6 +1,6 @@
 <?php
-//$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
-$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
+//$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
 $mSQLQuery=mysql_query("SELECT Authorization_Num FROM gge4_authorization_num WHERE UserID=".$gUID." AND transaction_id='".$transactionid."'");
 if(mysql_num_rows($mSQLQuery) > 0) 
 {
