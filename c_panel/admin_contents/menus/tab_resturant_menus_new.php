@@ -344,12 +344,12 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 						<a class="hover_gray" style="padding: 2px 6px 2px 5px; border-radius: 50%;color: black;background-color: #b9b9b9; font-size: 12px; margin-left: 130px !important; margin-top: -15px !important; cursor: pointer;color: white;">?<i>Use this button to turn menus on and off.</i></a>
 						<div style="margin-bottom: 20px; padding-left: 40px;">
 							<style>
-							label
+							#lblOnOff
 							{
 								padding-left: 0px !important;	
 							}
 							
-							label:before
+							#lblOnOff:before
 							{
 								display: none;
 							}
@@ -357,7 +357,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 							
 							<div class="onoffswitch">
 								<input type="checkbox" class="onoffswitch-checkbox" id="chkOnOff" status="<?=$menu_desc['status']?>" menuid="<?=$menu_id?>" <?php if (trim($mMenuStatus)==1) { echo("checked"); } ?> />
-							  	<label class="onoffswitch-label" for="myonoffswitch">
+							  	<label class="onoffswitch-label" for="myonoffswitch" id="lblOnOff">
 									<div class="onoffswitch-inner" status="<?=$menu_desc['status']?>" menuid="<?=$menu_id?>"></div>
 									<div class="onoffswitch-switch"></div>
 							  	</label>
