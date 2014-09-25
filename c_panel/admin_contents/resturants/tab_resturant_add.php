@@ -358,32 +358,32 @@ function getXMLHTTP() { //fuction to return the xml http object
                                 //}
 	
 			     $queryInsertRestaurant = "INSERT INTO resturants
-                                    SET name= '".addslashes($catname)."'
-                                            ,url_name= '".addslashes($rest_url_name)."'
-                                            ,owner_id='".addslashes($owner_name)."'
+                                    SET name= '".prepareStringForMySQL($catname)."'
+                                            ,url_name= '".prepareStringForMySQL($rest_url_name)."'
+                                            ,owner_id='".prepareStringForMySQL($owner_name)."'
                                             ,license_id='".$license_key."'
 					    ,status = '1'
-                                            ,email='".addslashes($email)."'
-                                            ,fax='".addslashes($fax)."'
-                                            ,phone='".addslashes($phone)."'
+                                            ,email='".prepareStringForMySQL($email)."'
+                                            ,fax='".prepareStringForMySQL($fax)."'
+                                            ,phone='".prepareStringForMySQL($phone)."'
                                             ,rest_open_close = '1'
                                             ,delivery_offer = '0'
 					    ,order_minimum = '".$order_minimum."'
-                                            ,payment_method='".addslashes($payment_method)."'
-                                            ,time_zone_id='$time_zone'
-                                            ,rest_address= '$rest_address'
-                                            ,rest_city= '$rest_city'
-                                            ,rest_state= '$rest_state'
-                                            ,rest_zip= '$rest_zip'
+                                            ,payment_method='".prepareStringForMySQL($payment_method)."'
+                                            ,time_zone_id='".prepareStringForMySQL($time_zone)."'
+                                            ,rest_address= '".prepareStringForMySQL($rest_address)."'
+                                            ,rest_city= '".prepareStringForMySQL($rest_city)."'
+                                            ,rest_state= '".prepareStringForMySQL($rest_state)."'
+                                            ,rest_zip= '".prepareStringForMySQL($rest_zip)."'
 					    ,premium_account = '".$check_product_premium->premium_account."'
                                             ,chargify_subscription_id='".$chargify_subscription_id->subscription->id."'
-                                            ,region='" . addslashes(trim($region)) . "'
+                                            ,region='" . prepareStringForMySQL(trim($region)) . "'
 					    ,srid = '".$getSrid."'";
 			    mysql_query($queryInsertRestaurant);
 				Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurant , 'menu', 1 , 'cpanel');
 
                             $catid = mysql_insert_id();
-				if($catid)
+				if($catid>0)
 				{
 					if (isset($optionallogo))
 					{
@@ -413,9 +413,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 							}
 						}
 					}
-				}
 
-			    if($catid){
 					$mImageStr = "";
 					if ((trim($mImageName)!="") && (trim($mImageName)!="NIA.jpg"))
 					{
@@ -425,8 +423,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 					$queryInsertRestaurantAnalytics = 	"INSERT INTO `analytics` SET
 					resturant_id = ".$catid.",
                                 	first_letter = '".strtoupper(substr($catname,0,1))."',
-                                	name='".addslashes($catname)."',
-                                	url_name='".addslashes($rest_url_name)."',
+                                	name='".prepareStringForMySQL($catname)."',
+                                	url_name='".prepareStringForMySQL($rest_url_name)."',
                                 	status='1',
                                 	orders_last_month_count='0', ".$mImageStr."
                                 	orders_last_but_second_month_count='0'";												 
@@ -439,25 +437,25 @@ function getXMLHTTP() { //fuction to return the xml http object
                                     mysql_query("INSERT INTO categories SET parent_id= ".$catid.", menu_id= ". $menuid .", cat_name= '" . "Sub Menu Category" . "', cat_ordering= 1, cat_des= '" . "Sub Menu Description" . "'");
 /*------------------------------------------------------------------------------------------------------*/
                                         
-                                    
-                                        }
-			for($j = 0; $j< 7; $j++) {
-				//hour and minutes are treaded as string
-				$open_time =  '0800';
-				$close_time = '1700';
-                                Log::write("Add restaurant business hours - tab_resturant_add.php", "QUERY --INSERT INTO business_hours 
-					SET rest_id = '".$catid."'
-						,day= '".$j."'
-						,open='$open_time'
-						,close='$close_time'", 'menu', 1 , 'cpanel');
-				mysql_query(
-					"INSERT INTO business_hours 
-					SET rest_id = '".$catid."'
-						,day= '".$j."'
-						,open='$open_time'
-						,close='$close_time'"
-				);
-			}
+                                   
+					for($j = 0; $j< 7; $j++) {
+						//hour and minutes are treaded as string
+						$open_time =  '0800';
+						$close_time = '1700';
+										Log::write("Add restaurant business hours - tab_resturant_add.php", "QUERY --INSERT INTO business_hours 
+							SET rest_id = '".$catid."'
+								,day= '".$j."'
+								,open='$open_time'
+								,close='$close_time'", 'menu', 1 , 'cpanel');
+						mysql_query(
+							"INSERT INTO business_hours 
+							SET rest_id = '".$catid."'
+								,day= '".$j."'
+								,open='$open_time'
+								,close='$close_time'"
+						);
+					}
+				}
 			//When resturant has been created then the granted license status will become activated.
 			mysql_query("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key);
 			mysql_query("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name);

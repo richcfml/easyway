@@ -2,3 +2,4 @@ pdffiles/
 /includes/config.php
 /images/item_images/
 .htaccess
+/logs/

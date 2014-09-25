@@ -29,8 +29,16 @@
     }
 
 </style>
+<?php
+	$mTmpSPD = 0;
+	$mTmpIframeSettings = $objRestaurant->SelectIframeDetailsByRestaurantID($objRestaurant->id);
+	if ($mTmpIframeSettings!=0)
+	{
+		$mTmpSPD  = $mTmpIframeSettings->ShowPicturesDescription;
+	}
+?>	
 <a href="#BodyLeftArea" rel="facebox" id="showPopupLink"></a>
-<? if ($options["show_item_pictures_and_description"] == 0) { ?>
+<? if ($mTmpSPD == 0) { ?>
     <div id="dhtmltooltip"></div>
     <script src="<? echo $js_root; ?>dhtmltip.js" type="text/javascript"></script>
 <? } ?>
@@ -1102,7 +1110,7 @@ $.each(attributeRequired, function(index, value) {
                         $image = ($image == "" ? 'no-image-available.jpg' : 'item_images/' . $image);
                         ?>
                         <div class="products_area<?
-                            if ($options["show_item_pictures_and_description"] == 0) {
+                            if ($mTmpSPD == 0) {
                                 echo " compact";
                             }
                             ?>" <?php if ($menulist->status!=1) { echo("style='display: none;'"); }?>>
@@ -1111,13 +1119,13 @@ $.each(attributeRequired, function(index, value) {
                                     <td style="width: 2%;">
                                     </td>
                                     <td align="left" style="width: 87%; font-size:12px;">
-                                        <? if ($options["show_item_pictures_and_description"] == "1") { ?>
+                                        <? if ($mTmpSPD == "1") { ?>
                                             <div class="product_image"><img src="<? echo $SiteUrl . "images/" . $image; ?>" width="70" height="70" border="0" alt="<?= stripslashes($menulist->item_title) ?>" /></div>
                                         <? } ?>
 
 
                                         <?php 
-											if ($options["show_item_pictures_and_description"] == "1") 
+											if ($mTmpSPD == "1") 
 											{ 
 										?>
                                         	<div class="product_name">
@@ -1208,7 +1216,7 @@ $.each(attributeRequired, function(index, value) {
 
                     }//function
     </script>
-    <? if ($options["show_loyalty_box_about_the_cart"] == 1) { ?>
+    <? if ($mSLB == 1) { ?>
         <? if ($loggedinuser->valuetec_card_number > 0) { ?>  
             <div class="heading">YOUR VIP REWARDS <span class="rewardamount">$<?= $loggedinuser->valuetec_reward ?></span></div>
             <table class="listing1" width="100%" cellpadding="0px" cellspacing="0px" border="0" style="border: 1px solid #e4e4e4; border-bottom: none;">
