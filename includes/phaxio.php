@@ -1,13 +1,10 @@
 <?php
-include("config.php");
 class EWOphaxio
 {
 	
 	public function SendFax($pOrderID, $pFaxNumber) 
 	{
-		$mysql_conn = mysql_connect("localhost","easywayordering","Yh56**ew!d") or die( mysql_error()."  cannot connect...");
-		mysql_select_db("dev_easywayordering",$mysql_conn);
-		
+	
 		try
 		{
 			//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
