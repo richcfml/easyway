@@ -357,9 +357,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                                     $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$check_product_premium->premium_account,'activate');
                                 //}
 	
-	
-			    mysql_query(
-                                    "INSERT INTO resturants
+			     $queryInsertRestaurant = "INSERT INTO resturants
                                     SET name= '".addslashes($catname)."'
                                             ,url_name= '".addslashes($rest_url_name)."'
                                             ,owner_id='".addslashes($owner_name)."'
@@ -380,8 +378,10 @@ function getXMLHTTP() { //fuction to return the xml http object
 					    ,premium_account = '".$check_product_premium->premium_account."'
                                             ,chargify_subscription_id='".$chargify_subscription_id->subscription->id."'
                                             ,region='" . addslashes(trim($region)) . "'
-					    ,srid = '".$getSrid."'"	
-                            );
+					    ,srid = '".$getSrid."'";
+			    mysql_query($queryInsertRestaurant);
+				Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurant , 'menu', 1 , 'cpanel');
+
                             $catid = mysql_insert_id();
 				if($catid)
 				{
@@ -422,15 +422,16 @@ function getXMLHTTP() { //fuction to return the xml http object
 						$mImageStr = " optionl_logo='".$mImageName."', ";
 					}
 					
-																		 
-	                            mysql_query("INSERT INTO `analytics` SET
+					$queryInsertRestaurantAnalytics = 	"INSERT INTO `analytics` SET
 					resturant_id = ".$catid.",
                                 	first_letter = '".strtoupper(substr($catname,0,1))."',
                                 	name='".addslashes($catname)."',
                                 	url_name='".addslashes($rest_url_name)."',
                                 	status='1',
                                 	orders_last_month_count='0', ".$mImageStr."
-                                	orders_last_but_second_month_count='0'");
+                                	orders_last_but_second_month_count='0'";												 
+	                            mysql_query($queryInsertRestaurantAnalytics);
+					Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurantAnalytics , 'menu', 1 , 'cpanel');
                                     
 /*-------------------- Insert Query For Main Menu And Sub Menu  ----------------------------------------*/
                                     mysql_query("INSERT INTO menus SET rest_id= ".$catid.", menu_name= '" . "Main Menu" . "', menu_ordering= '" . "0" . "', menu_desc= '" . "Menu Description" . "', status= 1");

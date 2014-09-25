@@ -1,0 +1,724 @@
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:32:01 am] - IP:[115.186.125.71] - User:[qc] - Browser info: [Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [id] => 15678
+            [product_id] => 115984
+            [association_id] => 115989
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115989
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item 2
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 3.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 2
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [1] => stdClass Object
+        (
+            [id] => 15677
+            [product_id] => 115984
+            [association_id] => 115936
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115936
+                            [cat_id] => 182
+                            [sub_cat_id] => 13957
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Beef Cheese Burger
+                            [item_code] => 
+                            [item_des] => Beef Cheese Burger
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115936_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-18 06:02:51
+                        )
+
+                )
+
+        )
+
+    [2] => stdClass Object
+        (
+            [id] => 15676
+            [product_id] => 115984
+            [association_id] => 115952
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115952
+                            [cat_id] => 182
+                            [sub_cat_id] => 14477
+                            [item_num] => 0
+                            [status] => 1
+                            [item_title] => Chilled Slush
+                            [item_code] => 
+                            [item_des] => Chilled slush for <br/><br/>adults only !
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115952_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 0
+                            [SortOrder] => 2
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-19 14:18:38
+                        )
+
+                )
+
+        )
+
+    [3] => stdClass Object
+        (
+            [id] => 15679
+            [product_id] => 115984
+            [association_id] => 115988
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115988
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 3
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [4] => stdClass Object
+        (
+            [id] => 15675
+            [product_id] => 115984
+            [association_id] => 115991
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115991
+                            [cat_id] => 182
+                            [sub_cat_id] => 14532
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Bottom left 1
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 0
+                            [HasAssociates] => 0
+                            [UpdatedOn] => 2014-09-23 11:54:38
+                        )
+
+                )
+
+        )
+
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:32:01 am] - IP:[115.186.125.71] - User:[qc] - Browser info: [Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - attributes: 
+
+Array
+(
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:48:04 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [id] => 15678
+            [product_id] => 115984
+            [association_id] => 115989
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115989
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item 2
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 3.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 2
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [1] => stdClass Object
+        (
+            [id] => 15677
+            [product_id] => 115984
+            [association_id] => 115936
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115936
+                            [cat_id] => 182
+                            [sub_cat_id] => 13957
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Beef Cheese Burger
+                            [item_code] => 
+                            [item_des] => Beef Cheese Burger
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115936_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-18 06:02:51
+                        )
+
+                )
+
+        )
+
+    [2] => stdClass Object
+        (
+            [id] => 15676
+            [product_id] => 115984
+            [association_id] => 115952
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115952
+                            [cat_id] => 182
+                            [sub_cat_id] => 14477
+                            [item_num] => 0
+                            [status] => 1
+                            [item_title] => Chilled Slush
+                            [item_code] => 
+                            [item_des] => Chilled slush for <br/><br/>adults only !
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115952_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 0
+                            [SortOrder] => 2
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-19 14:18:38
+                        )
+
+                )
+
+        )
+
+    [3] => stdClass Object
+        (
+            [id] => 15679
+            [product_id] => 115984
+            [association_id] => 115988
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115988
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 3
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [4] => stdClass Object
+        (
+            [id] => 15675
+            [product_id] => 115984
+            [association_id] => 115991
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115991
+                            [cat_id] => 182
+                            [sub_cat_id] => 14532
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Bottom left 1
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 0
+                            [HasAssociates] => 0
+                            [UpdatedOn] => 2014-09-23 11:54:38
+                        )
+
+                )
+
+        )
+
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:48:05 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - attributes: 
+
+Array
+(
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:53:44 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [id] => 15609
+            [product_id] => 115973
+            [association_id] => 115952
+            [sortOrder] => 1
+            [115973] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115952
+                            [cat_id] => 182
+                            [sub_cat_id] => 14477
+                            [item_num] => 0
+                            [status] => 1
+                            [item_title] => Chilled Slush
+                            [item_code] => 
+                            [item_des] => Chilled slush for <br/><br/>adults only !
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115952_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 0
+                            [SortOrder] => 2
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-19 14:18:38
+                        )
+
+                )
+
+        )
+
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:58:28 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:59:17 am] - IP:[115.186.125.71] - User:[qc] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [id] => 15678
+            [product_id] => 115984
+            [association_id] => 115989
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115989
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item 2
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 3.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 2
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [1] => stdClass Object
+        (
+            [id] => 15677
+            [product_id] => 115984
+            [association_id] => 115936
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115936
+                            [cat_id] => 182
+                            [sub_cat_id] => 13957
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Beef Cheese Burger
+                            [item_code] => 
+                            [item_des] => Beef Cheese Burger
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115936_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-18 06:02:51
+                        )
+
+                )
+
+        )
+
+    [2] => stdClass Object
+        (
+            [id] => 15676
+            [product_id] => 115984
+            [association_id] => 115952
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115952
+                            [cat_id] => 182
+                            [sub_cat_id] => 14477
+                            [item_num] => 0
+                            [status] => 1
+                            [item_title] => Chilled Slush
+                            [item_code] => 
+                            [item_des] => Chilled slush for <br/><br/>adults only !
+                            [retail_price] => 10.00
+                            [sale_price] => 0
+                            [item_image] => img_115952_prd.jpg
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 0
+                            [SortOrder] => 2
+                            [HasAttributes] => 1
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-19 14:18:38
+                        )
+
+                )
+
+        )
+
+    [3] => stdClass Object
+        (
+            [id] => 15679
+            [product_id] => 115984
+            [association_id] => 115988
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115988
+                            [cat_id] => 182
+                            [sub_cat_id] => 14531
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Top right item
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 3
+                            [HasAttributes] => 0
+                            [HasAssociates] => 1
+                            [UpdatedOn] => 2014-09-24 15:05:47
+                        )
+
+                )
+
+        )
+
+    [4] => stdClass Object
+        (
+            [id] => 15675
+            [product_id] => 115984
+            [association_id] => 115991
+            [sortOrder] => 0
+            [115984] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [prd_id] => 115991
+                            [cat_id] => 182
+                            [sub_cat_id] => 14532
+                            [item_num] => 
+                            [status] => 1
+                            [item_title] => Bottom left 1
+                            [item_code] => 
+                            [item_des] => 
+                            [retail_price] => 2.00
+                            [sale_price] => 0
+                            [item_image] => 
+                            [feature_sub_cat] => 0
+                            [Alt_tag] => 
+                            [Ptitle] => 
+                            [Meta_des] => 
+                            [Meta_tag] => 
+                            [imagethumb] => 
+                            [pos_id] => 
+                            [item_type] => 
+                            [SortOrder] => 1
+                            [HasAttributes] => 0
+                            [HasAssociates] => 0
+                            [UpdatedOn] => 2014-09-23 11:54:38
+                        )
+
+                )
+
+        )
+
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 12:59:17 am] - IP:[115.186.125.71] - User:[qc] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - attributes: 
+
+Array
+(
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 01:16:33 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - associations: 
+
+Array
+(
+)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Time:[25-09-2014 01:16:33 am] - IP:[115.186.125.71] - User:[] - Browser info: [Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36]
+-------------------------------------------------------------------------------------------------------------------------------
+
+Show Popup - attributes: 
+
+Array
+(
+)
