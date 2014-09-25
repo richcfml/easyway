@@ -17,7 +17,7 @@ class cydne
  
 	public function sendSMS($to, $message, $reference='', $matchedmessageid='', $type=1)
 	{
-		global $objRestaurant;
+		global $objRestaurant,$CdynePostBackUrl;
 	 	$objfun=new clsFunctions();
 		$message= $objfun->_esc_xmlchar(str_replace("!","",str_replace("'","",$message)));
 		$to= $objfun->esc_special($to);
