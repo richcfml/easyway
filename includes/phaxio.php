@@ -1,14 +1,17 @@
 <?php
+
 class EWOphaxio
 {
-	
+		
 	public function SendFax($pOrderID, $pFaxNumber) 
 	{
-	
+		global $PhaxioCallBackUrl;
 		try
 		{
 			//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-			mysql_query("INSERT INTO fax_log(orderid, status, fax_date, TrackingNumber, fax_message) values (".$pOrderID.",0,'". date("Y-m-d H:i:s")  ."', 0, 'Fax sending started' )");
+			$query="INSERT INTO fax_log(orderid, status, fax_date, TrackingNumber, fax_message) values (".$pOrderID.",0,'". date("Y-m-d H:i:s")  ."', 0, 'Fax sending started' )";
+			mysql_query($query);
+			Log::write('PHAXIO Post Array - Send Fax', $query.mysql_error(), 'phaxio');
 			$mLogID = mysql_insert_id();
 			
 			$mFileName = $pOrderID .".pdf";
