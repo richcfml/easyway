@@ -1,5 +1,4 @@
-<?php 
-	 
+<?php
 	require_once("../classes/restaurant.php");
 	$Objrestaurant_data=new restaurant();
 	$Objrestaurant=new restaurant();
@@ -137,7 +136,7 @@ if($Objrestaurant)
 		$item='';
 	}
 
-        $menyqry = mysql_fetch_array(mysql_query("SELECT  id, menu_name FROM menus where rest_id = $catid AND status = 1 ORDER BY menu_ordering ASC limit 1"));
+        $menyqry = mysql_fetch_array(mysql_query("SELECT  id, menu_name FROM menus where rest_id = $mRestaurantIDCP AND status = 1 ORDER BY menu_ordering ASC limit 1"));
         $menu_id = $menyqry['id'];
         $menu_name = $menyqry['menu_name'];
         if(!empty($menu_id))

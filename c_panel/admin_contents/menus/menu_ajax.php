@@ -362,7 +362,7 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
         Log::write("Add new product_association - menu_ajax.php", "QUERY -- insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
         mysql_query("insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "");
         Log::write("Set product HasAttributes=1, HasAssociates=1 - menu_ajax.php", "QUERY -- UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
-        mysql_query("UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $product_rs->prd_id . "");
+        mysql_query("UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $newProductID . "");
     }
 
     $mSQlAttr = mysql_query("Select * from new_attribute where sub_catid=" . $cat_id  . "");
@@ -427,8 +427,8 @@ else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd
     
     Log::write("Add new attribute - menu_ajax.php", "QUERY -- insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` )  select " . $newProductID . ", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` from attribute where ProductID=" . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
     mysql_query("insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` )  select " . $newProductID . ", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` from attribute where ProductID=" . $product_rs->prd_id . "");
-    Log::write("Set product HasAttributes=1,HasAssociates - menu_ajax.php", "QUERY -- UPDATE product set HasAttributes=1,HasAssociates WHERE prd_id = " . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
-    mysql_query("UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $product_rs->prd_id . "");
+    Log::write("Set product HasAttributes=1,HasAssociates - menu_ajax.php", "QUERY -- UPDATE product set HasAttributes=1,HasAssociates WHERE prd_id = " . $newProductID . "", 'menu', 1 , 'cpanel');
+    mysql_query("UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $newProductID . "");
     Log::write("Add new product association - menu_ajax.php", "QUERY -- insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
     mysql_query("insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "");
     echo $newProductID;

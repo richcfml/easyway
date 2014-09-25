@@ -46,9 +46,7 @@ if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
             window.location.href = "<?= $AdminSiteUrl ?>?mod=new_menu&catid="+catid+"&menuid="+menu_id+"&menu_name="+menu_name;
         </script>
 <?
-}
-
-else {
+}else {
     mysql_query("DELETE FROM attribute where ProductID  = '" . $_GET['prod_id'] . "' ");
     $scat_id = $_REQUEST['subcat_id'];
     $attribute_id = $_GET['itemcheckAttribute'];
@@ -59,8 +57,8 @@ else {
             $query = "INSERT INTO attribute SET productid = '" . $_GET['prod_id'] . "', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat=0,Type	 = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name = '".$attr['display_Name']."'";
             Log::write("Add new attribute - add_attribute_new.php", "QUERY --".$query, 'menu', 1 , 'cpanel');
             mysql_query($query);
-            Log::write("Set product HasAttributes=1 - add_attribute_new.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['prd_id'] . "", 'menu', 1 , 'cpanel');
-            mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['prd_id'] . "");
+            Log::write("Set product HasAttributes=1 - add_attribute_new.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['prod_id'] . "", 'menu', 1 , 'cpanel');
+            mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['prod_id'] . "");
         }
     }
     ?>
