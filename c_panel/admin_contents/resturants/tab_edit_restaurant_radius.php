@@ -302,8 +302,6 @@ if (isset($_POST['submit'])) {
         $errMessage = "Please enter delivery charges";
     } else if ($time_zone < 0) {
         $errMessage = "Please select resturant's time zone";
-    } else if ($voice_phone == '' && $phone_notification_status == 1 && $_SESSION['admin_type'] == 'admin') {
-        $errMessage = "Please enter voice confirmation phone number";
     } else if ($credit == '' && $cash == '' && $_SESSION['admin_type'] == 'admin') {
         $errMessage = "Please select payment method";
     } else if ($restRs1 > 0) {
