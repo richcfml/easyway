@@ -244,6 +244,7 @@ h4 {
     <div class="left normal">
         <input type="hidden" id="btnsubmit" name="btnconfirmorder1" value=" Submit "  class="button blue">
     <input type="submit" id="submitbutton" name="btnconfirmorder" value=" Submit "  class="button blue">
+	&nbsp;<span style="color: red; display: none;" id="spnStop">Your order is being processed, do not refresh or go back.</span>
     <br/>
     </div>
       <div class="clear"></div>
@@ -326,6 +327,7 @@ $(function(){
 			  submitHandler: function (form) {
             
 					 $("#submitbutton").attr('disabled', 'disabled'); 
+					 $("#spnStop").show();
    			 		form.submit();
 			  }
 				
