@@ -675,6 +675,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 	}
 	
 	$mURL="http://www.ordrsrvr.net/index.php";
+        Log::write("Post to Order Server", "Curl Initialization for OrderId: ".$orderId."", 'orderserver', 1 , '');
 	$cURL = curl_init();
  
  	curl_setopt($cURL,CURLOPT_URL,$mURL);
@@ -682,8 +683,10 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
  	curl_setopt($cURL,CURLOPT_POSTFIELDS,$encoded);
  	curl_setopt($cURL,CURLOPT_RETURNTRANSFER, true); 
  	curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
+        Log::write("Post to Order Server", "Curl Execution Start", 'orderserver', 1 , '');
 	$result = curl_exec($cURL);
 	$result_info= json_decode($result,true);
+        Log::write("Post to Order Server", "Curl Execution End. Result: ".$result_info['Result']."", 'orderserver', 1 , '');
  	curl_close($cURL);
 	mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_escape_string($encoded)."' WHERE OrderID =".$orderId.""); 
 }

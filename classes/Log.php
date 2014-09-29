@@ -4,17 +4,17 @@ class Log {
     public static function write($message_name, $message, $log_name , $c_panel = 0 , $menu = '') {
         
         if($menu != ''){
-            @define('LOGFILEDIR', dirname(dirname(__FILE__)) . '/logs/' . $log_name . "/".$menu);
+            $LogFileDir = dirname(dirname(__FILE__)) . '/logs/' . $log_name . "/".$menu;
         } else {
-            @define('LOGFILEDIR', dirname(dirname(__FILE__)) . '/logs/' . $log_name);
+            $LogFileDir = dirname(dirname(__FILE__)) . '/logs/' . $log_name;
         }
-        if (!file_exists(LOGFILEDIR)) {
-            mkdir(LOGFILEDIR, 0777, true);
+        if (!file_exists($LogFileDir)) {
+            mkdir($LogFileDir, 0777, true);
         }
-        define('LOGFILENAME',LOGFILEDIR."/". @date('d-m-y') . '-log-file.log');
-        $handle = fopen(LOGFILENAME, 'a');
+        $LogFileName = $LogFileDir."/". @date('d-m-y') . '-log-file.log';
+        $handle = fopen($LogFileName, 'a');
         if (!$handle){
-            $handle = fopen(LOGFILENAME, 'w');
+            $handle = fopen($LogFileName, 'w');
         }
 
         if($c_panel == 0 && class_exists('users')){
