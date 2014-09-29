@@ -3,7 +3,51 @@
 define('JSON_SERVER_RESPONSE_BREAKER', '|_|_|_|_|_|_|_|_|');
 require_once 'lib/authorize_api/AuthNetCIM.php';
 
+Class AuthorizeNetTransactionModel{
 
+    public static function saveTransaction($txn_id, $orderid, $rest_id, $amount, $cc_no){
+       
+        $time = time();
+        mysql_query('INSERT INTO auth_transactions (rest_id, order_id, txn_id, time, amount, status) VALUES ('.mysql_escape_string($rest_id).', '.mysql_escape_string($orderid).', "'.mysql_escape_string($txn_id).'", '.mysql_escape_string($time).', "'.mysql_escape_string($amount).'", 1)') or die(mysql_error());
+        return mysql_insert_id();
+    }
+
+    public static function getTransaction($txn_id){
+        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE txn_id = "'.mysql_escape_string($txn_id).'"'));
+    }
+    
+    public static function getTransactionByOrder($order_id){
+        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE order_id = "'.mysql_escape_string($order_id).'"'));
+    }
+
+    public static function refundTransaction($txn_id, $auth){
+        $transaction = AuthorizeNetTransactionModel::getTransaction($txn_id);
+        if($transaction){
+            if(!AuthorizeNetTransactionModel::isConfirmed($transaction->order_id)){
+                echo $transaction->cc_no;
+                $response = $auth->credit($txn_id, ''.$transaction->amount, ''.$transaction->cc_no);
+                if($response->approved){
+                    AuthorizeNetTransactionModel::setRefund($transaction->order_id);
+                }else{
+                    return $response->error_message;
+                }
+
+            }else{
+                return 'order already confirmed!';
+            }
+        }else{
+            return false;
+        }
+    }
+    public static function isConfirmed($order_id){
+        $order = mysql_fetch_object(mysql_query('SELECT * FROM ordertbl WHERE id = "'.mysql_escape_string($order_id).'"'));
+        return $order->order_confirm == 1;
+    }
+    public static function setRefund($order_id){
+        mysql_query('UPDATE auth_transactions set status = 2 WHERE id = "'.mysql_escape_string($order_id).'"');
+        
+    }
+}
 
 Class AuthNetTokenizationModel{
 
