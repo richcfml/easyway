@@ -257,7 +257,7 @@ if (!empty($_GET)) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (isset($_POST['submit'])) {
-	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true);, 'restaurant', 1);
+	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
     $restQry = mysql_query("select name from resturants where name='$catname' AND id!='$catid'");
     $restRs = mysql_num_rows($restQry);
     if ($restRs > 0)
