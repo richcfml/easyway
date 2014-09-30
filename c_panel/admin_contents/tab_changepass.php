@@ -95,14 +95,16 @@ function getXMLHTTP() { //fuction to return the xml http object
            if($payment_profile_id < 0) {
 			$errMessage1 = "Please select Card";
 		}else{
+            Log::write('updatePaymentProfile parameter - tab_changepass.php', 'Posted Array:payment profile id:'.$payment_profile_id, 'MyAccount', 1);
             $payment_data = $chargify->updatePaymentProfile($first_name,$last_name,$billingAddress1,$billingAddress2,$city,$state ,$zip ,$country,$payment_profile_id,$exp_month,$exp_year );
+            Log::write('updatePaymentProfile - tab_changepass.php', 'Response Array:'.print_r($payment_data,true), 'MyAccount', 1);
 
             $sql=mysql_query("update chargify_payment_method set billing_address = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_address))."',billing_address_2 = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_address_2))."'
                 ,billing_city = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_city))."',billing_country = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_country))."',billing_state ='".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_state))."'
                 ,billing_zip = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_zip))."',first_name = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->first_name))."',last_name = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->last_name))."'
                 ,expiration_month = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->expiration_month))."',expiration_year = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->expiration_year))."'
                  where Payment_profile_id = ".$payment_profile_id."");
-
+            Log::write('update chargify_payment table - tab_changepass.php', 'Query:'.$sql, 'MyAccount', 1);
             
         }
         }
@@ -111,6 +113,7 @@ function getXMLHTTP() { //fuction to return the xml http object
             $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$licenseid' limit 0,1)"));
             $Objsubcription = $chargify->getSubcription($chargify_subscription_id->chargify_subscription_id);
             $oldProduct = $Objsubcription->product;
+            Log::write('My Account - tab_changepass.php', 'Calling Create Migration:subscriptionID:'.$chargify_subscription_id->chargify_subscription_id.' Product ID:'.$product_details, 'MyAccount', 1);
             $chargify->createMigration($chargify_subscription_id->chargify_subscription_id,$product_details);
             
             $oldProductSQl = mysql_fetch_object(mysql_query("select * from chargify_products where product_id='".$oldProduct->id."' and user_id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)"));
@@ -124,12 +127,14 @@ function getXMLHTTP() { //fuction to return the xml http object
                 {
                     $quantityPremium = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$newProductSQl->premium_account);
                     $quantityStandard = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$oldProductSQl->premium_account);
+                    Log::write('My Account - tab_changepass.php', 'Calling multipleAllocations:subscriptionID:'.$reseller_chargify_id->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:1', 'MyAccount', 1);
                     $chargify->multipleAllocation($reseller_chargify_id->chargify_subcription_id,$quantityPremium,$quantityStandard,1);
                 }
                 else
                 {
                     $quantityPremium = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$oldProductSQl->premium_account);
                     $quantityStandard = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$newProductSQl->premium_account);
+                    Log::write('My Account - tab_changepass.php', 'Calling multipleAllocations:subscriptionID:'.$reseller_chargify_id->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:0', 'MyAccount', 1);
                     $chargify->multipleAllocation($reseller_chargify_id->chargify_subcription_id,$quantityPremium,$quantityStandard,0);
                 }
             }
@@ -153,9 +158,13 @@ function getXMLHTTP() { //fuction to return the xml http object
             {
                 
                     $chargify_subscription = $chargify->reactivateSubcription($chargify_subscription_id->chargify_subscription_id,$subcription_method,$credit_card_number,$card_no,$exp_month,$exp_year);
+                    Log::write('My Account - tab_changepass.php', 'Calling reactivateSubcription:subscriptionID:'.$chargify_subscription_id->chargify_subscription_id , 'MyAccount', 1);
                     if(!empty($chargify_subscription->subscription))
                     {
-                    mysql_query("UPDATE licenses SET  status='activated' WHERE license_key ='$license_id'");
+                    $uptLicenses = "UPDATE licenses SET  status='activated' WHERE license_key ='$license_id'";
+                    mysql_query($uptLicenses);
+                    Log::write('Edit Restaurant - tab_changepass.php', 'Updated Licenses Clients:'.$uptLicenses, 'MyAccount', 1);
+
                     mysql_query("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where license_key ='$license_id'  limit 0,1)");
 		    mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)");
                     if($subcription_method =='invoice')
@@ -210,6 +219,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                 }
                 $quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$chargify_subscription_id->premium_account);
                 $quantity = $quantity+1;
+                Log::write('My Account - tab_changepass.php', 'Calling Allocation Quantity:'.$reseller_chargify_id->chargify_subcription_id.'Quantity;'.$quantity.'Account Type:'.$chargify_subscription_id->premium_account.'activate:activate', 'MyAccount', 1);
                 $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$chargify_subscription_id->premium_account,'activate');
                 $chargify_customer = $chargify_subscription->subscription->customer;
 
@@ -218,13 +228,13 @@ function getXMLHTTP() { //fuction to return the xml http object
                 
                 if(empty($check_card_data_Qry))
                 {
-                    mysql_query(
-                            "INSERT INTO chargify_payment_method
+                    $uptchargify_payment_method = "INSERT INTO chargify_payment_method
                             SET user_id= '".addslashes($_SESSION['owner_id'])."'
                                     ,chargify_customer_id= '".addslashes($chargify_customer->id)."'
                                     ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
-                                    ,card_number='".$credit_card_info->credit_card->masked_card_number."'"
-                    );
+                                    ,card_number='".$credit_card_info->credit_card->masked_card_number."'";
+                    mysql_query($uptchargify_payment_method);
+                    Log::write('My Account - tab_changepass.php', 'Update Chargify Payment menthod:'.$uptchargify_payment_method , 'MyAccount', 1);
                 }
 
                     if(!empty($resData))
@@ -272,14 +282,17 @@ function getXMLHTTP() { //fuction to return the xml http object
                         
                         $quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$chargify_subscription_id->premium_account);
                         $quantity = $quantity-1;
+                        Log::write('My Account - tab_changepass.php', 'Calling Allocation Quantity:'.$reseller_chargify_id->chargify_subcription_id.'Quantity;'.$quantity.'Account Type:'.$chargify_subscription_id->premium_account.'suspend:suspend', 'MyAccount', 1);
                         $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$chargify_subscription_id->premium_account,'suspend');
                         //if($chargify_subscription_id->premium_account==1)
                         //{
-                            $chargify->cancelSubcriptionByRestowner($chargify_subscription_id->chargify_subscription_id);
+                        Log::write('My Account - tab_changepass.php', 'cancelSubcriptionByRestowner Subscription ID:'.$chargify_subscription_id->chargify_subscription_id, 'MyAccount', 1);
+                        $chargify->cancelSubcriptionByRestowner($chargify_subscription_id->chargify_subscription_id);
                         //}
 
                         if(!empty($sridSql->srid))
                         {
+                            Log::write('My Account - tab_changepass.php', 'cancelVendesta srid:'.$sridSql->srid, 'MyAccount', 1);
                             $chargify->cancelVendesta($sridSql->srid);
                             mysql_query("update resturants set srid = '' where id = ".$sridSql->id."");
                         }
