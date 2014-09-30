@@ -257,7 +257,7 @@ if (!empty($_GET)) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (isset($_POST['submit'])) {
-
+	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true);, 'restaurant', 1);
     $restQry = mysql_query("select name from resturants where name='$catname' AND id!='$catid'");
     $restRs = mysql_num_rows($restQry);
     if ($restRs > 0)
@@ -397,8 +397,7 @@ if (isset($_POST['submit'])) {
 		// Get Chargify Product ID Ends Here // -- Gulfam
 		
         if ($_SESSION['admin_type'] == 'admin') {
-            mysql_query(
-                    "UPDATE resturants 
+			$queryUpdate="UPDATE resturants 
 					SET name= '" . prepareStringForMySQL(trim($catname)) . "'
 						,email= '" . addslashes($email) . "'
 						,fax= '" . addslashes($fax) . "'
@@ -435,25 +434,25 @@ if (isset($_POST['submit'])) {
 						,yelp_restaurant_url='" . addslashes(trim($yelp_restaurant_url)) . "'
 						,premium_account='" . addslashes(trim($premium_account)) . "'
 						,region='" . addslashes(trim($region)) . "'
-					where id = $catid"
-            );
-            mysql_query(
-                    "UPDATE analytics 
+					where id = $catid";
+            mysql_query($queryUpdate);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Update Restaurant:'.$queryUpdate, 'restaurant', 1);
+			$queryAnalytics="UPDATE analytics 
 					SET name= '" . addslashes(trim($catname)) . "'
                                                 ,optionl_logo='$name1'
-					where resturant_id = $catid"
-            );
+					where resturant_id = $catid";
+            mysql_query($queryAnalytics);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Analytics:'.$queryAnalytics, 'restaurant', 1);
             //When resturant has been created then the granted license status will become activated.
-            mysql_query(
-                    "UPDATE licenses 
+			$queryLicences="UPDATE licenses 
 					SET status='activated'
 						,resturant_id=" . $catid . "
 						,activation_date= '" . time() . "' 
-					where id =" . $license_key
-            );
+					where id =" . $license_key;
+            mysql_query($queryLicences);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Licences:'.$queryLicences, 'restaurant', 1);
         } else if ($_SESSION['admin_type'] == 'store owner' || $_SESSION['admin_type'] == 'reseller') {
-            mysql_query(
-                    "UPDATE resturants 
+			$queryUpdate="UPDATE resturants 
 					SET name= '" . prepareStringForMySQL($catname) . "'
 						,email= '" . addslashes($email) . "'
 						,fax= '" . addslashes($fax) . "'
@@ -479,18 +478,19 @@ if (isset($_POST['submit'])) {
 						,meta_keywords='" . addslashes(trim($meta_keywords)) . "'
 						,meta_description='" . addslashes(trim($meta_description)) . "'
 						,region='" . addslashes(trim($region)) . "'
-					where id = $catid"
-            );
-            mysql_query(
-                    "UPDATE analytics 
+					where id = $catid";
+            mysql_query($queryUpdate);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant - Reseller:'.$queryUpdate, 'restaurant', 1);
+			$queryAnalytics="UPDATE analytics 
 					SET name= '" . prepareStringForMySQL($catname) . "'
 						,optionl_logo='$name1'
-					where resturant_id = $catid"
-            );
+					where resturant_id = $catid";
+            mysql_query($queryAnalytics);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Analytics - Reseller:'.$queryAnalytics, 'restaurant', 1);
         }
-
-	mysql_query("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name);
-        
+	$queryResellerClient="UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name;
+	mysql_query($queryResellerClient);
+    Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Reseller Clients:'.$queryResellerClient, 'restaurant', 1);
 	if(isset($region) && $region == "0"){
             mysql_query("UPDATE resturants SET payment_gateway='authoriseDotNet'
 					where id = $catid"
@@ -526,13 +526,16 @@ if (isset($_POST['submit'])) {
             $quantityPremium = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,1);
             $quantityStandard = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,0);
             //print_r($quantity);
+			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling multipleAllocations:subscriptionID:'.$getResellerID->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:'.$getSrid->premium_account, 'restaurant', 1);
             $chargify->multipleAllocation($getResellerID->chargify_subcription_id,$quantityPremium,$quantityStandard,$getSrid->premium_account);
 
             $srid = $getSrid->srid;
             //echo $srid;
             $mURL = "https://reputation-intelligence-api.vendasta.com/api/v2/account/convertSalesAccount/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1&srid=".$srid;
+			
             if($premium_account == 1)
             {
+				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Vandesta for premium account URL:'.$mURL, 'restaurant', 1);
                 $parameters = "email=".$getOwnerEmail->email;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $mURL);
@@ -553,8 +556,10 @@ if (isset($_POST['submit'])) {
                 $cntry=$_POST['region'];
                 if($cntry=='0'){$cntry="GB";}else if($cntry=='1'){$cntry="US";} else if($cntry=='2'){$cntry="CA";}else{$cntry="US";}
                 $demoAccountFlag = "true";
+				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
                 $chargify->cancelVendesta($srid);
                 mysql_query("update resturants set srid = '' where id ".$catid."");
+				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
                 $srid = $chargify->createVendestaPremium($catname,$cntry,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag,$phone,$getOwnerEmail->email);
                 
 		
