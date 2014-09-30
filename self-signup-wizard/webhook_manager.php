@@ -3,7 +3,7 @@
 	include("../includes/class.phpmailer.php");
 	$function_obj = new clsFunctions();
 	$objMail = new testmail();
-
+	Log::write("Chargify WebHook - webhook_manager.php", " Request Params:".print_r($_REQUEST,true), 'chargify', 1);
 	if(!empty($_REQUEST["payload"]["subscription"]["state"])) {
 		$state = $_REQUEST["payload"]["subscription"]["state"];
 		$subscription_id = $_REQUEST["payload"]["subscription"]["id"];
