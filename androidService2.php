@@ -1,13 +1,12 @@
 <?php
+require_once("includes/config.php");
 $jsonData = array();
 $jsonTempData = array();
 $message = array();
 $desiredResult = array();
     
 if (isset($_REQUEST['op'])) {
-    include "includes/config.php";
     include "classes/restaurant.php";
-    include("includes/function.php");
     
     $function_obj = new clsFunctions();
     $Objrestaurant = new restaurant();

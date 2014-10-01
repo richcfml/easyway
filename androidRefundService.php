@@ -1,5 +1,5 @@
 <?php
-
+require_once("includes/config.php");
 $jsonData = array();
 $jsonTempData = array();
 $message = array();
@@ -7,11 +7,8 @@ ini_set('display_errors', 1);
 error_reporting(1);
 
 if (isset($_REQUEST['op'])) {
-    include "includes/config.php";
     include "classes/restaurant.php";
-    include("includes/function.php");
     include("includes/class.phpmailer.php"); 
-    require_once('classes/Log.php');	
 
     $function_obj = new clsFunctions();
     $Objrestaurant = new restaurant();
