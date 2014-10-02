@@ -17,7 +17,7 @@
 		  $Objrestaurant= $Objrestaurant_data->getDetail($_GET['cid']);
 	}
  
-	if($Objrestaurant->region == 1) {$currency = "$";$java_currency = "$";}else{$currency = "&#163;"; $java_currency = "\u00A3";}
+	if($Objrestaurant->region == 1  || $Objrestaurant->region == 2) {$currency = "$";$java_currency = "$";}else{$currency = "&#163;"; $java_currency = "\u00A3";}
 	
 		$restId=$Objrestaurant->id;
 	 if ( $_SESSION['admin_type'] == 'store owner' && $Objrestaurant->owner_id !=$_SESSION['owner_id'] ){
