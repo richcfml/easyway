@@ -115,12 +115,13 @@ class GO3
 	
 	function go3DoRequest($pParam, $pURL)
 	{
+		Log::write('GO3 CALL URL - GO3 API', 'URL: '.$pURL.', Parameter: '.$pParam, 'go3');
 		$mResult = file_get_contents($pURL);
 		
 		if ($mResult)
 		{
 			$mXML = simplexml_load_string($mResult); 
-
+			Log::write('GO3 Response - GO3 API', $mResult, 'go3');
 			if ($pParam==1) //Login
 			{
 				if (strval($mXML->ResponseCode)=="0000")
@@ -225,6 +226,7 @@ class GO3
 		else
 		{
 			return "Error occurred.";
+			Log::write('GO3 NO Response - GO3 API', 'No Reponse', 'go3');
 		}
 	}
 	
