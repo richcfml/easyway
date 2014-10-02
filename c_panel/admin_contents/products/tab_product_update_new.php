@@ -80,9 +80,55 @@ if (isset($_GET['prd_id'])) {
     $imgSource = $prd_data->item_image;
 	
 	$size = getimagesize("../images/item_images/". $imgSource);
-
-	$mWidth = round($size[0]/4.5);
-	$mHeight = round($size[1]/4.5);
+	
+	if (($size[0]>=450) || ($size[1]>=450))
+	{
+		$mWidth = round($size[0]/4.5);
+		$mHeight = round($size[1]/4.5);
+		$mScale = 4.5;
+	}
+	else if ((($size[0]<450) && ($size[0]>=400)) || (($size[1]<450) && ($size[1]>=400)))
+	{
+		$mWidth = round($size[0]/4);
+		$mHeight = round($size[1]/4);
+		$mScale = 4;
+	}
+	else if ((($size[0]<400) && ($size[0]>=300)) || (($size[1]<400) && ($size[1]>=300)))
+	{
+		$mWidth = round($size[0]/3.5);
+		$mHeight = round($size[1]/3.5);
+		$mScale = 3.5;
+	}
+	else if ((($size[0]<300) && ($size[0]>=250)) || (($size[1]<300) && ($size[1]>=250)))
+	{
+		$mWidth = round($size[0]/3);
+		$mHeight = round($size[1]/3);
+		$mScale = 3;
+	}
+	else if ((($size[0]<250) && ($size[0]>=220)) || (($size[1]<250) && ($size[1]>=220)))
+	{
+		$mWidth = round($size[0]/2.5);
+		$mHeight = round($size[1]/2.5);
+		$mScale = 2.5;
+	}																							
+	else if ((($size[0]<220) && ($size[0]>=190)) || (($size[1]<220) && ($size[1]>=190)))
+	{
+		$mWidth = round($size[0]/2);
+		$mHeight = round($size[1]/2);
+		$mScale = 2;
+	}
+	else if ((($size[0]<190) && ($size[0]>=120)) || (($size[1]<190) && ($size[1]>=105)))
+	{
+		$mWidth = round($size[0]/1.5);
+		$mHeight = round($size[1]/1.5);
+		$mScale = 1.5;
+	}
+	else
+	{
+		$mWidth = round($size[0]/1);
+		$mHeight = round($size[1]/1);
+		$mScale = 1;
+	}
 
     $pos_id =$prd_data->pos_id;
     /*if($imgSource != '')
@@ -343,6 +389,7 @@ if (isset($_GET['prd_id'])) {
                                 ?> ><div style="text-align: center;font-size:16px"> Photo of item </div>
                                 <div style="text-align:center;">
 									<img src ="../images/item_images/<?php echo $imgSource; ?>?time=<?php echo time() ?>" id="item_img" style="margin-top: 9px; width: <?=$mWidth?>px; height: <?=$mHeight?>px;"/>
+									<input type="hidden" id="hdnScale" name="hdnScale" value="<?=$mScale?>" />
                                 </div>
                             </div>
                             <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
@@ -463,8 +510,54 @@ if (isset($_GET['prd_id'])) {
 																$('#item_img').data('Jcrop').destroy();
 															}
 
-															$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
-									                        $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+															if ((mWidth>=450) || (mHeight>=450))
+															{
+																$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+																$('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+																$('#hdnScale').val('4.5');
+															}
+															else if (((mWidth<450) && (mWidth>=400)) || ((mHeight<450) && (mHeight>=400)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/4)+"px");
+																$('#item_img').css("height",Math.round(mHeight/4)+"px");;
+																$('#hdnScale').val('4');
+															}
+															else if (((mWidth<400) && (mWidth>=300)) || ((mHeight<400) && (mHeight>=300)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/3.5)+"px");
+																$('#item_img').css("height",Math.round(mHeight/3.5)+"px");;
+																$('#hdnScale').val('3.5');
+															}
+															else if (((mWidth<300) && (mWidth>=250)) || ((mHeight<300) && (mHeight>=250)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/3)+"px");
+																$('#item_img').css("height",Math.round(mHeight/3)+"px");
+																$('#hdnScale').val('3');
+															}
+															else if (((mWidth<250) && (mWidth>=220)) || ((mHeight<250) && (mHeight>=220)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/2.5)+"px");
+																$('#item_img').css("height",Math.round(mHeight/2.5)+"px");
+																$('#hdnScale').val('2.5');
+															}																							
+															else if (((mWidth<220) && (mWidth>=190)) || ((mHeight<220) && (mHeight>=190)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/2)+"px");
+																$('#item_img').css("height",Math.round(mHeight/2)+"px");
+																$('#hdnScale').val('2');
+															}
+															else if (((mWidth<190) && (mWidth>=120)) || ((mHeight<190) && (mHeight>=105)))
+															{
+																$('#item_img').css("width",Math.round(mWidth/1.5)+"px");
+																$('#item_img').css("height",Math.round(mHeight/1.5)+"px");
+																$('#hdnScale').val('1.5');
+															}
+															else
+															{
+																$('#item_img').css("width",Math.round(mWidth)+"px");
+																$('#item_img').css("height",Math.round(mHeight)+"px");
+																$('#hdnScale').val('1');
+															}
 
 															$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
 															$('#item_img').Jcrop
@@ -698,8 +791,54 @@ if (isset($_GET['prd_id'])) {
                          						    	$('#item_img').data('Jcrop').destroy();
                         							}
 													
-													('#item_img').css("width",Math.round(mWidth/4.5)+"px");
-							                        $('#item_img').css("height",Math.round(mHeight/4.5)+"px");	
+													if ((mWidth>=450) || (mHeight>=450))
+													{
+														$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+														$('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+														$('#hdnScale').val('4.5');
+													}
+													else if (((mWidth<450) && (mWidth>=400)) || ((mHeight<450) && (mHeight>=400)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/4)+"px");
+														$('#item_img').css("height",Math.round(mHeight/4)+"px");;
+														$('#hdnScale').val('4');
+													}
+													else if (((mWidth<400) && (mWidth>=300)) || ((mHeight<400) && (mHeight>=300)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/3.5)+"px");
+														$('#item_img').css("height",Math.round(mHeight/3.5)+"px");;
+														$('#hdnScale').val('3.5');
+													}
+													else if (((mWidth<300) && (mWidth>=250)) || ((mHeight<300) && (mHeight>=250)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/3)+"px");
+														$('#item_img').css("height",Math.round(mHeight/3)+"px");
+														$('#hdnScale').val('3');
+													}
+													else if (((mWidth<250) && (mWidth>=220)) || ((mHeight<250) && (mHeight>=220)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/2.5)+"px");
+														$('#item_img').css("height",Math.round(mHeight/2.5)+"px");
+														$('#hdnScale').val('2.5');
+													}																							
+													else if (((mWidth<220) && (mWidth>=190)) || ((mHeight<220) && (mHeight>=190)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/2)+"px");
+														$('#item_img').css("height",Math.round(mHeight/2)+"px");
+														$('#hdnScale').val('2');
+													}
+													else if (((mWidth<190) && (mWidth>=120)) || ((mHeight<190) && (mHeight>=105)))
+													{
+														$('#item_img').css("width",Math.round(mWidth/1.5)+"px");
+														$('#item_img').css("height",Math.round(mHeight/1.5)+"px");
+														$('#hdnScale').val('1.5');
+													}
+													else
+													{
+														$('#item_img').css("width",Math.round(mWidth)+"px");
+														$('#item_img').css("height",Math.round(mHeight)+"px");
+														$('#hdnScale').val('1');
+													}
 													
 													$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
 													$('#item_img').Jcrop

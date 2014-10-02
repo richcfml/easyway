@@ -131,25 +131,32 @@ else if (isset($_GET['imgupload']))
             $image = new SimpleImage();
             $image->load($uploadfile);
 			
-			if ($width>$height)
+			if (($width>500) || ($height>500))
 			{
-				$newWidth = 500;
-				$newHeight = round(((500/$width)*$height));
-				$image->resize($newWidth,$newHeight);
+				if ($width>$height)
+				{
+					$newWidth = 500;
+					$newHeight = round(((500/$width)*$height));
+					$image->resize($newWidth,$newHeight);
+				}
+				else if ($width<$height)
+				{
+					$newWidth = round(((500/$height)*$width));
+					$newHeight = 500;
+					$image->resize($newWidth,$newHeight);
+				}
+				else 
+				{
+					$newWidth = 500;
+					$newHeight = 500;
+					$image->resize($newWidth,$newHeight);
+				}
 			}
-			else if ($width<$height)
+			else
 			{
-				$newWidth = round(((500/$height)*$width));
-				$newHeight = 500;
-				$image->resize($newWidth,$newHeight);
+				$newWidth = $width;
+				$newHeight = $height;
 			}
-			else 
-			{
-				$newWidth = 500;
-				$newHeight = 500;
-				$image->resize($newWidth,$newHeight);
-			}
-			
             $image->save($uploadfile);
             
         if ($_FILES['file-0']['error'] == 0)
@@ -209,8 +216,9 @@ else if (isset($_GET['add_menu_item']))
 }
 else if (isset($_GET['cropimg']))
 {   $name =  substr( $_GET['ext'], strrpos( $_GET['ext'], '/' )+1 );
-    $targ_w =$_GET['w']*4.5; 
-	$targ_h = $_GET['h']*4.5; 
+	$mScale =  $_GET['scale'];
+    $targ_w =$_GET['w']*$mScale; 
+	$targ_h = $_GET['h']*$mScale; 
 	$jpeg_quality = 90;
     if(strpos($_GET['ext'], 'prd')!= true)
     {
@@ -223,8 +231,8 @@ else if (isset($_GET['cropimg']))
     echo $src;
     $img_r = imagecreatefromjpeg($src);
     $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-    imagecopyresampled($dst_r,$img_r,0,0,$_GET['x']*4.5,$_GET['y']*4.5,
-    $targ_w,$targ_h,$_GET['w']*4.5,$_GET['h']*4.5);
+    imagecopyresampled($dst_r,$img_r,0,0,$_GET['x']*$mScale,$_GET['y']*$mScale,
+    $targ_w,$targ_h,$_GET['w']*$mScale,$_GET['h']*$mScale);
     //imagejpeg($dst_r,null,$jpeg_quality);
     //header('Content-type: image/jpeg');
     imagejpeg($dst_r,$src,$jpeg_quality);
@@ -243,7 +251,30 @@ else if (isset($_GET['update_menu_item']))
         $type = rtrim(implode(',', $_POST['type']), ',');
     }
 
-    $price = str_replace("$",",",$price);
+    
+	//Gulfam - Code to for Editing restaurants other than US region starts 
+	$mRegioRes = mysql_query("SELECT IFNULL(R.region, 1) AS RestaurantRegion FROM  resturants R INNER JOIN  product P ON R.id = P.cat_id AND P.prd_id=".$_GET['prd_id']);
+	
+	if (mysql_num_rows($mRegioRes)>0)
+	{
+		$mRegioRow = mysql_fetch_object($mRegioRes);
+		if (($mRegioRow->RestaurantRegion!=1) && ($mRegioRow->RestaurantRegion!=2))
+		{
+				$price = str_replace("£",",",$price);
+		}
+		else
+		{
+			$price = str_replace("$",",",$price);
+		}
+	}
+	else
+	{
+		$price = str_replace("$",",",$price);
+	}
+	//Gulfam - Code to for Editing restaurants other than US region Ends 
+	
+	
+
     $price = explode(",",$price);
     $price = trim(end($price));
 
@@ -361,7 +392,7 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
         mysql_query("insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`,`display_Name`,`Default`,`add_to_price`,attr_name,extra_charge )  select " . $newProductID . ", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`,`display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` from attribute where ProductID=" . $product_rs->prd_id . "");
         Log::write("Add new product_association - menu_ajax.php", "QUERY -- insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
         mysql_query("insert into product_association(`product_id`, `association_id`,`sortOrder` )  select " . $newProductID . ", `association_id`,`sortOrder`  from product_association where product_id =" . $product_rs->prd_id . "");
-        Log::write("Set product HasAttributes=1, HasAssociates=1 - menu_ajax.php", "QUERY -- UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');
+        Log::write("Set product HasAttributes=1, HasAssociates=1 - menu_ajax.php", "QUERY -- UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $newProductID . "", 'menu', 1 , 'cpanel');
         mysql_query("UPDATE product set HasAttributes=1,HasAssociates=1 WHERE prd_id = " . $newProductID . "");
     }
 
@@ -482,6 +513,24 @@ else if (isset($_GET['item_deactivate']) && $_GET['item_deactivate'] == 1 && !em
     {
         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product SET  status='0' WHERE prd_id=$id", 'menu', 1 , 'cpanel'); 
         $result = mysql_query("UPDATE product SET  status='0' WHERE prd_id=$id");
+        echo 'Deactivate';
+    }
+}
+else if (isset($_GET['submenu_deactivate']) && $_GET['submenu_deactivate'] == 1 && !empty($_GET['cat_id'])) //cat_id = Sub MenuID
+{
+    $result = '';
+    $id = $_GET['cat_id'];
+    if ($_GET['status'] == "0")
+    {
+        Log::write("Update Categories Status - menu_ajax.php", "QUERY -- UPDATE categories SET  status='1' WHERE cat_id=$id", 'menu', 1 , 'cpanel'); 
+        $result = mysql_query("UPDATE categories SET  status='1' WHERE cat_id=$id");
+        echo 'Activate';
+    } 
+    
+    else if ($_GET['status'] == "1")
+    {
+        Log::write("Update Categories Status - menu_ajax.php", "QUERY -- UPDATE categories SET  status='0' WHERE cat_id=$id", 'menu', 1 , 'cpanel'); 
+        $result = mysql_query("UPDATE categories SET  status='0' WHERE cat_id=$id");
         echo 'Deactivate';
     }
 }
@@ -772,6 +821,7 @@ else if (isset($_GET['loadRelatedDropdown']) && $_GET['loadRelatedDropdown'] == 
     $rest_id = $_GET['rest_id'];
     $result = array();
     $getcategories = array();
+    $subcatIDs = '';
     $cat_query = mysql_query("SELECT cat_id,cat_name FROM categories WHERE parent_id= '" . $rest_id . "'");
     while ($mRow1 = mysql_fetch_assoc($cat_query))
     {
@@ -834,8 +884,12 @@ else if (isset($_GET['GetallAttributeOptionName']) && $_GET['GetallAttributeOpti
     {
         $getdisplay_Name = "'".$getdisplay_Name."'";
     }
-    //echo "SELECT distinct(display_Name),option_name FROM `new_attribute` WHERE sub_catid =".$_GET['sub_catid']." and option_name not in(".$getdisplay_Name.")";exit;
-    $item_query = mysql_query("SELECT distinct(display_Name),option_name FROM `new_attribute` WHERE sub_catid =".$_GET['sub_catid']." and option_name not in(".$getdisplay_Name.")");
+	
+    $mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$_GET['sub_catid']);
+	$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+	$mMenuID = $mMenuIDRow->menu_id;
+
+    $item_query = mysql_query("SELECT distinct(display_Name),option_name FROM `new_attribute` WHERE sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.") AND option_name not in(".$getdisplay_Name.")");
     while($itemRs = mysql_fetch_array($item_query))
     {
          $result[$itemRs['option_name']]=$itemRs['display_Name'];
@@ -860,7 +914,15 @@ else if (isset($_GET['addAttributeinProduct']) && $_GET['addAttributeinProduct']
     } 
     else
     {
-        $getattr = mysql_query("Select * from new_attribute where display_Name = '" . $_GET['display_Name'] . "' and sub_catid =" . $_GET['sub_catid'] . " and option_name = '" . $_GET['option_name'] . "'");
+		$mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$_GET['sub_catid']);
+		$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+		$mMenuID = $mMenuIDRow->menu_id;
+
+    	$item_query = mysql_query("SELECT distinct(id),option_name FROM `new_attribute` WHERE sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.") AND option_name not in(".$getdisplay_Name.")");
+	
+	
+	
+        $getattr = mysql_query("Select * from new_attribute where display_Name = '" . $_GET['display_Name'] . "' and sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.") AND option_name = '" . $_GET['option_name'] . "'");
         while ($attr = mysql_fetch_array($getattr))
         {
             if (!empty($attr['id']))
@@ -1015,7 +1077,8 @@ else if (isset($_GET['AddNewAttribute']))
 	$mRequired = $_GET["Required"];
 	$Title_Price_Defalt = $_GET["Title_Price_Defalt"];
 	$mAdd_to_Price = $_GET["add_to_price"];
-    $mPrd_id = $_GET["prd_id"];
+        $mPrd_id = $_GET["prd_id"];
+        $attrids='';
 	
 	$mDupQry = "SELECT COUNT(*) AS AttributeCount FROM attribute WHERE TRIM(LOWER(option_name))='".trim(strtolower($mOptionName))."' AND ProductID=".$mPrd_id;
 
@@ -1140,6 +1203,7 @@ else if (isset($_GET['UpdateAttribute']))
         $mPrd_id = $_GET["prd_id"];
         $mAttrFields = $_GET["attrFields"];
         $mExtraCharger = $_GET["extraCharger"];
+        $attrids='';
 
 	if (trim(strtolower($mOldOptionName))!=trim(strtolower($mOptionName)))
 	{
@@ -1156,12 +1220,13 @@ else if (isset($_GET['UpdateAttribute']))
 			}
 		}
 	}
-
-        $mResult = mysql_query("SELECT IFNULL(MAX(OderingNO), 0) AS OrderNo FROM attribute Where ProductID = ".$mPrd_id);
+        
+        $mResult = mysql_query("SELECT OderingNO AS OrderNo FROM attribute Where ProductID = ".$mPrd_id." and option_name = '".$mOldOptionName."'");
 	$mOrderNoRow = mysql_fetch_object($mResult);
-	$mOrderNo = $mOrderNoRow->OrderNo+1;
+	$mOrderNo = $mOrderNoRow->OrderNo;
         
         $ProductIDs = array();
+        $ProdIDs = array();
         $Title_Price_Defalt = substr($Title_Price_Defalt, 1);
         $titarray = explode("|", $Title_Price_Defalt);
 
@@ -1173,13 +1238,15 @@ else if (isset($_GET['UpdateAttribute']))
         }
         else if($mApplySubCat==1)
         {
-             $mProductIdQry = mysql_query("Select distinct(ProductID) from attribute where option_name = '".$mOldOptionName."' and ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.")");
+             $mProductIdQry = mysql_query("Select distinct(ProductID),OderingNO from attribute where option_name = '".$mOldOptionName."' and ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.")");
                 while($prdids = mysql_fetch_array($mProductIdQry))
                 {
-                    $ProductIDs[] = $prdids['ProductID'];
+                    $ProductIDs[$prdids['ProductID']][0] = $prdids['ProductID'];
+                    $ProductIDs[$prdids['ProductID']][1] = $prdids['OderingNO'];
+                    $ProdIDs[] = $prdids['ProductID'];
                 }
-                Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID in  (".implode(",",$ProductIDs).") and option_name = '".$mOldOptionName."'", 'menu', 1 , 'cpanel');
-                mysql_query("Delete from attribute where ProductID in  (".implode(",",$ProductIDs).") and option_name = '".$mOldOptionName."'");
+                Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID in  (".implode(",",$ProdIDs).") and option_name = '".$mOldOptionName."'", 'menu', 1 , 'cpanel');
+                mysql_query("Delete from attribute where ProductID in  (".implode(",",$ProdIDs).") and option_name = '".$mOldOptionName."'");
         }
 
         
@@ -1200,11 +1267,11 @@ else if (isset($_GET['UpdateAttribute']))
             {
                 foreach($ProductIDs as $id)
                 {                
-                    Log::write("Set product HasAttributes=1 - tab_add_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $id . "", 'menu', 1 , 'cpanel');
-                    mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $id . "");
-                    Log::write("Add new attribute - menu_ajax.php", "QUERY --INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$id.", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$mOrderNo.",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."','".$mExtraCharger."')", 'menu', 1 , 'cpanel');
-                    mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$id.", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$mOrderNo.",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."','".$mExtraCharger."')");
-                    if($id == $mPrd_id)
+                    Log::write("Set product HasAttributes=1 - tab_add_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $id[0] . "", 'menu', 1 , 'cpanel');
+                    mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $id[0] . "");
+                    Log::write("Add new attribute - menu_ajax.php", "QUERY --INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$id[0].", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$id[1].",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."','".$mExtraCharger."')", 'menu', 1 , 'cpanel');
+                    mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$id[0].", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$id[1].",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."','".$mExtraCharger."')");
+                    if($id[0] == $mPrd_id)
                     {
                         $attrids .= mysql_insert_id()."-";
                     }

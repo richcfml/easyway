@@ -848,7 +848,7 @@ a:hover {
     font-weight:bold;
 }
 .clear { clear:both; }
-.attribute {font-size:12px;}
+.attribute {font-size:12px;width:370px}
 .Text_14px{ font-size:14px;}
 .red {color:#ff0000;}
 .delivery_radio {font-size:13px; padding:3px 0px 7px 25px; background-color:#CCC;}

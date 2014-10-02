@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/darktooltip.min.css">
 <script src="js/darktooltip.min.js"></script>
     <a class="fancyloadRelatedItem" href="#BrowsefancyBox"></a>
-    <div id="BrowsefancyBox" style="display:none;width:1150px;min-height:1448px;">
+    <div id="BrowsefancyBox" style="display:none;width:1150px;min-height:500px;">
         <div>
             <form action="admin_contents/products/add_assoc_new.php" method="get" name="frm1" >
                 <div style="background-color: #25AAE1;font-size: 19px;color: white;text-align: center;padding: 7px;border-radius: 5px;">Check Items To Associate</div>
@@ -78,48 +78,58 @@
 								<option value="4">Create Your Own</option>
 							</select>
 							<span style="color:red; visibility: hidden;" id="spnChooseAttr">*</span>
-							<input type="text" id="txtAttName" name="txtAttName" placeholder="Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden;" id="spnNameReq">*</span>
-							<select id ="attr_limit" name="attr_limit" style="height: 36px;width: 60px;" placeholder="Limit">
-								<option value="">Limit</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
-                                                        <span style="color:red; visibility: hidden;" id="spnChooseLimit">*</span>
+							<input type="text" id="txtAttTitle" name="txtAttTitle" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 320px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnAttTitleReq">*</span>
 						</td>
 					</tr>
 					<tr style="height: 10px;">
 						<td colspan="4">
-							<div id="final_attr_name" name="final_attr_name" style="font-size: 14px;color: green;"><span id="span_Choose" style="margin-left:18px"></span><span id="span_limit"></span><span id="span_attr_name"></span></div>
+							<div id="final_attr_name" name="final_attr_name" style="font-size: 14px;color: green;"><span id="span_attr_name"></span></div>
 						</td>
 					</tr>
-                                        <tr>
-                                            <td colspan="4">
-                                                <div style="color: #25AAE1; font-size:14px;margin-top: 12px;margin-left: 72px;width: 273px;float: left">Charge extra if limit exceeded</div>
-                                                <div style="float: left;margin-left: -32px;">
-                                                 <input type="radio" name="chkLimitExceed" id="chkLimitExceedNo" value="0"  class="chk_style"><label for="chkLimitExceedNo" style="color: #25AAE1; font-size:14px;margin-top: 8px;">No</label>
-                                                 <input type="radio" name="chkLimitExceed" id="chkLimitExceedYes" value="1" class="chk_style"><label for="chkLimitExceedYes" style="color: #25AAE1; font-size:14px;">Yes</label>
-                                                 <input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;margin-top: 6px;width: 60px;height: 24px;display:none" />
-                                                <span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <script type="text/javascript">
-                                        $(document).ready(function()
-                                        {
-                                            $("input[name='chkLimitExceed']").change(function ()
-                                            {
-                                                var value = this.value;
-                                                if(value == 1)
-                                                {
-                                                    $("#txtLimitExceed").show();
+                    <tr>
+                  		<td colspan="4">
+							<table style="background-color: #ECEDEE; width: 100%; text-align: center;" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="center" style="width: 25%;">
+										<select id ="attr_limit" name="attr_limit" style="height: 36px;width: 60px;" placeholder="Limit">
+											<option value="">Limit</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+										<span style="color:red; visibility: hidden;" id="spnChooseLimit">*</span>	
+									</td>
+									<td align="left" valign="middle" style="width: 35%;">
+										<div style="color: #25AAE1; font-size:14px; margin-left: 5px;">Charge extra if limit exceeded</div>
+									</td>
+									<td align="left" style="width: 40%;">
+										<div style="margin-left: 5px;">
+											<input type="radio" name="chkLimitExceed" id="chkLimitExceedNo" value="0"  class="chk_style"><label for="chkLimitExceedNo" style="color: #25AAE1; font-size:14px;">No</label>
+											<input type="radio" name="chkLimitExceed" id="chkLimitExceedYes" value="1" class="chk_style"><label for="chkLimitExceedYes" style="color: #25AAE1; font-size:14px;">Yes</label>
+											<input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;height: 24px; width: 50px; display:none" />
+											<span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<script type="text/javascript">
+					$(document).ready(function()
+					{
+						$("input[name='chkLimitExceed']").change(function ()
+						{
+							var value = this.value;
+							if(value == 1)
+							{
+								$("#txtLimitExceed").show();
 
                                                 }
                                                 else
@@ -136,7 +146,7 @@
 					</tr>
 					<tr style="height: 50px;">
 						<td colspan="4">
-							<input type="text" id="txtAttTitle" name="txtAttTitle" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 320px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnAttTitleReq">*</span>
+							<input type="text" id="txtAttName" name="txtAttName" placeholder="Admin Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden;" id="spnNameReq">*</span>
 						</td>
 					</tr>
 					<tr style="height: 5px;">
@@ -243,71 +253,226 @@
 						<td colspan="4">
 
 							<script language="javascript" type="text/javascript">
-								function deleteOption(pRowID)
+								function makeString()
 								{
-									var pRowID1 = document.getElementById(pRowID);
-									$(pRowID1).hide();
-									$(pRowID1).hide();
-									mText = "|"+pRowID.replace("ewo_qc", "~");
-									mText = mText.replace("ewo_qc", "~");
-									mText = mText.replace("|tr", "|");
-									mText = mText.replace(/\//g, ' ');
-									$("#hdnOptions").val($("#hdnOptions").val().replace(mText, ""));
+									var mStr = "";
+									if ($("#attr_choose").val() == 4)
+									{
+										mStr = $("#txtAttTitle").val();
+										if ($("#attr_limit").val()!="")
+										{
+											mStr = mStr+" (up to "+$("#attr_limit option:selected").text()+")";
+										}
+									}
+									else if ($("#attr_choose").val() != "")
+									{
+										mStr = $("#attr_choose option:selected").text(); 
+										if ($("#attr_limit").val()!="")
+										{
+											mStr = mStr+" up to "+$("#attr_limit option:selected").text()+' '+$("#txtAttTitle").val();
+										}
+										else
+										{
+											mStr = mStr+" "+$("#txtAttTitle").val();
+										}
+									}
+									else
+									{
+										mStr = "";
+										if ($("#attr_limit").val()!="")
+										{
+											mStr = mStr+" up to "+$("#attr_limit option:selected").text()+' '+$("#txtAttTitle").val();
+										}
+										else
+										{
+											mStr = mStr+" "+$("#txtAttTitle").val();
+										}
+									}
+									
+									$("#span_attr_name").text(mStr);
 								}
 								
+                                function deleteOption(pRowID)
+                                {
+                                    var pRowID1 = document.getElementById(pRowID);
+                                    $(pRowID1).hide();
+                                    $(pRowID1).hide();
+                                    mText = "|"+pRowID.replace("ewo_qc", "~");
+                                    mText = mText.replace("ewo_qc", "~");
+                                    mText = mText.replace("|tr", "|");
+                                    mText = mText.replace(/\//g, ' ');
+                                    $("#hdnOptions").val($("#hdnOptions").val().replace(mText, ""));
+
+                                    //Saad change 25-Sept-2014
+                                    var editIdHiddenValue = $('#hdnEditOptionId').val();
+                                    if(editIdHiddenValue == pRowID) {
+                                        cancelEditAttributeOption();
+                                    }
+                                }
+
+                                // Saad - 25-Sept-2014 -- Edit Attribute Option
+                                function editAttributeOption(optionRowId)
+                                {
+                                    var tableRow = document.getElementById(optionRowId);
+                                    var rowColumns = $(tableRow).find('td');
+                                    var optionName = $(rowColumns[1]).text();
+                                    var optionPrice =  $(rowColumns[2]).text();
+                                    var isOptionDefaultSelected =  $(rowColumns[3]).text();
+                                    $('#txtAttSubTitle').val(optionName);
+                                    if(optionPrice==="NA"){
+                                        $('#txtAttPrice').val('');
+                                    }else{
+                                        $('#txtAttPrice').val(optionPrice);
+                                    }
+
+                                    if(isOptionDefaultSelected != 'No') {
+                                        $('#chkAttDef').attr('checked', true);
+                                    }else{
+                                        $('#chkAttDef').attr('checked', false);
+                                    }
+
+                                    $('#btnUpdateAttr').attr('onclick','updateAttributeOption("'+optionRowId+'");');
+                                    $('#hdnEditOptionId').val(optionRowId);
+                                    $('#btnAddAttr').hide();
+                                    $('#btnUpdateAttr').show();
+                                    $('#btnCancelAttr').show();
+                                    
+                                }
+
+                                // Saad - 25-Sept-2014 -- Cancel Editing Attribute Option
+                                function cancelEditAttributeOption()
+                                {
+                                    $("#spnDup").hide();
+                                    $('#txtAttSubTitle').val('');
+                                    $('#txtAttPrice').val('');
+                                    $('#hdnEditOptionId').val('');
+                                    $('#chkAttDef').attr('checked', false);
+
+                                    $('#btnAddAttr').show();
+                                    $('#btnUpdateAttr').hide();
+                                    $('#btnCancelAttr').hide();
+                                    
+                                }
+
+                                // Saad - 25-Sept-2014 -- Update Attribute Option
+                                function updateAttributeOption(optionRowId)
+                                {
+                                    var tableRow = document.getElementById(optionRowId);
+                                    var rowColumns = $(tableRow).find('td');
+                                    
+                                    var currentOptionName = $(rowColumns[1]).text();
+                                    //var currentOptionPrice =  $(rowColumns[2]).text();
+                                    //var currentOptionDefaultSelected =  $(rowColumns[3]).text();
+
+                                    var updatedOptionName = $.trim($('#txtAttSubTitle').val());
+                                    var updatedOptionPrice =  $('#txtAttPrice').val();
+                                    var isOptionDefaultSelected =  $('#chkAttDef').is(':checked');
+                                    
+                                    //var currentValForHiddenField = "|"+currentOptionName+"~"+currentOptionPrice+"~"+currentOptionDefaultSelected;
+
+                                    $("#spnDup").hide();
+
+                                    // Check if empty field for attribute
+                                    if ((updatedOptionName == "") || (updatedOptionName == 'Example - "Hot Sause"'))
+                                    {
+                                        $("#spnTitleReq").css("visibility", "visible");
+                                        $("#txtAttSubTitle").focus();
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        $("#spnTitleReq").css("visibility", "hidden");
+                                    }
+
+                                    // Check if user updated option name
+                                    if(currentOptionName.toLowerCase() !== updatedOptionName.toLowerCase())
+                                    {
+                                        // Check updated name of option in hidden field in order to make sure no duplicate name for options
+                                        if ($.trim($("#hdnOptions").val()).toLowerCase().indexOf("|"+updatedOptionName.toLowerCase()+"~")>=0)
+                                        {
+                                            $("#spnDup").show();
+                                            $("#txtAttSubTitle").focus();
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            $("#spnDup").hide();
+                                        }
+                                    }
+
+                                    var updatedOptionPriceFixedValue = "NA";
+                                    if ($.trim(updatedOptionPrice)!="")
+                                    {
+                                        updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
+                                    }
+
+                                    var updatedOptionDefaultValue = "No";
+                                    if (isOptionDefaultSelected)
+                                    {
+                                        updatedOptionDefaultValue = "Yes";
+                                    }
+
+                                    $(rowColumns[1]).text(updatedOptionName);
+                                    $(rowColumns[2]).text(updatedOptionPriceFixedValue);
+                                    $(rowColumns[3]).text(updatedOptionDefaultValue);
+
+                                    //var updatedValForHiddenField = "|"+updatedOptionName+"~"+mPrice+"~"+updatedOptionDefaultValue;
+
+                                    var allOptionsArray = $("#hdnOptions").val().split('|');
+                                    var updatedOptionsArray = new Array();
+                                    updatedOptionsArray[0] = allOptionsArray[0];
+                                    
+                                    for(i = 1; i < allOptionsArray.length; i++){
+
+                                        var attributeValues = allOptionsArray[i].split('~');
+                                        if(attributeValues[0] === currentOptionName){
+                                            updatedOptionsArray[i] = updatedOptionName+"~"+updatedOptionPriceFixedValue+"~"+updatedOptionDefaultValue;
+                                        }else{
+                                            updatedOptionsArray[i] = allOptionsArray[i];
+                                        }
+                                    }
+
+                                    var updatedValue = updatedOptionsArray.join('|');
+                                    
+                                    $("#hdnOptions").val(updatedValue);
+                                    var updatedId = "tr"+updatedOptionName.replace(/ /g,"/")+"ewo_qc"+updatedOptionPriceFixedValue+"ewo_qc"+updatedOptionDefaultValue;
+
+                                    $(tableRow).find('#imgAttEdit').attr('onclick','editAttributeOption("'+updatedId+'");');
+                                    $(tableRow).find('#imgAttDel').attr('onclick','deleteOption("'+updatedId+'");');
+
+                                    $(tableRow).attr('id',updatedId);
+                                    
+                                    var tableRow2 = document.getElementById("2"+optionRowId);
+                                    $(tableRow2).attr('id','2'+updatedId);
+                                    //$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+                                    
+                                    cancelEditAttributeOption();
+                                    
+                                }
 								$(document).ready(function()
 								{
 									$("#attr_choose").change(function()
-										{
-											if($("#attr_choose").val()!="" && $("#attr_choose").val()!= 4)
-											{
-												$("#span_Choose").text($( "#attr_choose option:selected" ).text())
-                                                                                                $('#txtAttName').width(160);
-											}
-                                                                                        else if($("#attr_choose").val()== 4)
-                                                                                        {
-                                                                                                $('#txtAttName').width(200);
-                                                                                                $( "#span_Choose" ).text('Type your message here');
-                                                                                                $( "#span_limit" ).text('');
-                                                                                                $("#span_attr_name").text('');
-                                                                                        }
-											else
-											{
-												$( "#span_Choose" ).text('');
-                                                                                                $('#txtAttName').width(160);
-											}
-										});
+									{
+										makeString();
+										$("#txtAttTitle").focus();	
+									});
 
-										$("#txtAttName").focusout(function()
-										{
-											if($( "#attr_limit" ).text()!="" && $("#attr_choose").val()!= 4)
-											{
-												$("#span_attr_name").text(' '+$("#txtAttName").val());
-											}
-											else
-											{
-												$("#span_attr_name").text('');
-											}
-										});
-
-										$("#attr_limit").change(function()
-										{
-											$("#span_limit").text(' '+$( "#attr_limit option:selected" ).text());
-											if($("#attr_limit").val()!="" && $("#attr_choose").val()!= 4)
-											{   
-												$( "#span_limit" ).text(" up to "+$( "#attr_limit option:selected" ).text());
-											}
-											else
-											{
-												$( "#span_limit" ).text('')
-											}
-
-										});
-										
-									$("#txtAttPrice,#txtLimitExceed").keydown(function (e) {
+									$("#txtAttTitle").focusout(function()
+									{
+										makeString();
+									});
+									
+									$("#attr_limit").change(function()
+									{
+										makeString();
+									});
+									
+									$("#txtAttPrice,#txtLimitExceed").keydown(function (e) 
+									{
 										if ($.inArray(e.keyCode, [173, 46, 8, 9, 27, 13, 110, 190, 109, 189]) !== -1 ||
 											(e.keyCode == 65 && e.ctrlKey === true) ||
-											(e.keyCode >= 35 && e.keyCode <= 39)) {
+											(e.keyCode >= 35 && e.keyCode <= 39)) 
+										{
 												 return;
 										}
 										if ((e.keyCode != 173) && (e.keyCode != 109) && (e.keyCode != 189))
@@ -319,13 +484,14 @@
 										}
 									});
 
-                                                                        $("#txtAttName,#txtAttTitle,#txtAttSubTitle").keypress(function(e) {
-                                                                                   var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
-                                                                                   var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (keyCode == 32) || (keyCode == 8 ));
-                                                                                   return ret;
-                                                                       });
+									$("#txtAttName,#txtAttTitle,#txtAttSubTitle").keypress(function(e) 
+									{
+									   var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+									   var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (keyCode == 32) || (keyCode == 8 ) || (keyCode == 9 ) || (keyCode == 127 ) || (keyCode == 37 ) || (keyCode == 39 ) || (keyCode == 46 ));
+									   return ret;
+									});
 
-								    $("#btnAddAttr").die('click').live('click', function() 
+									$("#btnAddAttr").die('click').live('click', function() 
 									{
 										$("#spnDup").hide();
 										if (($.trim($("#txtAttSubTitle").val())=="") || ($.trim($("#txtAttSubTitle").val())=='Example - "Hot Sause"'))
@@ -354,9 +520,7 @@
 										var mPrice = "NA";
 										if ($.trim($("#txtAttPrice").val())!="")
 										{
-											
-                                                                                        mPrice = Number($("#txtAttPrice").val()).toFixed(2);
-											
+											mPrice = Number($("#txtAttPrice").val()).toFixed(2);	
 										}
 										
 										var mDefault = "No";
@@ -366,7 +530,7 @@
 										}
 										
 										$("#hdnOptions").val($("#hdnOptions").val()+"|"+$("#txtAttSubTitle").val()+"~"+mPrice+"~"+mDefault);
-										$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+                                        					$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
 										$("#chkAttDef").attr("checked", false);
 										$("#txtAttSubTitle").val("");
 										$("#txtAttPrice").val("");
@@ -378,7 +542,11 @@
 									<td style="width: 40%;">
 									</td>
 									<td style="width: 60%; text-align: left !important;" align="left">
-										<input type="button" id="btnAddAttr" name="btnAddAttr" value="Add">&nbsp;<span style="color: red; display: none;" id="spnDup">Attribute already exists.</span>
+					                                        <input type="button" id="btnAddAttr" name="btnAddAttr" value="Add">
+					                                        <!-- Saad Change - 25-Sept-2014-->
+					                                        <input type="button" id="btnUpdateAttr" name="btnUpdateAttr" class="btnUpdateAttrOption" value="Update" style="display:none;">
+					                                        <input type="button" id="btnCancelAttr" name="btnCancelAttr" class="btnUpdateAttrOption" value="Cancel" onclick="cancelEditAttributeOption();" style="display:none;">
+					                                        &nbsp;<span style="color: red; display: none;" id="spnDup">Attribute already exists.</span>
 									</td>
 								</tr>
 							</table>
@@ -397,6 +565,7 @@
 									</td>
 									<td style="width: 90%;">
 										<input type="hidden" id="hdnOptions" name="hdnOptions" />
+                                            					<input type="hidden" id="hdnEditOptionId" name="hdnEditOptionId" />
 										<input type="hidden" id="hdnAttributes" name="hdnAttributes" />
 										<input type="hidden" id="updateAttributeSet1" name="updateAttributeSet1" />
 										<input type="hidden" id="hdnName" name="hdnName" />
@@ -491,7 +660,7 @@
 												$("#spnAttTitleReq").css("visibility", "hidden");
 												
 												var mSubCatID = <?=$_GET["sub_cat"];?>;
-												var mName = $("#span_Choose").text()+$("#span_limit").text()+$("#span_attr_name").text();
+												var mName = $("#span_attr_name").text();
 												var mOptionName = $("#txtAttTitle").val();
 												var mAttrFields = $("#attr_choose").val()+'~'+$("#txtAttName").val()+'~'+$("#attr_limit").val();
 												var prd_id = $("#prd_id").val();
@@ -603,18 +772,28 @@
 																			
 																			img.find('span').addClass("attr_delete");
 																			img.find('span').text('x');
-																			var attr_name = "attr_"+(document.getElementById('updateAttributeSet1').value).replace(/ /g,'');
-                                                                                                                                                        var atrtObject = document.getElementById(attr_name);
-																			$(atrtObject).remove();
-																			$("#attr-list_product").append('<li id=\'attr_' + mAttributeName.split(' ').join('') + '\' class="liAtribute"><a href="#dvAddAttribute" class="option_Name" style="margin-top:2px">'+mAttributeName+'</a> '+img.html()+'  <div style="clear:both"></div></li>');
-																			$('.noAttributesForProduct').hide();
-                                                                                                                                                        $("#btnSortAttribute").show();
-																			$('.option_Name').fancybox({
-																				  afterClose: function() {
-																					  emptyFancyBoxFields();
-																				  }
-																				});
-																			}
+                                                                                                                                                        if(document.getElementById('updateAttributeSet1').value =="")
+                                                                                                                                                        {
+                                                                                                                                                            $("#attr-list_product").append('<li id=\'attr_' + mAttributeName.split(' ').join('') + '\' class="liAtribute"><a href="#dvAddAttribute" class="option_Name" style="margin-top:2px">'+mAttributeName+'</a> '+img.html()+'  <div style="clear:both"></div></li>');
+                                                                                                                                                            $('.noAttributesForProduct').hide();
+                                                                                                                                                            $("#btnSortAttribute").show();
+                                                                                                                                                            $('.option_Name').fancybox({
+                                                                                                                                                                      afterClose: function() {
+                                                                                                                                                                              emptyFancyBoxFields();
+                                                                                                                                                                      }
+                                                                                                                                                            });
+                                                                                                                                                        }
+                                                                                                                                                        else
+                                                                                                                                                        {
+                                                                                                                                                            var attr_name = "attr_"+(document.getElementById('updateAttributeSet1').value).replace(/ /g,'');
+                                                                                                                                                            var atrtObject = document.getElementById(attr_name);
+                                                                                                                                                            $(atrtObject).attr('id','\'attr_' + mAttributeName.split(' ').join('') + '\'');
+                                                                                                                                                            $(atrtObject).find('a').text(mAttributeName);
+                                                                                                                                                            $(atrtObject).find('span').attr('attributeids',data);
+                                                                                                                                                            $(atrtObject).find('span').attr('display_name',mName);
+                                                                                                                                                            $(atrtObject).find('span').attr('option_name',mAttributeName);
+                                                                                                                                                        }
+																		}
 																	});
 																}
 																
@@ -643,9 +822,8 @@
 													});
 											});
                                                                                                        
-										   $('.option_Name').live("click",function()
-										   {
-											   
+										   	$(".option_Name").die('click').live('click', function() 
+										   	{   
 											   var option_Name = $(this).text();
 											   var subcatid = $("#hdnCatid").val();
 											   $("#updateAttributeSet1").val(option_Name);
@@ -697,15 +875,6 @@
 																	$("#txtAttName").val(AttrData[i]['display_Name']);
 																}
 
-																if($("#attr_choose").val() !="" && $("#attr_choose").val()!= 4)
-																{
-																	$("#span_Choose").text($("#attr_choose option:selected" ).text())
-																}
-																if($("#attr_limit").val() !="" && $("#attr_choose").val()!= 4)
-																{
-																	$("#span_limit").text(' up to '+$("#attr_limit option:selected" ).text())
-																}
-																$("#span_attr_name").text(' '+$("#txtAttName").val());
 
 																if(AttrData[i]['Required']== "1")
 																{
@@ -733,10 +902,10 @@
 																{
 																		mDefault = "Yes";
 																}
-
+																makeString();
 																hdnOptions  = hdnOptions+  "|"+AttrData[i]['Title'].replace("&#39;", "'")+"~"+mPrice+"~"+mDefault;
 
-																$("#tblOptions tr:last").after('<tr id="tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+AttrData[i]['Title'].replace("&#39;", "'")+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=deleteOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+AttrData[i]['Title'].replace("&#39;", "'")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+                                                                    								$("#tblOptions tr:last").after('<tr id="tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+AttrData[i]['Title'].replace("&#39;", "'")+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+AttrData[i]['Title'].replace("&#39;", "'")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
 															}
 															$("#hdnOptions").val(hdnOptions);
 														}
@@ -754,6 +923,13 @@
 
 										function emptyFancyBoxFields()
 										{
+					                                                // Saad changes 25-Sept-2014
+					                                                $('#btnAddAttr').show();
+					                                                $("#spnDup").hide();
+					                                                $('#btnUpdateAttr').hide();
+					                                                $('#btnCancelAttr').hide();
+					                                                $('#hdnEditOptionId').val('');
+
 											$("#hdnOptions").val('');
 											$("#chkAttDef").attr("checked", false);
 											$("#txtAttSubTitle").val("");
@@ -772,14 +948,12 @@
 											$("#username_availability_result").html('');
 											$("#hdnName").val('');
 											$('.validated_error').css('display','none');
-											$("#span_Choose").text('');
-											$("#span_limit").text('');
 											$("#span_attr_name").text('');
 											$("#attr_choose").val("");
 											$("#attr_limit").val("");
 											$("#txtLimitExceed").val("");
-										        $("#hdnAttributes").val("");
-                                                                                        $('#txtAttName').attr('placeholder','Name');
+										    $("#hdnAttributes").val("");
+                                            $('#txtAttName').attr('placeholder','Admin Name');
 										}
 										</script>
 										<input type="button" id="btnSave" name="btnSave" value="Save">
@@ -811,11 +985,9 @@
         <a class="fancyCopMenu" href="#TheFancyboxCopyMenu"></a>
         <div id="TheFancyboxCopyMenu" style="display:none;width:400px;min-height:250px;" >
             <div style="background-color: #25AAE1;font-size: 19px;color: white;text-align: left;padding-left: 7px;padding: 14px;border-radius: 5px;">
-              Copy Menu</div>
-            <div style="text-align: center;font-size: 17px;padding: 13px;">Restaurants</div>
-                    
-             <form action="admin_contents/products/copy_restaurant_menu.php" method="get" name="frmCopy" >
-              <div class='check_box_restaurant' style="margin-left: 10px;">
+              Select Restaurants</div>
+             <form action="admin_contents/products/copy_restaurant_menu.php?catid=<?php echo $_GET['catid']?>&menuid=<?php echo $_GET['menuid']?>&menu_name=<?php echo $_GET['menu_name']?>" method="get" name="frmCopy" >
+              <div class='check_box_restaurant' style="margin-left: 10px;margin-top: 15px;">
               <?php
                     $item_query = mysql_query("SELECT id,name from resturants where owner_id =(Select owner_id from resturants WHERE id = '".$Objrestaurant->id."') and id != '".$Objrestaurant->id."'");
                         while($itemRs = mysql_fetch_object($item_query)){
@@ -824,7 +996,14 @@
 
                <? }?>
                </div>
-                    <input type="hidden" value ="<?=$menu_id?>" id="hdnMenu_id" name="hdnMenu_id"/>
-                    <input type="submit" value="Copy Menu" id="btnCopyRestaurant" name="btnCopyRestaurant" class="cancel" >
+                    <input type="hidden" value ="<?=$_GET['menuid']?>" id="hdnMenu_id" name="hdnMenu_id"/>
+                    <input type="hidden" value ="<?=$_GET['catid']?>" id="hdnRestaurantID" name="hdnRestaurantID"/>
+                    <input type="hidden" value ="<?=$_GET['menu_name']?>" id="hdnMenuName" name="hdnMenuName"/>
+                    <?php if(mysql_num_rows($item_query)>0){?>
+                    <input type="submit" value="Copy Menu" id="btnCopyRestaurant" name="btnCopyRestaurant" class="cancel" style="margin-top: 60px;"><?php }
+                    else{?>
+                    <div style="text-align: center;font-size: 20px;padding: 13px;margin-top: 21px;">No restaurants available</div>
+                    <?php }
+                    ?>
              </form>
          </div>

@@ -318,13 +318,22 @@ function updateOrder(id){
 										else 
 										{
 											$price = ""; 
-											$price1 = ""; 
+											$price1 = "~"; 
 										}
-										echo $price1.", ";
+//--------------------------------------------------------------------Start NK(23-09-2014)------------------------------------------------------------                                                                                
+//										echo $price1.", ";
+//                                                                                echo '12345 --- ';print_r($price1);exit;
+                                                                                if(!isset($attribueArray[$t+1])){
+                                                                                echo $price1. " ";}else{echo $price1. ", ";}
+//--------------------------------------------------------------------End NK(23-09-2014)--------------------------------------------------------------                                                                                
 									}
 									else
 									{
-										echo(", ");
+//--------------------------------------------------------------------Start NK(23-09-2014)------------------------------------------------------------                                                                                
+//										echo ", ";
+                                                                            if(!isset($attribueArray[$t+1])){
+                                                                            echo " ";}else{echo ", ";}
+//--------------------------------------------------------------------End NK(23-09-2014)--------------------------------------------------------------
 									}
 								
 									
@@ -333,6 +342,7 @@ function updateOrder(id){
 								}
 								else
 								{
+									echo"<br/>";
 									$Option_Name=str_replace("Select","",str_replace("select","",$OptonNameRs[0]));
 									echo "<strong>".$Option_Name." "."</strong>";
 									$AttbuteShow=str_replace("^",'"',$ATrOptions[0]);
@@ -362,7 +372,7 @@ function updateOrder(id){
 										else 
 										{
 											$price = ""; 
-											$price1 = ""; 
+											$price1 = "~"; 
 										}
 										echo $price1.", ";
 									}
@@ -370,9 +380,6 @@ function updateOrder(id){
 									{
 										echo(", ");
 									}			
-									?>
-									<br> 
-						<?php 
 								}
 							}
 						}  

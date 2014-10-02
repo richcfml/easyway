@@ -278,7 +278,21 @@ $loop_index_check = FALSE;
 
                         mStrRe = mStrRe + '</i></td></tr>';
 /*------------------------------Naveed Start---------------------------------------------------*/
-                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+                        if (attribute.display_Name!=null)
+						{
+							if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
+							{
+                        		html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+							}
+							else
+							{
+		                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+							}
+						}
+						else
+						{
+	                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+						}
 /*------------------------------Naveed End---------------------------------------------------*/
                         if (attribute.Type == 1) {
                             html = html + '  <tr><td><select id="ddlAttr" attributeid="'+attribute.id+'" textboxid="txtDD'+attribute.id+'" type="select" name="' + attribute_name + '" class="inputAttrDD">';
@@ -1086,7 +1100,7 @@ $(document).ready(function()
 
                     if ($current_cat == $menulist->sub_cat_id || $firstindex == 0) {
                         ?>
-                        <div class="products_area" style="height: 40px; <?php if ($menulist->status!=1) { echo("display: none;"); }?>">
+                        <div class="products_area" style="height: 40px; <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ")) { echo("display: none;"); }?>">
                             <table style="margin: 0px; width: 100%;" cellpadding="0" cellspacing="0" border="0">
                                 <tr style="height: 40px;">
                                     <td style="width: 2%;">

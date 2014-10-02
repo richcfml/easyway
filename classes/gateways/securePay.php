@@ -18,6 +18,9 @@ echo "<pre>";print_r($response);echo "</pre>";
 			die();
 			} else {
 			$_SESSION['GATEWAY_RESPONSE']=$gw->responses['responsetext'];
+                        if (isset($api) && $api == true) {
+                            return;
+                        }
 			@mysql_close($mysql_conn);
 			header("location: ". $SiteUrl .$objRestaurant->url ."/?item=failed&test=1&response_code=".$response->response_code."" );exit;
  }

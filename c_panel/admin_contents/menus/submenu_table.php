@@ -92,9 +92,48 @@
                        	<img style="padding: 3px;" src="img/copy.png" alt="<?= $mRow["cat_id"] ?>" data-tooltip="Copy" id="submenu_Copy_<?= $mRow["cat_id"] ?>" class="submenu_item_Copy"/>
 		       			<img style="padding: 2px;" column="<?=$mColumn?>" rid="<?=$Objrestaurant->id?>" mid="<?=$menu_id?>" src="img/delete_icon2.png" alt="<?= $mRow["cat_id"] ?>" data-tooltip="Delete" id="submenu_Delete_<?= $mRow["cat_id"] ?>" class="submenu_item_Delete"/>
                     </div>
-                   <div style="text-align: center;color: #5B5B5B;width: 300px;float: left;margin-top: 4px;"><span class ="lblCat" style="font-weight: bold; font-size: 16px;cursor: pointer;" id="<?= $mRow["cat_id"] ?>">
-
-                <?= str_replace("\\", "", $mRow["cat_name"]) ?>
+                   <div style="text-align: center;color: #5B5B5B;width: 300px;float: left;margin-top: 4px;">
+				   	<span class ="lblCat" style="font-weight: bold; font-size: 16px;cursor: pointer;" id="<?= $mRow["cat_id"] ?>">
+						<table style="width: 90%; margin: 0px;" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td style="width: 40%; text-align: right;" align="right">
+									<?php 
+									if ($mRow['status'] == 1) 
+									{
+									?>
+										<img src="img/enable_submenu.png" width="16" height="16" border="0" data-tooltip="Enabled" class ="rdb_statusSM" alt="<?= $mRow["cat_id"] ?>" status="<?= $mRow["status"] ?>" style="cursor: pointer; cursor: hand;" />	
+									<?php 
+									} 
+									else if ($mRow['status'] == 0) 
+									{
+									?>
+										<img src="img/disable_submenu.png" width="16" height="16" border="0" data-tooltip="Disabled" class ="rdb_statusSM" alt="<?= $mRow["cat_id"] ?>" status="<?= $mRow["status"] ?>" style="cursor: pointer; cursor: hand;"/>
+									<?php 
+									} 
+									?>
+								</td>
+								<td style="width: 2%;">
+								</td>
+								<td style="width: 58%; text-align: left;" align="left;">
+									<?php
+									if ($mRow['status'] == 0) 
+									{
+									?>
+										<span style="color: #E8E8E8;" id="spn<?=$mRow['cat_id']?>">
+									<?php
+									}
+									else
+									{
+									?>
+										<span id="spn<?=$mRow['cat_id']?>">
+									<?php
+									}
+									?>
+			                				<?= str_replace("\\", "", $mRow["cat_name"]) ?>
+									</span>		
+								</td>
+							</tr>
+						</table>
                     </span>
 
                    <i class="fa fa-minus collapseImage"  data-tooltip="collapse Menu" <?if(mysql_num_rows($mResPr) == 0){ ?>style="display:none"<?}?>></i>
@@ -105,7 +144,10 @@
                  </div>
                     <div class="toggleSubmenu">
                     <?php $mRowPr1 = $mRow['products'];
-                    foreach ($mRowPr1 as $mRowPr) {
+                    if (count($mRowPr1)>0)
+					{
+                   		foreach ($mRowPr1 as $mRowPr) 
+						{
                     ?>
                         <ul id="tblS" class="clsS">
                             <li id="liPrd" class="liPrd">
@@ -158,7 +200,7 @@
                                                         <td style=" font-size: 12px;float:left;margin-left: 20px;">
 
 
-                                                            <div <? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } { ?>class="enable-menu"<? } ?>><?= "$" . $mRowPr["retail_price"] ?></div>
+                                                            <div <? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } { ?>class="enable-menu"<? } ?>><?= $currency . $mRowPr["retail_price"] ?></div>
 
                                                         </td>
                                                     </tr>
@@ -230,8 +272,16 @@
                                     </ul>
 
                     <?php
-                                                        }
+                    	}
+					}
+					else
+					{
                     ?>
+					 	<ul id="tblS" class="clsS" style="min-height: 3px;">
+                        </ul>
+					<?php
+					}
+					?>
                    </div>
                 </li>
                 <?php

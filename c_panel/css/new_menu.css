@@ -1089,6 +1089,22 @@ img.BodyContainer {
     background-color: #2295c5;
 }
 
+.btnUpdateAttrOption
+{
+    width: 100px;
+    border: 1px solid #25AAE1;
+    color: #FFFFFF;
+    background-color: #25AAE1;
+    display: inline-block;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
+.btnUpdateAttrOption:hover
+{
+    background-color: #2295c5;
+}
+
 #btnSave
 {
     width: 74px;

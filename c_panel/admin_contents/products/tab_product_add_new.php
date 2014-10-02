@@ -353,6 +353,7 @@ if($_POST['cropimg'])
                              <input type="hidden" id="w" name="w" />
                              <input type="hidden" id="h" name="h" />
                              <span id="cropimg" name="cropimg" style="display: none;margin-left: 10px;" class="deleteimg" />Crop Image</span>
+							<input type="hidden" id="hdnScale" name="hdnScale" />
                         </td>
 
                     </tr>
@@ -433,8 +434,56 @@ if($_POST['cropimg'])
 																									$('#item_img').data('Jcrop').destroy();
 																							}
 																							
-																							$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
-																	                        $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+																							
+																							if ((mWidth>=450) || (mHeight>=450))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+																		                        $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+																								$('#hdnScale').val('4.5');
+																							}
+																							else if (((mWidth<450) && (mWidth>=400)) || ((mHeight<450) && (mHeight>=400)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/4)+"px");
+																								$('#item_img').css("height",Math.round(mHeight/4)+"px");;
+																								$('#hdnScale').val('4');
+																							}
+																							else if (((mWidth<400) && (mWidth>=300)) || ((mHeight<400) && (mHeight>=300)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/3.5)+"px");
+																		                        $('#item_img').css("height",Math.round(mHeight/3.5)+"px");;
+																								$('#hdnScale').val('3.5');
+																							}
+																							else if (((mWidth<300) && (mWidth>=250)) || ((mHeight<300) && (mHeight>=250)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/3)+"px");
+																	                        	$('#item_img').css("height",Math.round(mHeight/3)+"px");
+																								$('#hdnScale').val('3');
+																							}
+																							else if (((mWidth<250) && (mWidth>=220)) || ((mHeight<250) && (mHeight>=220)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/2.5)+"px");
+																	                        	$('#item_img').css("height",Math.round(mHeight/2.5)+"px");
+																								$('#hdnScale').val('2.5');
+																							}																							
+																							else if (((mWidth<220) && (mWidth>=190)) || ((mHeight<220) && (mHeight>=190)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/2)+"px");
+																	                        	$('#item_img').css("height",Math.round(mHeight/2)+"px");
+																								$('#hdnScale').val('2');
+																							}
+																							else if (((mWidth<190) && (mWidth>=120)) || ((mHeight<190) && (mHeight>=105)))
+																							{
+																								$('#item_img').css("width",Math.round(mWidth/1.5)+"px");
+																								$('#item_img').css("height",Math.round(mHeight/1.5)+"px");
+																								$('#hdnScale').val('1.5');
+																							}
+																							else
+																							{
+																								$('#item_img').css("width",Math.round(mWidth)+"px");
+																	                        	$('#item_img').css("height",Math.round(mHeight)+"px");
+																								$('#hdnScale').val('1');
+																							}
+																							
 																							
 																							$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
 																							$('#item_img').Jcrop
@@ -668,8 +717,54 @@ if($_POST['cropimg'])
 																			$('#item_img').data('Jcrop').destroy();
 																			}
 																			
-																			$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
-													                        $('#item_img').css("height",Math.round(mHeight/4.5)+"px");	
+																			if ((mWidth>=450) || (mHeight>=450))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+																				$('#hdnScale').val('4.5');
+																			}
+																			else if (((mWidth<450) && (mWidth>=400)) || ((mHeight<450) && (mHeight>=400)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/4)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/4)+"px");;
+																				$('#hdnScale').val('4');
+																			}
+																			else if (((mWidth<400) && (mWidth>=300)) || ((mHeight<400) && (mHeight>=300)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/3.5)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/3.5)+"px");;
+																				$('#hdnScale').val('3.5');
+																			}
+																			else if (((mWidth<300) && (mWidth>=250)) || ((mHeight<300) && (mHeight>=250)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/3)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/3)+"px");
+																				$('#hdnScale').val('3');
+																			}
+																			else if (((mWidth<250) && (mWidth>=220)) || ((mHeight<250) && (mHeight>=220)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/2.5)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/2.5)+"px");
+																				$('#hdnScale').val('2.5');
+																			}																							
+																			else if (((mWidth<220) && (mWidth>=190)) || ((mHeight<220) && (mHeight>=190)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/2)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/2)+"px");
+																				$('#hdnScale').val('2');
+																			}
+																			else if (((mWidth<190) && (mWidth>=120)) || ((mHeight<190) && (mHeight>=105)))
+																			{
+																				$('#item_img').css("width",Math.round(mWidth/1.5)+"px");
+																				$('#item_img').css("height",Math.round(mHeight/1.5)+"px");
+																				$('#hdnScale').val('1.5');
+																			}
+																			else
+																			{
+																				$('#item_img').css("width",Math.round(mWidth)+"px");
+																				$('#item_img').css("height",Math.round(mHeight)+"px");
+																				$('#hdnScale').val('1');
+																			}	
 																			
 																			$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
 																			$('#item_img').Jcrop

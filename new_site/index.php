@@ -115,16 +115,17 @@
 			</script>   
         
 			<div style="float:left">
-				<div class="footer_Logo_Left"><a href="http://easywayordering.com"><img src="/images/Footer_Left_Logo.png" width="126px" border="0"></a></div>
+                <div class="footer_Logo_Left" style="width: 150px;height: 150px;"><a href="http://easywayordering.com"><img src="/images/Footer_Left_Logo.png" width="150px" height="150px" border="0"></a></div>
 				<div class="footer_Text_Left">Powered by Easy Way Ordering</div>
 			</div>
 		  
 			<?php 
-			if ($objRestaurant->reseller->company_name!="")
+                        $imgPath = $SiteUrl."images/logos_thumbnail/". @$objRestaurant->reseller->company_logo;
+			if ($objRestaurant->reseller->company_name!="" && @getimagesize($imgPath))
 			{ 
 			?>
            	<div style="float:right;">
-           		<div class="footer_Logo_Left"><a href="http://<?=$objRestaurant->reseller->company_logo_link?>"><img  src="/images/logos_thumbnail/<?= @$objRestaurant->reseller->company_logo?>" border="0"/></a></div>
+                    <div class="footer_Logo_Left" style="width: 150px;height: 150px;"><a href="http://<?=$objRestaurant->reseller->company_logo_link?>"><img  src=<?=$imgPath?> border="0" width="150px" height="150px" /></a></div>
            		<div class="footer_Text_Left">Distributed by <?=$objRestaurant->reseller->company_name?></div>
            	</div>
 			<?php 

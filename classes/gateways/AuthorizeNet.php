@@ -61,7 +61,16 @@ if(!isset($tokenization))
 		$_POST['x_exp_date']='';
 		
 		$response = $transaction->authorizeAndCapture();
-		 if ($response->approved) {
+    $response_array = array();
+    foreach($response as $key => $value){
+        $response_array[$key] = $value;        
+    }
+    
+    $result = ($response->approved == 1 ? 'Approved' : 'Not approved');
+    
+    Log::write("AuthorizeNet Response Array - Tokenization not set \nResult: ".$result, print_r($response_array, true), 'AuthorizeNet');
+		
+                if ($response->approved) {
 				$_POST['payment_method']=1;
 				$_POST['invoice_number']=$response->invoice_number;
 				$_POST['transaction_id']=$response->transaction_id;

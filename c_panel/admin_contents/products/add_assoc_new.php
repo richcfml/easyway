@@ -54,26 +54,75 @@ require_once("../../../includes/config.php");
         else {
 		if($_REQUEST['apply_subcat']) {
 
-		$scat_id = $_REQUEST['sub_cat_id'];
-		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
-		while($prodRs = mysql_fetch_array($prodQry)){
-			Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$_GET['product_id']."' ", 'menu', 1 , 'cpanel');
-			mysql_query("DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'");
+//		$scat_id = $_REQUEST['sub_cat_id'];
+//		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
+//		while($prodRs = mysql_fetch_array($prodQry)){
+//			Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$_GET['product_id']."' ", 'menu', 1 , 'cpanel');
+//			mysql_query("DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'");
+//
+//		}
+//
+//		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
+//		while($prodRs = mysql_fetch_array($prodQry)){
+//			$association_id = $_GET['itemcheck'];
+//                        $orderNo = 1;
+//			for($i=0; $i<count($_GET['itemcheck']); $i++) {
+//				if($prodRs['prd_id'] != $association_id[$i]) {
+//				$query = "INSERT INTO product_association SET product_id = '".$prodRs['prd_id']."', association_id = '".$association_id[$i]."',sortOrder = ".$orderNo."";
+//				mysql_query($query);
+//                                mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
+//                                $orderNo++;
+//				}
+//			}// end for
+//		}// end while
+                
+                // Saad Changes 24-Sept-2014 -
+                $subMenuId = $_GET['sub_cat_id'];
 
-		}
+                $selectedProductId = $_GET['product_id'];
+                //Delete all associated items for selected productId
+                Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$_GET['product_id']."' ", 'menu', 1 , 'cpanel');
+                mysql_query("DELETE FROM product_association where product_id = '".$selectedProductId."'");
+                // Update Has Associates for selected productId
+                Log::write("Update product association - add_assoc_new.php", "QUERY -- UPDATE product set HasAssociates=0 WHERE prd_id = " . $prodRs['prd_id'], 'menu', 1 , 'cpanel');
+                mysql_query("UPDATE product set HasAssociates=0 WHERE prd_id = " . $prodRs['prd_id'] . "");
+                    
+		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $subMenuId");
 
-		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
 		while($prodRs = mysql_fetch_array($prodQry)){
-			$association_id = $_GET['itemcheck'];
-                        $orderNo = 1;
-			for($i=0; $i<count($_GET['itemcheck']); $i++) {
-				if($prodRs['prd_id'] != $association_id[$i]) {
-				$query = "INSERT INTO product_association SET product_id = '".$prodRs['prd_id']."', association_id = '".$association_id[$i]."',sortOrder = ".$orderNo."";
-				mysql_query($query);
-                                mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
-                                $orderNo++;
-				}
-			}// end for
+                    $association_id = $_GET['itemcheck'];
+                    $countOfItemChecked = count($association_id);
+                    $isAssociationInserted = false;
+                    $maxOrderNo = 0;
+                    
+                    $maxOrderNoQuery = mysql_fetch_object(mysql_query("Select max(sortOrder) as maxOrder from product_association where product_id = ".$prodRs['prd_id']));
+
+                    if($maxOrderNoQuery->maxOrder != null) {
+                        // MaxOrder is present -- Get it and use it for other products;
+                        $maxOrderNo = $maxOrderNoQuery->maxOrder;
+                        $maxOrderNo++;
+                    }
+                    
+                    for($i=0; $i<$countOfItemChecked; $i++) {
+                        if($prodRs['prd_id'] != $association_id[$i]) {
+                            //echo "Select count(id) from product_association where product_id = ".$prodRs['prd_id']." && association_id = ".$association_id[$i]." <br/>";
+                            $isAssocAlreadyExist = mysql_query("Select 1 from product_association where product_id = '".$prodRs['prd_id']."'&& association_id = '".$association_id[$i]."'");
+
+                            if(mysql_num_rows($isAssocAlreadyExist)> 0) {
+                               // "Already exist, do nothing just move for another association"
+                            } else {
+                                // no entry in association for that particular product id, now insert it and move for another association
+                                $query = "INSERT INTO product_association SET product_id = ".$prodRs['prd_id'].", association_id = ".$association_id[$i].",sortOrder = ".$maxOrderNo."";
+                                mysql_query($query);
+                                $isAssociationInserted = true;
+                                $maxOrderNo++;
+                            }
+                        }
+                    }// end for
+                    if($isAssociationInserted) {
+                        //if association is inserted for product then also update their status
+                        mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
+                    }
 		}// end while
 	}
         else

@@ -168,51 +168,18 @@ $(document).ready(function() {
 
     $("#attr_chooseSM").change(function()
     {
-        if($("#attr_chooseSM").val()!="" && $("#attr_chooseSM").val()!= 4)
-        {
-            $("#span_ChooseSM").text($( "#attr_chooseSM option:selected" ).text())
-            $('#txtAttNameSM').width(160);
-        }
-        else if($("#attr_chooseSM").val()== 4)
-        {
-                
-                $('#txtAttNameSM').width(200);
-                $( "#span_ChooseSM" ).text('');
-                $( "#span_limitSM" ).text('');
-                $( "#span_ChooseSM" ).text('Type your message here');
-                $("#span_attr_name").text('');
-        }
-        else
-        {
-            $( "#span_ChooseSM" ).text('');
-            $('#txtAttNameSM').width(160);
-        }
+		makeStringSM();
+		$("#txtAttTitleSM").focus();	
     });
 
-    $("#txtAttNameSM").focusout(function()
+    $("#txtAttTitleSM").focusout(function()
     {
-        if($( "#attr_limitSM" ).text()!="" && $("#attr_chooseSM").val()!= 4)
-        {
-            $("#span_attr_nameSM").text(' '+$("#txtAttNameSM").val());
-        }
-        else
-        {
-            $("#span_attr_nameSM").text('');
-        }
+        makeStringSM();
     });
 
     $("#attr_limitSM").change(function()
     {
-        $("#span_limitSM").text(' '+$( "#attr_limitSM option:selected" ).text());
-        if($("#attr_limitSM").val()!="" && $("#attr_chooseSM").val()!= 4)
-        {   
-            $( "#span_limitSM" ).text(" up to "+$( "#attr_limitSM option:selected" ).text());
-        }
-        else
-        {
-            $( "#span_limitSM" ).text('')
-        }
-
+        makeStringSM();
     });
 
 
@@ -256,7 +223,7 @@ $(document).ready(function() {
             }
 
             $("#hdnOptionsSM").val($("#hdnOptionsSM").val()+"|"+$("#txtAttSubTitleSM").val()+"~"+mPrice+"~"+mDefault);
-            $("#tblOptionsSM tr:last").after('<tr id="tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitleSM").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=deleteOptionSM("tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDelSM" id="imgAttDelSM"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitleSM").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+            $("#tblOptionsSM tr:last").after('<tr id="tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitleSM").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOptionSM("tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEditSM" id="imgAttEditSM"/>&nbsp;<img onclick=deleteOptionSM("tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDelSM" id="imgAttDelSM"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitleSM").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
             $("#chkAttDefSM").attr("checked", false);
             $("#txtAttSubTitleSM").val("");
             $("#txtAttPriceSM").val("");
@@ -330,7 +297,45 @@ $(document).ready(function() {
 
      $('#description_menu').attr('placeholder','');
     });
-
+	
+	function makeStringSM()
+	{
+		var mStr = "";
+		if ($("#attr_chooseSM").val() == 4)
+		{
+			mStr = $("#txtAttTitleSM").val();
+			if ($("#attr_limitSM").val()!="")
+			{
+				mStr = mStr+" (up to "+$("#attr_limitSM option:selected").text()+")";
+			}
+		}
+		else if ($("#attr_chooseSM").val() != "")
+		{
+			mStr = $("#attr_chooseSM option:selected").text(); 
+			if ($("#attr_limitSM").val()!="")
+			{
+				mStr = mStr+" up to "+$("#attr_limitSM option:selected").text()+' '+$("#txtAttTitleSM").val();
+			}
+			else
+			{
+				mStr = mStr+" "+$("#txtAttTitleSM").val();
+			}
+		}
+		else
+		{
+			mStr = "";
+			if ($("#attr_limitSM").val()!="")
+			{
+				mStr = mStr+" up to "+$("#attr_limitSM option:selected").text()+' '+$("#txtAttTitleSM").val();
+			}
+			else
+			{
+				mStr = mStr+" "+$("#txtAttTitleSM").val();
+			}
+		}
+		
+		$("#span_attr_nameSM").text(mStr);
+	}
 
     $("#btnSaveSM").die('click').live('click', function()
     {
@@ -365,7 +370,7 @@ $(document).ready(function() {
            {
                subcatid = $("#hdn_subcatid").val();
            }
-            var mName = $("#span_ChooseSM").text()+$("#span_limitSM").text()+$("#span_attr_nameSM").text();
+            var mName = $("#span_attr_nameSM").text();
             var mOptionName = $("#txtAttTitleSM").val();
             var mAttrFields = $("#attr_chooseSM").val()+'~'+$("#txtAttNameSM").val()+'~'+$("#attr_limitSM").val();
             var add_to_price = 1;
@@ -524,7 +529,7 @@ $(document).ready(function() {
     });
 
 //Get Attribute data for Edit
-    $('.option_NameSM').live("click",function()
+	$(".option_NameSM").die('click').live('click', function() 
     {
 
 
@@ -580,16 +585,6 @@ $(document).ready(function() {
                             $("#txtAttNameSM").val(AttrData[i]['display_Name'].replace("&#39;", "'"));
                         }
 
-                        if($("#attr_chooseSM").val() !="" && $("#attr_chooseSM").val()!= 4)
-                        {
-                            $("#span_ChooseSM").text($("#attr_chooseSM option:selected" ).text())
-                        }
-                        if($("#attr_limitSM").val() !="" && $("#attr_chooseSM").val()!= 4)
-                        {
-                            $("#span_limitSM").text(' up to '+$("#attr_limitSM option:selected" ).text())
-                        }
-                        $("#span_attr_nameSM").text(' '+$("#txtAttNameSM").val());
-
                         if(AttrData[i]['Required']== "1")
                         {
                             $("#chkAttReqSM").prop('checked',true);
@@ -618,7 +613,7 @@ $(document).ready(function() {
 
                         hdnOptions  = hdnOptions+  "|"+AttrData[i]['Title'].replace("&#39;", "'")+"~"+mPrice+"~"+mDefault;
 
-                        $("#tblOptionsSM tr:last").after('<tr id="tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+AttrData[i]['Title'].replace("&#39;", "'")+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=deleteOptionSM("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDelSM" id="imgAttDelSM"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+AttrData[i]['Title'].replace("&#39;", "'")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+                        $("#tblOptionsSM tr:last").after('<tr id="tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+AttrData[i]['Title'].replace("&#39;", "'")+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOptionSM("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEditSM" id="imgAttEditSM"/>&nbsp;<img onclick=deleteOptionSM("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDelSM" id="imgAttDelSM"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
                     }
                     $("#hdnOptionsSM").val(hdnOptions);
                 }
@@ -635,7 +630,7 @@ $(document).ready(function() {
 
     //*****************focus and blur event*********************//
     $( "#txtAttNameSM" ).blur(function() {
-         $('#txtAttNameSM').attr('placeholder','Name');
+         $('#txtAttNameSM').attr('placeholder','Admin Name');
      });
 
      $( "#txtAttNameSM" ).focus(function() {
@@ -678,14 +673,160 @@ $(document).ready(function() {
     //Delete attribute option from fancy box
     function deleteOptionSM(pRowID)
     {
-            var pRowID1 = document.getElementById(pRowID);
-            $(pRowID1).hide();
-            $(pRowID1).hide();
-            mText = "|"+pRowID.replace("ewo_qc", "~");
-            mText = mText.replace("ewo_qc", "~");
-            mText = mText.replace("|tr", "|");
-            mText = mText.replace(/\//g, ' ');
-            $("#hdnOptionsSM").val($("#hdnOptionsSM").val().replace(mText, ""));
+        var pRowID1 = document.getElementById(pRowID);
+        $(pRowID1).hide();
+        $(pRowID1).hide();
+        mText = "|"+pRowID.replace("ewo_qc", "~");
+        mText = mText.replace("ewo_qc", "~");
+        mText = mText.replace("|tr", "|");
+        mText = mText.replace(/\//g, ' ');
+        $("#hdnOptionsSM").val($("#hdnOptionsSM").val().replace(mText, ""));
+
+        //Saad change 25-Sept-2014
+        var editIdHiddenValue = $('#hdnEditOptionIdSM').val();
+        if(editIdHiddenValue == pRowID) {
+            cancelEditAttributeOptionSM();
+        }
+    }
+
+    // Saad - 25-Sept-2014 -- Edit Attribute Option
+    function editAttributeOptionSM(optionRowId)
+    {
+        var tableRow = document.getElementById(optionRowId);
+        var rowColumns = $(tableRow).find('td');
+        var optionName = $(rowColumns[1]).text();
+        var optionPrice =  $(rowColumns[2]).text();
+        var isOptionDefaultSelected =  $(rowColumns[3]).text();
+        $('#txtAttSubTitleSM').val(optionName);
+        if(optionPrice==="NA"){
+            $('#txtAttPriceSM').val('');
+        }else{
+            $('#txtAttPriceSM').val(optionPrice);
+        }
+        
+        if(isOptionDefaultSelected != 'No') {
+            $('#chkAttDefSM').attr('checked', true);
+        }else{
+            $('#chkAttDefSM').attr('checked', false);
+        }
+
+        $('#btnUpdateAttrSM').attr('onclick','updateAttributeOptionSM("'+optionRowId+'");');
+        $('#hdnEditOptionIdSM').val(optionRowId);
+        $('#btnAddAttrSM').hide();
+        $('#btnUpdateAttrSM').show();
+        $('#btnCancelAttrSM').show();
+
+    }
+
+    // Saad - 25-Sept-2014 -- Cancel Editing Attribute Option
+    function cancelEditAttributeOptionSM()
+    {
+        $("#spnDupSM").hide();
+        $('#txtAttSubTitleSM').val('');
+        $('#txtAttPriceSM').val('');
+        $('#hdnEditOptionIdSM').val('');
+        $('#chkAttDefSM').attr('checked', false);
+
+        $('#btnAddAttrSM').show();
+        $('#btnUpdateAttrSM').hide();
+        $('#btnCancelAttrSM').hide();
+
+    }
+
+    // Saad - 25-Sept-2014 -- Update Attribute Option
+    function updateAttributeOptionSM(optionRowId)
+    {
+        var tableRow = document.getElementById(optionRowId);
+        var rowColumns = $(tableRow).find('td');
+
+        var currentOptionName = $(rowColumns[1]).text();
+        //var currentOptionPrice =  $(rowColumns[2]).text();
+        //var currentOptionDefaultSelected =  $(rowColumns[3]).text();
+
+        var updatedOptionName = $.trim($('#txtAttSubTitleSM').val());
+        var updatedOptionPrice =  $('#txtAttPriceSM').val();
+        var isOptionDefaultSelected =  $('#chkAttDefSM').is(':checked');
+
+        //var currentValForHiddenField = "|"+currentOptionName+"~"+currentOptionPrice+"~"+currentOptionDefaultSelected;
+
+        $("#spnDupSM").hide();
+
+        // Check if empty field for attribute
+        if ((updatedOptionName == "") || (updatedOptionName == 'Example - "Hot Sause"'))
+        {
+            $("#spnTitleReqSM").css("visibility", "visible");
+            $("#txtAttSubTitleSM").focus();
+            return;
+        }
+        else
+        {
+            $("#spnTitleReqSM").css("visibility", "hidden");
+        }
+
+        // Check if user updated option name
+        if(currentOptionName.toLowerCase() !== updatedOptionName.toLowerCase())
+        {
+            // Check updated name of option in hidden field in order to make sure no duplicate name for options
+            if ($.trim($("#hdnOptionsSM").val()).toLowerCase().indexOf("|"+updatedOptionName.toLowerCase()+"~")>=0)
+            {
+                $("#spnDupSM").show();
+                $("#txtAttSubTitleSM").focus();
+                return;
+            }
+            else
+            {
+                $("#spnDupSM").hide();
+            }
+        }
+
+        var updatedOptionPriceFixedValue = "NA";
+        if ($.trim(updatedOptionPrice)!="")
+        {
+            updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
+        }
+
+        var updatedOptionDefaultValue = "No";
+        if (isOptionDefaultSelected)
+        {
+            updatedOptionDefaultValue = "Yes";
+        }
+
+        $(rowColumns[1]).text(updatedOptionName);
+        $(rowColumns[2]).text(updatedOptionPriceFixedValue);
+        $(rowColumns[3]).text(updatedOptionDefaultValue);
+
+        //var updatedValForHiddenField = "|"+updatedOptionName+"~"+mPrice+"~"+updatedOptionDefaultValue;
+
+        var allOptionsArray = $("#hdnOptionsSM").val().split('|');
+        var updatedOptionsArray = new Array();
+        updatedOptionsArray[0] = allOptionsArray[0];
+
+        for(i = 1; i < allOptionsArray.length; i++){
+
+            var attributeValues = allOptionsArray[i].split('~');
+            if(attributeValues[0] === currentOptionName){
+                updatedOptionsArray[i] = updatedOptionName+"~"+updatedOptionPriceFixedValue+"~"+updatedOptionDefaultValue;
+            }else{
+                updatedOptionsArray[i] = allOptionsArray[i];
+            }
+        }
+
+        var updatedValue = updatedOptionsArray.join('|');
+
+        $("#hdnOptionsSM").val(updatedValue);
+        var updatedId = "tr"+updatedOptionName.replace(/ /g,"/")+"ewo_qc"+updatedOptionPriceFixedValue+"ewo_qc"+updatedOptionDefaultValue;
+
+        $(tableRow).find('#imgAttEditSM').attr('onclick','editAttributeOptionSM("'+updatedId+'");');
+        $(tableRow).find('#imgAttDelSM').attr('onclick','deleteOptionSM("'+updatedId+'");');
+
+        $(tableRow).attr('id',updatedId);
+        
+        var tableRow2 = document.getElementById("2"+optionRowId);
+        $(tableRow2).attr('id','2'+updatedId);
+        //$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
+
+        cancelEditAttributeOptionSM();
+
     }
 
     function isNumber(n)
