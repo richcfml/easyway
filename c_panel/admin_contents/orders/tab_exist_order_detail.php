@@ -221,7 +221,15 @@ function updateOrder(id){
 							$mPrice = ""; 
 						}
 						
-						echo($mPriceDisp.", ");
+						if ((trim($mPriceDisp)!="0") && (trim($mPriceDisp)!="$0"))
+						{
+							echo($mPriceDisp.", ");
+						}
+						else
+						{
+							echo(", ");
+						}
+					
 						
 						if (($mLimit>0) && ($mLimitPrice>0) && ($mLimitCount>$mLimit))
 						{

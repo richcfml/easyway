@@ -88,7 +88,7 @@ class product{
    public static function getproductsbyallcategories($menuid) 
 	{
 //		$mTime1 = time();
-        $query = "SELECT categories.cat_ordering, categories.cat_id, categories.cat_name, categories.cat_des AS cat_des"
+        $query = "SELECT categories.status, categories.cat_ordering, categories.cat_id, categories.cat_name, categories.cat_des AS cat_des"
                 ." FROM menus INNER JOIN categories ON menus.id = categories.menu_id"
                 ." WHERE menus.status=1 AND menus.id =".$menuid." Order by categories.cat_ordering";
         $catResult = mysql_query($query);
@@ -144,7 +144,14 @@ class product{
             $arrProductList[$mIndex]->item_image = $prodRow->item_image;
             $arrProductList[$mIndex]->cat_ordering = $arrCats[$prodRow->sub_cat_id]->cat_ordering;
             $arrProductList[$mIndex]->SortOrder = $prodRow->SortOrder;
-            $arrProductList[$mIndex]->display = "";
+			if (trim($arrCats[$prodRow->sub_cat_id]->status)=="0")
+			{
+				$arrProductList[$mIndex]->display = " style='display: none;' ";
+			}
+			else
+			{
+				$arrProductList[$mIndex]->display = "";
+			}
         	//set rest of the fields
             $mIndex++;
         }
