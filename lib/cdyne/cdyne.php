@@ -104,8 +104,8 @@ class SMSTrace
 	const USERCANCEL=7;
 	
 	public function parseSMS() 
-	{	 
-		global $cart, $loggedinuser, $objRestaurant, $function_obj, $objMail;
+	{
+		global $cart, $loggedinuser, $objRestaurant, $function_obj, $objMail, $objGO3;
 		global $easyway_id;
 		$this->reply_phone_number=$this->cydne->phonenumber;
 		$this->phone_number=$this->cydne->phonenumber;
@@ -154,7 +154,6 @@ class SMSTrace
 							mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_Order_Titles_3', 'SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))=[".strtolower(trim($mSMSTmp))."]')");
 						}
 					}*/
-					
 					$this->id=$result->id;
 					$this->phone_number=$result->phone_number;
 					$this->user_id=$result->user_id;
