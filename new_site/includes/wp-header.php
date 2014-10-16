@@ -15,7 +15,8 @@
     <link href="<? echo $css_path;  ?>facebox.css" media="screen" rel="stylesheet" type="text/css"/>
     <link href="<? echo $css_path;  ?>prettyPhoto.css" media="screen" rel="stylesheet" type="text/css"/>
 	<script src="<? echo $js_root;  ?>facebox.js" type="text/javascript"></script>
-
+	<script src="<? echo $js_root;  ?>crossdomain.js" type="text/javascript"></script>
+	
     <script language="javascript">
         jQuery(document).ready(function($) {
             $('a[rel*=facebox]').facebox();
@@ -25,7 +26,7 @@
             $(divname).show();
         }
         function hideDiv(divname){
-            $(divname).hid();
+            $(divname).hide();
         }
     </script>
 <?

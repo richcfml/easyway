@@ -1,4 +1,5 @@
 <?php
+$mDIDNumber = '';
 if(isset($_POST['submit']))
 {
 	$order_destination			 = @$_POST['order_destination'];
@@ -15,16 +16,42 @@ if(isset($_POST['submit']))
 		$did_number='0';
 	}
 	
-	mysql_query("UPDATE resturants SET order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
-  
- 	$Objrestaurant->order_destination=$order_destination;
+	$mDIDNumber = $did_number;
+	$mDupFlag = false;
+	
+	if ((trim($did_number!='')) && (trim($did_number)!='0') && (trim($did_number)!=trim($_POST["did_number_p"])))
+	{
+		$mDupQuery = "SELECT COUNT(*) AS DidCount FROM resturants WHERE TRIM(did_number)='".trim($did_number)."'";
+		$mDupRes = mysql_query($mDupQuery);
+		if (mysql_num_rows($mDupRes)>0)
+		{
+			$mDupRow = mysql_fetch_object($mDupRes);
+			if ($mDupRow->DidCount>0)
+			{
+				$mMessage = "Did number already exists in system.";
+				$mDupFlag = true;
+			}
+		}
+	}
+	
+	if (!$mDupFlag)
+	{
+		mysql_query("UPDATE resturants SET order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
+		$Objrestaurant->did_number=$did_number;
+		$mMessage = "Restaurant updated successfully.";
+	}
+	else
+	{
+		mysql_query("UPDATE resturants SET order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
+	}
+
+	$Objrestaurant->order_destination=$order_destination;
 	$Objrestaurant->rest_order_email_fromat=$email_fromat;
 	$Objrestaurant->payment_gateway=$payment_gateway;
 	$Objrestaurant->tokenization=$tokenization;
 	$Objrestaurant->authoriseLoginID=$payment_gateway_login_id;
 	$Objrestaurant->transKey=$payment_gateway_trans_Key;
- 	$Objrestaurant->refund_password=$refund_password;
-	$Objrestaurant->did_number=$did_number;
+	$Objrestaurant->refund_password=$refund_password;
 	$Objrestaurant->saveToSession();
 }
  
@@ -33,7 +60,15 @@ include "nav.php"; ?>
 <div class="form_outer" >
 	<form  method="post" action="" id="mailing_list" name="mailing_list" enctype="multipart/form-data">
   		<table width="650" border="0" cellpadding="4" cellspacing="0">
-     		<tr align="left" valign="top">
+		    <tr style="background-color: white !important;">
+				<td colspan="2" style="background-color: white !important;">
+					<span style="color: red;"><?=$mMessage?></span>
+				</td>
+    		</tr>
+     		<tr style="height: 10px;">
+				<td colspan="2"></td>
+    		</tr>
+			<tr align="left" valign="top">
       			<td width="200px">
 					Order destination
 				</td>
@@ -135,7 +170,8 @@ include "nav.php"; ?>
                     DID Number
                 </td>
                 <td>
-                    <input name="did_number" type="text" size="30" maxlength="30" id="did_number" value="<?= $Objrestaurant->did_number ?>" />
+                    <input name="did_number" type="text" size="30" maxlength="30" id="did_number" value="<?php if (trim($mDIDNumber)!="") { echo($mDIDNumber); } else { echo($Objrestaurant->did_number); } ?>" />
+					<input name="did_number_p" type="hidden" id="did_number_p" value="<?= $Objrestaurant->did_number ?>" />
                 </td>
             </tr>
             <tr>

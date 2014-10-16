@@ -218,6 +218,15 @@ class restaurant  {
 			 if($current_time >= $business_hours->open && $current_time <= $business_hours->close) {
 						$this->isOpenHour=1;
 			}
+                        
+                        if(strrpos($business_hours->open,"-") !== FALSE){
+                            $business_hours->open = "0000";
+                        }
+                        
+                        if(strrpos($business_hours->close,"-") !== FALSE){
+                            $business_hours->close = "0100";
+                        }
+
 			$this->openTime=strtotime($business_hours->open);
 			$this->closeTime=strtotime($business_hours->close);
                         if($this->isOpenHour==1){
@@ -246,6 +255,15 @@ class restaurant  {
 				  }else if($day->day == 6) {
 					   $day->dayName = 'Sunday';
 				  }
+
+                                if(strrpos($day->open,"-") !== FALSE){
+                                    $day->open = "0000";
+                                }
+
+                                if(strrpos($day->close,"-") !== FALSE){
+                                    $day->close = "0100";
+                                }
+
 				 $day->close=date("g:i A",strtotime($day->close));
 				 $day->open=date("g:i A",strtotime($day->open));
 				$arr_days[]=$day;

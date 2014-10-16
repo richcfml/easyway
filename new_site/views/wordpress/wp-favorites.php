@@ -12,18 +12,7 @@
 	color:#e35c00;
 }
 </style>
-<script language="javascript" type="text/javascript">
-	$(document).ready(function()	
-	{	
-		jQuery.fn.center = function () 
-		{
-				$(this).css("position","absolute");
-				$(this).css("top", $("#imgQF").offset().top + "px");
-				$(this).css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
-				return $(this);
-		}
-	});
-</script>
+
 <div style="border: 0px !important; background-color:#FFF;">
 	<div style="margin: 5px;">
 		<div style="vertical-align: top; text-align: left;">
@@ -94,8 +83,8 @@
 					$('.hrefTerms').click(function()
 					{  	
 						jQuery.facebox({div: '#dvLearnMore'});  
-					}); 
-					$('#facebox').center();
+					});
+					window.parent.postMessage('{"centered":3}', '*');
 				});
 			</script>
 			<a style="cursor: pointer; cursor: hand; text-decoration: none; font-size: 13px;" class="hrefLM" name="hrefLM" id="hrefLM"><span class="lMore">Learn More</span></a>
@@ -179,15 +168,32 @@
 				$mTip = $loggedinuser->arrFavorites[$mCount]->driver_tip;
 				$mTotal = $mSalesTax+$mTotal+$mTip;
 		?>
+				<script type="application/javascript" language="javascript">
+				
+				   	$("#hrefFavTitle").die('click').live("click", function()
+					{
+						var mCount = $(this).attr("count");
+						jQuery.facebox({ div: '<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&wp_api=favdetail&ajax=1&favoriteindex='+mCount });
+						window.parent.postMessage('{"centered":3}', '*');
+					});
+				   
+				   	$("#hrefFavTitle1").die('click').live("click", function()
+					{
+						var mCount = $(this).attr("count");
+						jQuery.facebox({ div: '<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&wp_api=favdetail&ajax=1&favoriteindex='+mCount });
+						window.parent.postMessage('{"centered":3}', '*');
+					});
+						
+				</script>
 				<tr>
 					<td align="left" valign="middle" width="29%">
-						<a rel="facebox2" href="<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&wp_api=favdetail&ajax=1&favoriteindex=<?=$mCount?>" class="favTitle"><?= $favorite->title ?></a>
+						<a id="hrefFavTitle" count="<?=$mCount?>" style="cursor: hand; cursor: pointer;" class="favTitle"><?= $favorite->title ?></a>
 					</td>
 					<td align="left" valign="middle" width="12%">
 						<span class="favPrice"><?= '$'.$mTotal ?></span>
 					</td>
 					<td align="center" valign="middle" width="52%">
-						<a rel="facebox2" href="<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&wp_api=favdetail&ajax=1&favoriteindex=<?=$mCount?>" class="favTitle">view order / reorder</a>
+						<a style="cursor: hand; cursor: pointer;" count="<?=$mCount?>" id="hrefFavTitle1" class="favTitle">view order / reorder</a>
 					</td>
 					<td align="left" valign="middle" width="7%">
 						<a class="removefavoritesorder"  href="<?=$SiteUrl?><?= $objRestaurant->url ."/"?>?item=cart&wp_api=cart&removefavoritesindex=<?=$favoritesindex?>" title="Remove from favorites"><img src="../images/Trashbin.png"></a>
@@ -224,7 +230,16 @@
 						if (($objRestaurant->did_number!='0') && (trim($objRestaurant->did_number)!='') && (strlen($objRestaurant->did_number)>0))
 						{ 
 					?>
-						<a rel="facebox2" href="?mod=resturants&wp_api=resturants&item=reordercm&ajax=1" style="color:#36C; font-size: 12px; text-decoration: none;">EDIT QUICK FAVORITE PREFERENCES</a>
+						<script type="application/javascript" language="javascript">
+				
+							$("#hrefEditQFP").die('click').live("click", function()
+							{
+								jQuery.facebox({ div: '?mod=resturants&wp_api=resturants&item=reordercm&ajax=1' });
+								window.parent.postMessage('{"centered":3}', '*');
+							});
+								
+						</script>
+						<a id="hrefEditQFP" style="color:#36C; font-size: 12px; cursor: hand; cursor: pointer; text-decoration: none;">EDIT QUICK FAVORITE PREFERENCES</a>
 					<?php
 						}
 					}

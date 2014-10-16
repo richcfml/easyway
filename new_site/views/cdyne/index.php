@@ -1,6 +1,8 @@
 <?  
 if(isset($_POST['SMSSent']) && $_POST['SMSSent'])
 {
+	//outgoing message has been queued for sending
+	
 	$messageid = $_POST['MessageID'];
 	$referenceid =	$_POST['ReferenceID'];
 	$fromphonenumber = $_POST['FromPhoneNumber'];

@@ -151,6 +151,7 @@ if($_POST) {
 				mysql_query( $license_update_qry_srt );
 				
 			}
+                        $errMessage="Reseller Added Successfully";
 		}	
 		?>
 <!--------------------------------Start------------------------------------------------->
@@ -173,7 +174,7 @@ setTimeout("leave()", 2000);
 			die("ERROR: ".mysql_error()."<br/><br/><br/><br/><br/><br/>"); 
 		}
 	}
-            $errMessage="Reseller Added Successfully";
+            
 }
 ?>
 

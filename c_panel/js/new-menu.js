@@ -1252,6 +1252,7 @@ $(function() {
                                         el.attr("title","Disable");
                                         el.attr("src","../c_panel/img/enable_submenu.png");
                                         el.attr("status","1");
+										el.attr("data-tooltip","Disabled");
                                     }
                                     else if(data=='Deactivate')
                                     {
@@ -1259,6 +1260,7 @@ $(function() {
 										el.attr("title","Enable");
                                         el.attr("src","../c_panel/img/disable_submenu.png");
                                         el.attr("status","0");
+										el.attr("data-tooltip","Enabled");
                                     }
                                 }
                             });
@@ -1314,7 +1316,7 @@ $(function() {
 							
                         $("#show_photo").show();
                         $("#show_photo_before").hide();
-                        $("#item_img").attr("src","../c_panel/img/"+mImageSrc);
+                        $("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc);
                         $.fancybox.close();
                         $("#deleteimg").show();
                         $("#cropimg").show();
@@ -1374,8 +1376,8 @@ $(function() {
 							$('#item_img').css("height",Math.round(mHeight)+"px");
 							$('#hdnScale').val('1');
 						}
-						
-                        $('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc);
+
+                        $('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc);
                         $('#item_img').Jcrop({addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
 
         });
@@ -1495,8 +1497,8 @@ $(function() {
                     {
                         var ext = data.split("/").pop(-1);
                         if(data.indexOf('prd') < 0){
-                            $("#item_img").attr("src","../c_panel/img/"+ext+"?time="+newDate.getTime());
-                            $(".jcrop-holder img").attr("src","../c_panel/img/"+ext+"?time="+newDate.getTime());
+                            $("#item_img").attr("src","../c_panel/tempimages/"+ext+"?time="+newDate.getTime());
+                            $(".jcrop-holder img").attr("src","../c_panel/tempimages/"+ext+"?time="+newDate.getTime());
                         }
                         else{
                         $("#item_img").attr("src","../images/item_images/"+ext+"?time="+newDate.getTime());
@@ -1601,7 +1603,7 @@ $("#upd_file_btn").die('click').live("click", function(){
 							
                             $("#show_photo").show();
                             $("#show_photo_before").hide();
-                            $("#item_img").attr("src","../c_panel/img/"+mImageSrc);
+                            $("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc);
                             $.fancybox.close();
                             $("#deleteimg").show();
                             $("#cropimg").show();
@@ -1662,8 +1664,8 @@ $("#upd_file_btn").die('click').live("click", function(){
 								$('#item_img').css("height",Math.round(mHeight)+"px");
 								$('#hdnScale').val('1');
 							}
-																							
-                            $('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc);
+
+                            $('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc);
                             $('#item_img').Jcrop({addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]});
 
                             $.fancybox.close();
@@ -2005,6 +2007,7 @@ $("#upd_file_btn").die('click').live("click", function(){
 
                         img.find('span').addClass("related_delete");
                         img.find('span').text('x');
+                        $('#related_'+assoc_id).remove();
                         $("#related-list_product").append('<li id=\'related_' + assoc_id + '\' class="liRelated"><span style="width:80%;float:left;margin-top:4px">'+ItemName+'</span>'+img.html()+'  <div style="clear:both"></div></li>');
 			$("#typeRelatedItemName").val('');
                         $("#typeRelatedItemName").trigger('liszt:updated');

@@ -51,10 +51,11 @@ if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
     $scat_id = $_REQUEST['subcat_id'];
     $attribute_id = $_GET['itemcheckAttribute'];
     for ($i = 0; $i < count($_GET['itemcheckAttribute']); $i++) {
-        $getattr = mysql_query("Select * from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid =" . $scat_id . "");
+        $getattr = mysql_query("Select *,`Default`+0 AS `Default1` from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid =" . $scat_id . "");
         while ($attr = mysql_fetch_array($getattr)) {
-            // echo "INSERT INTO attribute SET product_id = '".$_GET['product_id']."', option_name = '".$attribute_id[$i]."',Title = '".$attr['Title']."',Price = '".$attr['Price']."',option_display_preference = '".$attr['option_display_preference']."',apply_sub_cat=0,rest_price = '".$attr['rest_price']."'";exit;
-            $query = "INSERT INTO attribute SET productid = '" . $_GET['prod_id'] . "', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat=0,Type	 = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name = '".$attr['display_Name']."'";
+            $default = $attr['Default1']?1:0;
+            //$query = "INSERT INTO attribute SET productid = '" . $_GET['prod_id'] . "', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat=0,Type	 = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name = '".$attr['display_Name']."'";
+            $query = "INSERT INTO attribute SET productid = '" . $_GET['prod_id'] . "', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat=0,Type	 = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name='" . $attr['display_Name'] . "' ,`Default`= " . $default . " ,add_to_price='" . $attr['add_to_price'] . "',attr_name ='" . $attr['attr_name'] . "',extra_charge ='" . $attr['extra_charge'] . "'";
             Log::write("Add new attribute - add_attribute_new.php", "QUERY --".$query, 'menu', 1 , 'cpanel');
             mysql_query($query);
             Log::write("Set product HasAttributes=1 - add_attribute_new.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['prod_id'] . "", 'menu', 1 , 'cpanel');

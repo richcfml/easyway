@@ -92,7 +92,7 @@
                        	<img style="padding: 3px;" src="img/copy.png" alt="<?= $mRow["cat_id"] ?>" data-tooltip="Copy" id="submenu_Copy_<?= $mRow["cat_id"] ?>" class="submenu_item_Copy"/>
 		       			<img style="padding: 2px;" column="<?=$mColumn?>" rid="<?=$Objrestaurant->id?>" mid="<?=$menu_id?>" src="img/delete_icon2.png" alt="<?= $mRow["cat_id"] ?>" data-tooltip="Delete" id="submenu_Delete_<?= $mRow["cat_id"] ?>" class="submenu_item_Delete"/>
                     </div>
-                   <div style="text-align: center;color: #5B5B5B;width: 300px;float: left;margin-top: 4px;">
+                   <div style="text-align: center;color: #5B5B5B;width: 300px;float: left;margin-top: 4px; background:#d0d0d0; ">
 				   	<span class ="lblCat" style="font-weight: bold; font-size: 16px;cursor: pointer;" id="<?= $mRow["cat_id"] ?>">
 						<table style="width: 90%; margin: 0px;" cellpadding="0" cellspacing="0" border="0">
 							<tr>
@@ -129,7 +129,7 @@
 									<?php
 									}
 									?>
-			                				<?= str_replace("\\", "", $mRow["cat_name"]) ?>
+			                				<?= wordwrap(str_replace("\\", "", $mRow["cat_name"]), 10, "\n", true); ?> 
 									</span>		
 								</td>
 							</tr>
@@ -194,7 +194,7 @@
                                                                     <img src="img/disable.png" width="16" height="16" border="0" data-tooltip="Disabled" class ="rdb_status" alt="<?= $mRowPr["prd_id"] ?>" status="<?= $mRowPr["status"] ?>"/>
                                                                 </div>
                                                         <? } ?>
-                                                            <strong <? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } else { ?>class="enable-menu"<? } ?>><?= $mRowPr["item_title"] ?></strong>
+                                                            <div style="margin-left: 55px; font-weight: bold;" <? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } else { ?>class="enable-menu"<? } ?>><?= wordwrap($mRowPr["item_title"], 10, "\n", true); ?></div>
                                                             <span id="lblProductID" style="display: none;"><?= $mRowPr["prd_id"] ?></span>
                                                         </td>
                                                         <td style=" font-size: 12px;float:left;margin-left: 20px;">
@@ -206,7 +206,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-style: italic">
-                                                            <div style="margin-left: 55px;"<? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } else { ?>class="enable-menu"<? } ?>><?= $mRowPr["item_des"] ?></div>
+                                                            <div style="margin-left: 55px;"<? if ($mRowPr["status"] == 0) { ?> class="disable-menu" <? } else { ?>class="enable-menu"<? } ?>><?= wordwrap($mRowPr["item_des"], 20, "\n", true); ?></div>
                                                         </td>
                                                     </tr>
                                                 </table>

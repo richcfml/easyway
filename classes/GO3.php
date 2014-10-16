@@ -225,8 +225,8 @@ class GO3
 		}
 		else
 		{
-			return "Error occurred.";
 			Log::write('GO3 NO Response - GO3 API', 'No Reponse', 'go3');
+			return "Error occurred.";
 		}
 	}
 	

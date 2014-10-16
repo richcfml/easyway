@@ -853,10 +853,12 @@ function getXMLHTTP() { //fuction to return the xml http object
           </tr>
 	  <tr align="left" valign="top">
                 <td width="254">Regional Settings:</td>
-                <td>  
-					<input name="region" type="radio" value="1" onclick="loadTimeZoneUS()" id="region" />USA&nbsp;&nbsp;
-                    <input name="region" type="radio" value="0" onclick="loadTimeZoneUK()" id="region" />UK&nbsp;&nbsp;
-                    <input name="region" type="radio" value="2" onclick="loadTimeZoneCanada()" id="region"/>Canada 
+                <td>
+<!--------------------------------Start NK(9-10-2014)----------------------------------------------------------------------------->                    
+                    <input name="region" type="radio" value="1" onclick="loadTimeZoneUS()" id="region" <?php if(($_POST['region'])=="1"){echo "checked";}?> <?php if(empty($_POST['region'])){ echo "checked"; } ?> />USA&nbsp;&nbsp;
+                    <input name="region" type="radio" value="0" onclick="loadTimeZoneUK()" id="region" <?php if(($_POST['region'])=="0"){echo "checked";}?>  />UK&nbsp;&nbsp;
+                    <input name="region" type="radio" value="2" onclick="loadTimeZoneCanada()" id="region" <?php if(($_POST['region'])=="2"){echo "checked";}?> />Canada 
+<!--------------------------------End NK(9-10-2014)----------------------------------------------------------------------------->                                        
                 </td>
             </tr>
            <tr align="left" valign="top"> 
@@ -1092,8 +1094,9 @@ function getXMLHTTP() { //fuction to return the xml http object
             var reseller_id = $('#reselelr').val();
             console.log($('#owner_name').val());
             getclients(reseller_id,'add_resturant',$('#owner_id').val(),$('#product_id').val(),$('#license_id').val());
-            
-            jQuery("#region").attr('checked', 'checked');
+//-----------------------------Start NK(9-10-2014)--------------------------------------------------------            
+//            jQuery("#region").attr('checked', 'checked');
+//-----------------------------End NK(9-10-2014)--------------------------------------------------------
             $('#phone').unmask();
             $('#fax').unmask();
             $('#phone').mask('(999) 999-9999');

@@ -232,6 +232,31 @@ class product{
         return $product;
     }
 
+
+    /// Used for displaying data for edit cart items.
+    /// Created by Saad - 2-Oct-2014
+    public function getProductDetailsForEditCartItem($productId) {
+        $prd_qry = mysql_query("select prd_id, item_title, item_type, item_des, retail_price, sale_price, item_image
+                                from product where prd_id = " . $productId);
+        
+        $prodRow = mysql_fetch_object($prd_qry);
+
+        //Assuming product is present in db, that's why customer ordered it.
+        $productDetails=new stdClass;
+        $productDetails->prd_id=$prodRow->prd_id;
+        $productDetails->item_title = $prodRow->item_title;
+        $productDetails->item_type = $prodRow->item_type;
+        $itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
+        $itemDesc=  str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)));
+        $productDetails->item_des = $itemDesc;
+        $productDetails->retail_price = $prodRow->retail_price;
+        $productDetails->sale_price = $prodRow->sale_price;
+        $productDetails->item_image = $prodRow->item_image;
+        
+        return $productDetails;
+
+    }
+
 }
 
 ?>

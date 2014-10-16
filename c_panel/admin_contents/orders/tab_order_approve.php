@@ -7,6 +7,37 @@ else
 {
 	$orderquery=mysql_query("select o.*, OrderDate  OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=0  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC");
 }
+$getOrders = array();
+$orderDetailsArray = array();
+while($orderRs=mysql_fetch_array($orderquery))
+{
+    $getOrders[]=$orderRs;
+    $OrderID.=$orderRs['OrderID'].",";
+}
+$OrderID = substr($OrderID,0,-1);
+$prdQuery2 = mysql_query("select * from orderdetails where orderid in($OrderID)");
+
+while($getOrderDetails = mysql_fetch_assoc($prdQuery2))
+{
+   $orderDetailsArray[]=$getOrderDetails;
+}
+$orderCount = count($getOrders);
+$orderDetailsCount = count($orderDetailsArray);
+
+//echo "<pre>";print_r($orderDetailsArray);
+
+for($i=0; $i<=$orderCount-1;$i++)
+{
+    for($j=0; $j<=$orderDetailsCount-1;$j++)
+    {
+        if($getOrders[$i]['OrderID'] ==$orderDetailsArray[$j]['orderid'])
+        {
+
+            $getOrders[$i]['orderDetails'][$j] = $orderDetailsArray[$j];
+        }
+    }
+}
+//echo "<pre>";print_r($getOrders);exit;
 @$numrows=mysql_num_rows($orderquery);
 
  	
@@ -65,19 +96,13 @@ function SelectAllAprove(){
         <p><strong> </strong></p></th>
     </tr>
     <?
-	 while($orderRs=mysql_fetch_array($orderquery)){	 
-       ?>
-    <!-- test code starts -->
-    <?	   
-	   $OrderID = @$orderRs["OrderID"];
-// 
+	 foreach($getOrders as $orderRs){
 	    ?>
-    <!-- test code ends-->
     <tr>
       <td><input type="checkbox" name="OID[]" value="<? echo $orderRs["OrderID"]?>" <? echo $checked?> /></td>
       <? $substr = substr($orderRs["OrderDate"],0,10);?>
       <td><a href="./?mod=order&item=detail&OrderID=<? echo $orderRs["OrderID"];?>"><? echo $orderRs["OrderID"];?></a></td>
-      <td><? 
+      <td><?
 			echo $Objrestaurant->name;
 	      ?>
       </td>
@@ -85,18 +110,32 @@ function SelectAllAprove(){
       <td><? echo trim($orderRs["cust_your_name"].' '.$orderRs["LastName"]);?> </td>
       <td>
       <table width="100%" class="tbl_small">
-        <?  $prdQuery2 ="select * from orderdetails where orderid = $OrderID";
-			     $GrandTotal=0;
-				 $prdQuery2= mysql_query($prdQuery2);
-				 while($Ord_RS2=mysql_fetch_array($prdQuery2,MYSQL_BOTH)){
-				 $ProductID= $Ord_RS2["prd_id"]?>
+        <?   $GrandTotal=0;
+             $string1 ='';
+             foreach($orderRs["orderDetails"] as $Ord_RS2){
+                                        $sign='';
+                                        $str_extra = stripslashes(stripcslashes($Ord_RS2["extra"]));
+                                        $str_extra = explode("~", $str_extra);
+                                        foreach($str_extra as $string){
+                                        $checkSign = substr($string, strpos($string, "|") + strlen("|"), 1);
+                                        if(!empty($checkSign) && $checkSign == "-"){
+                                            $sign = "- subtract ";
+                                        }
+                                        else{
+                                            $sign = "- add ";
+                                        }
+
+                                        $string1 .= str_replace('|',$sign.$currency,$string)."~";
+                                        }
+                                        $str_extra =  substr($string1,0,-1);
+             ?>
         <tr width="22%">
           <td width="22%" ><? echo stripslashes(stripcslashes($Ord_RS2["ItemName"]))?>
           <td><? if($Ord_RS2["extra"]) {?>
             <strong>Extras:</strong>
             <?
-					$str_extra = str_replace('~','<br />',stripslashes(stripcslashes($Ord_RS2["extra"]))); 
-					echo str_replace('|','- add '.$currency,$str_extra);
+					$str_extra = str_replace('~','<br />',stripslashes(stripcslashes($str_extra)));
+                                        echo $str_extra;
 					?>
             <? } ?>
             <br />

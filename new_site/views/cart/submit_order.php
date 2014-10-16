@@ -31,7 +31,16 @@
 	
 	$is_guest = 0;
 	Log::write(" In Submit Order","LoggedinUser Data:".print_r($loggedinuser,true),'order', 0 , 'user');
-	if(isset($_POST['customer_name']))
+//--------------------Start Nk(1-10-2014)--------------------------------------------------------	
+        if(isset($_POST['x_first_name']))
+        {
+            $loggedinuser->street1=$_POST[x_address];
+            $loggedinuser->cust_ord_city=$_POST[x_city];
+            $loggedinuser->cust_ord_state=$_POST[x_state];        
+            $loggedinuser->cust_ord_zip=$_POST[x_zip];
+        }
+//--------------------End Nk(1-10-2014)--------------------------------------------------------	                
+        if(isset($_POST['customer_name']))
 	{
 		$loggedinuser->	cust_your_name= trim($customer_name) ;
 		$loggedinuser->	LastName= trim($customer_last_name) ;
@@ -223,7 +232,13 @@
 			{
 				$str_attributes .='<b>'. $attr->Option_name .':</b>';
 			}
-			$str_attributes .=	trim($attr->Title) .($attr->Price!=0 ? " Add ". $attr->Price:"").', ';
+                        if(substr($attr->Price,0,1)=="-"){
+                            $sign = ' Subtract ';
+                        }
+                        else{
+                            $sign = ' Add ';
+                        }
+			$str_attributes .=	trim($attr->Title) .($attr->Price!=0 ? $sign. $attr->Price:"").', ';
 			$last_attr_name = $attr->Option_name;
 		}
 		$str_attributes .='</font></td></tr>';

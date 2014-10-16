@@ -60,7 +60,7 @@
             <td>Email</td>
             <td><input type="text" name="customer_email" id="customer_email" value="" /></td>
           </tr>
-
+      <? if ($cart->delivery_type==cart::Delivery){?>
         
            
        
@@ -85,7 +85,8 @@
           </tr>
      
        
-	  </table>
+
+         <?   }  ?>   </table>
          
            
             

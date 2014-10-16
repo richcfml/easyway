@@ -38,7 +38,7 @@
         
     </div>
         <a class="fancyloadAttributeItem" href="#BrowseAttributefancyBox"></a>
-        <div id="BrowseAttributefancyBox" style="display:none;width:1150px;min-height:400px;height:1448px;" class="handle_fancyBox">
+        <div id="BrowseAttributefancyBox" style="display:none;width:1150px;min-height:500px;" class="handle_fancyBox">
             <div>
                  
                 <form action="admin_contents/products/add_attribute_new.php" method="get" name="frm2" >
@@ -70,14 +70,16 @@
 					</tr>
 					<tr style="height: 50px;">
 						<td colspan="4">
-							<select id ="attr_choose" name="attr_choose" style="height: 36px;">
+<!----------------------------------------------------------------Start 30-09-2014---------------------------------------------------------->
+							<select id ="attr_choose" name="attr_choose" style="height: 36px; width: 130px; margin-left: -15px;">
+<!----------------------------------------------------------------End 30-09-2014---------------------------------------------------------->
 								<option value="">Please Select</option>
 								<option value="1">Choose</option>
 								<option value="2">Pick</option>
 								<option value="3">Add</option>
 								<option value="4">Create Your Own</option>
 							</select>
-							<span style="color:red; visibility: hidden;" id="spnChooseAttr">*</span>
+							<span style="color:red; visibility: hidden; margin-left: 2px;" id="spnChooseAttr">*</span>
 							<input type="text" id="txtAttTitle" name="txtAttTitle" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 320px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnAttTitleReq">*</span>
 						</td>
 					</tr>
@@ -88,10 +90,10 @@
 					</tr>
                     <tr>
                   		<td colspan="4">
-							<table style="background-color: #ECEDEE; width: 100%; text-align: center;" border="0" cellpadding="0" cellspacing="0">
+							<table style="background-color: #ECEDEE; width: 100%; text-align: center; margin-left: -70px;"" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center" style="width: 25%;">
-										<select id ="attr_limit" name="attr_limit" style="height: 36px;width: 60px;" placeholder="Limit">
+										<select id ="attr_limit" name="attr_limit" style="height: 32px;width: 60px; margin-top: 14px; margin-right: -975px; display: none;" placeholder="Limit">
 											<option value="">Limit</option>
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -106,14 +108,16 @@
 										</select>
 										<span style="color:red; visibility: hidden;" id="spnChooseLimit">*</span>	
 									</td>
-									<td align="left" valign="middle" style="width: 35%;">
-										<div style="color: #25AAE1; font-size:14px; margin-left: 5px;">Charge extra if limit exceeded</div>
+                                                                        <td align="left" valign="middle">  
+<!----------------------------------------------------------------Start 30-09-2014---------------------------------------------------------->
+<!--                                                                            style="width: 35%;">-->
+										<div style="color: #25AAE1; font-size:14px; margin-left: -20px;">Charge extra if limit exceeded</div>
 									</td>
 									<td align="left" style="width: 40%;">
-										<div style="margin-left: 5px;">
+										<div style="margin-left: -25px;">
 											<input type="radio" name="chkLimitExceed" id="chkLimitExceedNo" value="0"  class="chk_style"><label for="chkLimitExceedNo" style="color: #25AAE1; font-size:14px;">No</label>
 											<input type="radio" name="chkLimitExceed" id="chkLimitExceedYes" value="1" class="chk_style"><label for="chkLimitExceedYes" style="color: #25AAE1; font-size:14px;">Yes</label>
-											<input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;height: 24px; width: 50px; display:none" />
+											<input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;height: 25px; width: 50px; display:none" />
 											<span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>
 										</div>
 									</td>
@@ -130,12 +134,16 @@
 							if(value == 1)
 							{
 								$("#txtLimitExceed").show();
+                                                                $("#attr_limit").css("display", "block");
+                                                                $("#spnLimitExceed").css("margin-top", "-2px");
 
                                                 }
                                                 else
                                                 {
-                                                    $("#txtLimitExceed").hide();
+                                                    $("#txtLimitExceed").hide();                       
                                                     $("#spnLimitExceed").css("visibility", "hidden");
+//                                                    $("#attr_limit").hide();
+                                                    $("#attr_limit").css("display", "none");
                                                 }
                                             });
                                         });
@@ -171,8 +179,8 @@
 						<td style="width: 10%;">
 						</td>
 						<td align="left">
-							<input type="radio" name="chkAttAdd" id="chkAttAdd" value="1" checked="checked" class="chk_style"/><label for="chkAttAdd" style="color: #25AAE1; font-size:14px;margin-top: 8px;">Attribute adds to price</label><br />
-							<input type="radio" name="chkAttAdd" id="chkAttTotal" value="2" class="chk_style"/><label for="chkAttTotal" style="color: #25AAE1; font-size:14px;margin-top: 8px;">Attribute displays total price</label>
+							<input type="radio" name="chkAttAdd" id="chkAttAdd" value="1" checked="checked" class="chk_style"/><label for="chkAttAdd" style="color: #25AAE1; font-size:14px;margin-top: 8px; margin-left: -75px;">Attribute adds to price</label><br />
+							<input type="radio" name="chkAttAdd" id="chkAttTotal" value="2" class="chk_style"/><label for="chkAttTotal" style="color: #25AAE1; font-size:14px;margin-top: 8px; margin-left: -75px;">Attribute displays total price</label>
 						</td>
 					</tr>
 					<tr style="height: 10px;">
@@ -225,12 +233,12 @@
 						<td style="width: 10%;">
 						</td>
 						<td align="left">
-							<input type="text" id="txtAttSubTitle" name="txtAttSubTitle" placeholder="Example - &quot;Hot Sauce&quot;" style="width: 250px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnTitleReq">*</span>
+							<input type="text" id="txtAttSubTitle" name="txtAttSubTitle" placeholder="Example - &quot;Hot Sauce&quot;" style="width: 268px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnTitleReq">*</span>
 						</td>
-						<td style="width: 10%;">
+						<td style="width: 1%;">
 						</td>
 						<td align="left">
-							&nbsp;<input type="text" id="txtAttPrice" maxlength="7" name="txtAttPrice" placeholder=".75" style="width: 120px; text-indent: 5px; height: 30px;" />
+							&nbsp;<input type="text" id="txtAttPrice" maxlength="7" name="txtAttPrice" placeholder=".75" style="width: 120px; text-indent: 5px; height: 30px; margin-right: 72px;" />
 						</td>
 					</tr>
 					<tr style="height: 10px;">
@@ -444,7 +452,6 @@
                                     
                                     var tableRow2 = document.getElementById("2"+optionRowId);
                                     $(tableRow2).attr('id','2'+updatedId);
-                                    //$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
                                     
                                     cancelEditAttributeOption();
                                     
@@ -518,7 +525,7 @@
 																																				   
 										
 										var mPrice = "NA";
-										if ($.trim($("#txtAttPrice").val())!="")
+										if (($.trim($("#txtAttPrice").val())!="") && ($.trim($("#txtAttPrice").val()).replace(/-/g, "")!=""))
 										{
 											mPrice = Number($("#txtAttPrice").val()).toFixed(2);	
 										}
@@ -611,7 +618,7 @@
 								<tr>
 									<td style="width: 5%;"></td>
 									<td style="width: 65%;">
-										<span style="font-size: 14px;" class="appl_all">
+										<span style="font-size: 13px;" class="appl_all">
 											Would you like to apply this to an entire Submenu?
 										</span>
 										<input type="checkbox" name="chkAttEntire" id="chkAttEntire" value="1" class="chk_style"/>
@@ -738,7 +745,7 @@
 														url: ajaxUrl,
 														success: function(data) 
 														{	
-															if (data!='Failure')
+															if ((data!='Failure') && (data!='duplicate'))
 															{
 																if ($("#hdnAttributes").val().indexOf("~"+$("#txtAttTitle").val())<0)
 																{																												  
@@ -956,10 +963,10 @@
                                             $('#txtAttName').attr('placeholder','Admin Name');
 										}
 										</script>
-										<input type="button" id="btnSave" name="btnSave" value="Save">
+										<input type="button" id="btnSave" name="btnSave" value="Save" style="margin-right: 10px; width:65px;">
 									</td>
 									<td>
-										<input type="button" class="btnCancelSM"  value="Cancel">
+										<input type="button" class="btnCancelSM"  value="Cancel" style="margin-right: 60px; width:65px;">
 									</td>
 								</tr>
 							</table>

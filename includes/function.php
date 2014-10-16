@@ -487,208 +487,215 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 	// Parameters added by Saad 22Sept2014
 function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 {
-	$qryresult =  mysql_query("SELECT pos_json,pos_json_sent FROM ordertbl WHERE OrderID=".$orderId);
-	$pos_jason_result=mysql_fetch_object($qryresult);
-	if($pos_jason_result->pos_json_sent==0)  
-	{
-            if($creditCardProfileId == 0){ // Cash delievery
-                $creditCardType = "0";
-            }else if($typeForOrderServerOnly){ // New card and not saved in db
-                $creditCardType = $creditCardProfileId;
-            }else{ // Card information stored in db
-                $cardTypeQuery = mysql_query("SELECT data_type FROM general_detail where data_2 = '".$creditCardProfileId."'");
-                $cardType = mysql_fetch_object($cardTypeQuery);
-                $creditCardType = $cardType->data_type;
+    $qryresult =  mysql_query("SELECT pos_json,pos_json_sent FROM ordertbl WHERE OrderID=".$orderId);
+    $pos_jason_result=mysql_fetch_object($qryresult);
+    if($pos_jason_result->pos_json_sent==0)
+    {
+        if($creditCardProfileId == 0){ // Cash delievery
+            $creditCardType = "0";
+        }else if($typeForOrderServerOnly){ // New card and not saved in db
+            $creditCardType = $creditCardProfileId;
+        }else{ // Card information stored in db
+            $cardTypeQuery = mysql_query("SELECT data_type FROM general_detail where data_2 = '".$creditCardProfileId."'");
+            $cardType = mysql_fetch_object($cardTypeQuery);
+            $creditCardType = $cardType->data_type;
+        }
+
+        $order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
+                                                        submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used  FROM ordertbl WHERE OrderID =".$orderId);
+
+        $order_rs  = mysql_fetch_assoc($order_qry);
+
+
+        $order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price, 0 as item_tax, quantity as item_qty,prd.retail_price as item_price, RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
+                                                                         FROM orderdetails  ord Inner join product prd
+                                                                         on ord.pid=prd.prd_id
+                                                                         WHERE orderid = ". $order_rs['OrderID'] ."");
+
+
+        $cust_qry = mysql_query("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
+        $cust_rs  = mysql_fetch_assoc($cust_qry );
+
+
+        $rest_qry = mysql_query("SELECT id as restid, name as restname, phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
+        $rest_rs  = mysql_fetch_assoc($rest_qry );
+
+        $associated_items_price = 0;
+        $extra_items_price = 0;
+        $index=1;
+
+        $restTaxRate = $this->get_cat_tax($rest_rs['restid']);
+        
+        while ( $order_detail_rs  = mysql_fetch_object($order_detail_qry))
+        {
+            $associated_items_price = 0;
+            $extra_items_price = 0;
+            $assoc_split_arr1 = explode ('~',$order_detail_rs->associated_items);
+
+            $order_detail_rs->item_title=$this->replaceSpecial($order_detail_rs->item_title);
+            $order_detail_rs->special_notes=$this->replaceSpecial($order_detail_rs->special_notes);
+
+            for($j = 0; $j< count($assoc_split_arr1 ); $j++ )
+            {
+                $assoc_split_arr2 = explode ('|',$assoc_split_arr1[$j] );
+                if(count($assoc_split_arr2)>1)
+                {
+                    $associated_items_price += $assoc_split_arr2[1];
+                }
             }
 
-		$order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
-								submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used  FROM ordertbl WHERE OrderID =".$orderId);
-	
-		$order_rs  = mysql_fetch_assoc($order_qry);
+            $extra_split_arr1 = explode ('~',$order_detail_rs->extra);
+
+            for($k = 0; $k< count($extra_split_arr1 ); $k++ )
+            {
+                $extra_split_arr2 = explode ('|',$extra_split_arr1[$k] );
+                if(count($extra_split_arr2)>1)
+                {
+                    $extra_items_price += $extra_split_arr2[1];
+                }
+            }
+
+            $order_detail_rs->item_total_price  =($order_detail_rs->item_price  + $extra_items_price + $associated_items_price)  * $order_detail_rs->item_qty;
+
+            $order_detail_rs->item_tax = number_format(($order_detail_rs->item_total_price * $restTaxRate)/100,2);
+
+            $order_detail_rs->extra=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->extra)),"|");
+            $order_detail_rs->associated_items=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->associated_items)),"|");
+            $product_rs[$index]=$order_detail_rs;
+            $index++;
+        }
+        
+        $order_rs['DesiredDeliveryDate']=str_replace("as soon as possible", date("H:i",strtotime($order_rs['submit_time'])),strtolower($order_rs['DesiredDeliveryDate']));
+        $arr_Date=explode("-",$order_rs['DesiredDeliveryDate']);
+        $arr_Time=explode(" ",$arr_Date[2]);
+
+        $mTmpAdd = "";
+        $mTmpCity = "";
+        $mTmpState = "";
+        $mTmpZip = "";
+
+        if (strpos($order_rs['DeliveryAddress'], ","))
+        {
+            $mTmp = explode(",", $order_rs['DeliveryAddress']);
+            $mTmpAdd = trim($mTmp[0]);
+            $mTmpCity = trim($mTmp[1]);
+            if (count($mTmp)>2)
+            {
+                $mTmpState = trim($mTmp[2]);
+                if (count($mTmp)>3)
+                {
+                    $mTmpZip= trim($mTmp[3]);
+                }
+            }
+        }
+
+        $order["web-app"]=array(
+                              "app_id"=>"ewo0001",
+                              "auth_id"=>"105fdb19-1fc9-4c81-8bbd-61427912f83c",
+                              "app_key"=>"8346-a056344a2699"
+                                );
+
+        $order["ORDERINFO"]=array(
+                                "OrderID"  => $order_rs['OrderID'],
+                                "Total"  => $order_rs['total'],
+                                "UserID"  => $order_rs['UserID'],
+                                "delivery_method"  => $order_rs['order_receiving_method'],
+                                "delivery_time_reqested"  =>$arr_Time[1],
+                                "delivery_date_requested"  =>date("Y")."-".$arr_Date[0]."-".$arr_Date[1],
+                                "time_of_order"  => date("H:i",strtotime($order_rs['submit_time'])),
+                                "date_of_order"  => date("Y-m-d",strtotime($order_rs['submit_time'])),
+                                "asap_order" =>$order_rs['asap_order'],
+                                "transaction_type"    => $order_rs['payment_method'],
+                                "credit_card_type"    => $creditCardType,
+                                "delivery_instructions" =>  $this->replaceSpecial($order_rs['DelSpecialReq']) ,
+                                "delivery_address" => $this->replaceSpecial($order_rs['DeliveryAddress']),
+                                "street" => $this->replaceSpecial($mTmpAdd),
+                                "city" => $this->replaceSpecial($mTmpCity),
+                                "state" => $this->replaceSpecial($mTmpState),
+                                "zip" => $this->replaceSpecial($mTmpZip),
+                                "customer_name"=>$this->replaceSpecial($cust_rs['cust_your_name']),
+                                "customer_last_name"=>$this->replaceSpecial($cust_rs['LastName']),
+                                "customer_phone" => $cust_rs['cust_phone1'],
+                                "special_instructions" => $this->replaceSpecial($order_rs['DelSpecialReq']),
+                                "cat_id" => $order_rs['cat_id'],
+                                "payment_approv" => $order_rs['payment_approv'],
+                                "coupons" => $order_rs['coupons'],
+                                "order_confirm" => $order_rs['order_confirm'],
+                                "est_delivery_time" => $order_rs['est_delivery_time'],
+                                "vip_discount" => $order_rs['vip_discount'],
+                                "transaction_id" => $order_rs['transaction_id'],
+                                "refund_request" => $order_rs['refund_request'],
+                                "platform_used" => $order_rs['platform_used'],
+                                "is_guest" => $order_rs['is_guest']
+                                );
 
 
-		$order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price,quantity as item_qty,prd.retail_price as item_price,RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
-										 FROM orderdetails  ord Inner join product prd
-										 on ord.pid=prd.prd_id
-										 WHERE orderid = ". $order_rs['OrderID'] ."");
+        $phonechars = array("(", ")", "-", " ");
+
+        $order["CALLINFO"]=array(
+                "phone_number"=> str_replace($phonechars, "",$rest_rs['phone']),
+                "call_delay"=>"300",
+                "max_retries"=>"5",
+                "retry_delay"=>"300",
+                "wait_time"=>"45",
+                "restid"=> $rest_rs['restid'],
+                "restname" =>str_replace('\'','&#39;',$rest_rs['restname'])
+        );
+
+        $order["FAXINFO"]=array(
+                "fax_status"=> $faxstatus=="1" ? "sent":"not sent",
+                "fax_sent_date"=>date("Y-m-d",strtotime($order_rs['fax_date'])),
+        );
+
+        $order["ORDERS"]=array(
+                "order_id"=>$order_rs['OrderID'],
+                "items" => $product_rs
+        );
 
 
-		$cust_qry = mysql_query("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
-		$cust_rs  = mysql_fetch_assoc($cust_qry );
- 
- 
-		$rest_qry = mysql_query("SELECT id as restid, name as restname, phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
-		$rest_rs  = mysql_fetch_assoc($rest_qry );
- 
-		$associated_items_price = 0;
-		$extra_items_price = 0;
-		$index=1;
-	
-		while ( $order_detail_rs  = mysql_fetch_object($order_detail_qry)) 
-		{
-			$associated_items_price = 0;
-			$extra_items_price = 0;
-			$assoc_split_arr1 = explode ('~',$order_detail_rs->associated_items);
-		
-			$order_detail_rs->item_title=$this->replaceSpecial($order_detail_rs->item_title);
-			$order_detail_rs->special_notes=$this->replaceSpecial($order_detail_rs->special_notes);
- 
-			for($j = 0; $j< count($assoc_split_arr1 ); $j++ ) 
-			{
-				$assoc_split_arr2 = explode ('|',$assoc_split_arr1[$j] );
-				if(count($assoc_split_arr2)>1)
-				{
- 					$associated_items_price += $assoc_split_arr2[1];
-				}
-			}
+        if($order_rs['coupon_discount'] == null)
+        {
+                $order_rs['coupon_discount']=0;
+        }
 
-			$extra_split_arr1 = explode ('~',$order_detail_rs->extra);
- 	 
-			for($k = 0; $k< count($extra_split_arr1 ); $k++ ) 
-			{
-				$extra_split_arr2 = explode ('|',$extra_split_arr1[$k] );
-				if(count($extra_split_arr2)>1)
-				{
-					$extra_items_price += $extra_split_arr2[1];
-				}
-			}
- 
-			$order_detail_rs->item_total_price  =($order_detail_rs->item_price  + $extra_items_price + $associated_items_price)  * $order_detail_rs->item_qty;
+        $sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
 
-			$order_detail_rs->extra=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->extra)),"|");
-			$order_detail_rs->associated_items=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->associated_items)),"|");
-			$product_rs[$index]=$order_detail_rs;
-			$index++;
-		}
-		$order_rs['DesiredDeliveryDate']=str_replace("as soon as possible", date("H:i",strtotime($order_rs['submit_time'])),strtolower($order_rs['DesiredDeliveryDate']));
-		$arr_Date=explode("-",$order_rs['DesiredDeliveryDate']);
-		$arr_Time=explode(" ",$arr_Date[2]);
-		
-		$mTmpAdd = "";
-		$mTmpCity = "";
-		$mTmpState = "";
-		$mTmpZip = "";
+        $order["TOTAL"]=array(
+                "sub_total"=>number_format($sub_total,2),
+                "coupon_discount"=>number_format($order_rs['coupon_discount'],2),
+                "driver_charge"=>number_format($order_rs['driver_tip'],2),
+                "delivery_charges"=>number_format($order_rs['delivery_chagres'],2),
+                "total"=>number_format($order_rs['total'],2),
+                "tax"=>number_format($order_rs['Tax'],2),
+                "tip_amt"=>$order_rs['driver_tip'],
+                "PAYMENT"=>$order_rs['total']
+        );
 
-		if (strpos($order_rs['DeliveryAddress'], ","))
-		{
-			$mTmp = explode(",", $order_rs['DeliveryAddress']);
-			$mTmpAdd = trim($mTmp[0]);
-			$mTmpCity = trim($mTmp[1]);
-			if (count($mTmp)>2)
-			{
-				$mTmpState = trim($mTmp[2]);
-				if (count($mTmp)>3)
-				{
-					$mTmpZip= trim($mTmp[3]);
-				}
-			}
-		}
+        $encoded = json_encode($order);
+    }
+    else
+    {
+        $encoded=$pos_jason_result->pos_json;
+    }
 
- 		$order["web-app"]=array( 
-					  "app_id"=>"ewo0001", 
-					  "auth_id"=>"105fdb19-1fc9-4c81-8bbd-61427912f83c",  
-					  "app_key"=>"8346-a056344a2699"
-	
-		);
+    //$mURL="http://www.ordrsrvr.net/index.php";
+    $mURL="http://posapi.easywayordering.com/index.php";
+    
+    Log::write("Post to Order Server", "Curl Initialization for OrderId: ".$orderId."", 'orderserver', 1 , '');
 
-		$order["ORDERINFO"]=array(
-					"OrderID"  => $order_rs['OrderID'],
-					"Total"  => $order_rs['total'],
-					"UserID"  => $order_rs['UserID'],
-					"delivery_method"  => $order_rs['order_receiving_method'],
-					"delivery_time_reqested"  =>$arr_Time[1],
-					"delivery_date_requested"  =>date("Y")."-".$arr_Date[0]."-".$arr_Date[1],
-					"time_of_order"  => date("H:i",strtotime($order_rs['submit_time'])),
-					"date_of_order"  => date("Y-m-d",strtotime($order_rs['submit_time'])),
-				 	"asap_order" =>$order_rs['asap_order'],
-					"transaction_type"    => $order_rs['payment_method'],
-					"credit_card_type"    => $creditCardType,
-					"delivery_instructions" =>  $this->replaceSpecial($order_rs['DelSpecialReq']) ,
-					"delivery_address" => $this->replaceSpecial($order_rs['DeliveryAddress']), 
-					"street" => $this->replaceSpecial($mTmpAdd), 
-					"city" => $this->replaceSpecial($mTmpCity), 
-					"state" => $this->replaceSpecial($mTmpState), 
-					"zip" => $this->replaceSpecial($mTmpZip), 
-					"customer_name"=>$this->replaceSpecial($cust_rs['cust_your_name']),
-					"customer_last_name"=>$this->replaceSpecial($cust_rs['LastName']),
-					"customer_phone" => $cust_rs['cust_phone1'],  
-					"special_instructions" => $this->replaceSpecial($order_rs['DelSpecialReq']),
-					"cat_id" => $order_rs['cat_id'],
-					"payment_approv" => $order_rs['payment_approv'],
-					"coupons" => $order_rs['coupons'],
-					"order_confirm" => $order_rs['order_confirm'],
-					"est_delivery_time" => $order_rs['est_delivery_time'],
-					"vip_discount" => $order_rs['vip_discount'],
-					"transaction_id" => $order_rs['transaction_id'],
-					"refund_request" => $order_rs['refund_request'],
-					"platform_used" => $order_rs['platform_used'],
-					"is_guest" => $order_rs['is_guest']
-			);	
-				
-					
-  		$phonechars = array("(", ")", "-", " ");      
+    $cURL = curl_init();
 
-		$order["CALLINFO"]=array( 
-		  	"phone_number"=> str_replace($phonechars, "",$rest_rs['phone']), 
-		  	"call_delay"=>"300",  
-		  	"max_retries"=>"5", 
-		  	"retry_delay"=>"300", 
-		  	"wait_time"=>"45",
-		  	"restid"=> $rest_rs['restid'],
-		  	"restname" =>str_replace('\'','&#39;',$rest_rs['restname'])
-		);
- 
-		$order["FAXINFO"]=array( 
-			"fax_status"=> $faxstatus=="1" ? "sent":"not sent",	
-			"fax_sent_date"=>date("Y-m-d",strtotime($order_rs['fax_date'])),
-		);
-
-		$order["ORDERS"]=array(
-			"order_id"=>$order_rs['OrderID'], 
-			"items" => $product_rs
-		);
-			
-			
-		if($order_rs['coupon_discount'] == null)
-		{
-			$order_rs['coupon_discount']=0;
-		}
-
-		$sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
-
-		$order["TOTAL"]=array(
-			"sub_total"=>number_format($sub_total,2), 
-			"coupon_discount"=>number_format($order_rs['coupon_discount'],2),
-			"driver_charge"=>number_format($order_rs['driver_tip'],2), 
-			"delivery_charges"=>number_format($order_rs['delivery_chagres'],2),
-			"total"=>number_format($order_rs['total'],2), 
-			"tax"=>number_format($order_rs['Tax'],2), 
-			"tip_amt"=>$order_rs['driver_tip'], 
-			"PAYMENT"=>$order_rs['total']
-		);
-
-		$encoded = json_encode($order);
-	}
-	else 
-	{
-		$encoded=$pos_jason_result->pos_json;
-	}
-	
-	$mURL="http://www.ordrsrvr.net/index.php";
-        Log::write("Post to Order Server", "Curl Initialization for OrderId: ".$orderId."", 'orderserver', 1 , '');
-	$cURL = curl_init();
- 
- 	curl_setopt($cURL,CURLOPT_URL,$mURL);
- 	curl_setopt($cURL,CURLOPT_POST,true);
- 	curl_setopt($cURL,CURLOPT_POSTFIELDS,$encoded);
- 	curl_setopt($cURL,CURLOPT_RETURNTRANSFER, true); 
- 	curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-        Log::write("Post to Order Server", "Curl Execution Start", 'orderserver', 1 , '');
-	$result = curl_exec($cURL);
-	$result_info= json_decode($result,true);
-        Log::write("Post to Order Server", "Curl Execution End. Result: ".$result_info['Result']."", 'orderserver', 1 , '');
- 	curl_close($cURL);
-	mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_escape_string($encoded)."' WHERE OrderID =".$orderId.""); 
+    curl_setopt($cURL,CURLOPT_URL,$mURL);
+    curl_setopt($cURL,CURLOPT_POST,true);
+    curl_setopt($cURL,CURLOPT_POSTFIELDS,$encoded);
+    curl_setopt($cURL,CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    Log::write("Post to Order Server", "Curl Execution Start", 'orderserver', 1 , '');
+    $result = curl_exec($cURL);
+    $result_info= json_decode($result,true);
+    Log::write("Post to Order Server", "Curl Execution End. Result: ".$result_info['Result']."", 'orderserver', 1 , '');
+    curl_close($cURL);
+    mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_escape_string($encoded)."' WHERE OrderID =".$orderId."");
 }
 
 function replaceSpecial($data) {

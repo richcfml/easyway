@@ -209,7 +209,7 @@ $(document).ready(function() {
 			}
 
             var mPrice = "NA";
-            if  ($.trim($("#txtAttPriceSM").val())!="")
+            if (($.trim($("#txtAttPriceSM").val())!="") && ($.trim($("#txtAttPriceSM").val()).replace(/-/g, "")!=""))
             {
                     
                 mPrice = Number($("#txtAttPriceSM").val()).toFixed(2);
@@ -616,6 +616,7 @@ $(document).ready(function() {
                         $("#tblOptionsSM tr:last").after('<tr id="tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+AttrData[i]['Title'].replace("&#39;", "'")+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOptionSM("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEditSM" id="imgAttEditSM"/>&nbsp;<img onclick=deleteOptionSM("tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDelSM" id="imgAttDelSM"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+AttrData[i]['Title'].replace("&#39;", "'").replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
                     }
                     $("#hdnOptionsSM").val(hdnOptions);
+                    makeStringSM();
                 }
             }
        });

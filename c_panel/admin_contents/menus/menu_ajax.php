@@ -118,7 +118,7 @@ else if (isset($_GET['imgupload']))
     {
 		$newWidth = "";
 		$newHeight = "";
-        $path = '../../img/';
+        $path = '../../tempimages/';
         $exe = GetFileExt($_FILES['file-0']['name']);
         //$name = "img_" . $lastid . "_prd." . $exe;
         $name = $_FILES['file-0']['name'];
@@ -206,7 +206,7 @@ else if (isset($_GET['add_menu_item']))
         Log::write("Update Product Image- menu_ajax.php", "QUERY -- UPDATE product set item_image = '$name' where prd_id = " . $lastid, 'menu', 1 , 'cpanel');
         mysql_query("UPDATE product set item_image = '$name' where prd_id = " . $lastid);
         $destination_dir = "../../../images/item_images/"; //path of the destination directory
-        $source_dir = "../../img";
+        $source_dir = "../../tempimages";
         $source_img_path = $source_dir . "/" . $_GET['ext'];
         $destination_img_path = $destination_dir . "/" . $name;
         copy($source_img_path, $destination_img_path);
@@ -222,7 +222,7 @@ else if (isset($_GET['cropimg']))
 	$jpeg_quality = 90;
     if(strpos($_GET['ext'], 'prd')!= true)
     {
-        $src = '../../img/'.$name;
+        $src = '../../tempimages/'.$name;
     }
     else
     {
@@ -302,7 +302,7 @@ else if (isset($_GET['update_menu_item']))
         mysql_query("UPDATE product set item_image = '$name' where prd_id = " . $_GET['prd_id']);
         //echo __DIR__;exit;
         $destination_dir = "../../../images/item_images/"; //path of the destination directory
-        $source_dir = "../../img";
+        $source_dir = "../../tempimages";
         $source_img_path = $source_dir . "/" . $_GET['ext'];
         $destination_img_path = $destination_dir . "/" . $name;
         if(file_exists($source_img_path)){
@@ -324,6 +324,12 @@ else if (isset($_GET['update_menu_item']))
 
 else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
 {
+    
+//-------------------------------Start NK(10-10-2014)----------------------------------------------------------------------------------------------    
+    $CatOrder = mysql_query("SELECT IFNULL(MAX(cat_ordering), 0) AS cat_ordering FROM categories Where menu_id=".$_GET['menuid']."");
+    $CatOrderRow = mysql_fetch_object($CatOrder);
+    $ResCatOrder = $CatOrderRow->cat_ordering+1;
+    
     $cat_id = $_GET['cat_id'];
     $query = mysql_query("SELECT * FROM categories where menu_id=".$_GET['menuid']."");
     while ($select = mysql_fetch_array($query))
@@ -337,9 +343,10 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
                 ,'" . $cat_rs->status . "')", 'menu', 1 , 'cpanel');
     
     mysql_query("insert into categories(`parent_id`, `menu_id`, `cat_name`, `cat_des`, `cat_ordering`, `status`) values (
-    '" . $cat_rs->parent_id . "','" . $cat_rs->menu_id . "','" . $cat_rs->cat_name . "','" . $cat_rs->cat_des . "',1
+    '" . $cat_rs->parent_id . "','" . $cat_rs->menu_id . "','" . $cat_rs->cat_name . "','" . $cat_rs->cat_des . "',$ResCatOrder
     ,'" . $cat_rs->status . "')");
     $newCatId = mysql_insert_id();
+//-------------------------------End NK(10-10-2014)----------------------------------------------------------------------------------------------    
 
     $mysql_cat_products = mysql_query("select * from product where sub_cat_id =" . $cat_rs->cat_id . " Order by  prd_id");
     while ($product_rs = mysql_fetch_object($mysql_cat_products))
@@ -409,10 +416,16 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
 
 else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd_id']))
 {
+    
+//-------------------------------Start NK(10-10-2014)----------------------------------------------------------------------------------------------
+    $ResOrderNo = mysql_query("SELECT MIN(SortOrder)+1 AS SortOrder FROM product Where cat_id=".$_GET['cat_id']."");
+//    $$OrderNoRow = mysql_fetch_object($OrderNo);
+//    $ResOrderNo = $OrderNoRow->SortOrder+1;
+    
     $product_id = $_GET['prd_id'];
     $product_rs = mysql_fetch_object(mysql_query("select * from product where prd_id  =" . $product_id . ""));
     Log::write("Add new product - menu_ajax.php", "QUERY -- insert into product(
-				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`
+				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`,`SortOrder`
 
 					) values ( '" . $product_rs->cat_id . "', '" . $product_rs->sub_cat_id . "', '" . $product_rs->item_num . "'
 					, '" . $product_rs->item_title . "'
@@ -430,10 +443,11 @@ else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd
 					, '" . $product_rs->status . "'
 					, '" . $product_rs->pos_id . "'
                                         , '" . $product_rs->item_type . "'
+                                        , '" . $ResOrderNo . "'    
 
 					 )", 'menu', 1 , 'cpanel');
     mysql_query("insert into product(
-				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`
+				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`,`SortOrder`
 
 					) values ( '" . $product_rs->cat_id . "', '" . $product_rs->sub_cat_id . "', '" . $product_rs->item_num . "'
 					, '" . $product_rs->item_title . "'
@@ -451,9 +465,12 @@ else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd
 					, '" . $product_rs->status . "'
 					, '" . $product_rs->pos_id . "'
                                         , '" . $product_rs->item_type . "'
+                                        , '" . $ResOrderNo . "'     
 
 					 )");
-
+    
+//-------------------------------End NK(10-10-2014)----------------------------------------------------------------------------------------------
+    
     $newProductID = mysql_insert_id();
     
     Log::write("Add new attribute - menu_ajax.php", "QUERY -- insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` )  select " . $newProductID . ", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price`, `display_Name`,`Default`,`add_to_price`,`attr_name`,`extra_charge` from attribute where ProductID=" . $product_rs->prd_id . "", 'menu', 1 , 'cpanel');

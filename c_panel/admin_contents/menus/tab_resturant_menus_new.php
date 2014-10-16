@@ -28,8 +28,11 @@ function getdata($catid) {
         <script type="text/javascript">
             $(function()
             {
-                $( "[name='btnSubmit']" ).hide();
-                
+
+
+                $( "[id='btnSubmit1']" ).hide();
+                $( "[id='btnSubmit2']" ).hide();
+
             });
         </script>
     <?}
@@ -85,7 +88,12 @@ if (isset($_POST["btnSubmit"])) {
         Log::write("Update menu name,desc", "QUERY -- UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "' WHERE id =" . $menu_id, 'menu', 1 , 'cpanel');
        $udpSql  = mysql_query("UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id);
        //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
-       redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname']);
+
+//----------------------------------------------------------------------------------------------------
+//         redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id);
+//       redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname']);
+//----------------------------------------------------------------------------------------------------
+       
        }
     $mRes = getdata($Objrestaurant->id);
 
@@ -168,7 +176,24 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <script src="js/jquery.noty.packaged.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/main_menu.js?v=1"></script>
         <link rel="stylesheet" href="onoff/jquery.onoff.css" media="screen" />
-		<script src="onoff/jquery.onoff.js"></script>
+	<script src="onoff/jquery.onoff.js"></script>
+        
+<!-----------------------------------Start NK(2-10-2014)----------------------------------------------------->
+        <script type="text/javascript">
+        $.blockUI();
+
+        $(window).load(function()
+        {
+        setTimeout( "leave()", 1000 );    
+        });
+        
+        function leave()
+        {
+        $.unblockUI();
+        }
+        </script> 
+<!-----------------------------------End NK(2-10-2014)----------------------------------------------------->                
+
     </head>
 
     <body style="cursor: auto; font-family: Arial;">
@@ -457,7 +482,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					</tr>
 					<tr style="height: 50px;">
 						<td colspan="4">
-							<select id ="attr_chooseSM" name="attr_chooseSM" style="height: 36px;">
+							<select id ="attr_chooseSM" name="attr_chooseSM" style="height: 36px;width: 130px; margin-left: -20px;">
 								<option value="">Please Select</option>
 								<option value="1">Choose</option>
 								<option value="2">Pick</option>
@@ -475,10 +500,10 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					</tr>            
 					<tr>
 						<td colspan="4">
-							<table style="background-color: #ECEDEE; width: 100%; text-align: center;" border="0" cellpadding="0" cellspacing="0">
+							<table style="background-color: #ECEDEE; width: 100%; text-align: center; margin-left: -70px;" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center" style="width: 25%;">
-										<select id ="attr_limitSM" name="attr_limitSM" style="height: 36px;width: 60px;" placeholder="Limit">
+										<select id ="attr_limitSM" name="attr_limitSM" style="height: 36px;width: 60px; margin-right: -930px; " placeholder="Limit">
 											<option value="">Limit</option>
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -637,6 +662,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					</tr>
 					<tr>
 						<td colspan="4">
+                                                    <div style="overflow-y:scroll;height:100px ">
 							<table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td style="width: 5%;">
@@ -677,6 +703,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 									</td>
 								</tr>
 							</table>
+                                                    </div>
 						</td>
 					</tr>
 					<tr style="height: 10px;">

@@ -30,8 +30,38 @@ window.onload = function () {
 			} else {
 				$orderquery=mysql_query("select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id   AND payment_approv=1 AND o.cat_id = ".$Objrestaurant->id." ORDER BY o.OrderID DESC");
 @$numrows=mysql_num_rows($orderquery);
-					
-			}			
+
+			}
+$getOrders = array();
+$orderDetailsArray = array();
+while($orderRs=mysql_fetch_array($orderquery))
+{
+    $getOrders[]=$orderRs;
+    $OrderID.=$orderRs['OrderID'].",";
+}
+$OrderID = substr($OrderID,0,-1);
+$prdQuery2 = mysql_query("select * from orderdetails where orderid in($OrderID)");
+
+while($getOrderDetails = mysql_fetch_assoc($prdQuery2))
+{
+   $orderDetailsArray[]=$getOrderDetails;
+}
+$orderCount = count($getOrders);
+$orderDetailsCount = count($orderDetailsArray);
+
+//echo "<pre>";print_r($orderDetailsArray);
+
+for($i=0; $i<=$orderCount-1;$i++)
+{
+    for($j=0; $j<=$orderDetailsCount-1;$j++)
+    {
+        if($getOrders[$i]['OrderID'] ==$orderDetailsArray[$j]['orderid'])
+        {
+
+            $getOrders[$i]['orderDetails'][$j] = $orderDetailsArray[$j];
+        }
+    }
+}
 			?>
       
 <div id="main_heading">RESTAURANT ORDER REPORT</div>
@@ -84,11 +114,8 @@ function display(obj) {
           <br />
 <p><strong>        </strong></p></th>
       </tr>
-      <?	while($orderRs=mysql_fetch_array($orderquery)){	 	   
-	   $OrderID = @$orderRs["OrderID"];
-
-	    ?>
-      <!-- test code ends--> 
+      <? foreach($getOrders as $orderRs){
+       ?>
       <tr  >
         <? $substr = substr($orderRs["DesiredDeliveryDate"],0,10);?>
         <td><a href="./?mod=order&item=detail&OrderID=<? echo $orderRs["OrderID"];?>"><? echo $orderRs["OrderID"];?></a></td>
@@ -101,19 +128,33 @@ function display(obj) {
         <td><? echo trim($orderRs["cust_your_name"].' '.$orderRs["LastName"]);?> </td>
          <td>
          	<table width="100%" class="tbl_small">
-              		 <?  $prdQuery2 ="select * from orderdetails where orderid = $OrderID";
-			     $GrandTotal=0;
-				 $prdQuery2= mysql_query($prdQuery2);
-				 while($Ord_RS2=mysql_fetch_array($prdQuery2,MYSQL_BOTH)){
-				 $ProductID= $Ord_RS2["prd_id"]?>
+              		 <?  $GrandTotal=0;
+                             $string1 ='';
+                             foreach($orderRs["orderDetails"] as $Ord_RS2){
+                             $sign='';
+                             $str_extra = stripslashes(stripcslashes($Ord_RS2["extra"]));
+                             $str_extra = explode("~", $str_extra);
+                             foreach($str_extra as $string){
+                             $checkSign = substr($string, strpos($string, "|") + strlen("|"), 1);
+                             if(!empty($checkSign) && $checkSign == "-"){
+                                $sign = "- subtract ";
+                             }
+                             else{
+                                $sign = "- add ";
+                             }
+
+                             $string1 .= str_replace('|',$sign.$currency,$string)."~";
+                             }
+                             $str_extra =  substr($string1,0,-1);
+                             $ProductID= $Ord_RS2["prd_id"]?>
               	 <tr width="22%">
                 	<td width="22%" ><? echo stripslashes(stripcslashes($Ord_RS2["item_title"]))?>
      				<td>
 					<? if($Ord_RS2["extra"]) {?>
                     <strong>Extras:</strong>
                     <?
-					$str_extra = str_replace('~','<br />',stripslashes(stripcslashes($Ord_RS2["extra"]))); 
-					echo str_replace('|','- add '.$currency,$str_extra);
+					$str_extra = str_replace('~','<br />',stripslashes(stripcslashes($str_extra)));
+                                        echo $str_extra;
 					?>
                     <? } ?>
                     <br />

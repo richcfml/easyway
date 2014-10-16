@@ -120,190 +120,229 @@ class SMSTrace
 		}
 		
 		$mUserID = 0;
-		$mResult = mysql_query("SELECT id FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($this->phone_number)."' AND resturant_id=". $this->resaurant_id  ." AND password!=''");
-		if (mysql_num_rows($mResult)>0)
+		$mRestaurantID = $this->resaurant_id;
+		$mRestFlag = false;
+		
+		if ($objRestaurant->status==0)
 		{
-			$mRow = mysql_fetch_object($mResult);
-			$mUserID = $mRow->id;
-			if (is_numeric($mUserID))
+			$this->cydne->sendSMS($this->reply_phone_number,'Restaurant is not available at the moment! ' , '', '', cydne::SYSTEM_RESPONSE);
+			$this->Close();
+			$mRestFlag = true;
+		}
+		
+		if ($objRestaurant->isOpenHour==0)
+		{
+			$this->cydne->sendSMS($this->reply_phone_number,'Restaurant is closed at the moment! ' , '', '', cydne::SYSTEM_RESPONSE);
+			$this->Close();
+			$mRestFlag = true;
+		}
+		
+		
+		if (!($mRestFlag))
+		{
+			$mResult = mysql_query("SELECT id FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($this->phone_number)."' AND resturant_id=". $this->resaurant_id  ." AND password!=''");
+			if (mysql_num_rows($mResult)>0)
 			{
-				$mSMSTmp = strtolower(trim($this->sms));
-				$qry=mysql_query("SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID);
-				$result=mysql_fetch_object($qry);
-					
-				if(!isset($result->id)) 
+				$mRow = mysql_fetch_object($mResult);
+				$mUserID = $mRow->id;
+				if (is_numeric($mUserID))
 				{
-					$this->Open();
-				}
-				else if (($mSMSTmp!="yes") && ($mSMSTmp!="no") && ($mSMSTmp!="pickup") && ($mSMSTmp!="deliver") && ($mSMSTmp!=strtolower(trim($result->order_title))))
-				{
-					mysql_query("UPDATE repid_reordering_trace SET trace_status=".SMSTrace::TRACECLOSE." WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))!='".strtolower(trim($mSMSTmp))."'");
-					$this->Open();
-				}
-				else
-				{
-					/*$mSMSTmp = strtolower(trim($this->sms));
-					if (($mSMSTmp!="yes") && ($mSMSTmp!="no") && ($mSMSTmp!="pickup") && ($mSMSTmp!="deliver"))
+					$mSMSTmp = strtolower(trim($this->sms));
+					$qry=mysql_query("SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID);
+					$result=mysql_fetch_object($qry);
+						
+					if(!isset($result->id)) 
 					{
-						mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_Order_Titles_1', 'SMS: .".$mSMSTmp.", Order Title: ".$result->order_title."')");
-						if ($mSMSTmp!=strtolower(trim($result->order_title))) 
-						{
-							mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_Order_Titles_2', 'SMS: .".$mSMSTmp.", Order Title: ".$result->order_title."')");
-							$qry=mysql_query("SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))='".strtolower(trim($mSMSTmp))."'");
-							$result=mysql_fetch_object($qry);
-							mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_Order_Titles_3', 'SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))=[".strtolower(trim($mSMSTmp))."]')");
-						}
-					}*/
-					$this->id=$result->id;
-					$this->phone_number=$result->phone_number;
-					$this->user_id=$result->user_id;
-					$this->step=$result->step;
-					$this->order_title=$result->order_title;
-					$this->easyway_id=$result->easyway_id;
-					$this->ntries=$result->ntries;
-					$this->token_id=$result->token_id;
-					
-					$mToken = $loggedinuser->SelectTokenDetailsByTokenUserID($this->user_id, $this->token_id);
-					if($mToken->data_type==AMEX)
-					{
-						$card_type="American Express";
+						$this->Open();
 					}
-					else if($mToken->data_type==VISA)
+					else if (($mSMSTmp!="yes") && ($mSMSTmp!="no") && ($mSMSTmp!="pickup") && ($mSMSTmp!="deliver") && ($mSMSTmp!=strtolower(trim($result->order_title))))
 					{
-						$card_type="VISA";
-					}
-					else if($mToken->data_type==MASTER)
-					{
-						$card_type="MasterCard";
-					}
-					else if($mToken->data_type==DISCOVER)
-					{
-						$card_type="Discover";
+						mysql_query("UPDATE repid_reordering_trace SET trace_status=".SMSTrace::TRACECLOSE." WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))!='".strtolower(trim($mSMSTmp))."'");
+						$this->Open();
 					}
 					else
 					{
-						$card_type="Discover";
-					}
-					$x_exp_date1 = $mToken->card_expiry; 
-					
-					if (strtoupper($this->sms)=="YES")
-					{
-						$cart->clear();
-						$loggedinuser=$loggedinuser->loginbyid($this->user_id);
-						$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
-						$this->arrOrder=$arrfood[0];
-						$cart->addfavorites($this->arrOrder->food);
-						$cart->setdelivery_type($this->arrOrder->order_receiving_method);
-						$_POST['serving_date']=date("m/d/Y", time());
-						$_POST['vipcard']=0;
-						$_POST['serving_time']=0;
-						$_POST['payment_method']=1;
-						$card_token=$this->token_id;
-						$cart_total=$cart->grand_total(0);
-						$repid_payment=1;
-						$x_card_num='';
-						$x_exp_date='';
-						$special_notes ='';
-						$vip_discount =0;
-						if($this->step==2)
+						$this->id=$result->id;
+						$this->phone_number=$result->phone_number;
+						$this->user_id=$result->user_id;
+						$this->step=$result->step;
+						$this->order_title=$result->order_title;
+						$this->easyway_id=$result->easyway_id;
+						$this->ntries=$result->ntries;
+						$this->token_id=$result->token_id;
+						
+						$mToken = $loggedinuser->SelectTokenDetailsByTokenUserID($this->user_id, $this->token_id);
+						if($mToken->data_type==AMEX)
 						{
-							$this->cydne->sendSMS($this->reply_phone_number,' We are procssing your card hold one!!! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
-							$this->Close();
+							$card_type="American Express";
+						}
+						else if($mToken->data_type==VISA)
+						{
+							$card_type="VISA";
+						}
+						else if($mToken->data_type==MASTER)
+						{
+							$card_type="MasterCard";
+						}
+						else if($mToken->data_type==DISCOVER)
+						{
+							$card_type="Discover";
 						}
 						else
 						{
-							$success=0;
-							
-							if( $objRestaurant->payment_gateway=="authoriseDotNet")  
+							$card_type="Discover";
+						}
+						$x_exp_date1 = $mToken->card_expiry; 
+						if (strtoupper($this->sms)=="YES")
+						{
+							$cart->clear();
+							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+							$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+							$this->arrOrder=$arrfood[0];
+							$cart->addfavorites($this->arrOrder->food);
+							$cart->setdelivery_type($this->arrOrder->order_receiving_method);
+							$_POST['serving_date']=date("m/d/Y", time());
+							$_POST['vipcard']=0;
+							$_POST['serving_time']=0;
+							$_POST['payment_method']=1;
+							$card_token=$this->token_id;
+							$cart_total=$cart->grand_total(0);
+							$repid_payment=1;
+							$x_card_num='';
+							$x_exp_date='';
+							$special_notes ='';
+							$vip_discount =0;
+							if($this->step==2)
 							{
-								$objRestaurant->payment_gateway="AuthorizeNet";
-							}
-							
-							$x_first_name=$loggedinuser->cust_your_name;
-							$x_last_name=$loggedinuser->LastName;
-							if ($cart->OrderDeliveryMethod()=="Delivery")
-							{
-								$cart->driver_tip = $this->arrOrder->driver_tip;
-							}
-							
-							require_once 'classes/gateways/'.$objRestaurant->payment_gateway.'.php';
-							
-							if($success==1) 
-							{
-								$_POST['x_card_num']='';
-								$platform_used = 3;
-								
-								include "new_site/views/cart/submit_order.php";
-								$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successful ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
+								$this->cydne->sendSMS($this->reply_phone_number,' We are procssing your card hold one!!! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+								$this->Close();
 							}
 							else
 							{
-								$this->cydne->sendSMS($this->reply_phone_number,'payment method declined.  Please order online ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);							$this->updatestatus(SMSTrace::REJECTED);		 
-							}
-							$this->Close();	
-						}	
-					}
-					else if (strtoupper($this->sms)=="PICKUP")
-					{
-						$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 2);
-						$cart->clear();
-						$loggedinuser=$loggedinuser->loginbyid($this->user_id);
-						$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
-						$this->arrOrder=$arrfood[0];
-						$cart->addfavorites($this->arrOrder->food);
-						$cart->driver_tip = $this->arrOrder->driver_tip;
-						$cart->setdelivery_type(2);
-						
-						$mSMS="Pickup" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm, or DELIVER to change to delivery.';
-						$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
-					}
-					else if (strtoupper($this->sms)=="DELIVER")
-					{
-						$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 1);
-						$cart->clear();
-						$loggedinuser=$loggedinuser->loginbyid($this->user_id);
-						$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
-						$this->arrOrder=$arrfood[0];
-						$cart->addfavorites($this->arrOrder->food);
-						$cart->driver_tip = $this->arrOrder->driver_tip;
-						$cart->setdelivery_type(1);
-						
-						$mSMS="Delivery" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm, or PICKUP to change to pickup.';
-						$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
-					}
-					else if (strtoupper($this->sms)=="NO")
-					{
-						$this->Close();	
-						$this->cydne->sendSMS($this->reply_phone_number,' please send your favorites food title again, Session CLOSED' ,$this->order_title .'User CACNCEL','',cydne::SYSTEM_RESPONSE);
-						$this->updatestatus(SMSTrace::USERCANCEL);
-					}
-					else 
-					{
-						$this->ntries= $this->ntries+ 1;
-						if($this->ntries==30)
-						{
-							$this->Close();	
-							$this->cydne->sendSMS($this->reply_phone_number,' please send your favorites food title again, Session CLOSED' ,$this->order_title.' Max reply level ' ,'',cydne::SYSTEM_RESPONSE);
-							$this->updatestatus(SMSTrace::SESSIONCLOSED); 
+								$success=0;
+								
+								if( $objRestaurant->payment_gateway=="authoriseDotNet")  
+								{
+									$objRestaurant->payment_gateway="AuthorizeNet";
+								}
+								
+								$x_first_name=$loggedinuser->cust_your_name;
+								$x_last_name=$loggedinuser->LastName;
+								if ($cart->OrderDeliveryMethod()=="Delivery")
+								{
+									$cart->driver_tip = $this->arrOrder->driver_tip;
+								}
+								
+								require_once 'classes/gateways/'.$objRestaurant->payment_gateway.'.php';
+								
+								if($success==1) 
+								{
+									$_POST['x_card_num']='';
+									$platform_used = 3;
+									
+									include "new_site/views/cart/submit_order.php";
+									$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successful ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
+								}
+								else
+								{
+									$this->cydne->sendSMS($this->reply_phone_number,'payment method declined.  Please order online ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);							$this->updatestatus(SMSTrace::REJECTED);		 
+								}
+								$this->Close();	
+							}	
 						}
-						else
+						else if (strtoupper($this->sms)=="PICKUP")
 						{
-							$this->updateTries();
-							$this->cydne->sendSMS($this->reply_phone_number,' please reply with YES or NO to confirm order ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
-						}	
+							$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 2);
+							$cart->clear();
+							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+							$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+							$this->arrOrder=$arrfood[0];
+							$cart->addfavorites($this->arrOrder->food);
+							$cart->driver_tip = $this->arrOrder->driver_tip;
+							$cart->setdelivery_type(2);
+							
+							if ($objRestaurant->delivery_offer==1)
+							{
+								$mSMS="Pickup" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm, or DELIVER to change to delivery.';
+							}
+							else
+							{
+								$mSMS="Pickup" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm.';
+							}
+							$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+						}
+						else if (strtoupper($this->sms)=="DELIVER")
+						{
+							if ($objRestaurant->delivery_offer==1)
+							{
+								$cart->clear();
+								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+								$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+								$this->arrOrder=$arrfood[0];
+								$cart->addfavorites($this->arrOrder->food);
+								$cart->driver_tip = $this->arrOrder->driver_tip;
+								
+								if ($cart->grand_total(0)<$objRestaurant->order_minimum)
+								{
+									$mSMS="We are having a minimum limit of $".$objRestaurant->order_minimum." for Delivery orders. Please choose any other favorite order.";
+									$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+									$this->Close();	
+								}
+								else
+								{
+									$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 1);
+									$cart->setdelivery_type(1);
+									$mSMS="Delivery" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm, or PICKUP to change to pickup.';
+									$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+								}
+							}
+							else
+							{
+								$cart->clear();
+								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+								$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+								$this->arrOrder=$arrfood[0];
+								$cart->addfavorites($this->arrOrder->food);
+								$cart->driver_tip = $this->arrOrder->driver_tip;
+								
+								$mSMS = "We offer Pickup option only. Pickup ".$this->order_title." $". $cart->grand_total(0)." pay with ".$card_type." - ".$mToken->data_1." reply YES to confirm.";
+								$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+							}
+						}
+						else if (strtoupper($this->sms)=="NO")
+						{
+							$this->Close();	
+							$this->cydne->sendSMS($this->reply_phone_number,' please send your favorites food title again, Session CLOSED' ,$this->order_title .'User CACNCEL','',cydne::SYSTEM_RESPONSE);
+							$this->updatestatus(SMSTrace::USERCANCEL);
+						}
+						else 
+						{
+							$this->ntries= $this->ntries+ 1;
+							if($this->ntries==30)
+							{
+								$this->Close();	
+								$this->cydne->sendSMS($this->reply_phone_number,' please send your favorites food title again, Session CLOSED' ,$this->order_title.' Max reply level ' ,'',cydne::SYSTEM_RESPONSE);
+								$this->updatestatus(SMSTrace::SESSIONCLOSED); 
+							}
+							else
+							{
+								$this->updateTries();
+								$this->cydne->sendSMS($this->reply_phone_number,' please reply with YES or NO to confirm order ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
+							}
+						}
 					}
+				}
+				else
+				{
+					mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_User_ID_Non_Numeric', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id.", User ID: ".$mUserID."')");
+					exit;
 				}
 			}
 			else
 			{
-				mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_User_ID_Non_Numeric', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id.", User ID: ".$mUserID."')");
+				mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_No_User_ID', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id."')");
 				exit;
 			}
-		}
-		else
-		{
-			mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_No_User_ID', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id."')");
-			exit;
 		}
 	}
 			
@@ -345,11 +384,27 @@ class SMSTrace
 					}
 					
 					$mPaymentMethod = $loggedinuser->SelectPaymentMethodByFavoriteID($this->easyway_id);
-							
+					
+					if ($objRestaurant->delivery_offer==0)
+					{
+						$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 2);
+						$cart->setdelivery_type(2);
+					}
+					
 					if ($mPaymentMethod==1)
 					{
 						$cart->driver_tip = $this->arrOrder->driver_tip;
-						$sms=$cart->OrderDeliveryMethod() .' '.$this->sms .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$token->data_1 . ' reply YES to confirm, or PICKUP to change to pickup.';
+						
+						
+						if ($cart->grand_total(0)<$objRestaurant->order_minimum)
+						{
+							$cart->setdelivery_type(2);
+							$sms=$cart->OrderDeliveryMethod() .' '.$this->sms .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$token->data_1 . ' reply YES to confirm, or DELIVER to change to delivery.';
+						}
+						else
+						{
+							$sms=$cart->OrderDeliveryMethod() .' '.$this->sms .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$token->data_1 . ' reply YES to confirm, or PICKUP to change to pickup.';
+						}						
 					}
 					else if ($mPaymentMethod==2)
 					{

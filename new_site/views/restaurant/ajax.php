@@ -336,6 +336,8 @@ else if (isset($_GET['showEditPopup']))
     $hasAttribute = $_POST['hasAttribute'];
     $hasAssociates = $_POST['hasAssociates'];
     $cartItemIndex = $_POST['cartItemIndex'];
+    $productClass = new product();
+    $productDetails = $productClass->getProductDetailsForEditCartItem($product_id);
     //$totalPrice=0;
     $cartItem = $cart->showCartItem($product_id,$cartItemIndex);
     if($hasAssociates == 1){
@@ -398,7 +400,8 @@ else if (isset($_GET['showEditPopup']))
     $item_for = str_replace("'","&#39;",$cartItem->item_for);
     $requestnote = str_replace("'","&#39;",$cartItem->requestnote);
     //echo $item_for;echo $requestnote;
-    $result = array('assoc' => $association_result, 'attr' => $attributes_result , 'totalAttribute' => count($attributes_result), 'quantity' => $cartItem->quantity, 'item_for' => $item_for, 'requestnote' => $requestnote);
+    $result = array('assoc' => $association_result, 'attr' => $attributes_result , 'totalAttribute' => count($attributes_result),
+                    'quantity' => $cartItem->quantity, 'item_for' => $item_for, 'requestnote' => $requestnote,'productDetails' => $productDetails);
     print_r(json_encode($result));
 }
 ?>
