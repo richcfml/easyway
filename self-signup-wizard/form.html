@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+<link type="text/css" rel="stylesheet" href="css/style.css">
+
+<!--<script type="text/javascript" src="js/bootstrap.min.js"></script>-->
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+</head>
+
+<body>
+<div class="header_2"><a href="#"><img src="images/small.jpg" border="0" /></a></div>
+<div class="content">
+	<div class="container">
+    <div class="tabs-cont">
+    	<div class="left-col">
+            <div class="first">
+            	<span class="tile selected first" id="tab_1"></span>
+                <span class="tab_label selected tab_label_1">Create Your Account</span>
+            </div>
+            <div>
+    	        <span class="tile" id="tab_2"></span>
+	            <span class="tab_label">Restaurant Information</span>
+            </div>
+            <div>
+            	<span class="tile" id="tab_3"></span>
+        	    <span class="tab_label">Order settings</span>
+            </div>
+            <div>
+    	        <span class="tile" id="tab_4"></span>
+	            <span class="tab_label">Menus</span>
+            </div>
+            <div>
+            	<span class="tile" id="tab_5"></span>
+        	    <span class="tab_label">Payment Setting</span>
+            </div>
+            <div>
+	            <span class="tile last" id="tab_6"></span>
+    	        <span class="tab_label">Setup Instructions</span>
+            </div>
+		</div>
+        <div class="clearfix center-col">
+            <div class="tab1" id="tab1">
+                <div class="reg-div" id="reg-div">
+                    <!--<div class="step-heading">Create Your Account</div>-->
+                    <h3>Sign Up</h3>
+                    <div class="reg_table_div">
+                    	<table class="reg-table" width="100%" cellpadding="0" cellspacing="0" align="">
+                        <tr>
+                            <td width="50%">
+                                <label for="client_username">First Name: <span class="starig">*</span></label>
+                                <input type="text" id="client_username" name="client_username" />
+                            </td>
+                            <td width="50%">
+                                Last Name: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Phone: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                            <td>
+                                Email: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                         </tr>
+                         <tr>
+                            <td>
+                                User Name: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                            <td>
+                                Password: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                         </tr>
+                         <tr>
+                            <td>
+                                Conform Password: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                            <td>
+                                Country: <span class="starig">*</span><br />
+                                <select>
+                                    <option>Select Country</option>
+                                    <option>item 1</option>
+                                    <option>item 2</option>
+                                </select>
+                            </td>
+                         </tr>
+                         <tr>
+                            
+                            <td>
+                                State: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                            <td>
+                                City: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                         </tr>
+                         <tr>
+                            
+                            <td>
+                                Zip: <span class="starig">*</span><br />
+                                <input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                        <Td></Td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                          Alredy User ? <a href="#" class="link" id="login-id" onclick="showLogin('login-id')">Signin</a>
+                           <!--<div id="login-id" onclick="showLogin('login-id')">test</div>-->
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <div class="login-div" id="login-div">
+                    <h3>Login</h3>
+                    <div class="reg_table_div">
+                     <table class="reg-table" width="100%" cellpadding="0" cellspacing="0" align="">
+                        <tr>
+                        <td>
+                            Username: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>
+                            Password: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Don't have a account? <a href="#" class="link" id="reg-id" onclick="showLogin('reg-id')">Sign Up</a></td>
+                    </tr>
+                    </table>
+                    </div>
+                </div>
+                <div class="clr"></div>
+            </div>
+            <div class="tab2" id="tab2">
+                <!--<div class="step-heading">Restaurant Information</div>-->
+				<h3>Restaurant Information</h3>
+                <div class="reg_table_div">
+                	<table class="reg-table" width="100%" cellpadding="0" cellspacing="0" align="">
+                    <tr>
+                        <td width="50%">
+                            Restaurant Name: <span class="starig">*</span><br />
+                            <input type="text" />	
+                        </td>
+                        <td width="50%">
+                            Restaurant Phone: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                        <td>
+                            Fax: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Conform Password: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                        <td>
+                            Reseller: <span class="starig">*</span><br />
+                            <select>
+                                <option>Select Reseller</option>
+                                <option>item 1</option>
+                                <option>item 2</option>
+                            </select>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                            Country: <span class="starig">*</span><br />
+                            <select>
+                                <option>Select Country</option>
+                                <option>item 1</option>
+                                <option>item 2</option>
+                            </select>
+                        </td>
+                        <td>
+                            State: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td colspan="2">
+                            Select Time Zone: <span class="starig">*</span><br />
+                            <select>
+                                <option>Select Here...</option>
+                                <option>Item 1</option>
+                                <option>Item 2</option>
+                            </select>
+                        </td>
+                     </tr>
+                </table>
+                </div>
+            </div>
+            <div class="tab3" id="tab3">
+                <!--<div class="step-heading">Step 3: Order Settings</div>-->
+				<h3>Order Settings</h3>
+                <div class="reg_table_div">
+                	<table width="100%" class="reg-table">
+                    <tr>
+                        <Td>
+                            <strong>Will you receive orders via Fax, Email or POS?</strong><br />
+                            <input type="radio" name="FEP" value="2" id="fax" onclick="faxEmailPos('fax')"/>Fax &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="FEP" value="1" id="email" onclick="faxEmailPos('email')"/>Email &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="FEP" value="0" id="pos" onclick="faxEmailPos('pos')"/>POS &nbsp;&nbsp;&nbsp;&nbsp;
+                            <div class="faxDiv" id="FaxDivId">
+                            <input type="text" placeholder="Enter Fax Number..." />
+                            </div>
+                            <div class="faxDiv" id="EmailDivId">
+                            <input type="text" placeholder="Enter Your Email..." />
+                            </div>
+                            <div class="faxDiv" id="POSDivId">
+                            Your Online Ordering Coach will configure this for you during your training call.
+                            </div>
+                            
+                        </Td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Order Minimum: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sales Tax %: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Do you offer delivery (yes / no):</strong> <span class="starig">*</span><br />
+                             <input type="radio" name="delivery" id="del_yes" onclick="deliveryMethod('del_yes')"/>Yes &nbsp;&nbsp;&nbsp;&nbsp;
+                             <input type="radio" name="delivery" id="del_no" onclick="deliveryMethod('del_no')"/>No &nbsp;&nbsp;&nbsp;&nbsp;
+                             <div class="del_yes" id="del_yes_div">
+                                <strong>Delivery Option</strong><br />
+                                <input type="radio" name="yes" id="delRad" onclick="delRad('delRad')" />Delivery Radius &nbsp;&nbsp;&nbsp; 
+                                <input type="radio" name="yes" id="cusDelZon" onclick="delRad('cusDelZon')"/>Custome Delivery Zone&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="delRed" id="delRadDiv">
+                                    Dilivery Radius for Resturant:<br />
+                                    <input type="text" />
+                                    </div>
+                                    <div class="delRed" id="cusDelZonDiv"><img src="images/cus_img.png" /></div>
+                             </div>
+                             <div class="del_no" id="del_no_div">
+                             <!--no-->
+                             </div>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                <!--<div class="btn-hoder">
+            <input type="button" value="Previous" id="previus1" onclick="shows('previus1')" class="inActive-btn"/>
+            <input type="submit" value="Skip" id="finish" onclick="shows('finish1')" class="inActive-btn"/>
+            <input type="button" value="Next" id="next"  onclick="shows('next1')"  class="active-btn"/>
+        </div>-->
+            </div>
+            
+            <div class="tab4" id="tab4">
+            <h3>Menus</h3>
+            <div class="reg_table_div">
+                <!--<div class="step-heading">Step 4: Menus</div>-->
+                <table width="100%" class="reg-table">
+                <tr>
+                    <td>
+                        <input type="radio" name="menue"  id="uploadMenu" onclick="menues('uploadMenu')" />Upload your menus &nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                	<td>
+                    	<input type="radio" name="menue" id="uploadMenu2" onclick="menues('uploadMenu2')"/>Fax your menu to 877-211-0213 &nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                	<Td>
+                		<input type="radio" name="menue" id="uploadMenu3" onclick="menues('uploadMenu3')"/>Print fax cover sheet &nbsp;&nbsp;&nbsp;&nbsp;    
+                    </Td>
+                </tr>
+                </table>
+                </div>
+                <div class="uploadMenuDiv" id="uploadMenuDiv">
+				<div class="reg_table_div">	
+                	<table width="100%" class="reg-table">
+                    <tr>
+                        <td>
+                            Menu Name:<br />
+                            <input type="text" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Upload (browse for file on PC):<br />
+                            <input type="file" /> <br />
+                            
+                            Upload another menu file:<br />
+                            <input type="file" /> <br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Special instructions:<br />
+                            <textarea rows="3"></textarea>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+                <div class="uploadMenuDiv" id="uploadMenuDiv2">
+                <div class="reg_table_div">
+					<table width="100%" class="reg-table">
+                    	<tr>
+                        <Td>
+                    		Fax your Menue:<br />
+                    		<input type="text" />    
+                        </Td>
+                        </tr>
+                    </table>
+                    
+                </div>
+                </div>
+                <div class="uploadMenuDiv" id="uploadMenuDiv3">
+                	<div class="reg_table_div">
+                    	<table width="100%" class="reg-table" align="">
+                        <tr>
+                            <Td width="50%">
+                                Restaurant Name:<br />
+                                <input type="text" />
+                            </Td>
+                            <td width="50%">
+                            Contact Name: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            Phone: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>                       
+                             <td>
+                            Country: <span class="starig">*</span><br />
+                            <select>
+                                <option>Select Country</option>
+                                <option>item 1</option>
+                                <option>item 2</option>
+                            </select>
+                        </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                            State: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                        <td>
+                            City: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                     </tr>
+                     <tr>
+                        
+                        <td>
+                            Zip: <span class="starig">*</span><br />
+                            <input type="text" />
+                        </td>
+                    </tr>
+                    </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab5" id="tab5">
+            <!--<div class="step-heading">Step 5: Payment Settings</div>-->
+            <h3>Payment Setting</h3>
+            <div class="reg_table_div">
+            	<table width="100%" class="reg-table">
+                <tr>
+                    <td>
+                    <strong>Will you accept cash (yes / no):</strong><br />
+                    <input type="radio" name="cash" id="cash_yes" onclick="cashMet('cash_yes')" />Yes &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="cash" id="cash_no" onclick="cashMet('cash_no')"/>No &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="cashDiv" id="cashDivYes">
+                        <input type="radio" name="cash1" />I already have a [credit card processor name] merchant account for online transactions.<br />
+                        <input type="radio" name="cash1" />I would like to set up a new [credit card processor name] merchant account for online transactions.<br />
+                        <input type="radio" name="cash1" />I will not accept credit cards on my website.<br />
+                    </div>
+                    <div class="cashDiv" id="cashDivNo">no</div>
+                    </td>
+                </tr>
+            </table>
+            </div>
+            </div>
+            <div class="tab6" id="tab6">
+            <!--<div class="step-heading">Step 6: Setup Instructions</div>-->
+            <h3>Setup Instructions</h3>
+            <div class="reg_table_div">
+            	<table width="100%" class="reg-table">
+                <tr>
+                <td>
+                    <strong>Domain Name of your website</strong> <br />
+                    <div>       
+                    <input type="radio" name="domainName" id="domainName1" />  Already have a domain name. &nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="domainName" id="domainName2" />  I would like a new domain name. &nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="cashDiv" id="domainDiv2">
+                    <table width="100%" class="reg-table step_6_table">
+                        <tr>
+                            <td>
+                            Enter domain name:<br />
+                            <input type="text" />
+                            </td>
+                        </tr>
+                </table>
+                </div>
+                <div class="cashDiv" id="domainDiv3">
+                <table width="100%" class="reg-table step_6_table">
+                    <tr>
+                        <td>
+                        Enter desired domain name:<br />
+                        <input type="text" />
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                <br />
+                <strong>Website Integration</strong> <br /> 
+                <input type="radio" name="wesbite_integration" id="wesbite_integration1" /> I’m adding the EasyWay Ordering menu to my existing website <br />
+                <input type="radio" name="wesbite_integration" id="wesbite_integration2" /> I will use the EasyWay Ordering menu as my website <br />
+                <input type="radio" name="wesbite_integration" id="wesbite_integration3" /> I would like EasyWay to build me a custom website <br />
+                
+                <br />
+               <strong> Hosting Information</strong> <br /> 
+                <input type="radio" name="wesbite_integration" id="hosting_info1" /> I would like EasyWay to configure my hosting account and or integrate the ordering page with my website. <br />
+                <div class="cashDiv" id="hosting_div1">
+                <table width="100%" class="reg-table step_6_table">
+                    <tr>
+                        <td>
+                        Name of hosting company (ex GoDaddy):<br />
+                        <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Account number or username:<br />
+                        <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Account Password:<br />
+                        <input type="password" />
+                        </td>
+                    </tr>
+                    
+                </table>
+                </div>
+                <input type="radio" name="wesbite_integration" id="hosting_info2" /> My web designer will apply the necessary updates <br />
+                <div class="cashDiv" id="hosting_div2">
+                <table width="100%" class="reg-table step_6_table">
+                    <tr>
+                        <td>
+                        Name:<br />
+                        <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Phone:<br />
+                        <input type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Email address:<br />
+                        <input type="password" />
+                        </td>
+                    </tr>
+                    
+                </table>
+                </div>
+                <input type="radio" name="wesbite_integration" id="hosting_info3" /> I will apply the updates myself <br />
+                <div class="cashDiv" id="hosting_div3"></div>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </div>
+            <div class="btn-hoder">
+	    	<input type="button" value="« Previous" id="btn_previous" class="active-btn" style="display: none;"/>
+    	    <input type="submit" value="Skip" id="btn_skip" class="active-btn"  style="display: none;"/>
+        	<input type="button" value="Next »" id="btn_next" class="active-btn"/>
+            <input type="submit" value="Submit" id="btn_submit" class="active-btn" style="display: none;" />
+	    </div>
+		</div>
+        <div class="right-col">
+        	<h3>Description</h3>
+            <p>
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            </p>
+        </div>
+        <div class="clr"></div>
+        
+    </div>
+</div>
+</div>
+</body>
+</html>

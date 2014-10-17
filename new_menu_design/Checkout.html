@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-theme.css">
+    <link type="text/css" rel="stylesheet" href="css/CustomeStyle.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+						   
+	$("#LoginPopup").click(function(){
+    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#CheckinBigDiv').fadeOut();
+			});
+  	});	
+	
+	$("#RegisterPopup").click(function(){
+    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#RegisterBigDiv').fadeOut();
+			});
+  	});	
+	
+	$("#Tab1").click(function(){
+    	$("#ContentTab1").fadeIn() && $("#ContentTab2").fadeOut();
+  	});	
+	$("#Tab2").click(function(){
+    	$("#ContentTab2").fadeIn() && $("#ContentTab1").fadeOut();
+  	});	
+	
+	
+});
+</script>
+
+<script>
+
+function abc(){
+
+var a = document.getElementById('CardTxt').value
+
+if(a==555)
+{
+
+document.getElementById("ImgTwo").style.display="none";
+document.getElementById("ImgThree").style.display="none";
+document.getElementById("ImgFour").style.display="none";
+
+
+//var b= document.getElementById('ImgOne').style.display = visibility;
+	//alert("ok");
+	}
+
+
+if(a==666)
+{
+
+document.getElementById("ImgOne").style.display="none";
+document.getElementById("ImgThree").style.display="none";
+document.getElementById("ImgFour").style.display="none";
+
+
+//var b= document.getElementById('ImgOne').style.display = visibility;
+	//alert("ok");
+	}
+if(a==777)
+{
+
+document.getElementById("ImgOne").style.display="none";
+document.getElementById("ImgTwo").style.display="none";
+document.getElementById("ImgFour").style.display="none";
+
+
+//var b= document.getElementById('ImgOne').style.display = visibility;
+	//alert("ok");
+	}
+if(a==888)
+{
+
+document.getElementById("ImgOne").style.display="none";
+document.getElementById("ImgTwo").style.display="none";
+document.getElementById("ImgThree").style.display="none";
+
+
+//var b= document.getElementById('ImgOne').style.display = visibility;
+	//alert("ok");
+	}
+	
+
+	
+}
+$(document).ready(function(){
+$("#CardTxt").keyup(function(e){
+	if(e.keyCode == 8 && $("#CardTxt").val()=="")
+	{
+		document.getElementById("ImgOne").style.display="block";
+		document.getElementById("ImgTwo").style.display="block";
+		document.getElementById("ImgThree").style.display="block";
+		document.getElementById("ImgFour").style.display="block";
+
+	}
+	}); 
+});
+</script>
+
+    
+    
+    
+    
+    
+    
+    
+  </head>
+  <body>
+    	<div class="container">
+        	<div class="row"><img src="Images/TopBanner.PNG" class="BannerImg"></div>
+        </div>
+        <div class="container">
+        	<div class="row">
+            	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 ColumnBorder">
+                	<div id="AddressText">50 Broad St.<br>New York,NY</div>
+                    <div id="TimeDiv">7:00 am - 8:00 pm - Open</div>
+                    <div id="PhoneText">212 456-7890</div>
+                    <div id="SocialButtonsDiv">
+                    	<div id="facebookButton"><img src="Images/FbLike.png"></div>
+                    	<div id="TwitterButton"><img src="Images/TweetIcon.png"></div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ColumnBorder SecondColumnHeight">
+                	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 text-center GetOfferImg"><img src="Images/GetOfferIcon.PNG"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 GetOfferText text-center"><b>Get 10% Off!</b> Enter #777 below</div>
+                </div>
+                
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 BlackColumnBorder SecondColumnHeight">
+                	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 text-right">
+                    	<div id="CheckoutLogin"><a href="#" class="CheckoutLogin" id="LoginPopup">Log In</a></div>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                    	<div id="Seperator">|</div>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    	<div id="CheckoutLogout"><a href="#" class="CheckoutLogout" id="RegisterPopup">Regitster</a></div>
+                    </div>
+                </div>
+                <!--<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 BlackColumnBorder SecondColumnHeight">
+                	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center WelcomeText" style="width:90px"><a href="#" class="CheckoutLogin" id="LoginPopup">Log In</a>
+                    <span>|</span>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center Logout"><a href="#" class="CheckoutLogout" id="RegisterPopup">Register</a></div>
+                </div>-->
+            </div>
+        </div>
+    <div class="container" style="background-color:#ebebeb;">
+       
+       
+       <div id="CheckinBigDiv" style="display:none;">
+                	<div id="LoginHeading">Log In</div>
+                    <div id="CrossButton" style="margin-top: -15px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.<br>Don’t have any account?  <a href="#" class="RegisterinLine">Register Now!</a></div>
+                    <div id="LoginFbGPlusDiv">
+                    	<div id="LoginWithFb"><a href="#"><img src="Images/LoginWithFb.png"></a></div>
+                        <div id="LoginWithGPlus"><a href="#"><img src="Images/LoginWithGPlus.png"></a></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="LoginForm">
+                    <form>
+                    	<div class="FormLabel">Email* :</div>
+ <div class="FormText"><input type="text" pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$" required class="TextboxEmail"></div>
+                        <div class="FormLabel">Password* :</div>
+                        <div class="FormText"><input type="password" class="TextboxEmail" required ></div>
+                        <div id="ForgotPassword"><a href="#" class="ForgotPassword">Forgot Password?</a></div>
+                        <div class="clear"></div>
+                        <div id="LoginButton"><input type="submit" value="Log In" class="LoginButton"></div>
+                    </form></div>
+                    <div id="HrLine"><img src="Images/HrLine.png"></div>
+                    <div id="Or">or</div>
+                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest">Proceed as a Guest!</a></div>
+                </div>
+                
+                
+                <div id="RegisterBigDiv" style="display:none;">
+            		<div id="CrossButton" style="margin-top: 15px; margin-right: 15px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="LoginHeading" style="margin-top:-15px;">Register</div>
+                    <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.</div>
+                    <div id="RegisterWithSocialBigDiv">
+                    	<div id="RegisterWithFbGPlus">
+                        	<div id="RegisterFbDiv"><a href="#"><img src="Images/RegisterWithFb.png"></a></div>
+                            <div id="RegisterGPlusDiv"><a href="#"><img src="Images/RegisterWithGPlus.png"></a></div>
+                        </div>
+                        <div id="RegisterOr">or</div>
+                        <div id="RegisterTextBox">
+                    <form action="" method="">
+                        	<div class="FormLabel">Email* :</div>
+                            <div class="FormText">
+<input type="text" class="TextboxEmail" pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$" required></div>
+                            <div class="FormLabel">Password* :</div>
+                            <div class="FormText"><input type="password" required class="TextboxEmail"></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="RegisterButton"><input type="submit" value="Register" class="RegisterButton"></div>
+                    </form>
+                    <div id="AlreadyHaveAccount">Already have an account yet? <a href="#" class="RegisterLogin">Log in!</a></div>
+           	 	</div>
+       <div class="row" id="AfterRegisterBigDivRow" style="margin-right:0px">
+       				<div class="col-lg-12 col-md-12 col-xs-12" id="AlmostThere">Almost there!</div>
+        			<div class="col-lg-12 col-md-12 col-xs-12"  id="AlmostHereHr"><img src="Images/AlmostHrLine.png" width="100%"></div>
+  <div class="col-lg-12 col-md-12 col-xs-12" id="BigDiv">
+
+      <div class="col-lg-6 col-md-6 col-xs-12" id="RightDiv" style="background-color:#FFF; margin-left:35px">
+                 
+            <div class="row" style="margin-right:0px">
+                 <div class="col-lg-7 col-md-7  col-xs-12" id="FormDiv">
+                 	<div id="DeliveryHeading">Delivery Details</div>
+                            <div id="ChangeToPIckUp"><a href="#" class="ChangeToPIckUp">Change to Pick-Up?</a></div>
+                            <div id="DeliveryAddressDiv">
+                            	<div id="DeliveryAddress">Delivery Address</div>
+                                <div id="EnterlAddress">Enter Address:</div>
+                 		<form>
+                    <div class="DeliveryQuestion">Your Name*:</div>
+						<div class="DeliveryTextBox"><input type="text" class="form-group DeliveryText" pattern="[a-zA-Z]+" required></div>
+					<div class="DeliveryQuestion">Street* :</div>
+						<div class="DeliveryTextBox"><input type="text" class=" form-group DeliveryText" pattern="[a-zA-Z0-9]+" required></div>
+                    <div class="DeliveryQuestion">Suite/Apt # :</div>
+						<div class="DeliveryTextBox"><input type="text" class=" form-group DeliveryText"  pattern="[a-zA-Z0-9]+" ></div>
+                    <div class="DeliveryQuestion">Zip Code* :</div>
+						<div class="DeliveryTextBoxHalf"><input type="text" class=" form-group DeliveryTextHalf"  pattern="[0-9]+" required></div>
+					 <div class="CityState"><span class="CitySpan">City* :</span><span class="StateSpan">State* :</span></div>
+                                <div class="CityStateText"><span class="CitySpanText">
+						<input type="text" class="CityText"  pattern="[a-zA-Z]+" required ></span><span class="StateSpanText">
+						<input type="text" class="CityText"  pattern="[a-zA-Z]+" required ></span></div>
+                </form>
+                 </div>
+       </div>
+       
+      <div class="col-lg-4 col-md-4  col-xs-12" id="DeliveryDateTimeDiv">
+                       <div id="DelivertDateTimeDiv">
+                            	<div id="DelivertDateTimeHeading">Delivery Date/Time</div>
+                                <div id="DateTimeIcon"><img src="Images/DateTimeIcon.png"></div>
+                                <div id="DateTimeValue">7/14/2014 - 4:30 p.m.</div>
+                            </div>        
+                 </div>
+      </div>
+      <div class=" col-lg-12 col-md-12 col-xs-12"> 
+       <div id="DeliveryInstructions">Delivery Instructions:</div>
+                        	<div id="DeliveryTextArea">
+<textarea class="DeliveryTextArea"></textarea></div>
+      
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+     <div class="row" style="margin-right:0px">
+     <div class="col-lg-4 col-md-4  col-xs-12" id="RadioButtonDiv">
+     <div id="IfLoggedDeliveryHeading">Delivery Address</div>
+                                <div id="IfLoggedDeliveryText"><span class="SpanRadionBox">
+<input type="radio"></span><span class="SpanAddress">50 Broad St.<br> Suite 1701 New York,NY 10004</span></div>
+                            </div>
+      
+     
+     
+        		
+           <div class="col-lg-7 col-md-7  col-xs-8" id="FormDiv2">
+
+<div id="DelivertDateTimeHeading">Delivery Date/Time</div>
+                        		<div id="DateTimeIcon"><img src="Images/DateTimeIcon.png"></div>
+                        		<div id="DateTimeValue">7/14/2014 - 4:30 p.m.</div>
+                                <div id="DeliveryAddressDiv">
+                                    <div id="DeliveryAddress">Delivery Address</div>
+                                    <div id="EnterlAddress">Enter Address:</div>
+                                    <div class="DeliveryQuestion">Your Name*:</div>
+                                    <div class="DeliveryTextBox">
+<input type="text" class="DeliveryText" pattern="[a-zA-Z]+" required></div>
+                                    <div class="DeliveryQuestion">Street* :</div>
+                                    <div class="DeliveryTextBox">
+<input type="text" class="DeliveryText" pattern="[a-zA-Z0-9]+" required></div>
+                                    <div class="DeliveryQuestion">Suite/Apt # :</div>
+                                    <div class="DeliveryTextBox">
+<input type="text" class="DeliveryText" pattern="[a-zA-Z0-9]+" required></div>
+                                    <div class="DeliveryQuestion">Zip Code* :</div>
+                                    <div class="DeliveryTextBoxHalf">
+<input type="text" class="DeliveryTextHalf" pattern="[0-9]+" required></div>
+                                    <div class="clear"></div>
+                                    <div class="CityState"><span class="CitySpan">City* :</span><span class="StateSpan">State* :</span></div>
+                                    <div class="CityStateText"><span class="CitySpanText">
+<input type="text" class="CityText" pattern="[a-zA-Z]+" required></span><span class="StateSpanText">
+<input type="text" class="CityText" pattern="[a-zA-Z]+" required></span></div>
+                                    <div id="SaveThis"><span class="SpanCheckBox">
+<input type="checkbox"></span><span class="SpanSaveThis">Save this address?</span></div></div>
+                            	</div>
+        <div class=" col-lg-12 col-md-12 col-xs-12">                      
+ <div id="DeliveryInstructions">Delivery Instructions:</div>
+                        	<div id="DeliveryTextArea">
+<textarea class="DeliveryTextArea"></textarea></div>
+</div>
+
+</div>
+           </div>   
+   <div class="col-lg-5 col-md-5 col-xs-12" id="LeftDiv">
+                    	<div id="OrderSummaryDiv">
+                        	<div id="OrderSummaryHeading">Order Summary:</div>
+                            <div id="EditOrders"><a href="#" class="EditOrders">Edit Order</a></div>
+                            <div id="OrderItemsBigDiv">
+                            	<div class="OrderItems">
+                                	<span class="SpanItems">Bacon Cheeseburger</span>
+                                    <span class="SpanAmount">$4.45</span>
+                                    <span class="ItemSeperator"><hr color="#e5e5e5" class="ItemHr" style="margin:5px;"></span>
+                                </div>
+                                
+                                <div class="OrderItems">
+                                	<span class="SpanItems">Cobb Salad</span>
+                                    <span class="SpanAmount">$2.45</span>
+                                    <span class="SpanPolygon">For: Julie</span>
+                                    <span class="ItemSeperator"><hr color="#e5e5e5" class="ItemHr" style="margin:5px;"></span>
+                                </div>
+                                
+                                <div class="OrderItems">
+                                	<span class="SpanItems">Chef Salad</span>
+                                    <span class="SpanAmount">$2.45</span>
+                                    <span class="SpanPolygon">For:  Ray</span>
+                                    <span class="ItemSeperator"><hr color="#e5e5e5" class="ItemHr" style="margin:5px;"></span>
+                                </div>
+                            </div>
+                            <div id="TotalAmoutDiv">
+                            	<div class="TotalRow">
+                                	<span class="SpanTotalText">Subtotal:</span>
+                                    <span class="SpanTotalValue">$5.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Sales Tax:</span>
+                                    <span class="SpanTotalValue">$0.75</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Delivery:</span>
+                                    <span class="SpanTotalValue">$0.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Gratuity:</span>
+                                    <span class="SpanTotalValue Grdauity">$2.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText TotalStyle">Total:</span>
+                                    <span class="SpanTotalValue TotalValueStyle">$5.75</span>
+                                </div>
+                                <div class="ItemSeperator"><hr color="#4b4b4b" class="ItemHr"></div>
+                            </div>
+                </div>
+                
+                
+                <div class="row"style="margin-right:0px">
+                
+	 <div id="PaymentBigDiv" class="col-lg-5 col-md-5 col-xs-12">
+                        	<div id="PaymentHeading">Payment</div>
+                            <div id="MyTabsDiv">
+                            	<div id="TabsDiv">
+                                	<ul class="TabsUl">
+                                    	<li class="TabsLi" id="Tab1"><span class="TabsRadio"><input type="radio" name="Rdo"></span><span class="TabsHeading">Credit</span></li>
+                                        <li class="TabsLi" id="Tab2"><span class="TabsRadio"><input type="radio"  name="Rdo"></span><span class="TabsHeading">Cash</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="ContentTabsDiv">
+                            	<div id="ContentTab1" style="display:block">
+                                	<!--If checking out as LoggedIn-->
+                                    <div id="CheckOutAsLoggedIn">
+                                        <div id="CardOnFile">Card on file:</div>
+                                        <div id="SelectCard"><select class="SelectCard SelectImg"><option>Visa Card ***3465</option></select></div>
+                                        <div id="AddAnotherCard"><a href="#" class="AddAnotherCard">Add another card?</a></div>
+                                        <div id="ManagePayment"><a href="#" class="ManagePayment">Manage Payment Methods</a></div>
+                                    </div>
+                                    <!--If checking out as LoggedIn-->
+                                    
+                                    <!--If checking out as guest-->
+                                    <div id="CheckOutAsGuest">
+                                    	<div id="DeliveryAddressDiv" style="margin-left:0px;width: 100%;">
+                          <div class="DeliveryQuestion">Card Number*:</div>
+
+
+
+<div class="DeliveryTextBox"><span style="float:left">
+<input type="text" id="CardTxt"class="DeliveryText" onKeyPress="abc()" required></span>
+
+<span class="SpanCreditCard">
+<span id="ImgOne" style="float:left; position:relative"> <img src="Images/DiscoverCard.png"> </span>
+<span id="ImgTwo" style="float:left;position:relative"> <img src="Images/AmairenCard.png"> </span>
+<span id="ImgThree" style="float:left;position:relative"> <img src="Images/MasterCard.png"> </span>
+<span id="ImgFour" style="float:left;position:relative"><img src="Images/VisaCard.png"> </span>
+
+
+</span></div>
+                                            
+                                            <div class="DeliveryQuestion">CVV*:<span class="Expiration">Expiration*:</span></div>
+                                            <div class="DeliveryTextBoxHalf"><input type="text" class="DeliveryTextHalf" required></div>
+                                            <div class="DeliveryQuestion">Name on Card*:</div>
+                                            <div class="DeliveryTextBox"><input type="text" class="DeliveryText" required></div>
+                                            <div class="BillingAccessDiv"><span class="BillingRadio"><input type="radio"></span><span class="BillingText">Billing Adress same as delivery address</span></div>
+                                            <div class="DeliveryQuestion">Street* :</div>
+                                            <div class="DeliveryTextBox" style="margin-left:19px"><input type="text" class="DeliveryText" required></div>
+                                            <div class="DeliveryQuestion">Suite/Apt # :</div>
+                                            <div class="DeliveryTextBox" style="margin-left:15px"><input type="text" class="DeliveryText" required></div>
+                                            <div class="DeliveryQuestion" style="margin-left:19px">Zip Code* :</div>
+                                            <div class="DeliveryTextBoxHalf" style="margin-left:15px"><input type="text" class="DeliveryTextHalf" required></div>
+                                            <div class="clear"></div>
+                                            <div class="CityState" style="width: 100%;"><span class="CitySpan">City* :</span><span class="StateSpan" style="margin-left:50px">State* :</span></div>
+                <div class="CityStateText"><span class="CitySpanText"><input type="text" class="CityText" required></span><span class="StateSpanText"><input type="text" class="CityText" required></span></div>
+                                        </div>
+                                   
+                                    </div>                
+								</div>
+                
+         					  </div>     
+ 
+ 					 <div id="ContentTab2" style="display:none;">
+                                	<div id="CashMessage">Please Note: Payment due on delivery.</div>
+                                </div>
+ 						</div>
+ 					</div>
+ 				</div>
+ <div class="row" style="margin-right:0px">
+  <div class="col-lg-6 col-md-6 col-xs-12 VipDivRow" style="margin-top:-50px; margin-left:35px;">
+
+					<div id="VipDiv">
+                        	<div id="VipLeft">
+                            	<div id="VipHeading">VIP</div>
+                                <div id="VipBadge">$8</div>
+                                <div id="YourBalance">Your Balance</div>
+                                <div id="VipPoints"><span class="VipPoints">12</span> Points needed till next reward</div>
+                            </div>
+                            <div id="VerticleHr"></div>
+                            <div id="VipRight">
+                            	<div id="HowWouldYou">How would you like to redeem?</div>
+                                <div class="RadionQuestions"><span class="SpanRadioBoxVip">
+<input type="radio" name="rdo"></span><span class="SpanRadioTextVip" style="margin-top: 3px;">Use all available balance for this purchase</span></div>
+                          <div class="RadionQuestions"><span class="SpanRadioBoxVip" style="margin-top: 4px;">
+ <input type="radio" name="rdo"></span><span class="SpanRadioTextVip">Use <input type="text" style="width:40px;"> amount of balance</span></div>
+                                <div class="RadionQuestions"><span class="SpanRadioBoxVip"><input type="radio" name="rdo"></span><span class="SpanRadioTextVip">Earn <span class="RewardsPoints">8</span> points with this purchase</span></div>
+                            </div>
+ 
+
+  
+  
+  </div>
+  </div>          
+     
+     <div class="row" style="margin-right:0px">
+  <div class="col-lg-6 col-md-6 col-xs-12 CouponsGiftsDivRow" style="margin-top:15px; margin-left:49px;">
+
+			 <div id="CouponsGiftsDiv">
+                        	<div id="CouponsHeading">Coupons/Gift Cards</div>
+                            <div id="RedeemGiftCardDiv">
+                            	<span class="SpanRedeem">Redeem Giftcard:</span>
+                                <span class="SpanRedeemTextBox"><input type="text"></span>
+                                <span class="SpanEnterGiftCard">Enter giftcard number found on card.</span>
+                            </div>
+                            <div id="RedeemHr"><hr color="#e5e5e5" style="width:90%;"></div>
+                            <div id="CouponsDiv">
+                            	<span class="SpanCouponsHeading">Coupon:</span>
+                                <span class="SpanCouponTextBox"><input type="text" class="CouponText" placeholder="BURGER"></span>
+                                <span class="SpanBuyThree">Buy 3 Entrees - Get 4th Entree FREE!</span>
+                                <span class="SpanRemove"><a href="#" class="Remove">Remove</a></span>
+                            </div>
+     				</div>
+    		 </div>
+    	</div>
+    
+    <div class="row" style="margin-right:0px">
+     <div id="CheckoutSubmitOrderDiv"><input type="submit" class="CheckoutSubmitOrder" value="Submit Order!"></div></form>
+         </div>
+      <div class="row" style="margin-right:0px">
+      <div id="FinalScreenWhiteDiv">
+                        <div id="FinalScreen">
+                            <div id="YourFood">Your food is on it's way!</div>
+                            <div id="AnOrder">An order confirmation has been emailed to you. <br>While you wait why not:</div>
+                            <div class="clear"></div>
+                            <div id="FinalScreenSocialBigDiv">
+                            	<div class="FinalScreenSocialDiv" style="margin-top: 30px;">
+                                	<span class="SpanFinalScreenImg"><img src="Images/BigShare.png"></span>
+                                    <span class="SpanShareThisOrder" style="margin-top: 15px;">Share this order!</span>
+                                </div>
+                                <div class="FinalScreenSocialDiv" style="margin-top: 30px;">
+                                	<span class="SpanFinalScreenImg"><img src="Images/BigTweet.png"></span>
+                                    <span class="SpanShareThisOrder" style="margin-top: 15px;">Share this order!</span>
+                                </div>
+                                <div class="FinalScreenSocialDiv">
+                                	<span class="SpanFinalScreenImg"><img src="Images/BigYelp.png"></span>
+                                    <span class="SpanShareThisOrder" style="margin-top: 5px;">Share this order!</span>
+                                </div>
+                            </div>
+                            <div id="QuestionAboutOrder">Questions about your order? <a href="#" class="FinalContact">Contact us!</a></div>
+                        </div>
+		      </div>
+     	 </div>
+       
+        <div class="container">
+        	<div class="row">
+            	<div class="col-lg-12 col-md-12 col-xs-12">    
+                	<div id="PoweredBy"><img src="Images/PoweredBy.png"></div>
+                    <div id="FooterLinksBigDiv">
+                	<div class="FooterLinksLi"><a href="#" class="FooterLinks">Terms &amp; Conditions &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Privacy &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Refund Policy</a></div>
+                </div>
+                </div>
+            </div>
+        </div>
+  </body>  
+</html>
+    

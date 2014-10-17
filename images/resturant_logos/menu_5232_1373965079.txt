@@ -1,0 +1,24 @@
+select id
+, user_id
+, resturant_id
+, cart_total_amount
+, date_added
+, dated 
+from abandoned_carts ac 
+where 
+exists (
+select * 
+from abandoned_carts ac2 
+where ac2.user_id=ac.user_id
+and ac.resturant_id=ac2.resturant_id 
+and ac2.id>ac.id 
+and ac2.cart_total_amount=ac.cart_total_amount
+and ac2.date_added BETWEEN SUBDATE(ac2.date_added, INTERVAL 60 MINUTE) AND ADDDATE(ac2.date_added, INTERVAL 60 MINUTE)
+) 
+order by ac.dated asc;
+
+create temporary table temp (id int);
+insert temp (id) select id from abandoned_carts ac where exists (select * from abandoned_carts ac2 where ac2.user_id=ac.user_id and ac.resturant_id=ac2.resturant_id and ac2.id>ac.id and ac2.cart_total_amount=ac.cart_total_amount and ac2.date_added BETWEEN SUBDATE(ac2.date_added, INTERVAL 60 MINUTE) AND ADDDATE(ac2.date_added, INTERVAL 60 MINUTE));
+delete from abandoned_carts where id in (select id from temp);
+
+

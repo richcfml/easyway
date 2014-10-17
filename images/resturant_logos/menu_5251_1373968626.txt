@@ -1,0 +1,50 @@
+require_once 'google-api/Google_Client.php';
+	require_once 'google-api/contrib/Google_AnalyticsService.php';
+
+	$client = new Google_Client();
+	$client->setApplicationName("Google Analytics PHP Starter Application");
+
+	// Visit //code.google.com/apis/console?api=analytics to generate your
+	// client id, client secret, and to register your redirect uri.
+	$client->setClientId('668969395261-i6udf38kgm4chao3cm1v95b4stibgo2s.apps.googleusercontent.com');
+	$client->setClientSecret('XIIgkLfbIYxLmTWKp02e9K60');
+	$client->setRedirectUri('http://localhost/google-api/analytics/index.php');
+	//$client->setDeveloperKey('insert_your_developer_key');
+	$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
+
+	if (isset($_GET['logout'])) {
+	  unset($_SESSION['token']);
+	}
+
+	if (isset($_GET['code'])) {
+	  $client->authenticate();
+	  $_SESSION['token'] = $client->getAccessToken();
+	  $redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+	  header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
+	}
+
+	if (isset($_SESSION['token'])) {
+	  $client->setAccessToken($_SESSION['token']);
+	}
+
+	if ($client->getAccessToken()) {
+
+		$client->setUseObjects(true);
+
+		$service = new Google_AnalyticsService($client);
+		$profile_id = urldecode("ga:72879926");
+		$start_date = date('Y-m-d', strtotime('-30 days'));
+		$end_date = date('Y-m-d');
+		
+		$resturant_slug = "ozzies";
+		$response = $service->data_ga->get(
+					$profile_id,
+					$start_date,
+					$end_date,
+					'ga:transactionRevenue',
+					array(
+						'dimensions' => "ga:transactionId, ga:affiliation, ga:daysToTransaction, ga:source, ga:date, ga:hour"
+						//'filters' => "ga:pagePath=@$resturant_slug"
+					)
+				);
+		echo "<pre>"; print_r($response); echo "</pre>";

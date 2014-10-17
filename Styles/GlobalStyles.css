@@ -1,0 +1,511 @@
+@charset "utf-8";
+/* CSS Document */
+*,
+*:after,
+*::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.BodyMainPage{ background-color:#e4ebee; font-family:Arial, Helvetica, sans-serif;}
+.clear{ clear:both;}
+#MainPagePagewrap{ margin:0 auto; width:100%; background-color:#e4ebee; height:1000px; position:relative;}
+#InnerPagewrap{ margin:0 auto; width:93%; background-color:#ecedee; height:1000px; position:relative;}
+#LoginDiv{ float:right; margin-top:7%; margin-right: 4%; position:relative;}
+#LoginDiv:hover{ /*border-bottom:3px solid #f29100;*/}
+#LoginDiv a::after
+{
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	/*background: rgba(0,0,0,0.1);*/
+	background-color:#f29100;
+	content: '';
+	opacity: 0;
+	-webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+	-moz-transition: opacity 0.3s, -moz-transform 0.3s;
+	transition: opacity 0.3s, transform 0.3s;
+	-webkit-transform: translateY(10px);
+	-moz-transform: translateY(10px);
+	transform: translateY(10px);
+}
+#LoginDiv a:hover::after,
+#LoginDiv a:focus::after {
+	opacity: 1;
+	-webkit-transform: translateY(0px);
+	-moz-transform: translateY(0px);
+	transform: translateY(0px);
+}
+.Login{color:#636e75; font-size:14px; text-decoration:none; font-family:Arial, Helvetica, sans-serif;}
+.LoginImg{ float:left;}
+.LoginSpan{ float:left; color:#636e75; font-size:14px; margin-left:15px;margin-top: 10px;font-weight: bold;}
+#SocialIconsDiv{ float: right; margin-top:7%; width:19%; position:relative;}
+#FacebookIcon{ float:left; padding:5px;}
+#TwitterIcon{ float:left; padding:5px;}
+#GooglePlusIcon{ float:left; padding:5px;}
+#YoutbueIcon{ float:left; padding:5px;}
+#InstagramIcon{ float:left; padding:5px;}
+#LinkedInIcon{ float:left; padding:5px;}
+#RespinsiveMenu{ position:relative; margin-top:1%; float:left; width:100%;}
+#BannerDiv{ float:left; position:relative; width:100%; margin-top:3%; background-image:url(../images/Banner.png); background-repeat: round; height:460px;}
+#BannerPara{ margin: 0 auto;width: 940px;font-size: 60px;color: #ebebeb;text-align: center;font-weight: bold;padding-top: 80px; opacity:0.95;}
+#LetsBuuton{ text-align:center; position:relative; margin-top:50px;}
+#YellowDiv{ width:100%; float:left; position:relative; background-color:#f7941d; text-align:center; color:#FFF; font-weight:bold; font-size:36px; padding:60px 0;}
+#WhiteDivWhatWeOffer{ width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 40px;}
+#WhatWeOfferHeading{ text-align:center; color:#25aae1; font-size:40px; font-weight:bold; margin-top:35px;}
+#WhatWeOfferPara{ margin:0 auto; font-size:18px; color:#4b4b4b; width:485px; padding-top:15px; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#ComputerImg{ text-align:center; margin-top:80px; width:100%;}
+#IfYouAreBlueDiv{ width:100%; text-align:center; color:#fff; font-size:30px; background-color:#25aae1; float:left; position:relative; padding:30px 0;}
+.ArrowLeft{ margin-left:35px;}
+.ArrowRight{ margin-right:35px;}
+.Antonella{ margin-top:15px; font-size:18px; color:#FFF; float:right; margin-right:18%;font-weight: bold;}
+#WhiteDivEasyWayOrdering{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 115px;}
+#WhyEasyWayHeading{text-align: center;color: #25aae1;font-size: 40px;font-weight: bold;margin-top: 35px;}
+#WhyEasyWayHeading:hover{ color: #5AC3F0;}
+#NoRisk{text-align: center;color: #4b4b4b;font-size: 18px; margin-top:15px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#GrayBox{ width:100%; text-align:center; position:relative; margin-top:45px;}
+#Connect{width:100%; text-align:center; position:relative; margin-top:45px; font-size:30px; font-weight:bold; bold; color:#4b4b4b;}
+#WithCustomers{width:100%; text-align:center; position:relative; font-size:20px; font-weight:bold; color: #25aae1;}
+#WeProvide{margin:0 auto; font-size:16px; color:#777; width:380px; padding-top:15px; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#EmpowerGrowBigDiv{ width:940px; margin:0 auto; position:relative;}
+#EmpowerBigDiv{ width:470px; float:left; position:relative;}
+#GrowBigDiv{ width:470px; float:left; position:relative;}
+#EmpowerImg{ text-align:center; margin-top:80px; width:100%;}
+#VisitorsToYourWebsite{ text-align:center; margin-top:80px; width:100%; color:#888; font-size:16px;}
+#GrayImg{ text-align:center; margin-top:10px; width:100%;}
+#EmpowerHeading{ text-align:center; margin-top:70px; width:100%; color:#4b4b4b; font-size:30px; font-weight:bold;}
+#GrowHeading{ text-align:center; margin-top:165px; width:100%; color:#4b4b4b; font-size:30px; font-weight:bold;}
+#Yourself{text-align:center; width:100%;color:#25aae1; font-size:20px; font-weight:bold; margin-bottom:20px;}
+#YourBusiness{text-align:center; width:100%;color:#25aae1; font-size:20px; font-weight:bold; margin-bottom:20px;}
+#EmpowerPara{text-align:center; margin:0 auto; width:360px; color:#777; font-size:16px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#GrowPara{text-align:center; margin:0 auto; width:360px; color:#777; font-size:16px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#SeeAllButton{ width:100%; text-align:center; position:relative; margin-top:130px; float:left;}
+#GrayBigDiv{ width:100%; float:left; position:relative; background-color:#6a727e; padding:70px 0;}
+#GrayInnerDiv{ width:880px; margin:0 auto; position:relative;}
+#GrayInnerLeftDiv{ width:440px; float:left; position:relative;}
+#GettingStarted{ font-size:30px; color:#FFF; font-weight:bold;}
+#GiveUs15{ font-size:28px; color:#FFF; margin-top:10px; margin-left:30px;}
+#GrayInnerRightDiv{ width:440px; float:right; position:relative;}
+#SetupFreeDemo{ width:100%; text-align:center; position:relative;margin-top: 10px;}
+#WhiteDivRecommended{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 115px; height:410px;}
+#WhiteDivRecommendedInnerDiv{ width:920px; margin:0 auto; position:relative;}
+#WhiteDivRecommendedInnerLeftDiv{ float:left; position:relative; width:580px; margin-top:78px; }
+#WhiteDivRecommendedInnerLRightDiv{ float:right; position:relative; width:340px; color:#25aae1; font-size:28px; font-weight:bold; text-align:center;margin-top: 150px; }
+#FooterBigDiv{ width:100%; float:left; background-color:#282d30; position:relative;/* margin-bottom:10%;*/ padding-bottom:30px;}
+#FooterInnerDiv{ width:1200px;  margin:0 auto; position:relative;}
+#FooterInnerLeft{ width:720px; float:left; position:relative;}
+#FooterInnerRight{ width:480px; float:left; position:relative;}
+#Navigation{width:720px; float:left; position:relative;margin-top: 50px; margin-left: 70px;}
+#Careers{ float:left; position:relative; font-size:18px; color:#FFF; margin-right:80px;}
+#Press{ float:left; position:relative; font-size:18px; color:#FFF; margin-right:80px;}
+#Privacy{ float:left; position:relative; font-size:18px; color:#FFF; margin-right:80px;}
+#Support{ float:left; position:relative; font-size:18px; color:#FFF; margin-right:80px;}
+#AddressDiv{ width:375px; float:left; position:relative; margin-top:135px;}
+#FirstAddress{ position:relative; font-size:18px; color:#b9b9b9;}
+#SecondAddress{ position:relative; font-size:18px; color:#b9b9b9;}
+#Telephone{ position:relative; font-size:18px; color:#b9b9b9;}
+#Fax{ position:relative; font-size:18px; color:#b9b9b9;}
+#NewsletterDiv{ float:left; position:relative; width:395px;margin-top: 40px;}
+#TextBoxDiv{float:left; position:relative; width:280px;}
+#ButtonDiv{float:left; position:relative; width:100px; margin-left:5px;}
+.Text{ width:255px; padding:10px; border:1px solid #25aae1; color:#FFF; font-size:12px;background-color: #282d30; font-weight: bold;}
+.Submit{ background-color:#25aae1; color:#FFF; font-size:12px; padding: 11px; border: none; font-weight: bold;}
+#JoinOurNewsLetter{ position:relative; font-size:24px; color:#FFF; margin-top:20px;float: left;}
+#GetTheLattest{ position:relative; font-size:18px; color:#FFF; margin-top:20px;float: left;}
+#ArrowDiv{osition: relative;margin-top: 38px;margin-right: 15px;float: right;}
+
+.MarqueePadding{ padding:0 10px; text-align:center;}
+.MarqueeText{color:#25aae1; font-style:italic; font-size:18px; font-weight:bold;}
+
+/*404PageCSS Starts Here*/
+.BodyErrorPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;background-image:url(../images/GrayWithPink.png);background-size:100% auto; background-repeat:repeat-y;opacity: 0.5;}
+#ErrorPagePagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivErrorPage{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 145px; margin-top: 30px; border:1px solid #777;}
+#QuestionMarkImg{ width:100%; position:relative; text-align:center; margin-top:120px;}
+#Error404Heading{ width:100%; position:relative; text-align:center; margin-top:35px; color:#f7941d; font-size:130px; font-weight:bold;}
+.Error{font-size:100px;}
+#ErrorPara{ width:495px; margin:0 auto; color:#25aae1; font-size:40px; text-align:center; padding-top:60px;}
+.Underline {border-bottom: 2px solid;}
+.PinkGrid{ width:940px; height:auto; background-image:url(../images/PinkGrid.png); margin:0 auto;}
+
+
+/*BlogPageCSS Starts Here*/
+.BodyBlogPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#BlogPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivBlog{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 145px; margin-top: 30px;}
+#EasywayEdition{float:left; margin-top:80px; margin-left:150px; font-size:80px; color:#777777;}
+.Way{ color:#f29100;}
+.Edition{ color:#25aae1; font-size:55px; font-weight:bold;}
+#BlogContentDiv{ margin:0 auto; width:940px; position:relative;}
+#BlogLeftDiv{ float:left; position:relative; width:440px; margin-top:20px;}
+#BlogRightDiv{ float:right; position:relative; width:440px;}
+#BlogPost{ position:relative; float:left; margin-top:80px;}
+#BlogBurgerImg{ float: left;width: 282px;height: 252px;border: 5px solid #cdcdcd;border-right: none;}
+#BlogBurgerImg img{ width:278px; height:242px;}
+#ShareDiv{ position:relative; float:left; margin-left: 25px;margin-top: 15px;}
+#PinterestIcon{ position:relative;}
+#FbShareIcon{ position:relative;margin-top: 15px;}
+#TweetIcon{ position:relative;margin-top: 15px;}
+#PostBlogHeading{ font-size:28px; color:#25aae1; margin-top:25px; float:left; position:relative;}
+#Date{ font-size:28px; color:#25aae1; margin-top:25px; float:left; position:relative; margin-left:120px;}
+#FbLikeDiv{ float: left; position:relative;margin-top: 5px;}
+#BlogPara{ width:420px; float:left; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:16px; margin-top:10px;line-height: 1.5;}
+#AboutEasywayHeading{ float:right; position:relative; font-size:24px; color:#000; margin-top:100px;font-weight: bold;}
+#AboutPara{ width:345px; float:right; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:16px; margin-top:10px;line-height: 1.5;}
+#PopularPostHeading{ float:left; position:relative; font-size:24px; color:#000; margin-top:110px;font-weight: bold; margin-left:90px;}
+#Post{ float:right; margin-top:20px; position:relative;}
+#PostImg{ float:left; position:relative; width:192px; height:156px;}
+#PostImg img{ width:192px; height:156px;}
+#PostHeading{ float:left; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:24px; width:150px;margin-left: 5px;}
+
+/*Support CSS Starts Here*/
+
+.BodySupportPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#SupportPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivSupport{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 145px; margin-top: 30px;}
+#EasywayOrderingHeading{ width:100%; text-align:center; color:#282d30; font-size:40px; font-weight:bold; margin-top:80px;}
+#HelpAndSupportHeading{ width:100%; text-align:center; color:#25aae1; font-size:40px; font-weight:bold;}
+#HaveQuestionAbout{ margin:0 auto; width:575px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#4b4b4b; font-size:18px; padding-top:25px; text-align:center; margin-bottom:130px;}
+#CallUsBigDiv{ margin:0 auto; width:540px; position:relative;}
+#CallUsImg{ float:left; position:relative;margin-top: 10px;}
+#CallUsPara{ float:left; position:relative; color:#565d67; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";line-height: 2;
+margin-left: 35px;}
+.MarginLeft{ margin-left:50px;}
+#CallUs{ color:#f29100; font-size:18px; text-decoration:underline; float:left; position:relative; margin-top:25px;margin-left: 40px; font-weight:bold; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#EmailUsDiv{ margin:0 auto; width:540px; position:relative; padding-top:50px;}
+#EmailUsImg{ float:left; position:relative;}
+#EmailUsPara{ float:left; position:relative; color:#565d67; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";line-height: 2;
+margin-left: 35px;}
+#SendEmailButton{ position:relative; float:left;margin-top: 50px; margin-left: 150px;}
+.SendEmailButton{ background-color:#f29100; color:#fff; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";padding: 8px 25px; border-radius:5px; text-decoration:none;}
+#EmailUs{ color:#f29100; font-size:18px; text-decoration:underline; float:left; position:relative; margin-top:25px;margin-left: 32px; font-weight:bold; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#hr{ margin:0 auto; width:820px; border-bottom:1px solid #767f8b; padding-top:105px;}
+#ADedicatedTeam{ margin:0 auto; width: 430px; text-align:center; font-size:24px; padding-top:40px; color:#25aae1; font-weight:bold;}
+.JoinUsButton{ background-color:#25aae1; color:#FFF; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; padding: 7px 35px; border-radius:5px; font-size:20px; font-weight:500;}
+#FAQHeading{ width:100%; text-align:center; color:#222222; font-size:40px; font-weight:bold; margin-top:35px;}
+#AnswerToOur{  width:100%; text-align:center;color:#4b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; margin-top:20px;}
+#FAQBigDiv{ width:725px; margin:0 auto; position:relative; padding-top:50px;}
+#FAQLeftDiv{ float:left; width:305px; position:relative;}
+#FaqRightDiv{ float:right; width:305px; position:relative;}
+.Question{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#25aae1; width:300px; margin-top:30px; font-weight:800;}
+.Answer{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#4b4b4b; width:300px; margin-top:5px;}
+
+
+/*CSS FOR PRICING*/
+
+.BodyPricingPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#PricingPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#Pricing_GrayBigDiv{ width:100%; position:relative;background-color:#565d67; margin-top:40px;padding: 40px 0;}
+#Pricing_GrayInnerDiv{color:#fff; font-size:30px; text-align:center; font-weight:bold; width:690px; margin:0 auto;}
+#WhiteDivPricing{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 145px;}
+#OptionsTailored{ width:100%; font-size:40px; color:#25aae1; margin-top:60px; text-align:center; font-weight:bold;}
+#PlansAndPackages{ margin:0 auto; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:18px; position:relative; width:470px; padding-top:20px; text-align:center;}
+#PackageBigDiv{ width:765px; position:relative; margin:0 auto; padding-top:30px;}
+#FirstPackage{ width:250px; position:relative; float:left; background-color:#fff; border:1px solid #777;}
+#SecondPackage{ width:250px; position:relative; float:left; background-color:#fff; border:1px solid #777; margin:0 5px;}
+#ThirdPackage{ width:250px; position:relative; float:left; background-color:#e8f3f8; border:1px solid #777;}
+.PackageHeadingBox{width: 249px;position: relative;border-bottom: 1px solid #777;height: 90px;}
+.PackageHeading{ text-align:center; font-size:24px; color:#25aae1; font-weight:bold; width:100%;margin-top: 30px;}
+.PackageMoney{ text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:18px; width:100%;margin-top: 5px;}
+.PackageDetailBox{ position:relative; width:100%; padding-top:25px;}
+.Features{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; font-size:18px; padding-top:15px;}
+.Color{ color:#222;}
+.GetStartedDiv{ width:100%; text-align:center; margin-top:35px;margin-bottom: 35px;}
+.GetStarted{ background-color:#25aae1; color:#FFF; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; padding: 8px 15px;
+font-size: 18px;border-radius: 5px;text-decoration: none;}
+.EasywayPackage{ width:100%; text-align:center; padding-top:35px; position:relative;}
+.OrangeFeatures{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#f29100; font-size:18px; padding-top:15px;}
+.GreenFeatures{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#3cb878; font-size:18px; padding-top:15px;}
+#TakingControllGrayBigDiv{width: 100%;position: relative;background-color: #565d67; height:170px;}
+#TakingControllInnerDiv{ width:880px; margin:0 auto; position:relative;}
+#TakingControllLeftDiv{ width:620px; float:left; color:#fff; font-weight:bold;font-size: 30px;text-align: center; margin-top:50px;}
+#TakingControllRightDiv{ width:260px; float:right; position:relative; margin-top:55px;}
+#WhiteSecondDiv{ width:100%; position:relative; background-color:#FFF; float:left;}
+#WhatPeopleAre{ width:100%; text-align:center; font-size:40px; color:#25aae1; font-weight:bold; margin-top:70px;}
+#SeeWhat{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#4b4b4b; font-size:18px; padding-top:15px;}
+#Testimonials{ float:left; width:100%; margin:35px 0; position:relative;}
+#BestBuy{ background-image:url(../images/BestBuy.png); width:76px; height:90px;margin-top: -5px;position: absolute;margin-left: 183px;}
+/*CSS FOR Privacy*/
+
+.BodyPrivacyPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#PrivacyPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivPrivacy{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 145px; margin-top: 30px;}
+#OurPrivacyPolicy{ width:100%; text-align:center; color:#282d30; font-size:40px; font-weight:bold; margin-top:75px;}
+#TheApplication{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px;margin-top:75px; color:#777;}
+#PersonalBigDiv{ width:700px; position:relative; margin:0 auto; padding-top:100px;}
+#PersonalDataHeading{ color:#f7941d; font-size:32px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";font-weight: bold;}
+.PersonalDataHeadingGray{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#565d67; font-size:20px; font-weight:bold; margin-left:35px; margin-top:50px;}
+.PersonalDataParaGray{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#565d67; font-size:20px; margin-left:35px; margin-top:30px;}
+#ContactHeading{ color:#f7941d; font-size:32px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";font-weight: bold; margin-top:65px;}
+
+/*CSS FOR Login*/
+
+
+.BodyLoginPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#LoginPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivLogin{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px; margin-top: 30px;}
+#WelcomeBack{ width:100%; text-align:center; position:relative; font-size:40px; font-weight:bold; color:#25aae1; margin:65px 0;}
+#LoginBigDiv{ width:480px; margin:0 auto; position:relative;}
+#LoginClip{ text-align:center; position:relative; background-image:url(../images/LoginClip.png); width:111px; height:99px; margin: 0 auto;}
+#LoginInnerBox{ width:100%; background-color:#f1f2f4; border-radius:5px; border:1px solid #adaeb0; margin-top:-23px; padding-bottom:25px;box-shadow: 0px 2px 2px 0px #777;}
+#AdminPanel{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:30px; font-weight:bold; color:#222222; text-align:center; width:100%; margin-top:70px;}
+#ThisIs{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:22px;  color:#b4b4b4; text-align:center; width:100%;}
+#LoginTextBoxDiv{ width:385px; margin:0 auto; padding-top:40px;}
+.LoginUserText{ font-size:24px; color:#c2c3c7; background-color:#e5e7e9; border:1px solid #b0b2b4; border-radius:5px;height: 85px; width: 385px;padding-left: 25px;border-bottom-left-radius: 0px;border-bottom-right-radius: 0px; border-bottom: 1px solid #bfc1c2;}
+.LoginPassword{ font-size:24px; color:#c2c3c7; background-color:#e5e7e9; border:1px solid #b0b2b4; border-radius:5px;height: 85px;width: 385px;padding-left: 25px;border-top-left-radius: 0px; border-top-right-radius: 0px;border-top: none;}
+#ClientLoginDiv{ width:385px; margin:0 auto; padding-top:25px;}
+.ClientLoginButton{ font-size:36px; font-weight:bold; color:#fff; background-color:#25aae1; padding:15px 143px; border-radius:5px; border:1px solid #c3c5c7;}
+#ForgotPassword{ color:#f7941d; font-size:18px; width:100%; text-align:center; margin-top:90px;}
+#LoginJustGivCall{ color:#565d67; width:100%; font-size:17px; text-align:center;margin-top: 5px;}
+#error{ width:100%; text-align:center; margin-top:25px; font-size:18px; color:#9e0b0f; font-weight:bold;}
+
+
+/*CSS FOR Free Demo*/
+
+.BodyFreeDemoPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#FreeDemoPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivFreeDemo{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px; margin-top: 30px;}
+#SetYourDemo{ margin:0 auto; position: relative; font-size:30px; font-weight:bold; color:#25aae1; width:450px; text-align:center; padding-top:80px;}
+#DemoBigDiv{ margin:0 auto; width:775px; position:relative; padding-top:130px;}
+#DemoFirstDiv{ float:left; width:255px; position:relative;}
+#DemoSecondDiv{ float:left; width:255px; position:relative; margin:0 5px;}
+#DemoThirdDiv{ float:left; width:255px; position:relative;}
+.DemoImg{ width:100%; text-align:center; position:relative;}
+.DemoHeading{ width:100%; text-align:center; position:relative; color:#222222; font-size:18px; font-weight:bold; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; padding:70px 0;}
+.DemoButton{ width:100%; text-align:center; position:relative;}
+.DemoButtonClass{ background-color:#f7941d; color:#fff; border-radius:5px; padding:8px 15px; font-size:16px; text-decoration:none; font-weight:bold;padding: 12px 15px;}
+#AlreadyHaveBigDiv{ position:relative; width:780px; margin: 0 auto;}
+#AlreadyHaveLeftDiv{ position:relative; float:left; width:450px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:30px; color:#222222; text-align:center; margin-top:200px;}
+#AlreadyHaveRightDiv{ position:relative; float:right; width:330px; margin-top:230px;}
+.ScheduleTraining{ background-color:#25aae1; color:#fff; padding:17px; text-decoration:none; font-size:18px; font-weight:bold;border-radius: 5px; float:right;}
+
+
+
+
+/*CSS FOR Reseller*/
+
+.BodyResellerPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#ResellerPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#BeAPartGrayDiv{ width:100%; background-color:#565d67; float:left; position:relative; margin-top: 30px;}
+#BeAPartInnerDiv{ width:740px; margin:0 auto; font-size:30px; font-weight:bold; color:#fff; text-align:center; padding:50px 0;}
+#WhiteDivReseller{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px;}
+#WhyBecome{ color:#25aae1; font-size:40px; text-align:center; font-weight:bold; width:100%; margin-top:70px;}
+#ThereAreMultitude{ color:#777777; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; text-align:center; width:100%; margin-top:20px;}
+#CenterLiDiv{ width:485px; margin:0 auto; padding:110px 0;}
+.CenterLiInnerDiv{ width:485px; padding:30px 0; float:left; position:relative;}
+.SpanImg{ float:left;}
+.SpanText{ float:left; font-size:18px; color:#222222; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";margin-left: 30%;width: 255px;}
+#BecomeAResellerGrayDiv{ width:100%; background-color:#565d67; float:left; position:relative; margin-top: 130px; padding:50px 0;}
+#BecomeAResellerInnerDiv{ width:840px; margin:0 auto; position:relative;}
+#BecomeAResellerLeftDiv{ float:left; position:relative; color:#fff; font-size:30px; font-weight:bold;}
+.WeProvide{ font-weight:normal; font-size:24px;}
+#BecomeAResellerRightDiv{ float:right; position:relative;}
+#StartNow{ float:right; position:relative; margin-top:25px;}
+.StartNow{ background-color:#f7941d; font-size:18px; font-weight:bold; color:#fff; text-decoration:none; padding:18px 25px; border:2px solid #fff; border-radius:5px;}
+#LocateAResller{ width:100%; text-align:center; font-weight:bold; font-size:40px; margin-top:70px; color:#25aae1;}
+#LookingFor{ width:100%; text-align:center; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#4b4b4b; margin-top:10px;}
+#GMapDiv{ float:left; width:100%; position:relative; margin-top:50px;padding-bottom: 60px;}
+#ZipCodeBigDiv{ padding:60px 0; margin:0 auto; width:525px;}
+#ZipTextBoxLeft{ float:left; position:relative;}
+.ZipTextBoxLeft{ border:1px solid #777; color:#777; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; width:245px; padding:16px 30px;}
+#SendBoxRight{ float:right; position:relative;}
+.SendBoxRight{ background-color:#25aae1; color:#fff; font-size:18px; font-weight:bold; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; padding:18px 60px; border:none; border-radius:2px;}
+#googleMap{height: 500px; width:100%;}
+
+
+
+/*CSS FOR Features*/
+
+.BodyFeaturesPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#FeaturesPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivFeatures{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px; margin-top: 30px;}
+#OurOnlineOrdering{ width:725px; margin:0 auto; font-size:30px; font-weight:bold; color:#25aae1; padding:80px 0; text-align:center;}
+#IMacAnimation{ width:100%; height:380px; text-align:center; position:relative;}
+#IMacDiv{}
+#IPadDiv
+{
+margin-top:
+-125px;
+margin-left: 500px;
+}
+#IPhoneDiv{margin-top: -135px;
+margin-left: 135px;}
+#IMacPost{margin-top: -380px;display:none;}
+#IPadPost{margin-top: -98px;
+margin-left: 500px;display:none;}
+#IPhonePost{margin-left: 135px;
+margin-top: 10px;display:none;}
+#StartFreeTrialDiv{ margin:0 auto; width:370px; position:relative; padding-top:40px;}
+.StartFreeTrial{ background-color:#f7941d; color:#fff; font-size:24px; font-weight:bold; padding:20px; border-radius:5px; text-decoration:none;}
+#IWouldLike{ width:100%; position:relative; text-align:center; margin:35px 0 30px 0px;}
+.IWouldLike{ color:#565d67; font-size:14px; font-weight:bold;}
+#FeaturesScrollBigDiv{ width:100%; position:relative; background-color:#ecedee; height:680px;}
+#AdditionalFeatures{ width:100%; text-align:center; font-weight:bold; margin:70px 0; font-size:40px; color:#222;}
+#AdditionalFeaturesBigDiv{ width:770px; margin:0 auto; position:relative;}
+#AdditionalFeaturesLeftDiv{ width:345px; float:left; position:relative;}
+#AdditionalFeaturesRightDiv{ width:345px; float:right; position:relative;}
+.FeaturesInnerDiv{ width:345px; position:relative; float:left; padding:45px 0;}
+.FeaturesInnerDiv2{ width:345px; position:relative; float:right; padding:45px 0;padding-left: 50px;}
+.SpanFeatureImg{ float:left; position:relative;width: 80px;}
+.SpanFeatureText{ margin-left:25px; float:left; position:relative; color:#222222; font-size:18px;}
+.SpanFeatureImg2{ float:left; position:relative;margin-top: -7px; width: 80px;}
+.SpanFeatureText2{ margin-left:25px; float:left; position:relative; color:#222222; font-size:18px;}
+#DontGiveControlBigDiv{ width:100%; background-color:#25aae1; float:left; position:relative;}
+#DontGiveControlInnerDiv{ width:895px; margin:0 auto; position:relative;}
+#DontGivControlLeftDiv{ width:715px; float:left; position:relative; font-size:30px; color:#fff; text-align:center;padding: 40px 0;}
+#DontGivControlRightDiv{ width:175px; float:right; position:relative;}
+#SignUpNow{ float:right; position:relative; margin-top:75px;}
+.SignUpNow{ background-color:#f7941d; border:3px solid #fff; font-size:18px; text-decoration:none; padding:15px 25px; color:#fff; font-weight:bold; border-radius:5px;}
+#GiveUsHeading{ width:500px; color:#222222; font-size:30px; font-weight:bold; margin:0 auto; padding:80px 0; text-align:center;}
+#BigVideoDiv{ position:relative; margin:0 auto; width:945px; height:640px; background-color:#ebebeb;}
+#InnerBigVideo{ position:relative; margin:70px 50px; width:850px; height:485px; float:left;}
+#MetrimonialsVideoBigDiv{ width:1205px; margin:0 auto; position:relative;}
+.MetrimonialsInnerDiv{ float:left; width:399px; height:315px; position:relative; margin:0 1px; border:1px solid #888;}
+
+
+
+
+
+/*CSS FOR Features*/
+
+.BodySignUpPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#SignUpPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#WhiteDivSignUp{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px; margin-top: 30px;}
+#HomeImgDiv{ width:100%; position:relative; text-align:center; margin:30px 0;}
+#ReadyToSetup{ margin:0 auto; width:290px; padding:30px 0; position:relative; text-align:center; font-size:30px; color:#25aae1; font-weight:bold;}
+#FillInThe{ position:relative; width:100%; text-align:center; color:#4b4b4b; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light";}
+#SearchFormBigDiv{ width:860px; margin:0 auto; position:relative; padding:130px 0;}
+#RestaurantTextBoxDiv{ float:left; position:relative; width:320px;}
+.RestaurantTextBox{ border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 25px; width: 320px;}
+#CityZipTextBoxDiv{ float:left; position:relative; margin:0 40px; width:265px;}
+.CityZipTextBox{ border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 20px; width:265px;}
+#CountrySelectDiv{ float:left; position:relative; width:185px;}
+.CountrySelect{ border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 25px; width:185px;}
+.CountrySelectImg{background-image:url(../images/SignUpSelectImg.png);background-repeat: no-repeat;background-position: 95% 45%;position: relative;-webkit-appearance: none;-moz-appearance: none;appearance: none;}
+.TextBoxHeading{ font-size:16px; color:#777; margin-top:20px; font-weight:bold;}
+#SearchRestaurantError{ width:100%; text-align:center; font-size:18px; color:#790000; font-weight:bold; padding:10px 0;}
+.SearchRestaurantError{ width:100%; text-align:center; font-size:18px; color:#790000; font-weight:bold; padding:10px 0;}
+#SearchAgainDiv{ width:230px; margin:0 auto; padding:10px 0; position:relative;}
+.SearchAgain{ text-align:center; background-color:#f7941d; font-size:18px; font-weight:bold; color:#fff; border-radius:2px; padding:20px 30px; text-decoration:none;border:none;}
+#SelectYourBusinessBigDiv{ margin:0 auto; width:860px; position:relative; padding:55px 0;}
+#SelectYouBusinessHeading{ float:left; margin-left:20px; font-size:30px; font-weight:bold; color:#222222;}
+#DontSeeHeading{ float:left; color:#777777; font-size:16px; margin:20px; font-weight:bold;}
+.SpanClickTo{ color:#f7941d; text-decoration:none;}
+#SearchResultsDiv{ width:860px; border:2px solid #777777; position:relative; float:left;padding-bottom: 35px;}
+.ResultsDiv{ float:left; width:855px; padding:35px 20px; padding-bottom:0px; position:relative;}
+.ResultImg{ float:left; position:relative; width:180px; height:150px;}
+.RestaurantName{ font-size:24px; float:left; font-weight:bold; color:#222222; margin-left:40px; width:280px;}
+.RestaurantType{ font-size:18px; color:#222222; width:220px; position:relative; font-weight:normal; margin-top: 0px;}
+.RestaurantAddress{ float:left; position:relative; margin-left:20px; width:100px; font-size:14px; color:#222222;}
+.ThisIsMeDiv{ float:left; position:relative; margin-left:75px;margin-top: 60px; width:120px;}
+.ThisIsMe{ background-color:#f7941d; color:#fff; font-size:18px; font-weight:bold; padding:20px 10px; text-decoration:none; border-radius:2px;}
+.HrDiv{ float:left; width:100%; margin-top:35px; border-top:1px solid #777;}
+.ProgressBarDiv{ margin:0 auto; width:250px; position: relative; padding:100px 0;}
+#progress { width: 250px; position: relative; border-radius:15px; background-color:#e5e1de;}
+#percent { position: absolute; left: 10%; color:#fff; font-size:12px;}
+#bar { height: 15px; background-color: #67b5ce; width: 30%; border-radius:12px;}
+#AccordianBigDiv{ width:100%; float:left; position:relative; margin-top:10px;}
+.AccordianHeading{ font-size:30px; color:#222; font-weight:bold; position:relative; float:left; margin-top:20px; margin-left:20px;}
+.FormRaw{ width:820px; position:relative; float: left; margin-top: 20px; margin-left: 12px; margin-bottom:10px;}
+.AccRestaurantNameTextBoxDiv{ width:320px; float:left; position:relative;}
+.AccRestaurantNameTextBox{border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 25px; width: 320px; display:block !important;}
+.AccCityZipTextBoxDiv{ float:left; position:relative; margin:0 30px; width:250px;}
+.AccCityZipTextBox{ border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 20px; width:250px; display:block !important;}
+.AccCountrySelectDiv{ float:left; position:relative; width:185px;}
+.AccCountrySelect{ border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 25px; width:185px; display:block !important; background-color:#fff;}
+.AccCountrySelectImg{background-image:url(../images/SignUpSelectImg.png);background-repeat: no-repeat;background-position: 95% 45%;position: relative;}
+.SubmitBigDiv{ width:340px; margin: 0 auto; position:relative; padding:40px 0 50px 0;}
+.AccSubmitDiv{ float:left; position:relative; width:90px;}
+.Save{ padding:15px 20px; font-size:18px; font-weight:bold; color:#fff; text-decoration:none; background-color:#25aae1; border:none; border-radius:3px;}
+.Next{ background-color:#f7941d; padding:15px 20px; font-size:18px; font-weight:bold; color:#fff; text-decoration:none; border:none; border-radius:3px;}
+.HadingPara{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#4b4b4b; position:relative; float:left; width:800px; margin-left:20px;}
+.RadioBox{ background-image:url(../images/RadioBox1.png); display:block !important;float: left;margin-top: 25px;}
+.RadionImgIcon{ margin-left:40px;font-size: 16px;color: #777;font-weight: bold;}
+#uploadme {  width: 1px;  height: 1px;  visibility: hidden; }
+.FileUploadText{border:1px solid #777; font-size:24px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#777; padding: 15px 20px; width:200px; display:block !important; float:left;}
+.FileUploadButton{ background-color:#25aae1; padding: 12px 25px; font-size:16px; color:#fff; font-weight:bold; border-radius:5px;display:block !important; border:none;margin-left: 20px;float: left;margin-top: 15px;}
+#UploadedFilesDiv{ float:right; position:relative;margin-right: 40px;margin-top: -230px;}
+.FileAdded{ font-size:16px; font-weight:bold; color:#777777;}
+.UploadedMenu{ font-size:16px; color:#25aae1; font-weight:normal;}
+.UploadedMenuMargin{ margin-left:40px;}
+#PaymentInformationBigDiv{ margin:0 auto; width:810px; position:relative; padding:15px 0;}
+#PaymentInfoLeftDiv{ float:left; position:relative; width:380px;}
+#PaymentInfoRightDiv{ position:relative; float:right; width:420px;}
+#WillCustomerDiv{ margin-top:30px; position:relative; float:left;}
+#WillCustomerRightDiv{ margin-top:30px; position:relative; float:right;}
+.SpanWillCustomer{ float:left; position:relative; font-size:18px; color:#4b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; margin-top: 15px;}
+.SpanDollarImgIcon{ float:left; position:relative; margin-left:30px;}
+.RadioDiv{ position:relative; float:left; margin-left:25px;}
+.Yes{ color:#777777; font-size:18px; font-weight:bold;}
+.PaddingLeft{ padding-left:50px;}
+.RadioBoxQuestionDiv{ float:right; width: 372px; margin-top:40px;}
+.SpanRadioBoxQuestion{ float:left; position:relative;}
+.SpanQuestion{ float:left; position:relative; margin-left:15px; font-size:16px; color:#777777; text-align:center; font-weight:bold; margin-top: -15px;}
+#NameText{ position:relative; float:left;}
+.SpanWhatIsYour{ float:left; position:relative; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#4b4b4b;margin-top: 20px;}
+.SpanTextBox{ margin-left:30px; float:left; width:300px;}
+#IWouldLIkeDiv{ float:left; position:relative; margin-left:240px; margin-top:20px;}
+.ULPara{ font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#4b4b4b;}
+.LIPara{ margin-left:240px; margin-top:25px;}
+#CalculationsDIv{ position:relative; width:545px; margin:0 auto; padding:30px 0;}
+#PleaseReview{ color:#25aae1; width:100%; text-align:center; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; margin:30px 0;}
+#CalculationLeft{ float:left; position:relative; width:100px;}
+.CalculationLeftStyle{ color:#4b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px;}
+#CalculationRight{ float:right; position:relative; width:295px;}
+.CalculationRightStyle{ color:#4b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px;}
+.TotalPrice{ color:#00a651; margin-left:150px;}
+#ThankYouContainer{ width:100%; position:relative; margin:100px 0; float:left; height:auto;}
+#ThankYou{ color:#25aae1; font-size:40px; font-weight:bold; width:100%; text-align:center;}
+#ThankYouMsg{ margin:0 auto; color:#4b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; padding:60px 0; width:600px; text-align:center;}
+#FinalBackButton{ width:100px; margin:0 auto; position:relative; padding:70px 0;}
+
+
+/*CSS FOR Abous Us*/
+
+.BodyAboutUsPage{ background-color:#ecedee; font-family:Arial, Helvetica, sans-serif;}
+#AboutUsPagewrap{ margin:0 auto; width:100%; background-color:#ecedee; height:1000px; position:relative;}
+#TheBrainsBehind{ width:100%; background-color:#6a727e; margin-top: 30px; text-align:center; font-size:30px; font-weight:bold; padding:65px 0; color:#fff;}
+#WhiteDivAboutUs{width:100%; float:left; position:relative; background-color:#fff;padding-bottom: 120px;}
+#TheTeam{ font-size:40px; width:100%; text-align:center; color:#000; margin:60px 0; font-weight:bold; }
+#SilderContainer{ width:100%; float:left; position:relative; height:auto;}
+#EasyWayQuote{ width:100%; text-align:center; float:left; margin:60px 0; padding:45px 0; font-weight:bold; color:#fff; font-size:30px; background-color:#25aae1;}
+#CompanyInfoBigContainer{ width:100%; float:left; position:relative; height:auto; padding:65px 0;}
+#ChatWithUs{ width:100%; position:relative; float:left; text-align:center; font-size:40px; color:#222222; font-weight:bold; margin-top:65px;}
+#Comments{ width:100%; float:left; text-align:center; font-size:18px; color:#b4b4b; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; margin-top:15px;}
+#ContactUsForm{ margin:0 auto; padding-top:50px; width:865px; position:relative;}
+.YourNameDiv{ float:left; width:416px; position:relative;}
+.YourNameTextBox{ width:415px; color:#222222; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; border:1px solid #888; padding:15px;}
+#YourMessageDiv{ width:865px; float:left; position:relative; margin-top:25px;}
+.YourMessageTextArea{ width:865px; border:1px solid #888; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#222; padding:15px; height:200px;}
+#SendForm{ width:155px; margin:0 auto; padding-top:55px; position:relative;}
+.SendForm{ background-color:#25aae1; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#fff; border:none; padding:18px 55px;}
+#GetFreeDemoDiv{ margin:0 auto; width:240px; padding-top:100px; position:relative;}
+.GetFreeDemo{ background-color:#f7941d; font-size:18px; font-weight:bold; color:#fff; text-align:center; text-decoration:none; padding:20px; border-radius:3px;}
+#IamReady{ width:100%; text-align:center; color:#565d67; font-size:14px; margin-top: 30px; font-weight:bold;}
+.IamReady{ color:#565d67;}
+.TabHeading{ width:100%; font-size:40px; font-weight:bold; color:#222; text-align:center; position:relative;}
+#BookAndParaBigDiv{ margin:0 auto; width:810px; position:relative; padding:100px 0;}
+#BookAndParaLeftDiv{ float:left; width:285px; position:relative;}
+#BookAndParaRightDiv{ float:right; position:relative; width:470px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px; color:#4b4b4b;}
+.ArticleWidth{ width:100% !Important;}
+#CheckOut{ margin-top:15px; width:100%; text-align:center; font-size:18px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; color:#4b4b4b;}
+#PressBigDiv{ margin: 0 auto; width:790px; position:relative; padding-top:60px;}
+#PressLeftDiv{ width:220px; float:left; position:relative;}
+#PressRightDiv{ width:565px; float:right; position:relative;}
+.PressRightPara{ float:right; font-size:14px; color:#4b4b4b; font-weight:bold; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; margin-top:80px;width:565px;}
+.SpanDate{ font-weight:normal; font-style:italic;}
+.GreenBoxDiv{ position:relative; width:230px;}
+#TeleSalesAndSEOBigDiv{ position:relative; width:440px; margin:0 auto; padding-top:60px;}
+#SoftMobSelesBigDiv{ position:relative; width:660px; margin:0 auto; padding-top:60px;}
+.InnerCarrerBox{ float:left; position:relative; width:210px; margin:0 5px;}
+.CarrerBoxImgDiv{ width:100%; height:100%; text-align:center;}
+.CarrerBoxImg{ width:132px; height:132px; text-align:center; margin:0 auto;}
+.CarrerBoxHeading{ font-size:18px; color:#f29100; text-align:center; text-decoration:underline; padding:25px 0; font-weight:bold;}
+.ApplyDiv{ width:120px; margin:0 auto; text-align:center;padding-top: 20px;}
+.ApplyBox{ text-decoration:none; background-color:#f29100; color:#fff; font-weight:bold; padding:12px 30px; border-radius:3px; font-family:"Myriad Pro", "Myriad Pro Cond", "Myriad Pro Light"; font-size:18px;}
+.MarginTop{ margin-top:100px;}
+
+
+

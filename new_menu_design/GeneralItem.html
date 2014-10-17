@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>General Item</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-theme.css">
+    <link type="text/css" rel="stylesheet" href="css/CustomeStyle.css">
+    <script src="http:////ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script>
+$(document).ready(function(){
+						   
+	$("#LoginPopup").click(function(){
+    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#CheckinBigDiv').fadeOut();
+			});
+  	});	
+	
+	$("#RegisterPopup").click(function(){
+    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#RegisterBigDiv').fadeOut();
+			});
+  	});	
+	
+	$("#Tab1").click(function(){
+    	$("#ContentTab1").fadeIn() && $("#ContentTab2").fadeOut();
+  	});	
+	$("#Tab2").click(function(){
+    	$("#ContentTab2").fadeIn() && $("#ContentTab1").fadeOut();
+  	});	
+	
+	$("#FrontendTab1").click(function(){
+		$(this).addClass('BorderTab');	
+    	$("#FrontendContentTab1").fadeIn() && $("#FrontendContentTab2").fadeOut();
+		$("#FrontendTab2").removeClass('BorderTab');
+
+  	});	
+	$("#FrontendTab2").click(function(){
+		$(this).addClass('BorderTab');
+    	$("#FrontendContentTab2").fadeIn() && $("#FrontendContentTab1").fadeOut();
+		$("#FrontendTab1").removeClass('BorderTab');
+  	});	
+
+	$("#DeliveryPopup").click(function(){
+    	$("#DeliveryPopupDiv2").fadeIn();
+		$('.Cross').click(function()
+			{
+				$('#DeliveryPopupDiv2').fadeOut();
+			});
+  	});	
+	
+	$(".ModalItemName").click(function(){
+    	$("#ComplementryItemPopup").fadeIn();
+		$('.Cross').click(function()
+			{
+				$('#ComplementryItemPopup').fadeOut();
+			});
+  	});	
+	
+});
+</script>
+
+
+
+  </head>
+  <body>
+    	<div class="container">
+        	<div class="row"><img src="Images/TopBanner.PNG" class="BannerImg"></div>
+        </div>
+        <div class="container">
+        	<div class="row">
+            	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 ColumnBorder">
+                	<div id="AddressText">50 Broad St.<br>New York,NY</div>
+                    <div id="TimeDiv">7:00 am - 8:00 pm - Open</div>
+                    <div id="PhoneText">212 456-7890</div>
+                    <div id="SocialButtonsDiv">
+                    	<div id="facebookButton"><img src="Images/FbLike.png"></div>
+                    	<div id="TwitterButton"><img src="Images/TweetIcon.png"></div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ColumnBorder SecondColumnHeight">
+                	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 text-center GetOfferImg"><img src="Images/GetOfferIcon.PNG"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 GetOfferText text-center"><b>Get 10% Off!</b> Enter #777 below</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 BlackColumnBorder SecondColumnHeight">
+                	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 text-right">
+                    	<div id="CheckoutLogin"><a href="#" class="CheckoutLogin" id="LoginPopup">Log In</a></div>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                    	<div id="Seperator">|</div>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    	<div id="CheckoutLogout"><a href="#" class="CheckoutLogout" id="RegisterPopup">Regitster</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tabs-->
+        <div class="container ContainerPaddingLeftZero ContainerMarginTop">
+        	<div class="row">
+            	<div class="col-lg-12">
+                    <div id="FrontendTabsDiv">
+                        <ul class="FrontendTabsUl">
+                            <li class="FrontendTabsLi active" id="FrontendTab1"><a href="#" class="FrontendTabsLiLink">Main</a></li>
+                            <li class="FrontendTabsLi" id="FrontendTab2"><a href="#" class="FrontendTabsLiLink">Brunch</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--TabsEnds-->
+        <div class="container MainContainerBorder ContainerPaddingBottom ContainerBgColor">
+        	<div class="row">
+            	<div id="DeliveryPopupDiv2" style="display: none;">
+                		<div id="DeliveryPopupImg">
+                    		<div id="CrossButton" style="margin-top: 10px; margin-right: 15px;"><img src="Images/CrossButtonTra.png" class="Cross"></div>
+                        	<div id="PleaeEnter">Please enter your delivery address:</div>
+                        	<div id="DevliveryFormDiv">
+                        		<div id="DeliveryAddressDiv" style="margin-left:0px;">
+                                    <div class="DeliveryQuestionWhite">Name*:</div>
+                                    <div class="DeliveryTextBox"><input type="text" class="DeliveryText"></div>
+                                    <div class="DeliveryQuestionWhite">Street* :</div>
+                                    <div class="DeliveryTextBox"><input type="text" class="DeliveryText"></div>
+                                    <div class="DeliveryQuestionWhite">Suite/Apt # :</div>
+                                    <div class="DeliveryTextBox"><input type="text" class="DeliveryText"></div>
+                                    <div class="DeliveryQuestionWhite">Zip Code* :</div>
+                                    <div class="DeliveryTextBoxHalf"><input type="text" class="DeliveryTextHalf"></div>
+                                    <div class="clear"></div>
+                                    <div class="CityStateWhite"><span class="CitySpan">City* :</span><span class="StateSpan">State* :</span></div>
+                                    <div class="CityStateText"><span class="CitySpanText"><input type="text" class="CityText"></span><span class="StateSpanText"><input type="text" class="CityText"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="CheckoutSubmitOrderDiv" style="padding-top:15px;"><input type="submit" class="CheckoutSubmitOrder" value="Submit" style="width: 130px;"></div>
+                    <div id="SadMessageDIv">
+                    	<div class="SpanSadImg"><img src="Images/SadImg.png"></div>
+                        <div class="SpanSadText"><b>We're sorry!</b> You are outside of our delivery area.<br><a href="#" class="SpanPickUp"><i>Switch to Pick-up?</i></a></div>
+                    </div>
+                </div>
+                <div id="ComplementryItemPopup" style="display:none;">
+                	<div id="ComplementryItemPopupHeading">
+                    	<span class="SpanComplementryItemPopupHeading">Burger</span>
+                        <span class="SpanSpanComplementryItemPopupBadge"><img src="Images/PopularBadge.png"></span>
+                        <span class="SpanCross"><img src="Images/CrossButtonTra.png" class="Cross"></span>
+                    </div>
+                    <div id="PopupUpperContent">
+                        <div id="ItemPicDiv"><img src="Images/BurgerProfile.png" class="ItemPicSize"></div>
+                        <div id="RightContentDiv">
+                        	<div id="ItemNameHeading">Flame-grilled burger on freshly baked bun.</div>
+                            <div id="ComplementryAmoutDiv">
+                            	<span class="SpanInputNumber"><input type="number" min="0" class="InputNumber"></span>
+                                <span class="SpanCalculatedValue">$6.99</span>
+                            </div>
+                            <div id="For">For?:</div>
+                            <div id="ForTextBoxDiv"><input type="text" class="ForTextBox"></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="PopupSeperator"><img src="Images/PopupSeperator.png"></div>
+                    <div id="ChooseToopingBigDiv">
+                   <div class="NewPopupInnerDivWithHeading">	
+                    	<div class="ChooseToopingHeading">Choose Toppings<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        
+                    <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Lettuce</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Swiss Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Onions</span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Tomato</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">American Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Pico de Gallo - <span class="SpanAddPrice">add $.75</span></span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Bacon - <span class="SpanAddPrice">add $1.50</span></span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Peppers & Onions</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">American Cheese</span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Cheddar Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Hot Sauce</span>
+                            </div>
+                        </div>
+                      </div>
+                     </div> 
+                     <div class="NewPopupInnerDivWithHeading"> 
+                        <div class="ChooseToopingHeading">Choose Bun<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+					 <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
+                                <span class="SpanToppingItemText">Wheat Bun - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
+                                <span class="SpanToppingItemText">Ciabatta Roll - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="MusteredSeperator" style="margin-top: 15px; width:100%;"></div>
+                      <div class="NewPopupInnerDivWithHeading">
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">BBQ</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Ranch</span>
+                            </div>
+                        </div>
+                       </div>
+                       </div>
+                       <div class="NewPopupInnerDivWithHeading">
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">BBQ</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Ranch</span>
+                            </div>
+                        </div>
+                       </div>
+                       </div>
+                        <div id="SpecialInstruction">
+                         <div id="SpecialInstructionsLeftDiv">
+                        	<div id="SpecialInstructionsText">Special Instructions:</div>
+                            <div id="SpecialTextarea"><textarea class="SpecialTextarea"></textarea></div>
+                         </div>
+                        <div id="SpecialInstructionsRightDiv">
+                        <div class="clear"></div>
+                        <div id="SaveChangesMidDiv"><input type="submit" value="Add to Cart" style="width: 135px;" class="AddNewCardButton SaveChangesChangePassword"></div>
+                        <div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>
+                        </div><!--RightDiv-->
+                        </div><!--SpecialInsDiv-->
+                    </div>
+                    <div id="CustomerAlsoOrderedText">Customers also ordered:</div>
+                    <div id="CustomersAlsoOrderedDiv">
+                    	<div class="OrderedItemsDiv">
+                        	<div class="OrderItemImg"><img src="Images/OrderFries.png" class="OrderItemImgSize"></div>
+                            <div class="OrderItemName">Large Fry</div>
+                            <div class="OrderItemDesc">Hand-cut french fries</div>
+                            <div class="OrderItemPrice">$2.99</div>
+                            <div class="SmallAddButtonDiv"><a href="#" class="SmallAddButton">Add</a></div>
+                        </div>
+                        <div class="OrderedItemsDiv">
+                        	<div class="OrderItemImg"><img src="Images/CakeItem.png" class="OrderItemImgSize"></div>
+                            <div class="OrderItemName">Brownie</div>
+                            <div class="OrderItemDesc">A Cake Peice</div>
+                            <div class="OrderItemPrice">$2.99</div>
+                            <div class="SmallAddButtonDiv"><a href="#" class="SmallAddButton">Add</a></div>
+                        </div>
+                        <div class="OrderedItemsDiv">
+                        	<div class="OrderItemImg"><img src="Images/CakeItem.png" class="OrderItemImgSize"></div>
+                            <div class="OrderItemName">Soda</div>
+                            <div class="OrderItemDesc">Beverage of choice</div>
+                            <div class="OrderItemPrice">$2.99</div>
+                            <div class="SmallAddButtonDiv"><a href="#" class="SmallAddButton">Add</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!--No Special Elements -->
+                <div id="ComplementryItemPopupNoSpecialElements" style=" display:none; ">
+                	<div id="ComplementryItemPopupHeading">
+                    	<span class="SpanComplementryItemPopupHeading">Burger</span>
+                        <span class="SpanSpanComplementryItemPopupBadge"><img src="Images/PopularBadge.png"></span>
+                        <span class="SpanCross"><img src="Images/CrossButtonTra.png" class="Cross"></span>
+                    </div>
+                    <!-- -->
+                    <div id="PopupUpperContent">
+                        <!--<div id="RightContentDiv">-->
+                        	<div id="ItemNameHeadingNoSpecial">Flame-grilled burger on freshly baked bun.</div>
+                            <div id="ComplementryAmoutDivNoSpecial">
+                            	<span class=""><input type="number" min="0" class="InputNumber"></span>
+                                <span class="SpanCalculatedValueNoSpecial">$6.99</span>
+                            </div>
+                            <div id="ForNoSpecialDiv">
+                            	<div id="For">For?:</div>
+                            	<div id="ForTextBoxDiv"><input type="text" class="ForTextBox"></div>
+                            </div>
+                        <!--</div>-->
+                    </div>
+                    <!-- -->
+                    <div class="clear"></div>
+                    <div class="PopupSeperator"><img src="Images/PopupSeperator.png"></div>
+                    <div id="ChooseToopingBigDiv">
+                      <div class="NewPopupInnerDivWithHeading">
+                    	<div class="ChooseToopingHeading">Choose Toppings<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+					  <div class="NewPopupInnerDiv">
+                         <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Lettuce</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Swiss Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Onions</span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Tomato</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">American Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Pico de Gallo - <span class="SpanAddPrice">add $.75</span></span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Bacon - <span class="SpanAddPrice">add $1.50</span></span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Peppers & Onions</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">American Cheese</span>
+                            </div>
+                            
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Cheddar Cheese</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Hot Sauce</span>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="NewPopupInnerDivWithHeading">
+                        <div class="ChooseToopingHeading">Choose Bun<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                      <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
+                                <span class="SpanToppingItemText">Wheat Bun - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
+                                <span class="SpanToppingItemText">Ciabatta Roll - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
+                            </div>
+                        </div>
+                      </div>
+                      </div>  
+                      <div class="MusteredSeperator" style="width:100%; margin-top:15px;"></div>
+                      <div class="NewPopupInnerDivWithHeading">
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                      <div class="NewPopupInnerDiv">  
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">BBQ</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Ranch</span>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="NewPopupInnerDivWithHeading">  
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        <div class="NewPopupInnerDiv">
+                        <div class="ToopingContent">
+                        	<div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">BBQ</span>
+                            </div>
+                            <div class="ToppingItemsDiv">
+                            	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
+                                <span class="SpanToppingItemText">Ranch</span>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div id="SpecialInstruction">
+                        	<div id="SpecialInstructionsText">Special Instructions:</div>
+                            <div id="SpecialTextarea"><textarea class="SpecialTextarea"></textarea></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div id="SaveChangesMidDiv"><input type="submit" value="Add to Cart" style="width: 135px;" class="AddNewCardButton SaveChangesChangePassword"></div>
+                        <div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>
+                    </div>
+                </div>
+                <!--No Special Elements -->
+            	<div id="CheckinBigDiv" style="display:none;">
+                	<div id="LoginHeading">Log In</div>
+                    <div id="CrossButton" style="margin-top: -15px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.<br>Don’t have any account?  <a href="#" class="RegisterinLine">Register Now!</a></div>
+                    <div id="LoginFbGPlusDiv">
+                    	<div id="LoginWithFb"><a href="#"><img src="Images/LoginWithFb.png"></a></div>
+                        <div id="LoginWithGPlus"><a href="#"><img src="Images/LoginWithGPlus.png"></a></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="LoginForm">
+                    	<div class="FormLabel">Email* :</div>
+                        <div class="FormText"><input type="text" class="TextboxEmail"></div>
+                        <div class="FormLabel">Password* :</div>
+                        <div class="FormText"><input type="text" class="TextboxEmail"></div>
+                        <div id="ForgotPassword"><a href="#" class="ForgotPassword">Forgot Password?</a></div>
+                        <div class="clear"></div>
+                        <div id="LoginButton"><input type="submit" value="Log In" class="LoginButton"></div>
+                    </div>
+                    <div id="HrLine"><img src="Images/HrLine.png"></div>
+                    <div id="Or">or</div>
+                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest">Proceed as a Guest!</a></div>
+                </div>
+                
+                <div id="RegisterBigDiv" style="display:none;">
+            		<div id="CrossButton" style="margin-top: 15px; margin-right: 15px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="LoginHeading" style="margin-top:-15px;">Register</div>
+                    <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.</div>
+                    <div id="RegisterWithSocialBigDiv">
+                    	<div id="RegisterWithFbGPlus">
+                        	<div id="RegisterFbDiv"><a href="#"><img src="Images/RegisterWithFb.png"></a></div>
+                            <div id="RegisterGPlusDiv"><a href="#"><img src="Images/RegisterWithGPlus.png"></a></div>
+                        </div>
+                        <div id="RegisterOr">or</div>
+                        <div id="RegisterTextBox">
+                    <form action="" method="">
+                        	<div class="FormLabel">Email* :</div>
+                            <div class="FormText"><input type="text" class="TextboxEmail"></div>
+                            <div class="FormLabel">Password* :</div>
+                            <div class="FormText"><input type="text" class="TextboxEmail"></div>
+                        </form></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="RegisterButton"><input type="submit" value="Register" class="RegisterButton"></div>
+                    
+                    <div id="AlreadyHaveAccount">Already have an account yet? <a href="#" class="RegisterLogin">Log in!</a></div>
+           	 	</div>
+            	<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 ColumnPaddingLeftZero">
+                	<div id="FrontendContentTab1">
+                    	<div class="FrontendModalBoxDiv">
+                        	<div class="FrontendModalHeading">Burgers</div>
+                            <div class="FrontendModalContent">
+                            	<div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Hamburger</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Cheeseburger</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="FrontendModalBoxDiv">
+                        	<div class="FrontendModalHeading">Sides</div>
+                            <div class="FrontendModalContent">
+                            	<div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="FrontendModalBoxDiv">
+                        	<div class="FrontendModalHeading">Salads</div>
+                            <div class="FrontendModalContent">
+                            	<div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="FrontendContentTab2" style="display: none;">
+                    	<div class="FrontendModalBoxDiv">
+                        	<div class="FrontendModalHeading">Burgers</div>
+                            <div class="FrontendModalContent">
+                            	<div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Hamburger</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Cheeseburger</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                                <div class="FrontendModalItemRow">
+                                	<span class="SpanModalItemName"><a href="#" class="ModalItemName">Item</a></span>
+                                    <span class="SpanModalPrice"><a href="#" class="ModalPrice">$5.00</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ColumnPaddingRightZero">
+                	<div id="FrontendShippingCartBigDiv">
+                	<div id="GroupOrderDiv"><a href="#" class="GroupOrder">Group Order</a></div>
+                	<div id="FavouritesDiv"><a href="#" class="Favourites">Favorites</a></div>
+                    <div id="FrontendShippingCartDiv">
+                    	<div id="DeliveryDiv"><a href="#" class="Delivery" id="DeliveryPopup">Delivery</a></div>
+                        <div id="PickupDiv"><a href="#" class="Pickup">Pick Up</a></div>
+                        <div id="CartItemBigDiv" ng-app="">
+                        	<div class="CartSeperator"><hr></div>
+                            <div id="ItemsHeading">Items</div>
+                            <div class="CartItemRow" ng-init="Qty1=1;Price1=2.45">
+                            	<div class="SpanSelectCounter"><input type="number" min="0" class="InputNumber" ng-model="Qty1" /></div>
+                            	<div class="SpanItemName">Bacon Cheeseburger</div>
+                                <div class="SpanItemPrice">{{ Qty1 * Price1}}</div>
+                                <div class="SpanCartEdit"><a href="#" class="Edit">Edit</a></div>
+                                <div class="SpanCartRemove"><a href="#" class="Remove">Remove</a></div>
+                                <div class="CartItemSeperatorDiv"></div>
+                            </div>
+                            <div class="CartItemRow" ng-init="Qty2=1;Price2=2.45">
+                            	<div class="SpanSelectCounter"><input type="number" min="0" class="InputNumber" ng-model="Qty2" ></div>
+                            	<div class="SpanItemName">Cobb Salad</div>
+                                <div class="SpanItemPrice">{{ Qty2 * Price2}}</div>
+                                <div class="SpanCartEdit"><a href="#" class="Edit">Edit</a></div>
+                                <div class="SpanCartRemove"><a href="#" class="Remove">Remove</a></div>
+                                <div class="SpanPolygon" style="margin-left: 45px;">For: Julie</div>
+                                <div class="CartItemSeperatorDiv"></div>
+                            </div>
+                            <div class="CartItemRow" ng-init="Qty3=1;Price3=2.45">
+                            	<div class="SpanSelectCounter"><input type="number" min="0" class="InputNumber" ng-model="Qty3" ></div>
+                            	<div class="SpanItemName">Cobb Salad</div>
+                                <div class="SpanItemPrice">{{ Qty3 * Price5}}</div>
+                                <div class="SpanCartEdit"><a href="#" class="Edit">Edit</a></div>
+                                <div class="SpanCartRemove"><a href="#" class="Remove">Remove</a></div>
+                                <div class="SpanPolygon" style="margin-left: 45px;">For: Julie</div>
+                                <div class="CartItemSeperatorDiv"></div>
+                            </div>
+                            <div id="CouponsCartDiv">
+                            	<div id="CouponsHeading">Coupon</div>
+                                <div id="BurgerTextBox"><input type="text" class="BurgerTextBox" placeholder="BURGER"></div>
+                                <div id="CartCouponRemove"><a href="#" class="CartCouponRemove">Remove</a></div>
+                                <div id="Coupon20"><img src="Images/Coupon20.png"></div>
+                                <div id="BuyThreeOffer">Buy 3 Entrees - Get 4th Entree FREE!</div>
+                                <div class="CartSeperator"><hr></div>
+                            </div>
+                            <div id="TotalAmoutDiv" style="margin-left: 40px;">
+                            	<div class="TotalRow">
+                                	<span class="SpanTotalText">Subtotal:</span>
+                                    <span class="SpanTotalValue">$5.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Sales Tax:</span>
+                                    <span class="SpanTotalValue">$0.75</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Delivery:</span>
+                                    <span class="SpanTotalValue">$0.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText">Gratuity:</span>
+                                    <span class="SpanTotalValue Grdauity">$2.00</span>
+                                </div>
+                                <div class="TotalRow">
+                                	<span class="SpanTotalText TotalStyle">Total:</span>
+                                    <span class="SpanTotalValue TotalValueStyle">$5.75</span>
+                                </div>
+                                <div class="ItemSeperator"><hr color="#4b4b4b" class="ItemHr"></div>
+                            </div>
+                            <div class="clear"></div>
+                            <div id="CheckoutSubmitOrderDiv" style="padding-top:15px;"><input type="submit" class="CheckoutSubmitOrder" value="Submit Order!"></div>
+                            <div id="CancelCart"><a href="#" class="CancelCart">Cancel</a></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+        <div class="container FooterBgColor FooterMarginBottom FooterPaddingBottom">
+        	<div class="row">
+            	<div class="col-lg-12">    
+                	<div id="PoweredBy"><img src="Images/PoweredBy.png"></div>
+                    <div id="FooterLinksBigDiv">
+                	<div class="FooterLinksLi"><a href="#" class="FooterLinks">Terms &amp; Conditions &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Privacy &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Refund Policy</a></div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </footer>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>  
+</html>
+    

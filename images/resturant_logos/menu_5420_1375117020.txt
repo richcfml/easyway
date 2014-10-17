@@ -1,0 +1,353 @@
+1. Arts & Humanities
+	Books & Authors
+	Dancing
+	Genealogy
+	History
+	Other - Arts & Humanities
+	Performing Arts
+	Philosophy
+	Poetry
+	Theater & Acting
+	Visual Arts
+	
+2. Beauty & Style
+	Fashion & Accessories
+	Hair
+	Makeup
+	Other - Beauty & Style
+	Skin & Body
+	
+3. Business & Finance
+	Advertising & Marketing
+	Careers & Employment
+	Corporations
+	Credit
+	Insurance
+	Investing
+	Other - Business & Finance
+	Personal Finance
+	Renting & Real Estate
+	Small Business
+	Taxes
+	
+4. Cars & Transportation
+	Aircraft
+	Boats & Boating
+	Buying & Selling
+	Car Audio
+	Car Makes
+	Commuting
+	Insurance & Registration
+	Maintenance & Repairs
+	Motorcycles
+	Other - Cars & Transportation
+	Rail
+	Safety
+	
+5. Computers & Internet
+	Computer Networking
+	Hardware
+	Internet
+	Other - Computers
+	Programming & Design
+	Security
+	Software
+
+6. Consumer Electronics
+	Camcorders
+	Cameras
+	Cell Phones & Plans
+	Games & Gear
+	Home Theater
+	Land Phones
+	Music & Music Players
+	Other - Electronics
+	PDAs & Handhelds
+	TiVO & DVRs
+	TVs
+
+7. Dining Out - subcategories
+	Argentina
+	Australia
+	Austria
+	Brazil
+	Canada
+	Fast Food
+	France
+	Germany
+	India
+	Indonesia
+	Ireland
+	Italy
+	Malaysia
+	Mexico
+	New Zealand
+	Other - Dining Out
+	Philippines
+	Singapore
+	Spain
+	Switzerland
+	Thailand
+	United Kingdom
+	United States
+	Vietnam
+	
+8. Education & Reference
+	Financial Aid
+	Higher Education (University +)
+	Home Schooling
+	Homework Help
+	Other - Education
+	Preschool
+	Primary & Secondary Education
+	Quotations
+
+9. Enetertainment & Music
+	Celebrities
+	Comics & Animation
+	Horoscopes
+	Jokes & Riddles
+	Magazines
+	Movies
+	Music
+	On the Road
+	Other - Entertainment
+	Polls & Surveys
+	Radio
+	Television
+
+10. Environment
+	Alternative Fuel Vehicles
+	Conservation
+	Global Warming
+	Green Living
+	Other - Environment
+
+11. Family & Relationships
+	Kids
+	Family
+	Friends
+	Marriage & Divorce
+	Other - Family & Relationships
+	Singles & Dating
+	Weddings
+
+12. Food & Drink
+	Beer, Wine & Spirits
+	Cooking & Recipes
+	Entertaining
+	Ethnic Cuisine
+	Non-Alcoholic Drinks
+	Other - Food & Drink
+	Vegetarian & Vegan
+
+13. Games & Recreation
+	Amusement Parks
+	Board Games
+	Card Games
+	Gambling
+	Hobbies & Crafts
+	Other - Games & Recreation
+	Toys
+	Video & Online Games
+
+14. Health
+	Alternative Medicine
+	Dental
+	Diet & Fitness
+	Diseases & Conditions
+	General Health Care
+	Men's Health
+	Mental Health
+	Optical
+	Other - Health
+	Women's Health
+
+15. Home & Garden
+	Cleaning & Laundry
+	Decorating & Remodeling
+	Do It Yourself (DIY)
+	Garden & Landscape
+	Maintenance & Repairs
+	Other - Home & Garden
+
+16. Local Businesses - subcategories
+	Argentina
+	Australia
+	Austria
+	Brazil
+	Canada
+	France
+	Germany
+	India
+	Indonesia
+	Ireland
+	Italy
+	Mexico
+	New Zealand
+	Other - Local Businesses
+	Singapore
+	Spain
+	Switzerland
+	Thailand
+	United Kingdom
+	United States
+	Vietnam
+
+17. News & Events
+	Current Events
+	Media & Journalism
+	Other - News & Events
+
+18. Pets
+	Birds
+	Cats
+	Dogs
+	Fish
+	Horses
+	Other - Pets
+	Reptiles
+	Rodents
+
+19. Politics & Government
+	Civic Participation
+	Elections
+	Embassies & Consulates
+	Government
+	Immigration
+	International Organizations
+	Law & Ethics
+	Law Enforcement & Police
+	Military
+	Other - Politics & Government
+	Politics
+
+20. Pregnancy & Parenting
+	Adolescent
+	Adoption
+	Baby Names
+	Grade-Schooler
+	Newborn & Baby
+	Other - Pregnancy & Parenting
+	Parenting
+	Pregnancy
+	Toddler & Preschooler
+	Trying to Conceive
+
+21. Science & Mathematics
+	Agriculture
+	Alternative
+	Astronomy & Space
+	Biology
+	Botany
+	Chemistry
+	Earth Sciences & Geology
+	Engineering
+	Geography
+	Mathematics
+	Medicine
+	Other - Science
+	Physics
+	Weather
+	Zoology
+
+22. Social Science
+	Anthropology
+	Dream Interpretation
+	Economics
+	Gender Studies
+	Other - Social Science
+	Psychology
+	Sociology
+
+23. Society & Culture
+	Community Service
+	Cultures & Groups
+	Etiquette
+	Holidays
+	Languages
+	Mythology & Folklore
+	Other - Society & Culture
+	Religion & Spirituality
+	Royalty
+
+24. Sports
+	Auto Racing
+	Baseball
+	Basketball
+	Boxing
+	Cricket
+	Cycling
+	Fantasy Sports
+	Football (American)
+	Football (Australian)
+	Football (Canadian)
+	Football (Soccer)
+	Golf
+	Handball
+	Hockey
+	Horse Racing
+	Martial Arts
+	Motorcycle Racing
+	Olympics
+	Other - Sports
+	Outdoor Recreation
+	Rugby
+	Running
+	Snooker & Pool
+	Surfing
+	Swimming & Diving
+	Tennis
+	Volleyball
+	Water Sports
+	Winter Sports
+	Wrestling
+
+25. Travel - subcategories
+	Africa & Middle East
+	Air Travel
+	Argentina
+	Asia Pacific
+	Australia
+	Austria
+	Brazil
+	Canada
+	Caribbean
+	Cruise Travel
+	Europe (Continental)
+	France
+	Germany
+	India
+	Ireland
+	Italy
+	Latin America
+	Mexico
+	Nepal
+	New Zealand
+	Other - Destinations
+	Spain
+	Switzerland
+	Travel (General)
+	United Kingdom
+	United States
+	Vietnam
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

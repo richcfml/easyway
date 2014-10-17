@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Easyway Ordering | Client Login</title>
+<link rel="stylesheet" type="text/css" href="Styles/GlobalStyles.css" />
+<link rel="stylesheet" type="text/css" href="Styles/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="Styles/menu.css">
+<script type="text/javascript" src="Scripts/jquery.js"></script>
+<script type="text/javascript" src="Scripts/function.js"></script>
+<script src="Scripts/modernizr.custom.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+<!--<script src="Scripts/jquery-1.9.0.min.js"></script>-->
+<script src="Scripts/Misc.js"></script>
+<script type="text/javascript">
+function check(){
+var x = "";
+if(document.getElementById('user').value =="")
+    x="Incorrect Info Entered, Please Try Again";
+if(document.getElementById('password').value =="")
+    x="Incorrect Info Entered, Please Try Again";
+document.getElementById('error1').innerHTML = x;
+
+}
+</script>
+</head>
+
+<body class="BodyLoginPage">
+<div id="LoginPagewrap">
+	<div id="InnerPagewrap">
+    	<div id="LoginDiv">
+        	<a href="c_panel/login.php" class="Login">
+            	<span class="LoginImg"><img src="images/LoginIcon.PNG" /></span>
+            	<span class="LoginSpan">LOGIN</span>
+            </a>
+        </div>
+    	<div id="SocialIconsDiv">
+        	<div id="FacebookIcon"><a href="https://www.facebook.com/EasywayOrdering" target="_blank"><img src="images/FbIcon.png" /></a></div>
+            <div id="TwitterIcon"><a href="http://www.twitter.com/EasyWayInc" target="_blank"><img src="images/TwitterIcon.png" /></a></div>
+            <div id="GooglePlusIcon"><a href="https://plus.google.com/u/1/b/117596371910744353409/117596371910744353409" target="_blank"><img src="images/GooglePlusIcon.png" /></a></div>
+            <div id="YoutbueIcon"><a href="http://www.youtube.com/user/EasyWayOrdering/" target="_blank"><img src="images/YoutubeIcon.png" /></a></div>
+            <div id="InstagramIcon"><a href="http://instagram.com/easywayordering#" target="_blank"><img src="images/InstagramIcon.png" /></a></div>
+            <div id="LinkedInIcon"><a href="http://www.linkedin.com/in/easywayordering/" target="_blank"><img src="images/LinkedInIcon.png" /></a></div>
+        </div>
+        <div class="clear"></div>
+        <!--Responsive Menu Strats-->
+        <div id="RespinsiveMenu">
+            <div id="wrap">
+                <header>
+                    <div class="inner relative">
+                        <a class="logo" href="http://dev.easywayordering.com/home.html"><img src="images/EasywayLogo.png" alt="Easyway Ordering"></a>
+                        <a id="menu-toggle" class="button dark" href="#"><i style="color:#000;" class="icon-reorder"></i></a>
+                        <nav id="navigation">
+                            <ul id="main-menu">
+                                <li><a href="Features.html">FEATURES</a></li>
+                                <li><a href="Pricing.html">PRICING</a></li>
+                                <li><a href="AboutUs.html">ABOUT</a></li>
+                                <li><a href="Blog.html">BLOG</a></li>
+                                <li><a href="Reseller.html" style="color:#282d30;">RESELLER?</a></li>
+                                <li><a href="FreeDemo.html" style="color:#282d30;">FREE DEMO!</a></li>
+                            </ul>
+                        </nav>
+                        <div class="clear"></div>
+                    </div>
+                </header>	
+            </div>  
+         </div>  
+        <!-- REsponsive Menu Ends-->
+        <div class="clear"></div>
+        <div id="WhiteDivLogin">
+        	<div id="WelcomeBack">Welcome Back!</div>
+            <div id="LoginBigDiv">
+            	<div id="LoginClip"></div>
+                <div id="LoginInnerBox">
+                	<div id="AdminPanel">Admin Panel</div>
+                    <div id="ThisIs">This is where the magic happens!</div>
+                    <div id="LoginTextBoxDiv">
+                    	<form name="register" id="register">
+                        	<input type="text" name="username" class="LoginUserText" placeholder="Username" id="user" />
+                            <input type="text" name="username" class="LoginPassword" placeholder="Password" name="password" id="password" />
+                    </div>
+                    <div class="clear"></div>
+                    <div id="ClientLoginDiv">
+                    	<button onclick="check()" type=button class="ClientLoginButton">Login</button>
+                    	<!--<input type="submit" value="Login" class="ClientLoginButton" />-->
+						</form>                    
+                    </div>
+                </div>
+            </div>
+            <div name="error" id="error"> 
+				<p name="error1" id="error1"> 
+			</div>
+            <div id="ForgotPassword">Forgot your password? </div>
+            <div id="LoginJustGivCall">Just give us a call - 1-800-648-6238</div>
+
+        </div>
+        <div id="FooterBigDiv">
+        	<div id="FooterInnerDiv">
+            	<div id="FooterInnerLeft">
+                	<div id="Navigation">
+                        <div id="Careers"><a href="#" style="color:#FFF; text-decoration:none;">Careers</a></div>
+                        <div id="Press"><a href="#" style="color:#FFF; text-decoration:none;">Press</a></div>
+                        <div id="Privacy"><a href="Privacy.html" style="color:#FFF; text-decoration:none;">Privacy</a></div>
+                        <div id="Support"><a href="Support.html" style="color:#FFF; text-decoration:none;">Support</a></div>
+                    </div>
+                    <div id="AddressDiv">
+                    	<div id="FirstAddress">50 Broad Street   Suite 1701</div>
+                        <div id="SecondAddress">New York, NY 10004 United States of America. </div>
+                        <div id="Telephone">T: (800) 648-6238</div>
+                        <div id="Fax">F: (800) 356-1510</div>
+                        
+                    </div>
+                    
+                </div>
+                <div id="FooterInnerRight">
+               		<div id="ArrowDiv"><a href="#top"><img src="images/UpArrow.png" /></a></div>
+                	<div id="NewsletterDiv">
+                    	<div id="TextBoxDiv">
+                        	<form action="http://easywayordering.us7.list-manage.com/subscribe/post" method="POST"> 
+                            <input type="hidden" name="u" value="b833067e17d155a7b4f915d2e"> 
+                            <input type="hidden" name="id" value="4e87551cd3">
+							<input type="email" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0" size="25" value="" class="Text" placeholder="Enter email address">
+                            
+                        </div>
+                        <div id="ButtonDiv">
+                            <input type="submit" class="Submit" value="SIGN ME UP!" />
+                            </form>
+                        </div>
+                    </div>
+                    <div id="JoinOurNewsLetter">JOIN OUR NEWSLETTER</div>
+                    <div id="GetTheLattest">Get the latest industry news, plus valuable <br /> business tips and tricks, FOR FREE! - subscribe now</div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+</body>
+</html>

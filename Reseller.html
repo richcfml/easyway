@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Easyway Ordering | Reseller</title>
+<link rel="stylesheet" type="text/css" href="Styles/GlobalStyles.css" />
+<link rel="stylesheet" type="text/css" href="Styles/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="Styles/menu.css">
+<script type="text/javascript" src="Scripts/jquery.js"></script>
+<script type="text/javascript" src="Scripts/function.js"></script>
+<script src="Scripts/modernizr.custom.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+<!--<script src="Scripts/jquery-1.9.0.min.js"></script>-->
+<script src="Scripts/Misc.js"></script>
+<style>
+.infowindow {
+    display:none;
+}
+.infowindow {
+    border:2px solid black;
+    margin-top: 8px;
+    background:#333;
+    color:#FFF;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    padding: .5em 1em;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    text-shadow:0 -1px #000000;
+    -webkit-box-shadow: 0 0  8px #000;
+    box-shadow: 0 0 8px #000;
+}
+</style>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+<script>  
+ 	// Set the Map variable
+      	var map;
+      	function initialize() {	
+            var myOptions = {
+            zoom: 5,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var all = [
+            ["Karachi Office", "D-88/2, Block 5,Clifton", "Karachi", "Pakistan", "75600", "24.83541", "67.02935"], 
+            ["Islamabad Office", "House No. 4, Street No. 4,Sector F/8-3", "Islamabad", "Islamabad", "44000", "33.71759", "73.04119"],
+            ["Lahore Office", "Suite No. 4,2nd Floor,Lahore Cantt ", "Lahore", "Lahore", "54810", "31.50940", "74.36315"],
+            ["Quetta Office", "Office No. 1, Sangeen Complex, Alama Chowk,Airport Road", "Quetta", "Quetta", "87300", "30.25290", "66.95664"]
+      	];	
+		
+		<!--MY EDIT	-->
+		
+		<!--MY EDIT	-->
+		
+        var infoWindow = new google.maps.InfoWindow;
+        map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+		
+		var marker = new google.maps.Marker({
+  position: myCenter,
+  title:'Click to zoom'
+  });
+  
+        // Set the center of the map
+       	var pos = new google.maps.LatLng(30.83541, 70.02935);
+        map.setCenter(pos);
+        function infoCallback(infowindow, marker) { 
+            return function() {
+            infowindow.open(map, marker);
+        };
+   }			
+   function setMarkers(map, all) {	
+   	for (var i in all) {										
+            var name 	= all[i][0];
+            var address = all[i][1];
+            var city 	= all[i][2];
+            var state 	= all[i][3];
+            var zip 	= all[i][4];
+            var lat 	= all[i][5];
+            var lng 	= all[i][6];
+            var latlngset;
+            latlngset = new google.maps.LatLng(lat, lng);
+            var marker = new google.maps.Marker({  
+              map: map,  title: city,  position: latlngset ,icon: 'images/Marker.png',
+			  
+            });
+			
+            <!--var content = '<div class="map-content"><h3>' + name + '</h3>' + address + '<br />' + city + ', ' + state + ' ' + zip + '<br /><a href="http://maps.google.com/?daddr=' + address + ' ' + city + ', ' + state + ' ' + zip + '" target="_blank">Get Directions</a></div>';	-->	
+			var content = '<div class="map-content"><h3>' + name + '</h3>' + address + '<br />' + city + ', ' + state + ' ' + zip + '</div>';
+            var infowindow = new google.maps.InfoWindow();
+              infowindow.setContent(content);
+              google.maps.event.addListener(
+                marker, 
+                'click', 
+                infoCallback(infowindow, marker)
+              );
+          }
+        }			
+        // Set all markers in the all variable
+        setMarkers(map, all);
+      };
+      // Initializes the Google Map
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+	  
+	  
+	  
+	  
+	  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+</script>
+<script type="text/javascript">
+var myCenter=new google.maps.LatLng(24.83543,67.02948);
+
+function initialize()
+{
+var mapProp = {
+  center: myCenter,
+  zoom:15,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+var marker = new google.maps.Marker({
+  position: myCenter,
+  title:'Click to zoom'
+  });
+
+marker.setMap(map);
+
+// Zoom to 9 when clicking on marker
+google.maps.event.addListener(marker,'click',function() {
+  map.setZoom(9);
+  map.setCenter(marker.getPosition());
+  });
+     
+google.maps.event.addListener(map,'center_changed',function() {
+// 3 seconds after the center of the map has changed, pan back to the marker
+  window.setTimeout(function() {
+    map.panTo(marker.getPosition());
+  },3000);
+  });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+</head>
+
+<body class="BodyResellerPage">
+<div id="ResellerPagewrap">
+	<div id="InnerPagewrap">
+    	<div id="LoginDiv">
+        	<a href="c_panel/login.php" class="Login">
+            	<span class="LoginImg"><img src="images/LoginIcon.PNG" /></span>
+            	<span class="LoginSpan">LOGIN</span>
+            </a>
+        </div>
+    	<div id="SocialIconsDiv">
+        	<div id="FacebookIcon"><a href="https://www.facebook.com/EasywayOrdering" target="_blank"><img src="images/FbIcon.png" /></a></div>
+            <div id="TwitterIcon"><a href="http://www.twitter.com/EasyWayInc" target="_blank"><img src="images/TwitterIcon.png" /></a></div>
+            <div id="GooglePlusIcon"><a href="https://plus.google.com/u/1/b/117596371910744353409/117596371910744353409" target="_blank"><img src="images/GooglePlusIcon.png" /></a></div>
+            <div id="YoutbueIcon"><a href="http://www.youtube.com/user/EasyWayOrdering/" target="_blank"><img src="images/YoutubeIcon.png" /></a></div>
+            <div id="InstagramIcon"><a href="http://instagram.com/easywayordering#" target="_blank"><img src="images/InstagramIcon.png" /></a></div>
+            <div id="LinkedInIcon"><a href="http://www.linkedin.com/in/easywayordering/" target="_blank"><img src="images/LinkedInIcon.png" /></a></div>
+        </div>
+        <div class="clear"></div>
+        <!--Responsive Menu Strats-->
+        <div id="RespinsiveMenu">
+            <div id="wrap">
+                <header>
+                    <div class="inner relative">
+                        <a class="logo" href="http://dev.easywayordering.com/home.html"><img src="images/EasywayLogo.png" alt="Easyway Ordering"></a>
+                        <a id="menu-toggle" class="button dark" href="#"><i style="color:#000;" class="icon-reorder"></i></a>
+                        <nav id="navigation">
+                            <ul id="main-menu">
+                                <li><a href="Features.html">FEATURES</a></li>
+                                <li><a href="Pricing.html">PRICING</a></li>
+                                <li><a href="AboutUs.html">ABOUT</a></li>
+                                <li><a href="Blog.html">BLOG</a></li>
+                                <li><a href="Reseller.html" style="color:#282d30;">RESELLER?</a></li>
+                                <li><a href="FreeDemo.html" style="color:#282d30;">FREE DEMO!</a></li>
+                            </ul>
+                        </nav>
+                        <div class="clear"></div>
+                    </div>
+                </header>	
+            </div>  
+         </div>  
+        <!-- REsponsive Menu Ends-->
+        <div class="clear"></div>
+        <div id="BeAPartGrayDiv">
+        	<div id="BeAPartInnerDiv">Be a part of the online ordering revolution. <br />Become an EasyWay Ordering Authorized Reseller!</div>
+        </div>
+        <div id="WhiteDivReseller">
+        	<div id="WhyBecome">Why Become a Reseller?</div>
+            <div id="ThereAreMultitude">There are multitude of reasons why being an EasyWay reseller rocks:</div>
+            <div id="CenterLiDiv">
+                	<div class="CenterLiInnerDiv"><span class="SpanImg"><img src="images/DollarPlus.png" class="" /></span><span class="SpanText">Enjoy leads and training - we get you all set up!</span></div>
+                    <div class="CenterLiInnerDiv"><span class="SpanImg"><img src="images/Graph.png" class="" /></span><span class="SpanText">Create a recurring revenue system</span></div>
+                    <div class="CenterLiInnerDiv"><span class="SpanImg"><img src="images/Bucket.png" class="" /></span><span class="SpanText">Offer your customers the best online ordering system</span></div>
+                
+            </div>
+            
+            <div id="BecomeAResellerGrayDiv">
+            	<div id="BecomeAResellerInnerDiv">
+                	<div id="BecomeAResellerLeftDiv"><b>Become a Reseller in as little as a week.</b><br /><span class="WeProvide">We provide all the training and documents you need!</span></div>
+                    <div id="BecomeAResellerRightDiv">
+                    	<div id="StartNow"><a href="mailto:partners@easywayordering.com" class="StartNow">Start Now!</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="LocateAResller">Locate a Reseller</div>
+            <div id="LookingFor">Looking for an EasyWay Ordering reseller in your areas? Find us!</div>
+            <div id="GMapDiv">
+            	<div id="map_canvas" style="width:100%;height:500px;"></div>
+            </div>
+            <div id="ZipCodeBigDiv">
+            	<div id="ZipTextBoxLeft"><form><input type="text" class="ZipTextBoxLeft" placeholder="Zipcode" /></div>
+                <div id="SendBoxRight"><input type="submit" value="SEND" class="SendBoxRight" /></div>
+            </div>
+        </div>
+        
+        <div id="FooterBigDiv">
+        	<div id="FooterInnerDiv">
+            	<div id="FooterInnerLeft">
+                	<div id="Navigation">
+                        <div id="Careers"><a href="#" style="color:#FFF; text-decoration:none;">Careers</a></div>
+                        <div id="Press"><a href="#" style="color:#FFF; text-decoration:none;">Press</a></div>
+                        <div id="Privacy"><a href="Privacy.html" style="color:#FFF; text-decoration:none;">Privacy</a></div>
+                        <div id="Support"><a href="Support.html" style="color:#FFF; text-decoration:none;">Support</a></div>
+                    </div>
+                    <div id="AddressDiv">
+                    	<div id="FirstAddress">50 Broad Street   Suite 1701</div>
+                        <div id="SecondAddress">New York, NY 10004 United States of America. </div>
+                        <div id="Telephone">T: (800) 648-6238</div>
+                        <div id="Fax">F: (800) 356-1510</div>
+                        
+                    </div>
+                    
+                </div>
+                <div id="FooterInnerRight">
+               		<div id="ArrowDiv"><a href="#top"><img src="images/UpArrow.png" /></a></div>
+                	<div id="NewsletterDiv">
+                    	<div id="TextBoxDiv">
+                        	<form action="http://easywayordering.us7.list-manage.com/subscribe/post" method="POST"> 
+                            <input type="hidden" name="u" value="b833067e17d155a7b4f915d2e"> 
+                            <input type="hidden" name="id" value="4e87551cd3">
+							<input type="email" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0" size="25" value="" class="Text" placeholder="Enter email address">
+                            
+                        </div>
+                        <div id="ButtonDiv">
+                            <input type="submit" class="Submit" value="SIGN ME UP!" />
+                            </form>
+                        </div>
+                    </div>
+                    <div id="JoinOurNewsLetter">JOIN OUR NEWSLETTER</div>
+                    <div id="GetTheLattest">Get the latest industry news, plus valuable <br /> business tips and tricks, FOR FREE! - subscribe now</div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,331 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+.fixed {
+    padding:0;
+    margin:0;
+    border:0;
+    outline:0;
+    /*font-size:100%;
+    vertical-align:baseline;
+    font-family: 'Open Sans', sans-serif;
+    font-size:12px;
+    color:#393939;*/
+    width: 100%;
+    min-height: 70px;
+    position:fixed !Important;
+    top:0;
+    z-index: 10004;
+	height:70px;
+	background-color:#fff;
+	border-bottom: 2px solid #25aae1;
+	/*opacity: 0.9;*/
+}
+*,
+*:after,
+*::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+ol, ul {
+	list-style: none;
+	padding:0px;
+	margin:0px;
+}
+#wrap {
+	margin: 0 auto;
+}
+
+.inner {
+	margin: 0 auto;
+	max-width: 100%;
+	/*padding: 0 40px;*/
+	padding: 0 5px;
+}
+
+.relative {
+	position: relative;
+}
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+/* HEADER */
+#wrap > header {
+	/*background-color:#fff;
+	opacity:0.5;*/
+	/*padding-bottom: 5px;*/
+	margin-top:25px;
+}
+.logo {
+	display: inline-block;
+	font-size: 0;
+	margin-top:1px;
+	/*padding-top:15px;*/
+}
+#navigation {
+	position: absolute;
+	/*right: 350px;*/
+	right: 5px;
+	bottom: 0px;
+}
+
+#menu-toggle {
+	display: none;
+	float: right;
+}
+/*#menu-toggle a {
+	color:#00F;	
+}*/
+
+/* HEADER > MENU I have changed it due to Center in fixed scroll*/
+/*#main-menu {
+	float: right;
+	font-size: 0;
+	margin: 5px 0;
+}*/
+#main-menu {
+	/*float: right;*/
+	font-size: 0;
+	margin: 0 auto;
+	width: 770px;
+	/*margin: 5px 0;*/
+}
+#menu ul { 
+	list-style:none; 
+	}
+
+#menu ul li { 
+	display:inline; 
+	font-size:13px; 
+	padding:0 12px; 
+	}
+
+#menu ul li a { 
+	color:white; 
+	text-decoration:none; 
+	font-weight:normal;
+	font-family:'Open Sans', sans-serif; 
+	text-transform:uppercase;
+	letter-spacing: 1.4pt;
+	}
+
+#menu ul li a:hover { 
+	text-decoration:underline; 
+	color:#996699!important;
+	}
+#main-menu > li {
+	display: inline-block;
+	margin-left: 50px;
+	padding: 25px 0;
+}
+
+#main-menu > li.parent {
+	/*background-image: url(../images/plus-gray.png);*/
+	background-size: 7px 7px;
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+#main-menu > li.parent > a {
+	padding-left: 14px;
+}
+
+#main-menu > li > a {
+	color:#25aae1;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 5px 0;
+	text-decoration:none;
+	letter-spacing:1pt;
+	font-weight:bold;
+}
+
+#main-menu > li:hover > a,
+#main-menu > li.current-menu-item > a {
+	color:#25aae1;
+}
+
+#main-menu > li:hover > a
+{
+	/*border-bottom:3px solid #f29100;*/
+	
+}
+#main-menu a::after
+{
+	position: absolute;
+	top: 70%;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	/*background: rgba(0,0,0,0.1);*/
+	background-color:#f29100;
+	content: '';
+	opacity: 0;
+	-webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+	-moz-transition: opacity 0.3s, -moz-transform 0.3s;
+	transition: opacity 0.3s, transform 0.3s;
+	-webkit-transform: translateY(10px);
+	-moz-transform: translateY(10px);
+	transform: translateY(10px);
+}
+#main-menu a:hover::after,
+#main-menu a:focus::after {
+	opacity: 1;
+	-webkit-transform: translateY(0px);
+	-moz-transform: translateY(0px);
+	transform: translateY(0px);
+}
+/*#main-menu > li::after > a
+{
+	opacity: 0;
+	-webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+	-moz-transition: opacity 0.3s, -moz-transform 0.3s;
+	transition: opacity 0.3s, transform 0.3s;
+	-webkit-transform: translateY(10px);
+	-moz-transform: translateY(10px);
+	transform: translateY(10px);
+}*/
+
+/* HEADER > MENU > DROPDOWN */
+#main-menu li {
+	position: relative;
+}
+
+ul.sub-menu { /* level 2 */
+	display: none;
+	left: 0px;
+	top: 38px;
+	padding-top: 10px;
+	position: absolute;
+	width: 150px;
+	z-index: 9999;
+}
+
+ul.sub-menu ul.sub-menu { /* level 3+ */
+	margin-top: -1px;
+	padding-top: 0;
+	left: 149px;
+	top: 0px;
+}
+
+ul.sub-menu > li > a {
+	background-color: #333;
+	border: 1px solid #444;
+	border-top: none;
+	color: #bbb;
+	display: block;
+	font-size: 12px;
+	line-height: 15px;
+	padding: 10px 12px;
+}
+
+ul.sub-menu > li > a:hover {
+	background-color: #2a2a2a; 
+	color: #fff;
+}
+
+ul.sub-menu > li:first-child {
+	border-top: 3px solid #23dbdb;
+}
+
+ul.sub-menu ul.sub-menu > li:first-child {
+	border-top: 1px solid #444;
+}
+
+ul.sub-menu > li:last-child > a {
+	border-radius: 0 0 2px 2px;
+}
+
+ul.sub-menu > li > a.parent {
+	background-image: url(../images/arrow.png);
+	background-size: 5px 9px;
+	background-repeat: no-repeat;
+	background-position: 95% center;
+}
+
+#main-menu li:hover > ul.sub-menu {
+	display: block; /* show the submenu */
+}
+
+
+@media all and (max-width: 1100px) {
+
+	#navigation {
+		position: static;
+		margin-top: 20px;
+	}
+
+	#menu-toggle {
+		display: block;
+	}
+
+	#main-menu {
+		display: none;
+		float: none;
+		width:100%;
+	}
+
+	#main-menu li {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+
+	#main-menu > li {
+		margin-top: -1px;
+		border-right: none !Important;
+		padding-right: 0px !important;
+	}
+
+	#main-menu > li:first-child {
+		margin-top: 0;
+	}
+
+	#main-menu > li > a {
+		background-color: #ecedee;
+		border: 1px solid #888;
+		color: #bbb;
+		display: block;
+		font-size: 12px;
+		padding: 12px !important;
+		padding: 0;
+	}
+
+	#main-menu li > a:hover {
+		background-color: #444; 
+	}
+
+	#main-menu > li.parent {
+		background: none !important;
+		padding: 0;
+	}
+
+	#main-menu > li:hover > a,
+	#main-menu > li.current-menu-item > a {
+		border: 1px solid #444 !important;
+		color: #fff !important;
+	}
+
+	ul.sub-menu {
+		display: block;
+		margin-top: -1px;
+		margin-left: 20px;
+		position: static;
+		padding: 0;
+		width: inherit;
+	}
+
+	ul.sub-menu > li:first-child {
+		border-top: 1px solid #444 !important;
+	}
+
+	ul.sub-menu > li > a.parent {
+		background: #333 !important;
+	}
+}

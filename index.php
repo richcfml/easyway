@@ -1,0 +1,118 @@
+<?php
+require_once "includes/config.php";
+if(isset($_GET['session_id']))
+{
+	$currents_session_id = $_GET['session_id'];
+	session_id($currents_session_id);
+}
+else if(isset($_POST['x_sid']))
+{
+	$currents_session_id = $_POST['x_sid'];
+ 	session_id($currents_session_id);
+}
+
+	header('Access-Control-Allow-Origin: *.easywayordering.com'); 
+    define("AMEX",3);
+	define("VISA",4);
+	define("MASTER",5);
+	define("DISCOVER",6);
+	
+ 	require_once('lib/nusoap.php');
+	
+	include "classes/restaurant.php";
+	include "classes/users.php";
+	include "classes/validater.php";
+	require_once("classes/trackers.php"); 
+	require	"includes/class.phpmailer.php";
+	require_once('classes/valutec.php'); 
+	require_once('classes/menu.php');
+	require_once('classes/category.php');
+	require_once('classes/product.php');
+	require_once('classes/cart.php');
+	require_once('classes/GO3.php');
+ 	require_once('lib/cdyne/cdyne.php');
+	require_once('classes/abandoned_carts.php');
+	require_once('classes/chargify.php');
+	
+	require_once('lib/device_detection/Mobile_Detect.php');
+	$function_obj = new clsFunctions();
+	$validater = new validate(); 
+	$objRestaurant = new restaurant();
+	$objMail = new testmail();
+	$objMenu = new menu();
+	$objCategory = new category();
+	$product = new product();
+ 	$cart = new cart();
+ 	$objGO3 = new GO3();
+	$objcdyne=new cydne();
+	$loggedinuser=new users();
+	$abandoned_carts = new abandoned_carts();
+
+	$objRestaurant = $objRestaurant->getDetailbyUrl($_GET["name"]);
+
+	if($loggedinuser->loadfromsession())
+	{
+            $loggedinuser=$loggedinuser->loadfromsession();
+            if ($loggedinuser->resturant_id != $objRestaurant->id)
+            {
+                $loggedinuser = new users();
+            }
+	}
+        
+	$visit_tracker_html='';
+
+	//**********************************************************//
+	//**************************CYDNE****************************//
+	//**********************************************************//
+	$loggedinuser->resturant_id=$objRestaurant->id;
+	$objcdyne->APIkey='04257110-2ae2-452f-a776-f8ae189e5f74';
+	$objcdyne->did=$objRestaurant->did_number;
+	$objcdyne->url=$objRestaurant->url;
+	$objcdyne->restaurant_name=$objRestaurant->name;
+	$objcdyne->user=$loggedinuser;
+   	//**********************************************************//
+   	//**************************CYDNE****************************//
+   	//**********************************************************//
+	
+	$detect = new Mobile_Detect;
+	 
+	$mobileapp=false;
+	
+	if(isset($_GET['desktop']) && $_GET['desktop']==1) 
+	{
+		$_SESSION['desktopview']='true';
+		$mobileapp=false;
+	} 
+	else 
+	{
+		if($detect->isMobile() || $detect->isTablet() || (!empty($_GET['mobile']) && $_GET['mobile']==1)) 
+		{
+			$mobileapp=true;
+			if(isset($_SESSION['desktopview']) ) 
+			{
+				$mobileapp=false;
+			}
+		}
+	}
+
+	// $platform_used if 1 then website else if 2 then mobile else if 3 then rapid reorder
+	$platform_used = 1;
+	//$mobileapp = true;
+
+	if (isset($_GET["mobile_qc"]) || isset($_SESSION["mobile_qc"]))
+	{
+		$_SESSION["mobile_qc"] = 1;
+		$mobileapp = true;
+	}
+	
+	if ($mobileapp)
+	{
+		$platform_used = 2;
+		include("mobile/index.php");
+	}
+ 	else 
+	{
+ 		include("new_site/index.php");
+	}
+?>
+	
