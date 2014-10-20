@@ -1,6 +1,11 @@
 <?php
+<<<<<<< HEAD
 $url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
 //$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+=======
+//$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
+$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 $mSQLQuery=mysql_query("SELECT Authorization_Num FROM gge4_authorization_num WHERE UserID=".$gUID." AND transaction_id='".$transactionid."'");
 if(mysql_num_rows($mSQLQuery) > 0) 
 {

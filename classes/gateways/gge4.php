@@ -1,6 +1,11 @@
 <?php
+<<<<<<< HEAD
 $url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
 //$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+=======
+//$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
+$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 $mXML ="";
 extract($_POST);
 	

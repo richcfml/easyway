@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-theme.css">
+    <link type="text/css" rel="stylesheet" href="css/CustomeStyle.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script>
+$(document).ready(function(){
+						   
+	$("#AddNewCardPopup").click(function(){
+    	$("#AddNewCreditPopUp").fadeIn() && $("#AddNewAddressPopUp").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#AddNewCreditPopUp').fadeOut();
+			});
+  	});	
+	$("#AddNewAddressPop").click(function(){
+    	$("#AddNewAddressPopUp").fadeIn() && $("#AddNewCreditPopUp").fadeOut();
+		$('.Cross').click(function()
+			{
+				$('#AddNewAddressPopUp').fadeOut();
+			});
+  	});	
+	
+});
+</script>
+  </head>
+  <body>
+    	<div class="container">
+        	<div class="row"><img src="Images/TopBanner.PNG" class="BannerImg"></div>
+        </div>
+        <div class="container">
+        	<div class="row">
+            	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 ColumnBorder">
+                	<div id="AddressText">50 Broad St.<br>New York,NY</div>
+                    <div id="TimeDiv">7:00 am - 8:00 pm - Open</div>
+                    <div id="ClosedMessage" style="display:none;">Closed (Will Re-Open Tues. 7:00 am)</div>
+                    <div id="PhoneText">212 456-7890</div>
+                    <div id="SocialButtonsDiv">	
+                        <div id="facebookButton"><img src="Images/FbLike.png"></div>
+                    	<div id="TwitterButton"><img src="Images/TweetIcon.png"></div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ColumnBorder SecondColumnHeight">
+                	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 text-center GetOfferImg"><img src="Images/GetOfferIcon.PNG"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 GetOfferText text-center"><b>Get 10% Off!</b> Enter #777 below</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 BlackColumnBorder SecondColumnHeight">
+                	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center WelcomeText">Welcome <span class="NameSpan">Mark!</span></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center Logout"><a href="#" class="LogoutLink">Logout</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="container MainContentMarginTop MainContainerBorder ContainerPaddingBottom">
+        	<div class="row">
+            	<div class="col-lg-12">
+                	<div class="AboutGroupHeading"><span class="SpanHeading">Your Account</span></div>
+                    <div id="MakeChanges">Make changes to your account settings here.</div>
+                </div>
+                <div class="col-lg-12">
+                	<div class="row">
+                    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 AccountRightContent pull-right">
+                        	<div id="YouMust">Your most recent<br>order with us:</div>
+                            <div class="col-lg-12">
+                            	<div id="DateDelivery">
+                        			<span class="SpanDate">7/3/2014</span>
+                            		<span class="SpanDelivery">Delivery</span>
+                        		</div>
+                                <div id="ItemPrice">
+                        			<ul class="ItemPriceUl"><span class="SpanItemPrice1">Hamburger</span><span class="SpanItemPrice2">$4.45</span>
+                            			<li class="ItemPriceLi">No Pickles</li>
+                                		<li class="ItemPriceLi">Add Bacon</li>
+                            		</ul>
+                        		</div>
+                                <div id="TaxPrice">
+                        			<ul class="TaxPriceUl">
+                                      <li class="TaxPriceLi"><span class="SpanTaxPrice1">Tax:</span><span class="SpanTaxPrice2">$1.00</span></li>
+                                      <li class="TaxPriceLi"><span class="SpanTaxPrice1">Tip:</span><span class="SpanTaxPrice2">$1.00</span></li>
+                                      <li class="TaxPriceLi"><span class="SpanTaxPrice1"><b>Total</b></span><span class="SpanTaxPrice2"><b>$6.45</b></span></li>
+                            		</ul>
+                        		</div>
+                                <div id="SaveToFavourite"><a href="#" class="SaveToFavourite">Save to Favorites?</a></div>
+                                <div id="ReOrder"><a href="#" class="ReOrder">Re-Order?</a></div>
+                            </div>
+                        </div>
+                    	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        	<div class="LeftContentHeading">Manage Payment Accounts</div>
+                            <div class="col-lg-12 RowPadding">
+                            	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                            	<div id="VisaCard">VISA Card<br>ending in 4567</div>
+                                <div class="EditRemoveDiv">
+                                	<span class="VisaSpanEdit"><a href="#" class="EditRemoveColor">Edit</a></span>
+                                    <span class="VisaSpanRemove"><a href="#" class="EditRemoveColor">Remove</a></span>
+                                </div>
+                                <div class="DefaultCardDiv">
+                                	<span class="SpanDefaultCardRadio"><input type="radio"></span>
+                                    <span class="SpanDefaultCardRadioText">Default card</span>
+                                </div>
+                            	</div>
+                                <div class="VisaCardSeperator"></div>
+                                <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4 SecondSolumnMarginLeft">
+                            	<div id="VisaCard">Amex Card<br>ending in 2567</div>
+                                <div class="EditRemoveDiv">
+                                	<span class="VisaSpanEdit"><a href="#" class="EditRemoveColor">Edit</a></span>
+                                    <span class="VisaSpanRemove"><a href="#" class="EditRemoveColor">Remove</a></span>
+                                </div>
+                                <div class="DefaultCardDiv">
+                                	<span class="SpanDefaultCardRadio"><input type="radio"></span>
+                                    <span class="SpanDefaultCardRadioText">Default card</span>
+                                </div>
+                            </div>
+                            <div class="VisaCardSeperator"></div>
+                            <div class="col-lg-3  col-md-3 col-sm-4 col-xs-12 AddNewCardMargin"><a href="#" class="AddNewCardButton" id="AddNewCardPopup">Add New Card</a></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        	<div class="LeftContentHeading">Manage Addresses</div>
+                            <div class="col-lg-12 RowPadding">
+                            	<div class="col-lg-5  col-md-5 col-sm-5 col-xs-5">
+                            	<div id="VisaCard">50 Broad St.<br>Suite 1701<br>New York,NY 10004</div>
+                                <div class="EditRemoveDiv">
+                                	<span class="VisaSpanEdit"><a href="#" class="EditRemoveColor">Edit</a></span>
+                                    <span class="VisaSpanRemove"><a href="#" class="EditRemoveColor">Remove</a></span>
+                                </div>
+                                <div class="DefaultCardDiv">
+                                	<span class="SpanDefaultCardRadio"><input type="radio"></span>
+                                    <span class="SpanDefaultCardRadioText">Default delivery address</span>
+                                </div>
+                            </div>
+                            <div class="VisaCardSeperator"></div>
+                            <div class="col-lg-4 AddNewAddressMargin"><a href="#" class="AddNewCardButton" id="AddNewAddressPop">Add New Address</a></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        	<div class="LeftContentHeading">Manage Favorite Orders</div>
+                            <div class="col-lg-12 RowPadding">
+                            	<div class="col-lg-5 ViewFavouriteOrdersMarginTop"><a href="#" class="AddNewCardButton" id="AddNewAddressPop">View Favourite Orders</a></div>
+                                <div class="VisaCardSeperator"></div>
+                                <div class="col-lg-6">
+                                    <div id="QuickFavourite"><img src="Images/QuickFavouriteWOborder.png"></div>
+                                    <div id="DidYouKnow">Did you know you can text in your favorite orders? <a href="#" class="LearnMore">Learn More!</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        	<div class="LeftContentHeading">Change Password</div>
+                            <div class="col-lg-12 RowPadding">
+                            	<form>
+                            	<div class="NewPassword">New Password* :</div>
+                                <div class="NewPasswordTextBox"><input type="password" class="NewPasswordStyle" required></div>
+                                <div class="NewPassword">Confirm New Password* :</div>
+                                <div class="NewPasswordTextBox"><input type="password" class="NewPasswordStyle" required></div>
+                                <div class="clearfix"></div>
+                                <div id="SaveChangesMidDiv"><input type="submit" value="Save Changes" class="AddNewCardButton SaveChangesChangePassword"></div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div id="AddNewCreditPopUp" style="display: none;">
+                	<div id="CrossButton" style="margin-top: 10px; margin-right: 15px;"><img src="Images/CrossButtonTra.png" class="Cross"></div>
+                    <div id="AddNewCredit">Add New Credit Card</div>
+                    <div id="CenterFormDiv">
+                    	<div id="FormLeft">
+                        	<div id="DeliveryAddressDiv" style="margin-left:0px;margin-top: 30px; width:250px;">
+                                <div class="CityState"><span class="CitySpan">Card Number*:</span><span class="StateSpan" style="margin-left: 30px;"><a href="#" class="AreMyDetailSafe">Are my details safe?</a></span></div>
+                                <form>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText" style="width: 215px; padding: 15px 0;" required></div>
+                                <div class="clear"></div>
+                                <div class="CityState"><span class="CitySpan" style="width: 75px;">CVV* :</span><span class="StateSpan">Expiration*:</span></div>
+                                <div class="CityStateText"><span class="CitySpanText"><input type="text" class="CityText Height30" required></span></div>
+                            </div>
+                            <div class="clear"></div>
+                            <div id="VerifiedImg">
+                            	<span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=zW52nnHR2AfrE1sIkNBoOx7C5NUSwJR8qEoZohAbhSBcDjOqu2BYb"></script></span>
+                            	
+                            </div>
+                        </div>
+                        <div id="FormSeperator"></div>
+                        <div id="FormRight">
+                        	<div id="DeliveryAddressDiv" style="margin-left:0px;margin-top: 30px;">
+                            	
+                                <div class="DeliveryQuestion">Street*:</div>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText Height30" required></div>
+                                <div class="DeliveryQuestion">Suite/Apt # :</div>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText Height30" required></div>
+                                <div class="DeliveryQuestion">Zip Code* :</div>
+                                <div class="DeliveryTextBoxHalf"><input type="text" class="DeliveryTextHalf Height30" required></div>
+                                <div class="clear"></div>
+                                <div class="CityState"><span class="CitySpan">City* :</span><span class="StateSpan" style="margin-left: 50px;">State* :</span></div>
+                                <div class="CityStateText"><span class="CitySpanText"><input type="text" class="CityText Height30" required></span><span class="StateSpanText"><input type="text" class="CityText Height30" required></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="SaveChangesMidDiv"><input type="submit" value="Add" class="AddNewCardButton SubmitAdd"></div>
+                    </form>
+                </div>
+                
+                <div id="AddNewAddressPopUp" style="display:none;">
+                	<div id="CrossButton" style="margin-top: 10px; margin-right: 15px;"><img src="Images/CrossButtonTra.png" class="Cross"></div>
+                    <div id="AddNewCredit">Add New Address</div>
+                    <div id="AddNewAddressCenterForm">
+                    	<div id="DeliveryAddressDiv">
+                        		<form>
+                                <div class="DeliveryQuestion">Name*:</div>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText Height30" required></div>
+                                <div class="DeliveryQuestion">Street* :</div>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText Height30" required></div>
+                                <div class="DeliveryQuestion">Suite/Apt # :</div>
+                                <div class="DeliveryTextBox"><input type="text" class="DeliveryText Height30" required></div>
+                                <div class="DeliveryQuestion">Zip Code* :</div>
+                                <div class="DeliveryTextBoxHalf"><input type="text" class="DeliveryTextHalf Height30" required></div>
+                                <div class="clear"></div>
+                                <div class="CityState"><span class="CitySpan">City* :</span><span class="StateSpan" style="margin-left: 50px;">State* :</span></div>
+                                <div class="CityStateText"><span class="CitySpanText"><input type="text" class="CityText Height30" required></span><span class="StateSpanText"><input type="text" class="CityText Height30" required></span></div>
+                                <div class="clear"></div>
+                    			<div id="SaveChangesMidDiv"><input type="submit" value="Add" class="AddNewCardButton AddSubmitButton"></div>
+                                </form>
+                            </div>
+                    </div>
+                </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <footer>
+        <div class="container FooterBgColor FooterMarginBottom FooterPaddingBottom">
+        	<div class="row">
+            	<div class="col-lg-12">    
+                	<div id="PoweredBy"><img src="Images/PoweredBy.png"></div>
+                    <div id="FooterLinksBigDiv">
+                	<div class="FooterLinksLi"><a href="#" class="FooterLinks">Terms &amp; Conditions &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Privacy &nbsp;</a></div>
+                    <div class="FooterLinksLi"><a href="#" class="FooterLinks">| Refund Policy</a></div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </footer>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>  
+</html>
+    

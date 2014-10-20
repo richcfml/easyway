@@ -244,7 +244,11 @@ class product{
         //Assuming product is present in db, that's why customer ordered it.
         $productDetails=new stdClass;
         $productDetails->prd_id=$prodRow->prd_id;
+<<<<<<< HEAD
         $productDetails->item_title = $prodRow->item_title;
+=======
+        $productDetails->item_title = str_replace("'", "&#39;", $prodRow->item_title);
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         $productDetails->item_type = $prodRow->item_type;
         $itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
         $itemDesc=  str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)));

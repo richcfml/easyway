@@ -578,7 +578,11 @@ class chargifyApi
        }}';
 
 
+<<<<<<< HEAD
         $url = "https://easywayordering.chargify.com/subscriptions/".$subcription_id."/migrations.json";
+=======
+        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/migrations.json";
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
 

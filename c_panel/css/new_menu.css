@@ -860,7 +860,11 @@ table tr {background-color: transparent !important;}
 /*    background-color: #F0F0F0;*/
     background-color: #d0d0d0;
     margin-bottom: 3px;
+<<<<<<< HEAD
     min-height: 75px;
+=======
+    min-height: 85px;
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     width: 300px;
 }
 

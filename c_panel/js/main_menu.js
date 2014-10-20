@@ -1,5 +1,16 @@
 
 $(document).ready(function() {
+<<<<<<< HEAD
+=======
+    
+    var $radios = $('input:radio[name=chkLimitExceedSM]');
+                                            
+    if($radios.is(':checked') === false) 
+    {
+        $radios.filter('[value=0]').prop('checked', true);
+    }                                       
+    
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 	window.onload = function () 
 	{
 		$(".myDiv").hide();    
@@ -156,12 +167,22 @@ $(document).ready(function() {
         if(value == 1)
         {
             $("#txtLimitExceedSM").show();
+<<<<<<< HEAD
+=======
+            $("#attr_limitSM").show();
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 
         }
         else
         {
             $("#txtLimitExceedSM").hide();
             $("#spnLimitExceedSM").css("visibility", "hidden");
+<<<<<<< HEAD
+=======
+            
+            $("#attr_limitSM").hide();
+            $("#spnChooseLimitSM").css("visibility", "hidden");
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         }
     });
 
@@ -169,7 +190,22 @@ $(document).ready(function() {
     $("#attr_chooseSM").change(function()
     {
 		makeStringSM();
+<<<<<<< HEAD
 		$("#txtAttTitleSM").focus();	
+=======
+		$("#txtAttTitleSM").focus();
+                if($("#attr_chooseSM").val()=="4")
+                {
+//                    $("#txtAttTitleSM").width(320);
+                    $('#txtAttTitleSM').attr('placeholder','Type your message here');
+
+                }
+                else
+                {
+//                    $("#txtAttTitleSM").width(255);
+                    $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+                }
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     });
 
     $("#txtAttTitleSM").focusout(function()
@@ -308,6 +344,10 @@ $(document).ready(function() {
 			{
 				mStr = mStr+" (up to "+$("#attr_limitSM option:selected").text()+")";
 			}
+<<<<<<< HEAD
+=======
+                        $('#txtAttTitleSM').attr('placeholder','Type your message here');
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 		}
 		else if ($("#attr_chooseSM").val() != "")
 		{
@@ -320,6 +360,10 @@ $(document).ready(function() {
 			{
 				mStr = mStr+" "+$("#txtAttTitleSM").val();
 			}
+<<<<<<< HEAD
+=======
+                        $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 		}
 		else
 		{
@@ -568,16 +612,36 @@ $(document).ready(function() {
                             mAttributeArray = AttrData[i]['attr_name'].replace("&#39;", "'").split("~");
                             $("#txtAttNameSM").val(mAttributeArray[1]);
                             $("#attr_chooseSM").val(mAttributeArray[0]);
+<<<<<<< HEAD
+=======
+                            if($("#attr_chooseSM").val()=="4")
+                            {
+//                                $("#txtAttTitleSM").width(320);
+                            }
+                            else
+                            {
+//                                $("#txtAttTitleSM").width(255);
+                            }
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                             $("#attr_limitSM").val(mAttributeArray[2]);
                             if(AttrData[i]['extra_charge']!=''&& AttrData[i]['extra_charge']!='0')
                             {
                                 $("#txtLimitExceedSM").val(AttrData[i]['extra_charge']);
                                 $("#chkLimitExceedYesSM").attr('checked', 'checked');
                                 $("#txtLimitExceedSM").show();
+<<<<<<< HEAD
+=======
+                                $("#attr_limitSM").show();
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                             }
                             else
                             {
                                 $("#chkLimitExceedNoSM").attr('checked', 'checked');
+<<<<<<< HEAD
+=======
+                                $("#txtLimitExceedSM").hide();
+                                $("#attr_limitSM").hide();
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                             }
                         }
                         else
@@ -639,10 +703,17 @@ $(document).ready(function() {
          $('#txtAttNameSM').attr('placeholder','');
      });
 
+<<<<<<< HEAD
      $( "#txtAttTitleSM" ).blur(function() {
 
          $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
      });
+=======
+//     $( "#txtAttTitleSM" ).blur(function() {
+//
+//         $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+//     });
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 
      $( "#txtAttTitleSM" ).focus(function() {
 
@@ -781,7 +852,11 @@ $(document).ready(function() {
         }
 
         var updatedOptionPriceFixedValue = "NA";
+<<<<<<< HEAD
         if ($.trim(updatedOptionPrice)!="")
+=======
+		if (($.trim(updatedOptionPrice)!="") && ($.trim(updatedOptionPrice).replace(/-/g, "")!=""))
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         {
             updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
         }
@@ -858,10 +933,19 @@ $(document).ready(function() {
     $("#span_attr_nameSM").text('');
     $("#attr_chooseSM").val("");
     $("#attr_limitSM").val("");
+<<<<<<< HEAD
+=======
+    $("#attr_limitSM").hide();
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     $("#txtLimitExceedSM").val("");
     $("#hdnAttributesSM").val("");
     $("#txtLimitExceedSM").hide();
     $("#chkLimitExceedNoSM").attr('checked', 'checked');
+<<<<<<< HEAD
+=======
+    $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+    $("#txtAttTitleSM").width(255);
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 
     }
 

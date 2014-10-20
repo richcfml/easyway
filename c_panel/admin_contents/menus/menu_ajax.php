@@ -418,10 +418,22 @@ else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd
 {
     
 //-------------------------------Start NK(10-10-2014)----------------------------------------------------------------------------------------------
+<<<<<<< HEAD
     $ResOrderNo = mysql_query("SELECT MIN(SortOrder)+1 AS SortOrder FROM product Where cat_id=".$_GET['cat_id']."");
 //    $$OrderNoRow = mysql_fetch_object($OrderNo);
 //    $ResOrderNo = $OrderNoRow->SortOrder+1;
     
+=======
+    
+    $qryCat_ID=mysql_query("SELECT cat_id AS cat_id FROM product Where prd_id=".$_GET['prd_id']."");
+    $rowCat_ID = mysql_fetch_object($qryCat_ID);
+    $getCat_ID = $rowCat_ID->cat_id;
+    
+    $OrderNo = mysql_query("SELECT MAX(SortOrder) AS SortOrder FROM product Where cat_id=".$getCat_ID);
+    $OrderNoRow = mysql_fetch_object($OrderNo);
+    $ResOrderNo = $OrderNoRow->SortOrder+1;
+  
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     $product_id = $_GET['prd_id'];
     $product_rs = mysql_fetch_object(mysql_query("select * from product where prd_id  =" . $product_id . ""));
     Log::write("Add new product - menu_ajax.php", "QUERY -- insert into product(
@@ -799,7 +811,19 @@ else if (isset($_GET['LoadAttribute']) && $_GET['LoadAttribute'] == 1 && !empty(
     $counter = 0;
     $result = '';
 
+<<<<<<< HEAD
      $item_query = mysql_query("SELECT DISTINCT (option_name),display_Name FROM  `new_attribute` WHERE sub_catid =".$_GET['sub_cat_id']."");
+=======
+
+	$mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$_GET['sub_cat_id']);
+	$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+	$mMenuID = $mMenuIDRow->menu_id;
+
+    $item_query = mysql_query("SELECT distinct(display_Name),option_name FROM `new_attribute` WHERE sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.") AND option_name not in(".$getdisplay_Name.")");
+
+
+     $item_query = mysql_query("SELECT DISTINCT (option_name),display_Name FROM  `new_attribute` WHERE sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.")");
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
      while($itemRs	= mysql_fetch_object($item_query))
      {
              $assoc_query = mysql_query("SELECT distinct(option_name) FROM attribute WHERE option_name = '".$itemRs->option_name."' and ProductID = ".$_GET['prd_id']."");
@@ -1007,10 +1031,21 @@ else if (isset($_GET['LoadAttributeByCategory']) && $_GET['LoadAttributeByCatego
     $counter = 0;
     $result = '';
 
+<<<<<<< HEAD
     $item_query = mysql_query("SELECT DISTINCT (option_name),display_Name FROM  `new_attribute` WHERE sub_catid	 = ".$_GET['sub_cat_id']."");
     while($itemRs	= mysql_fetch_object($item_query))
     {
         $assoc_query = mysql_query("SELECT distinct(option_name) FROM attribute WHERE option_name = '".$itemRs->option_name."' and ProductID in(select prd_id from product where sub_cat_id = ".$_GET['sub_cat_id'].")");
+=======
+	$mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$_GET['sub_cat_id']);
+	$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+	$mMenuID = $mMenuIDRow->menu_id;
+	
+    $item_query = mysql_query("SELECT DISTINCT (option_name),display_Name FROM  `new_attribute` WHERE sub_catid	 IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.")");
+    while($itemRs	= mysql_fetch_object($item_query))
+    {
+        $assoc_query = mysql_query("SELECT distinct(option_name) FROM attribute WHERE option_name = '".$itemRs->option_name."' and ProductID in (select prd_id from product where sub_cat_id IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID."))");
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         $assoc_rows = mysql_fetch_array($assoc_query);
         $result .=  "<div class='checkboxBindAttribute'><input type='checkbox' name='itemcheckAttribute[]' id='itemcheckAttribute'" . (($assoc_rows['option_name'])?" checked ":""). "value='".$itemRs->display_Name ."'>".stripslashes($itemRs->option_name)."</div>";
         $counter++;

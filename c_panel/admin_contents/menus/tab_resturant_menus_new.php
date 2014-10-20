@@ -85,10 +85,26 @@ if (isset($_POST["btnSubmit"])) {
                 }
             }
         }
+<<<<<<< HEAD
         Log::write("Update menu name,desc", "QUERY -- UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "' WHERE id =" . $menu_id, 'menu', 1 , 'cpanel');
        $udpSql  = mysql_query("UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id);
        //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
 
+=======
+       Log::write("Update menu name,desc", "QUERY -- UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "' WHERE id =" . $menu_id, 'menu', 1 , 'cpanel');
+       $udpSql  = mysql_query("UPDATE menus SET menu_name= '" . prepareStringForMySQL($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id);
+       //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
+
+//--------------------------------------------------------------------------------------------     
+        
+        $link =  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname'];
+        $escaped_link = htmlspecialchars($link, ENT_QUOTES, 'UTF-8');
+        header("Location: ".$link);
+
+//--------------------------------------------------------------------------------------------
+      
+       
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 //----------------------------------------------------------------------------------------------------
 //         redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id);
 //       redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname']);
@@ -160,9 +176,15 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/normalize.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<<<<<<< HEAD
         <script type="text/javascript" src="js/new-menu.js?v=2"></script>
         <link rel="stylesheet" type="text/css" href="/css/result-light.css">
         <link rel="stylesheet" type="text/css" href="css/new_menu.css?v=1">
+=======
+        <script type="text/javascript" src="js/new-menu.js?<?php echo $jsParameter;?>"></script>
+        <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+        <link rel="stylesheet" type="text/css" href="css/new_menu.css?<?php echo $jsParameter;?>">
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         <script src="../js/jquery.validate.js" type="text/javascript"></script>
         <script src="js/fancybox.js" type="text/javascript"></script>
         <link rel="stylesheet" type="text/css" href="css/fancy.css">
@@ -174,7 +196,11 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <script src="js/modernizr.custom.js"></script>
         <script src="js/classie.js"></script>
         <script src="js/jquery.noty.packaged.min.js" type="text/javascript"></script>
+<<<<<<< HEAD
         <script type="text/javascript" src="js/main_menu.js?v=1"></script>
+=======
+        <script type="text/javascript" src="js/main_menu.js?<?php echo $jsParameter;?>"></script>
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         <link rel="stylesheet" href="onoff/jquery.onoff.css" media="screen" />
 	<script src="onoff/jquery.onoff.js"></script>
         
@@ -466,7 +492,11 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                     </body>
                 </html>
                
+<<<<<<< HEAD
 <!-------------------------------------------------------------------->
+=======
+<!-----------------------------Start NK(11-10-2014)--------------------------------------->
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 	<div style="display: none; font-family: Arial; border: 1px solid #CCC; width: 600px;" id="dvAddAttributeSM">
 		<table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
 			<tr style="height: 50px; background-color:#25AAE1 !important; text-align: center; vertical-align: middle;">
@@ -482,13 +512,18 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					</tr>
 					<tr style="height: 50px;">
 						<td colspan="4">
+<<<<<<< HEAD
 							<select id ="attr_chooseSM" name="attr_chooseSM" style="height: 36px;width: 130px; margin-left: -20px;">
+=======
+                                        <select id ="attr_chooseSM" name="attr_chooseSM" style="height: 36px;width: 140px; margin-left: -15px;">
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 								<option value="">Please Select</option>
 								<option value="1">Choose</option>
 								<option value="2">Pick</option>
 								<option value="3">Add</option>
 								<option value="4">Create Your Own</option>
 							</select>
+<<<<<<< HEAD
 							<span style="color:red; visibility: hidden;" id="spnChooseAttrSM">*</span>
 							<input type="text" id="txtAttTitleSM" name="txtAttTitleSM" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 320px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnAttTitleReqSM">*</span> 
 	                    </td>                  
@@ -529,14 +564,89 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 											<span style="color:red; visibility: hidden;" id="spnLimitExceedSM">*</span>
 										</div>
 									</td>
+=======
+                                        <span style="color:red; visibility: hidden; margin-left: 8px;" id="spnChooseAttrSM">*</span>
+                                        <input type="text" id="txtAttTitleSM" name="txtAttTitleSM" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 302px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden; margin-left: 2px;" id="spnAttTitleReqSM">*</span>
+            </td>                  
+                        </tr>
+                        <tr style="height: 10px;">
+                                <td colspan="4">
+                                        <div id="final_attr_nameSM" name="final_attr_nameSM" style="font-size: 14px;color: green;"><span id="span_attr_nameSM"></span></div>
+                                </td>
+                        </tr>            
+                        <tr>
+                                <td colspan="4">
+                                        <table style="background-color: #ECEDEE; width: 100%; text-align: center; margin-left: -70px;" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+<!--									<td align="center" style="width: 25%;">
+                                                                <select id ="attr_limitSM" name="attr_limitSM" style="height: 32px;width: 60px; margin-top: 14px; margin-right: -975px; display: none; " placeholder="Limit">
+                                                                        <option value="">Limit</option>
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                        <option value="6">6</option>
+                                                                        <option value="7">7</option>
+                                                                        <option value="8">8</option>
+                                                                        <option value="9">9</option>
+                                                                        <option value="10">10</option>
+                                                                </select>
+                                                                <span style="color:red; visibility: hidden; margin-left: 2px;" id="spnChooseLimitSM">*</span> 
+                                                        </td>-->
+									<td align="left" valign="middle" >
+                                                                            <!--style="width: 35%;"-->
+                                                                <div style="color: #25AAE1; font-size:14px; margin-left: 130px;">Charge extra if limit exceeded</div>
+									</td>
+                                                        <td align="left">
+                                                                <div style="margin-left: 8px;">
+											<input type="radio" name="chkLimitExceedSM" id="chkLimitExceedNoSM" value="0"  class="chk_style"><label for="chkLimitExceedNoSM" style="color: #25AAE1; font-size:14px;">No</label>
+										 	<input type="radio" name="chkLimitExceedSM" id="chkLimitExceedYesSM" value="1" class="chk_style"><label for="chkLimitExceedYesSM" style="color: #25AAE1; font-size:14px;">Yes</label>
+<!--									<input type="text" id="txtLimitExceedSM" name="txtLimitExceedSM" maxlength="4" placeholder="" style="text-indent: 5px; width: 50px; height: 25px; display:none" />
+                                                                        <span style="color:red; visibility: hidden;" id="spnLimitExceedSM">*</span>-->
+										</div>
+									</td>
+                                                        <td colspan="4">
+                                                            <input type="text" id="txtLimitExceedSM" name="txtLimitExceedSM" maxlength="4" placeholder="" style="text-indent: 5px;height: 25px; width: 50px; margin-left: 5px;display:none" />
+                                                            <span style="color:red; visibility: hidden;" id="spnLimitExceedSM">*</span>
+                                                        </td>   
+
+                                                        <td colspan="4">    
+                                                            <select id ="attr_limitSM" name="attr_limitSM" style="height: 33px;width: 60px; display: none;margin-right: -3px" placeholder="Limit"> 
+                                                                        <option value="">Limit</option>
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                        <option value="6">6</option>
+                                                                        <option value="7">7</option>
+                                                                        <option value="8">8</option>
+                                                                        <option value="9">9</option>
+                                                                        <option value="10">10</option>
+                                                            </select>
+                                                                <span style="color:red; visibility: hidden;" id="spnChooseLimitSM">*</span>
+                                                        </td>
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 								</tr>
 							</table>
 						</td>
 					</tr>
+<<<<<<< HEAD
                                         
 					<tr style="height: 50px;">
 						<td colspan="4">
                             <input type="text" id="txtAttNameSM" name="txtAttNameSM" placeholder="Admin Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden;" id="spnNameReqSM">*</span>
+=======
+
+                                        <tr style="height: 10px;">
+						<td colspan="4">
+						</td>
+					</tr>
+					<tr style="height: 50px;">
+						<td colspan="4">
+                            <input type="text" id="txtAttNameSM" name="txtAttNameSM" placeholder="Admin Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden; margin: 2px;" id="spnNameReqSM">*</span>
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						</td>
 					</tr>
 					<tr style="height: 5px;">
@@ -561,8 +671,13 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 						<td style="width: 10%;">
 						</td>
 						<td align="left">
+<<<<<<< HEAD
 							<input type="radio" name="chkAttAddSM" id="chkAttAddSM" value="1" checked="checked" class="chk_style"/><label for="chkAttAddSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Attribute adds to price</label><br />
 							<input type="radio" name="chkAttAddSM" id="chkAttTotalSM" value="2" class="chk_style"/><label for="chkAttTotalSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Attribute displays total price</label>
+=======
+							<input type="radio" name="chkAttAddSM" id="chkAttAddSM" value="1" checked="checked" class="chk_style"/><label for="chkAttAddSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px; margin-left: -75px;">Attribute adds to price</label><br />
+							<input type="radio" name="chkAttAddSM" id="chkAttTotalSM" value="2" class="chk_style"/><label for="chkAttTotalSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px; margin-left: -75px;">Attribute displays total price</label>
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						</td>
 					</tr>
 					<tr style="height: 10px;">
@@ -581,7 +696,11 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 									</td>
 									<td>
 										<input type="radio" name="rbAttSM" id="rbAttDDSM" value="1" checked="checked" class="chk_style"/><label for="rbAttDDSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Drop Down Menu</label><br />
+<<<<<<< HEAD
 										<input type="radio" name="rbAttSM" id="rbAttCBSM" value="2" class="chk_style"/><label for="rbAttCBSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Check Boxes</label><br />
+=======
+										<input type="radio" name="rbAttSM" id="rbAttCBSM" value="2" class="chk_style"/><label for="rbAttCBSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Check Boxes</label><span style="font-size:14px;"></span><br />
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 										<input type="radio" name="rbAttSM" id="rbAttRBSM" value="3" class="chk_style"/><label for="rbAttRBSM"  style="color: #25AAE1; font-size:14px;margin-top: 8px;">Radio Buttons</label>
 									</td>
 								</tr>
@@ -615,12 +734,21 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 						<td style="width: 10%;">
 						</td>
 						<td align="left">
+<<<<<<< HEAD
 							<input type="text" id="txtAttSubTitleSM" name="txtAttSubTitleSM" placeholder="Example - &quot;Hot Sauce&quot;" style="width: 250px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnTitleReqSM">*</span>
 						</td>
 						<td style="width: 10%;">
 						</td>
 						<td align="left">
 							&nbsp;<input type="text" id="txtAttPriceSM" maxlength="7" name="txtAttPriceSM" placeholder=".75" style="width: 120px; text-indent: 5px; height: 30px;" />
+=======
+							<input type="text" id="txtAttSubTitleSM" name="txtAttSubTitleSM" placeholder="Example - &quot;Hot Sauce&quot;" style="width: 268px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnTitleReqSM">*</span>
+						</td>
+						<td style="width: 1%;">
+						</td>
+						<td align="left">
+							&nbsp;<input type="text" id="txtAttPriceSM" maxlength="7" name="txtAttPriceSM" placeholder=".75" style="width: 120px; text-indent: 5px; height: 30px; margin-right: 72px;" />
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						</td>
 					</tr>
 					<tr style="height: 10px;">
@@ -716,6 +844,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 								<tr>
 									<td style="width: 5%;"></td>
 									<td style="width: 65%;">
+<<<<<<< HEAD
 										<span style="font-size: 14px;">
 											Would you like to apply this to an entire Submenu?
 										</span>
@@ -726,6 +855,19 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 									</td>
 									<td>
                                                                             <input type="button" class="btnCancelSM"  value="Cancel">
+=======
+										<span style="font-size: 13px;">
+											Would you like to apply this to an entire Submenu?
+										</span>
+										<input type="checkbox" name="chkAttEntireSM" id="chkAttEntireSM" value="1" class="chk_style"/>
+                                                                                <label for="chkAttEntireSM" style="color: #25AAE1; font-size:14px;margin-bottom: 15px;"></label>
+									</td>
+									<td style="width: 12%;" align="right">
+										<input type="button" id="btnSaveSM" name="btnSaveSM" value="Save" style="margin-right: 10px; width:65px;">
+									</td>
+									<td>
+                                                                            <input type="button" class="btnCancelSM"  value="Cancel" style="margin-right: 60px; width:65px;">
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 									</td>
 								</tr>
 							</table>
@@ -759,6 +901,10 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
        </div>
     
     
+<<<<<<< HEAD
 	<!-------------------------------------------------------------------->
+=======
+	<!--------------------------END NK(11-10-2014)------------------------------------------>
+>>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         </body>
                 </html>
