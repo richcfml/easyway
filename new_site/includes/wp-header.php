@@ -18,12 +18,7 @@
 	<script src="<? echo $js_root;  ?>crossdomain.js" type="text/javascript"></script>
 	
     <script language="javascript">
-<<<<<<< HEAD
         jQuery(document).ready(function($) {
-=======
-        jQuery(document).ready(function($) 
-		{	
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
             $('a[rel*=facebox]').facebox();
         });
 

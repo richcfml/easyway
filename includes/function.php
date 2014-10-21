@@ -559,12 +559,6 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 
             $order_detail_rs->item_tax = number_format(($order_detail_rs->item_total_price * $restTaxRate)/100,2);
 
-<<<<<<< HEAD
-=======
-            // format total price upto 2 decimal places
-            $order_detail_rs->item_total_price = number_format($order_detail_rs->item_total_price,2);
-
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
             $order_detail_rs->extra=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->extra)),"|");
             $order_detail_rs->associated_items=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->associated_items)),"|");
             $product_rs[$index]=$order_detail_rs;

@@ -93,13 +93,7 @@
 		       			<img style="padding: 2px;" column="<?=$mColumn?>" rid="<?=$Objrestaurant->id?>" mid="<?=$menu_id?>" src="img/delete_icon2.png" alt="<?= $mRow["cat_id"] ?>" data-tooltip="Delete" id="submenu_Delete_<?= $mRow["cat_id"] ?>" class="submenu_item_Delete"/>
                     </div>
                    <div style="text-align: center;color: #5B5B5B;width: 300px;float: left;margin-top: 4px; background:#d0d0d0; ">
-<<<<<<< HEAD
 				   	<span class ="lblCat" style="font-weight: bold; font-size: 16px;cursor: pointer;" id="<?= $mRow["cat_id"] ?>">
-=======
-<!------------------------------------------------------------------------------------------>                       
-				   	<span class ="lblCat" style="font-weight: bold; font-size: 15px;cursor: pointer;" id="<?= $mRow["cat_id"] ?>">
-<!------------------------------------------------------------------------------------------->                                            
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						<table style="width: 90%; margin: 0px;" cellpadding="0" cellspacing="0" border="0">
 							<tr>
 								<td style="width: 40%; text-align: right;" align="right">
@@ -148,10 +142,6 @@
                     <span id="lblCatID" style="display: none;"><?= $mRow["cat_id"] ?></span>
 
                  </div>
-<<<<<<< HEAD
-=======
-                    <div style="width: 300px; height: 10px; margin-top: 2px;"> </div>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                     <div class="toggleSubmenu">
                     <?php $mRowPr1 = $mRow['products'];
                     if (count($mRowPr1)>0)

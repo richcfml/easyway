@@ -4,11 +4,7 @@
 <link rel="stylesheet" href="css/darktooltip.min.css">
 <script src="js/darktooltip.min.js"></script>
     <a class="fancyloadRelatedItem" href="#BrowsefancyBox"></a>
-<<<<<<< HEAD
     <div id="BrowsefancyBox" style="display:none;width:1150px;min-height:500px;">
-=======
-    <div id="BrowsefancyBox" style="display:none;width:1150px;min-height:600px; ">
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         <div>
             <form action="admin_contents/products/add_assoc_new.php" method="get" name="frm1" >
                 <div style="background-color: #25AAE1;font-size: 19px;color: white;text-align: center;padding: 7px;border-radius: 5px;">Check Items To Associate</div>
@@ -42,13 +38,7 @@
         
     </div>
         <a class="fancyloadAttributeItem" href="#BrowseAttributefancyBox"></a>
-<<<<<<< HEAD
         <div id="BrowseAttributefancyBox" style="display:none;width:1150px;min-height:500px;" class="handle_fancyBox">
-=======
-<!--------------------------------------------------------------------------------------------->
-        <div id="BrowseAttributefancyBox" style="display:none;width:1150px;min-height:600px;" class="handle_fancyBox">
-<!--------------------------------------------------------------------------------------------->
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
             <div>
                  
                 <form action="admin_contents/products/add_attribute_new.php" method="get" name="frm2" >
@@ -81,11 +71,7 @@
 					<tr style="height: 50px;">
 						<td colspan="4">
 <!----------------------------------------------------------------Start 30-09-2014---------------------------------------------------------->
-<<<<<<< HEAD
 							<select id ="attr_choose" name="attr_choose" style="height: 36px; width: 130px; margin-left: -15px;">
-=======
-							<select id ="attr_choose" name="attr_choose" style="height: 36px; width: 140px; margin-left: -15px;">
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 <!----------------------------------------------------------------End 30-09-2014---------------------------------------------------------->
 								<option value="">Please Select</option>
 								<option value="1">Choose</option>
@@ -93,13 +79,8 @@
 								<option value="3">Add</option>
 								<option value="4">Create Your Own</option>
 							</select>
-<<<<<<< HEAD
 							<span style="color:red; visibility: hidden; margin-left: 2px;" id="spnChooseAttr">*</span>
 							<input type="text" id="txtAttTitle" name="txtAttTitle" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 320px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden;" id="spnAttTitleReq">*</span>
-=======
-							<span style="color:red; visibility: hidden; margin-left: 8px;" id="spnChooseAttr">*</span>
-							<input type="text" id="txtAttTitle" name="txtAttTitle" placeholder="Display Title (Example - &quot;Choose Sauce&quot;)" style="width: 302px; text-indent: 5px; height: 30px;" /><span style="color:red; visibility: hidden; margin-left: 2px;" id="spnAttTitleReq">*</span>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						</td>
 					</tr>
 					<tr style="height: 10px;">
@@ -109,37 +90,10 @@
 					</tr>
                     <tr>
                   		<td colspan="4">
-<<<<<<< HEAD
 							<table style="background-color: #ECEDEE; width: 100%; text-align: center; margin-left: -70px;"" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center" style="width: 25%;">
 										<select id ="attr_limit" name="attr_limit" style="height: 32px;width: 60px; margin-top: 14px; margin-right: -975px; display: none;" placeholder="Limit">
-=======
-							<table style="background-color: #ECEDEE; width: 100%; text-align: center; margin-left: -70px;" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-
-                                                                        <td align="left" valign="middle">  
-<!----------------------------------------------------------------Start 30-09-2014---------------------------------------------------------->
-<!--                                                                            style="width: 35%;">-->
-										<div style="color: #25AAE1; font-size:14px; margin-left: 130px;">Charge extra if limit exceeded</div>
-									</td>
-									<td align="left">
-										<div style="margin-left: 8px;">
-											<input type="radio" name="chkLimitExceed" id="chkLimitExceedNo" value="0"  class="chk_style"><label for="chkLimitExceedNo" style="color: #25AAE1; font-size:14px;">No</label>
-											<input type="radio" name="chkLimitExceed" id="chkLimitExceedYes" value="1" class="chk_style"><label for="chkLimitExceedYes" style="color: #25AAE1; font-size:14px;">Yes</label>
-<!--											<input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;height: 25px; width: 50px; display:none" />
-											<span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>-->
-										</div>
-									</td> 
-                                                                        
-                                                                        <td colspan="4">
-                                                                            <input type="text" id="txtLimitExceed" name="txtLimitExceed" maxlength="4" placeholder="" style="text-indent: 5px;height: 25px; width: 50px; margin-left: 5px;display:none" />
-                                                                            <span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>
-                                                                        </td>   
-                                                                            
-                                                                        <td colspan="4">    
-                                                                            <select id ="attr_limit" name="attr_limit" style="height: 33px;width: 60px; display: none;margin-right: -3px" placeholder="Limit">  
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 											<option value="">Limit</option>
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -152,7 +106,6 @@
 											<option value="9">9</option>
 											<option value="10">10</option>
 										</select>
-<<<<<<< HEAD
 										<span style="color:red; visibility: hidden;" id="spnChooseLimit">*</span>	
 									</td>
                                                                         <td align="left" valign="middle">  
@@ -168,11 +121,6 @@
 											<span style="color:red; visibility: hidden;" id="spnLimitExceed">*</span>
 										</div>
 									</td>
-=======
-										<span style="color:red; visibility: hidden;" id="spnChooseLimit">*</span>
-                                                                        </td>
-                                                                        
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 								</tr>
 							</table>
 						</td>
@@ -186,27 +134,16 @@
 							if(value == 1)
 							{
 								$("#txtLimitExceed").show();
-<<<<<<< HEAD
                                                                 $("#attr_limit").css("display", "block");
                                                                 $("#spnLimitExceed").css("margin-top", "-2px");
-=======
-                                                                $("#attr_limit").show();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 
                                                 }
                                                 else
                                                 {
                                                     $("#txtLimitExceed").hide();                       
                                                     $("#spnLimitExceed").css("visibility", "hidden");
-<<<<<<< HEAD
 //                                                    $("#attr_limit").hide();
                                                     $("#attr_limit").css("display", "none");
-=======
-                                                    
-                                                    $("#attr_limit").hide();
-                                                    $("#spnChooseLimit").css("visibility", "hidden");
-
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                                                 }
                                             });
                                         });
@@ -217,11 +154,7 @@
 					</tr>
 					<tr style="height: 50px;">
 						<td colspan="4">
-<<<<<<< HEAD
 							<input type="text" id="txtAttName" name="txtAttName" placeholder="Admin Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden;" id="spnNameReq">*</span>
-=======
-							<input type="text" id="txtAttName" name="txtAttName" placeholder="Admin Name" style="width:160px; text-indent: 5px; height: 30px;margin-top: 6px;" /><span style="color:red; visibility: hidden; margin: 2px;" id="spnNameReq">*</span>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						</td>
 					</tr>
 					<tr style="height: 5px;">
@@ -338,11 +271,6 @@
 										{
 											mStr = mStr+" (up to "+$("#attr_limit option:selected").text()+")";
 										}
-<<<<<<< HEAD
-=======
-                                                                                
-                                                                                $('#txtAttTitle').attr('placeholder','Type your message here');
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 									}
 									else if ($("#attr_choose").val() != "")
 									{
@@ -355,10 +283,6 @@
 										{
 											mStr = mStr+" "+$("#txtAttTitle").val();
 										}
-<<<<<<< HEAD
-=======
-                                                                                $('#txtAttTitle').attr('placeholder','Display Title (Example - "Choose Sauce")');
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 									}
 									else
 									{
@@ -485,12 +409,7 @@
                                     }
 
                                     var updatedOptionPriceFixedValue = "NA";
-<<<<<<< HEAD
                                     if ($.trim(updatedOptionPrice)!="")
-=======
-
-									if (($.trim(updatedOptionPrice)!="") && ($.trim(updatedOptionPrice).replace(/-/g, "")!=""))
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                                     {
                                         updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
                                     }
@@ -542,22 +461,7 @@
 									$("#attr_choose").change(function()
 									{
 										makeString();
-<<<<<<< HEAD
 										$("#txtAttTitle").focus();	
-=======
-										$("#txtAttTitle").focus();
-                                                                                if($("#attr_choose").val()=="4")
-                                                                                {
-//                                                                                    $("#txtAttTitle").width(255);
-                                                                                    $('#txtAttTitle').attr('placeholder','Type your message here');
-
-                                                                                }
-                                                                                else
-                                                                                {
-//                                                                                    $("#txtAttTitle").width(255);
-                                                                                    $('#txtAttTitle').attr('placeholder','Display Title (Example - "Choose Sauce")');
-                                                                                }
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 									});
 
 									$("#txtAttTitle").focusout(function()
@@ -633,11 +537,7 @@
 										}
 										
 										$("#hdnOptions").val($("#hdnOptions").val()+"|"+$("#txtAttSubTitle").val()+"~"+mPrice+"~"+mDefault);
-<<<<<<< HEAD
                                         					$("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
-=======
-                                        $("#tblOptions tr:last").after('<tr id="tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"><td style="width: 5%;"></td><td style="width: 50%;" align="left">'+$("#txtAttSubTitle").val()+'</td><td style="width: 15%;" align="left">'+mPrice+'</td><td style="width: 15%;" align="left">'+mDefault+'</td><td style="width: 10%;"><img onclick=editAttributeOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attEdit" src="img/pencil.png" alt="Edit" style="width: 17px;cursor:pointer" data-tooltip="Edit" name="imgAttEdit" id="imgAttEdit"/>&nbsp;<img onclick=deleteOption("tr'+$("#txtAttSubTitle").val().replace(/ /g,"/")+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'"); class="attRem" src="img/delete_icon2.png" alt="Delete" style="width: 17px;cursor:pointer" data-tooltip="Delete" name="imgAttDel" id="imgAttDel"/></td><td style="width: 5%;"></td></tr><tr id="2tr'+$("#txtAttSubTitle").val()+"ewo_qc"+mPrice+"ewo_qc"+mDefault+'" style="height: 5px;"><td colspan="6"></td></tr>');
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 										$("#chkAttDef").attr("checked", false);
 										$("#txtAttSubTitle").val("");
 										$("#txtAttPrice").val("");
@@ -965,36 +865,16 @@
 																	mAttributeArray = AttrData[i]['attr_name'].replace("&#39;", "'").split("~");
 																	$("#txtAttName").val(mAttributeArray[1]);
 																	$("#attr_choose").val(mAttributeArray[0]);
-<<<<<<< HEAD
-=======
-                                                                                                                                        if($("#attr_choose").val()=="4")
-                                                                                                                                        {
-//                                                                                                                                            $("#txtAttTitle").width(320);
-                                                                                                                                        }
-                                                                                                                                        else
-                                                                                                                                        {
-//                                                                                                                                            $("#txtAttTitle").width(255);
-                                                                                                                                        }
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 																	$("#attr_limit").val(mAttributeArray[2]);
 																	if(AttrData[i]['extra_charge']!=''&& AttrData[i]['extra_charge']!='0')
 																	{
 																		$("#txtLimitExceed").val(AttrData[i]['extra_charge']);
 																		$("#chkLimitExceedYes").attr('checked', 'checked');
 																		$("#txtLimitExceed").show();
-<<<<<<< HEAD
-=======
-                                                                                                                                                $("#attr_limit").show();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 																	}
 																	else
 																	{
 																		$("#chkLimitExceedNo").attr('checked', 'checked');
-<<<<<<< HEAD
-=======
-                                                                                                                                                $("#txtLimitExceed").hide();
-                                                                                                                                                $("#attr_limit").hide();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 																	}
 																}
 																else
@@ -1056,12 +936,6 @@
 					                                                $('#btnUpdateAttr').hide();
 					                                                $('#btnCancelAttr').hide();
 					                                                $('#hdnEditOptionId').val('');
-<<<<<<< HEAD
-=======
-                                                                                        
-                                                                                        $("#txtLimitExceed").hide();
-                                                                                        $("#attr_limit").hide();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 
 											$("#hdnOptions").val('');
 											$("#chkAttDef").attr("checked", false);
@@ -1085,16 +959,8 @@
 											$("#attr_choose").val("");
 											$("#attr_limit").val("");
 											$("#txtLimitExceed").val("");
-<<<<<<< HEAD
 										    $("#hdnAttributes").val("");
                                             $('#txtAttName').attr('placeholder','Admin Name');
-=======
-                                                                                        $("#chkLimitExceedNo").attr('checked', 'checked');
-                                                                                        $("#hdnAttributes").val("");
-                                                                                        $('#txtAttName').attr('placeholder','Admin Name');
-                                                                                        $('#txtAttTitle').attr('placeholder','Display Title (Example - "Choose Sauce")');
-//                                                                                        $("#txtAttTitle").width(255);
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 										}
 										</script>
 										<input type="button" id="btnSave" name="btnSave" value="Save" style="margin-right: 10px; width:65px;">
@@ -1129,7 +995,6 @@
               Select Restaurants</div>
              <form action="admin_contents/products/copy_restaurant_menu.php?catid=<?php echo $_GET['catid']?>&menuid=<?php echo $_GET['menuid']?>&menu_name=<?php echo $_GET['menu_name']?>" method="get" name="frmCopy" >
               <div class='check_box_restaurant' style="margin-left: 10px;margin-top: 15px;">
-<<<<<<< HEAD
               <?php
                     $item_query = mysql_query("SELECT id,name from resturants where owner_id =(Select owner_id from resturants WHERE id = '".$Objrestaurant->id."') and id != '".$Objrestaurant->id."'");
                         while($itemRs = mysql_fetch_object($item_query)){
@@ -1137,16 +1002,6 @@
                     <input type='checkbox' name='restaurantcheck[]' id='restaurantcheck' value=" <?= $itemRs->id ?>" class="chk_style"><label for="restaurantcheck" style="color: #25AAE1; font-size:14px;"><?=stripslashes($itemRs->name) ?></label>
 
                <? }?>
-=======
-              <?php $i = 0;
-                    $item_query = mysql_query("SELECT id,name from resturants where owner_id =(Select owner_id from resturants WHERE id = '".$Objrestaurant->id."') and id != '".$Objrestaurant->id."'");
-                        while($itemRs = mysql_fetch_object($item_query)){
-                ?>
-                    <input type='checkbox' name='restaurantcheck[]' id='restaurantcheck_<?=$i?>' value=" <?= $itemRs->id ?>" class="chk_style">
-                    <label for="restaurantcheck_<?=$i?>" style="color: #25AAE1; font-size:14px;height: 35px;"><?=stripslashes($itemRs->name) ?></label>
-
-               <? $i++; }?>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                </div>
                     <input type="hidden" value ="<?=$_GET['menuid']?>" id="hdnMenu_id" name="hdnMenu_id"/>
                     <input type="hidden" value ="<?=$_GET['catid']?>" id="hdnRestaurantID" name="hdnRestaurantID"/>

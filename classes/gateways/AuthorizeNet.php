@@ -2,11 +2,7 @@
 
 /*
  * Authorize.net API and transakction key
-<<<<<<< HEAD
  * '62XAQ6temv3', '9nM359LD3Uh48Gq8'
-=======
- * '62XAQ6temv3', '9gEgzkA2t2kT327q'
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
  *
  */
 
@@ -29,13 +25,8 @@ if(!isset($tokenization))
 //extract($_POST);
 		define("AUTHORIZENET_API_LOGIN_ID",$objRestaurant->authoriseLoginID);    // Add your API LOGIN ID
 		define("AUTHORIZENET_TRANSACTION_KEY",$objRestaurant->transKey); // Add your API transaction key
-<<<<<<< HEAD
 		define("AUTHORIZENET_SANDBOX",false);       // Set to false to test against production
 		define("TEST_REQUEST", "false");           // You may want to set to true if testing against production
-=======
-		define("AUTHORIZENET_SANDBOX",true);       // Set to false to test against production
-		define("TEST_REQUEST", "true");           // You may want to set to true if testing against production
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 		define("AUTHORIZENET_MD5_SETTING","");
 		
 		 extract($_POST);

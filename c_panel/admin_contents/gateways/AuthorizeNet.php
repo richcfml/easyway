@@ -2,23 +2,15 @@
 	    require_once '../lib/authorize_api/AuthorizeNet.php';
 		define("AUTHORIZENET_API_LOGIN_ID",$Objrestaurant->authoriseLoginID);    // Add your API LOGIN ID
 		define("AUTHORIZENET_TRANSACTION_KEY",$Objrestaurant->transKey); // Add your API transaction key
-<<<<<<< HEAD
 		define("AUTHORIZENET_SANDBOX",false);       // Set to false to test against production
 		define("TEST_REQUEST", "FALSE");           // You may want to set to true if testing against production
-=======
-		define("AUTHORIZENET_SANDBOX",true);       // Set to false to test against production
-		define("TEST_REQUEST", "true");           // You may want to set to true if testing against production
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 		define("AUTHORIZENET_MD5_SETTING","");
 		//$transactionid ='2204481791';
 		//$cc = '1000';
 		//$amount='26.86';
 		
 		$transaction = new AuthorizeNetAIM;
-<<<<<<< HEAD
                 $transaction->setSandbox(AUTHORIZENET_SANDBOX);
-=======
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 		//Modified01082013
 		$response = $transaction->void($transactionid);
 		$response1 = $transaction->credit($transactionid,$amount,$cc);

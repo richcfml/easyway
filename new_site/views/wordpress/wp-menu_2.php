@@ -1,37 +1,3 @@
-<script type="text/javascript">
-	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-	var eventer = window[eventMethod];
-	var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-
-	/// Listen to message from child window
-	eventer(messageEvent, function (e) 
-	{
-		var mJSON = JSON.parse(e.data);
-		if (mJSON.hasAtt=="2")
-		{
-			$('#facebox').css("position","absolute");
-			$('#facebox').css("top", Math.max(0, ((mJSON.height - $('#facebox').outerHeight()) / 2) + mJSON.scrollTop) + "px");
-			$('#facebox').css("left", Math.max(0, ((mJSON.width - $('#facebox').outerWidth()) / 2) + mJSON.scrollLeft) + "px");
-					
-			$('#facebox2').css("position","absolute");
-			$('#facebox2').css("top", Math.max(0, ((mJSON.height - $('#facebox2').outerHeight()) / 2) + mJSON.scrollTop) + "px");
-			$('#facebox2').css("left", Math.max(0, ((mJSON.width - $('#facebox2').outerWidth()) / 2) + mJSON.scrollLeft) + "px");
-			
-			setTimeout(function(){$('#facebox').show(); $('#facebox2').show();}, 300);
-		}
-		else
-		{
-			$('#facebox').css("position","absolute");
-			$('#facebox').css("top", Math.max(0, ((mJSON.height - $('#facebox').outerHeight()) / 2) + mJSON.scrollTop) + "px");
-			$('#facebox').css("left", Math.max(0, ((mJSON.width - $('#facebox').outerWidth()) / 2) + mJSON.scrollLeft) + "px");
-			if (mJSON.hasAtt=="0")
-			{
-				setTimeout(function(){$('#facebox').show()}, 300);
-			}
-		}
-	}, false);
-
-</script>
 <style type="text/css">
     #dhtmltooltip{
         position: absolute;
@@ -169,7 +135,6 @@ $loop_index_check = FALSE;
     }
     
     function showPopup(productId,hasAssociates,hasAttribute,cartItemIndex) {
-
 		var div;
 		if (cartItemIndex==-1)
 		{
@@ -181,6 +146,15 @@ $loop_index_check = FALSE;
 		}
 		var rect = div.getBoundingClientRect();
 
+		if (cartItemIndex==-1)
+		{
+        	$('#facebox').css('top',rect.top-100+'px');
+		}
+		else
+		{
+			$('#facebox').css('top',rect.top+100+'px');
+		}
+        $('#facebox').css("position","absolute");
         $('#attributes_wrapper').html('');
         $('#association_wrapper').html('');
         $('#item_image').remove();
@@ -332,28 +306,16 @@ $loop_index_check = FALSE;
 						{
 							if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
 							{
-<<<<<<< HEAD
                         		html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
 							}
 							else
 							{
 		                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-=======
-                        		html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-							}
-							else
-							{
-		                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 							}
 						}
 						else
 						{
-<<<<<<< HEAD
 	                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-=======
-	                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 						}
 /*------------------------------Naveed End---------------------------------------------------*/
                         if (attribute.Type == 1) {
@@ -629,11 +591,7 @@ $loop_index_check = FALSE;
                             html = html + "</select><input type='hidden' id='txtDD"+attribute.id+"' value='"+mDD+"'/></td></tr>";
                         }
 						
-<<<<<<< HEAD
                         html = html + mAttReq;
-=======
-                        html = html + mAttReq+'</table></td></tr>';
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
                     });
                     html = html + '<tr><td>&nbsp;</td></tr></table>';
 
@@ -678,22 +636,39 @@ $loop_index_check = FALSE;
                     }
                     $('#association_wrapper').html(html);
                     $('#showPopupLink').trigger('click');
+					if (cartItemIndex==-1)
+					{
+						$('#facebox').css('top',rect.top-100+'px');
+					}
+					else
+					{
+						$('#facebox').css('top',rect.top+100+'px');
+					}
+                    $('#facebox').css("position","absolute");
                 },
                 error: function(data)
                 {
                     alert('Error occurred.');
                 }
             });
-			window.parent.postMessage('{"centered":2}', '*');	
         } else {
             $('#quantity').val(1);
             $('#item_for').val('');
             $('#requestnote').val('');
             $('#requestnote').text('');
+            
             $('#showPopupLink').trigger('click');
-			window.parent.postMessage('{"centered":1}', '*');
+       		if (cartItemIndex==-1)
+			{
+				$('#facebox').css('top',rect.top-100+'px');
+			}
+			else
+			{
+				$('#facebox').css('top',rect.top+100+'px');
+			}
+            $('#facebox').css("position","absolute");
         }
-		$('#facebox').hide();
+
     }
 
     $(function() {
@@ -739,44 +714,24 @@ $.each(attributeRequired, function(index, value) {
     }
   });
     var attributeId = 'attrRequired-'+value;
-<<<<<<< HEAD
-=======
-    var attributeborderId = 'attrRequiredBorder-'+value;
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     if(!(isAllRequiredSelected))
     {
         isValid = false;
         $($('[id='+attributeId+']')[1]).show();
-<<<<<<< HEAD
-=======
-        $($('[id='+attributeborderId+']')[1]).css({"display":"block","border":"2px solid #9C0F17","border-collapse":"separate","border-spacing":"2px"});
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     }
     else
     {
         $($('[id='+attributeId+']')[1]).hide();
-<<<<<<< HEAD
-=======
-        $($('[id='+attributeborderId+']')[1]).css({"border":"none"});
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     }
 });
 
     if(!(isValid))
     {
         $($('[id=updateMessage]')[1]).show();
-<<<<<<< HEAD
-=======
-        $($('[id=updateMessage1]')[1]).show();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
     }
     else
     {
         $($('[id=updateMessage]')[1]).hide();
-<<<<<<< HEAD
-=======
-        $($('[id=updateMessage1]')[1]).hide();
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 /*------------------------------Naveed End-----------------------------------------------------*/        
             var mUrl = '';
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
@@ -1365,11 +1320,7 @@ $.each(attributeRequired, function(index, value) {
     
         <div style="clear: both;"></div>
 		
-<<<<<<< HEAD
         <div id="updateMessage" style="background:#D49191; border:1px solid #FD0808; padding:5px; color:#FFFFFF; margin-top:10px;display:none;font-size:15px;">Please select required attribute(*) to proceed further!</div>
-=======
-        <div id="updateMessage" style="margin-bottom: 10px; color:#9C0F17; margin-top:10px;display:none;font-size:14px;">Please make a selection to continue.</div>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         
         <div id='attributes_wrapper'></div>
         <div id="association_wrapper"></div>
@@ -1411,13 +1362,8 @@ $.each(attributeRequired, function(index, value) {
             <textarea name="requestnote" id="requestnote" tabindex="3" cols="35" rows="4"></textarea>
         </div>
         <div class="attribute">
-<<<<<<< HEAD
 
             <input type="submit" name="addtocart" id="addtocart" value="Add to Cart" >
-=======
-            <div style="float: left;width:100px"><input type="submit" name="addtocart" id="addtocart" value="Add to Cart" ></div>
-            <div id="updateMessage1" style="padding:3px; color:#9C0F17; margin-top:10px;display:none;font-size:14px;">Please make a selection to continue.</div>
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
         </div>
 
         <div style="height:5px;">&nbsp;</div>

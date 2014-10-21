@@ -8,11 +8,7 @@ require("classes/chargifyApi.php");
 include("../includes/class.phpmailer.php"); 
 include("../includes/class.smtp.php");
 require_once('../classes/abandoned_carts.php');
-<<<<<<< HEAD
 
-=======
-$jsParameter = "v3";
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 $function_obj = new clsFunctions();
 $chargify = new chargifyApi();
 

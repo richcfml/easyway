@@ -18,13 +18,8 @@ class EWOphaxio
 			$mFilePath = realpath("pdffiles/pdf".$mFileName);	
 			
 			$mCallBackURL = $PhaxioCallBackUrl."crons/callback.php?orderid=".$pOrderID;
-<<<<<<< HEAD
 			
 			$mPostData = array('to' => $pFaxNumber, 'filename' => '@'.$mFilePath, 'api_key' => '988a0407345b82071a33a6210d6a544274d07bab', 'api_secret' => 'b2ee04dcc71f46a11fa5d81ba5e0e7210b0376bd', 'callback_url' => $mCallBackURL);
-=======
-
-			$mPostData = array('to' => $pFaxNumber, 'filename' => '@'.$mFilePath, 'api_key' => 'd49abed94ef39b4660ab4efac437bd390b49c306', 'api_secret' => '432b90fc5f4de6d9fecbe11f5e2d2a3bc3d961a6', 'callback_url' => $mCallBackURL);
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 			
             Log::write('PHAXIO Post Array - Send Fax', print_r($mPostData,true), 'phaxio');
                         
@@ -102,11 +97,7 @@ class EWOphaxio
 	{
 		try
 		{
-<<<<<<< HEAD
 			$mPostData = array('id' => $pFaxID, 'api_key' => '988a0407345b82071a33a6210d6a544274d07bab', 'api_secret' => 'b2ee04dcc71f46a11fa5d81ba5e0e7210b0376bd');
-=======
-			$mPostData = array('id' => $pFaxID, 'api_key' => 'd49abed94ef39b4660ab4efac437bd390b49c306', 'api_secret' => '432b90fc5f4de6d9fecbe11f5e2d2a3bc3d961a6');
->>>>>>> 4eba8fa0761ad6566ffc69896fac63eac3d4d950
 			
                         Log::write('PHAXIO Post Array - Check Fax Status', print_r($mPostData,true), 'phaxio');
                         
