@@ -2,8 +2,8 @@
 	    require_once '../lib/authorize_api/AuthorizeNet.php';
 		define("AUTHORIZENET_API_LOGIN_ID",$Objrestaurant->authoriseLoginID);    // Add your API LOGIN ID
 		define("AUTHORIZENET_TRANSACTION_KEY",$Objrestaurant->transKey); // Add your API transaction key
-		define("AUTHORIZENET_SANDBOX",true);       // Set to false to test against production
-		define("TEST_REQUEST", "true");           // You may want to set to true if testing against production
+		define("AUTHORIZENET_SANDBOX",$AuthorizeDotNetSandBox);       // Set to false to test against production, $AuthorizeDotNetSandBox is defined in includes/config.php
+		define("TEST_REQUEST", $AuthorizeDotNetTestRequest);           // You may want to set to true if testing against production, $AuthorizeDotNetTestRequest is defined in includes/config.php
 		define("AUTHORIZENET_MD5_SETTING","");
 		//$transactionid ='2204481791';
 		//$cc = '1000';

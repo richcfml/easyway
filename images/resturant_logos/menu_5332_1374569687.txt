@@ -1,7 +1,0 @@
-
-ActionTracker/SearchATUsers.aspx [table aligning]
-ActionTracker/AtPage.Master.aspx [enabled jquery migrate]
-ActionTracker/scripts/datepicker/jquery.ui.custom.1.8.6.min.js
-Actiontracker/controls/itemdetails.ascx
-ActionTracker/AddNewItemDetails.aspx [modified js]
-ActionTracker/css/style.css

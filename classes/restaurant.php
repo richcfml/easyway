@@ -142,7 +142,7 @@ class restaurant  {
         		$objRestaurant->cash=1;	
 		
 		if(empty($objRestaurant->header_image)){
-			$objRestaurant->header_image = "../images/resturant_logos/default_200_by_200.jpg";
+			$objRestaurant->header_image = "../images/default_200_by_200.jpg";
 		} else {
 			$objRestaurant->header_image = "../images/resturant_headers/" . $objRestaurant->header_image;
 		}

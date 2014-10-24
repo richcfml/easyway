@@ -1,6 +1,9 @@
 pdffiles/
 /includes/config.php
 /images/item_images/
+/images/logos_thumbnail/
+/images/resturant_headers/
+/images/resturant_logos/
 .htaccess
 /logs/
 /c_panel/tempimages/

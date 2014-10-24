@@ -19,7 +19,9 @@ class EWOphaxio
 			
 			$mCallBackURL = $PhaxioCallBackUrl."crons/callback.php?orderid=".$pOrderID;
 
-			$mPostData = array('to' => $pFaxNumber, 'filename' => '@'.$mFilePath, 'api_key' => 'd49abed94ef39b4660ab4efac437bd390b49c306', 'api_secret' => '432b90fc5f4de6d9fecbe11f5e2d2a3bc3d961a6', 'callback_url' => $mCallBackURL);
+			//$PhaxioApiKey and $PhaxioApiSecret are defined in includes/config.php
+			global $PhaxioApiKey, $PhaxioApiSecret;
+			$mPostData = array('to' => $pFaxNumber, 'filename' => '@'.$mFilePath, 'api_key' => $PhaxioApiKey, 'api_secret' => $PhaxioApiSecret, 'callback_url' => $mCallBackURL);
 			
             Log::write('PHAXIO Post Array - Send Fax', print_r($mPostData,true), 'phaxio');
                         
@@ -97,7 +99,9 @@ class EWOphaxio
 	{
 		try
 		{
-			$mPostData = array('id' => $pFaxID, 'api_key' => 'd49abed94ef39b4660ab4efac437bd390b49c306', 'api_secret' => '432b90fc5f4de6d9fecbe11f5e2d2a3bc3d961a6');
+			//$PhaxioApiKey and $PhaxioApiSecret are defined in includes/config.php
+			global $PhaxioApiKey, $PhaxioApiSecret;
+			$mPostData = array('id' => $pFaxID, 'api_key' => $PhaxioApiKey, 'api_secret' => $PhaxioApiSecret);
 			
                         Log::write('PHAXIO Post Array - Check Fax Status', print_r($mPostData,true), 'phaxio');
                         

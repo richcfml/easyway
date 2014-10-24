@@ -144,7 +144,6 @@
                     <span id="lblCatID" style="display: none;"><?= $mRow["cat_id"] ?></span>
 
                  </div>
-                    <div style="width: 300px; height: 10px; margin-top: 2px;"> </div>
                     <div class="toggleSubmenu">
                     <?php $mRowPr1 = $mRow['products'];
                     if (count($mRowPr1)>0)

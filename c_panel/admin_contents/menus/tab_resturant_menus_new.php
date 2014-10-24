@@ -169,9 +169,9 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/normalize.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
-        <script type="text/javascript" src="js/new-menu.js?<?php echo $jsParameter;?>"></script>
+        <script type="text/javascript" src="js/new-menu.js<?php echo $jsParameter;?>"></script>
         <link rel="stylesheet" type="text/css" href="/css/result-light.css">
-        <link rel="stylesheet" type="text/css" href="css/new_menu.css?<?php echo $jsParameter;?>">
+        <link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
         <script src="../js/jquery.validate.js" type="text/javascript"></script>
         <script src="js/fancybox.js" type="text/javascript"></script>
         <link rel="stylesheet" type="text/css" href="css/fancy.css">
@@ -183,7 +183,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <script src="js/modernizr.custom.js"></script>
         <script src="js/classie.js"></script>
         <script src="js/jquery.noty.packaged.min.js" type="text/javascript"></script>
-        <script type="text/javascript" src="js/main_menu.js?<?php echo $jsParameter;?>"></script>
+        <script type="text/javascript" src="js/main_menu.js<?php echo $jsParameter;?>"></script>
         <link rel="stylesheet" href="onoff/jquery.onoff.css" media="screen" />
 	<script src="onoff/jquery.onoff.js"></script>
         
