@@ -16,18 +16,20 @@
 $(document).ready(function(){
 						   
 	$("#LoginPopup").click(function(){
-    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut();
+    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#CheckinBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
 	$("#RegisterPopup").click(function(){
-    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut();
+    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#RegisterBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
@@ -164,7 +166,7 @@ $("#CardTxt").keyup(function(e){
        
        <div id="CheckinBigDiv" style="display:none;">
                 	<div id="LoginHeading">Log In</div>
-                    <div id="CrossButton" style="margin-top: -15px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="CrossButton" style="margin-top: -10px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.<br>Don’t have any account?  <a href="#" class="RegisterinLine">Register Now!</a></div>
                     <div id="LoginFbGPlusDiv">
                     	<div id="LoginWithFb"><a href="#"><img src="Images/LoginWithFb.png"></a></div>
@@ -183,13 +185,13 @@ $("#CardTxt").keyup(function(e){
                     </form></div>
                     <div id="HrLine"><img src="Images/HrLine.png"></div>
                     <div id="Or">or</div>
-                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest">Proceed as a Guest!</a></div>
+                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest" style="float:left">Proceed as a Guest!</a></div>
                 </div>
                 
                 
                 <div id="RegisterBigDiv" style="display:none;">
             		<div id="CrossButton" style="margin-top: 15px; margin-right: 15px;"><img src="Images/CrossButton.png" class="Cross"></div>
-                    <div id="LoginHeading" style="margin-top:-15px;">Register</div>
+                    <div id="LoginHeading" style="margin-top:-5px;">Register</div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.</div>
                     <div id="RegisterWithSocialBigDiv">
                     	<div id="RegisterWithFbGPlus">
@@ -207,7 +209,7 @@ $("#CardTxt").keyup(function(e){
                         </div>
                     </div>
                     <div class="clear"></div>
-                    <div id="RegisterButton"><input type="submit" value="Register" class="RegisterButton"></div>
+                    <div id="RegisterButton" style="float:none"><input type="submit" value="Register" class="RegisterButton"></div>
                     </form>
                     <div id="AlreadyHaveAccount">Already have an account yet? <a href="#" class="RegisterLogin">Log in!</a></div>
            	 	</div>
@@ -434,13 +436,13 @@ $("#CardTxt").keyup(function(e){
   <div class="col-lg-6 col-md-6 col-xs-12 CouponsGiftsDivRow" style="margin-top:15px; margin-left:35px;">
 
 			 <div id="CouponsGiftsDiv">
-                        	<div id="CouponsHeading">Coupons/Gift Cards</div>
-                            <div id="RedeemGiftCardDiv">
+                        	<div id="CouponsHeading">Coupons</div>
+                            <!--<div id="RedeemGiftCardDiv">
                             	<span class="SpanRedeem">Redeem Giftcard:</span>
                                 <span class="SpanRedeemTextBox"><input type="text"></span>
                                 <span class="SpanEnterGiftCard">Enter giftcard number found on card.</span>
                             </div>
-                            <div id="RedeemHr"><hr color="#e5e5e5" style="width:90%;"></div>
+                            <div id="RedeemHr"><hr color="#e5e5e5" style="width:90%;"></div>-->
                             <div id="CouponsDiv">
                             	<span class="SpanCouponsHeading">Coupon:</span>
                                 <span class="SpanCouponTextBox"><input type="text" class="CouponText" placeholder="BURGER"></span>

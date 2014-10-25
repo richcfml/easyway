@@ -8,25 +8,27 @@
     <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
     <link type="text/css" rel="stylesheet" href="css/bootstrap-theme.css">
     <link type="text/css" rel="stylesheet" href="css/CustomeStyle.css">
-    <script src="http:////ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+   <script src="http:////ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
     <script>
 $(document).ready(function(){
 						   
 	$("#LoginPopup").click(function(){
-    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut();
+    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#CheckinBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
 	$("#RegisterPopup").click(function(){
-    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut();
+    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#RegisterBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
@@ -58,21 +60,29 @@ $(document).ready(function(){
   	});	
 	$("#LoginPopup_OneColumn").click(function(){
     	$("#CheckinBigDiv").fadeIn();
-		$("#RegisterBigDiv").fadeOut();
+		$("#RegisterBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#CheckinBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	$("#RegisterPopup_OneColumn").click(function(){
     	$("#RegisterBigDiv").fadeIn();
-		$("#CheckinBigDiv").fadeOut();
+		$("#CheckinBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#RegisterBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
-	
+	$("#FrontendTab1").css("background-color","#ebebeb")&& $("#FrontendTab2").css("background","none")
+  	$("#FrontendTab1").click(function(){
+    	$("#FrontendTab1").css("background-color","#ebebeb")&& $("#FrontendTab2").css("background","none")
+  });
+  $("#FrontendTab2").click(function(){
+    	$("#FrontendTab2").css("background-color","#ebebeb")&& $("#FrontendTab1").css("background","none")
+  });
 	
 });
 </script>
@@ -99,7 +109,7 @@ $(document).ready(function(){
         	<div class="row">
             	<div id="CheckinBigDiv" style="display:none;">
                 	<div id="LoginHeading">Log In</div>
-                    <div id="CrossButton" style="margin-top: -15px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="CrossButton" style="margin-top: -10px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.<br>Don’t have any account?  <a href="#" class="RegisterinLine">Register Now!</a></div>
                     <div id="LoginFbGPlusDiv">
                     	<div id="LoginWithFb"><a href="#"><img src="Images/LoginWithFb.png"></a></div>
@@ -122,7 +132,7 @@ $(document).ready(function(){
                 
                 <div id="RegisterBigDiv" style="display:none;">
             		<div id="CrossButton" style="margin-top: 15px; margin-right: 15px;"><img src="Images/CrossButton.png" class="Cross"></div>
-                    <div id="LoginHeading" style="margin-top:-15px;">Register</div>
+                    <div id="LoginHeading" style="margin-top:-5px;">Register</div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.</div>
                     <div id="RegisterWithSocialBigDiv">
                     	<div id="RegisterWithFbGPlus">
@@ -139,7 +149,7 @@ $(document).ready(function(){
                         </form></div>
                     </div>
                     <div class="clear"></div>
-                    <div id="RegisterButton"><input type="submit" value="Register" class="RegisterButton"></div>
+                    <div id="RegisterButton" style="float:none;"><input type="submit" value="Register" class="RegisterButton"></div>
                     
                     <div id="AlreadyHaveAccount">Already have an account yet? <a href="#" class="RegisterLogin">Log in!</a></div>
            	 	</div>

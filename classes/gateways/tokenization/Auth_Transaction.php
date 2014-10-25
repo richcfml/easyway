@@ -57,10 +57,8 @@ Class AuthNetTokenizationModel{
 
 
     public function __construct($login, $password){
-
-        $this->cim = new AuthnetCIM($login, $password, false);
-
-
+		global $AuthorizeDotNetSandBox;
+        $this->cim = new AuthnetCIM($login, $password, $AuthorizeDotNetSandBox); //$AuthorizeDotNetSandBox is defined in includes/config.php
         }
 
     public function loadProfile($email, $rest_id){
@@ -79,7 +77,8 @@ Class AuthNetTokenizationModel{
 
 
     public function returnAuthNet($login, $password, $sandbox = false){
-        $this->cim = new AuthnetCIM($login, $password, $sandbox);
+		global $AuthorizeDotNetSandBox;
+        $this->cim = new AuthnetCIM($login, $password, $AuthorizeDotNetSandBox); //$AuthorizeDotNetSandBox is defined in includes/config.php
     }
 
     public function createProfile($email, $rest_id){

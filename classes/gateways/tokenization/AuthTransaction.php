@@ -57,7 +57,7 @@ Class AuthorizeNetTokenizationModel{
 
     public function __construct($login, $password){
        
-        $this->cim = new AuthnetCIM($login, $password, true);
+        $this->cim = new AuthnetCIM($login, $password, $AuthorizeDotNetSandBox); //$AuthorizeDotNetSandBox is defined in includes/config.php
 
         //echo "<pre>"; print_r($this->cim);exit;
         }
@@ -78,7 +78,7 @@ Class AuthorizeNetTokenizationModel{
 
 
     public function returnAuthNet($login, $password, $sandbox = true){
-        $this->cim = new AuthnetCIM($login, $password, $sandbox);
+        $this->cim = new AuthnetCIM($login, $password, $AuthorizeDotNetSandBox); //$AuthorizeDotNetSandBox is defined in includes/config.php
     }
     
     public function createProfile($email, $rest_id){
