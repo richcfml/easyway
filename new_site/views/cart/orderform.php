@@ -62,6 +62,7 @@ else
 	$serving_date=$_POST['serving_date'];
 	$serving_time=$_POST['serving_time'];
 	$payment_method=$_POST['payment_method'];
+        $special_notes=$_POST['special_notes'];
 	if(isset($_POST['cart_delivery_charges']))
 	{
 		$objRestaurant->delivery_charges=$_POST['cart_delivery_charges'];
@@ -143,6 +144,7 @@ span.alert-error
     	<input type="hidden" name="serving_date" value="<?=$serving_date ?>">
 	    <input type="hidden" name="serving_time" value="<?=$serving_time ?>">
 	    <input type="hidden" name="payment_method" value="<?=$payment_method ?>">
+            <input type="hidden" name="special_notes" value="<?=$special_notes?>">
     	<input type="hidden" name="cart_delivery_charges" value="<?=$cart->rest_delivery_charges ?>">
     	<div class="heading">Order confirmation</div>
 		<h3>

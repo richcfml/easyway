@@ -2,8 +2,6 @@
 	require_once("../includes/config.php");
 	include_once("../includes/phaxio.php"); 
 		
-	$mysql_conn = mysql_connect("localhost","easywayordering","Yh56**ew!d") or die( mysql_error()."  cannot connect...");
-	mysql_select_db("dev_easywayordering",$mysql_conn);
 	
 	if (isset($_GET["orderid"]))
 	{

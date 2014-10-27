@@ -678,8 +678,8 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
         $encoded=$pos_jason_result->pos_json;
     }
 
-    //$mURL="http://www.ordrsrvr.net/index.php";
-    $mURL="http://posapi.easywayordering.com/index.php";
+    $mURL="http://www.ordrsrvr.net/index.php";
+    //$mURL="http://posapi.easywayordering.com/index.php";
     
     Log::write("Post to Order Server", "Curl Initialization for OrderId: ".$orderId."", 'orderserver', 1 , '');
 
