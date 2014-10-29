@@ -318,16 +318,16 @@ $loop_index_check = FALSE;
 						{
 							if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
 							{
-                        		html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+                        		html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
 							}
 							else
 							{
-		                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+		                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
 							}
 						}
 						else
 						{
-	                        html = html + '<tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+	                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
 						}
 /*------------------------------Naveed End---------------------------------------------------*/
                         if (attribute.Type == 1) {
@@ -603,7 +603,7 @@ $loop_index_check = FALSE;
                             html = html + "</select><input type='hidden' id='txtDD"+attribute.id+"' value='"+mDD+"'/></td></tr>";
                         }
 						
-                        html = html + mAttReq;
+                        html = html + mAttReq+'</table></td></tr>';
                     });
                     html = html + '<tr><td>&nbsp;</td></tr></table>';
 
@@ -726,24 +726,29 @@ $.each(attributeRequired, function(index, value) {
     }
   });
     var attributeId = 'attrRequired-'+value;
+    var attributeborderId = 'attrRequiredBorder-'+value;
     if(!(isAllRequiredSelected))
     {
         isValid = false;
         $($('[id='+attributeId+']')[1]).show();
+        $($('[id='+attributeborderId+']')[1]).css({"display":"block","border":"2px solid #9C0F17","border-collapse":"separate","border-spacing":"2px"});
     }
     else
     {
         $($('[id='+attributeId+']')[1]).hide();
+        $($('[id='+attributeborderId+']')[1]).css({"border":"none"});
     }
 });
 
     if(!(isValid))
     {
         $($('[id=updateMessage]')[1]).show();
+        $($('[id=updateMessage1]')[1]).show();
     }
     else
     {
         $($('[id=updateMessage]')[1]).hide();
+        $($('[id=updateMessage1]')[1]).hide();
 /*------------------------------Naveed End-----------------------------------------------------*/        
             var mUrl = '';
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
@@ -1333,7 +1338,7 @@ $.each(attributeRequired, function(index, value) {
     
         <div style="clear: both;"></div>
 		
-        <div id="updateMessage" style="background:#D49191; border:1px solid #FD0808; padding:5px; color:#FFFFFF; margin-top:10px;display:none;font-size:15px;">Please select required attribute(*) to proceed further!</div>
+        <div id="updateMessage" style="margin-bottom: 10px; color:#9C0F17; margin-top:10px;display:none;font-size:14px;">Please make a selection to continue.</div>
         
         <div id='attributes_wrapper'></div>
         <div id="association_wrapper"></div>
@@ -1375,8 +1380,8 @@ $.each(attributeRequired, function(index, value) {
             <textarea name="requestnote" id="requestnote" tabindex="3" cols="35" rows="4"></textarea>
         </div>
         <div class="attribute">
-
-            <input type="submit" name="addtocart" id="addtocart" value="Add to Cart" >
+            <div style="float: left;width:100px"><input type="submit" name="addtocart" id="addtocart" value="Add to Cart" ></div>
+            <div id="updateMessage1" style="padding:3px; color:#9C0F17; margin-top:10px;display:none;font-size:14px;">Please make a selection to continue.</div>
         </div>
 
         <div style="height:5px;">&nbsp;</div>
