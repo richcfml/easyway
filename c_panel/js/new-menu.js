@@ -430,10 +430,10 @@ $.noty.defaults.template_menu_delete= '<div id="popup_box" class="popup_box" sty
          $('#txtAttName').attr('placeholder','');
      });
 
-     $( "#txtAttTitle" ).blur(function() {
-
-         $('#txtAttTitle').attr('placeholder','Display Title (Example - "Choose Sauce")');
-     });
+//     $( "#txtAttTitle" ).blur(function() {
+//
+//         $('#txtAttTitle').attr('placeholder','Display Title (Example - "Choose Sauce")');
+//     });
 
      $( "#txtAttTitle" ).focus(function() {
 

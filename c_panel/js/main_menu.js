@@ -1,5 +1,13 @@
 
 $(document).ready(function() {
+    
+    var $radios = $('input:radio[name=chkLimitExceedSM]');
+                                            
+    if($radios.is(':checked') === false) 
+    {
+        $radios.filter('[value=0]').prop('checked', true);
+    }                                       
+    
 	window.onload = function () 
 	{
 		$(".myDiv").hide();    
@@ -156,12 +164,16 @@ $(document).ready(function() {
         if(value == 1)
         {
             $("#txtLimitExceedSM").show();
+            $("#attr_limitSM").show();
 
         }
         else
         {
             $("#txtLimitExceedSM").hide();
             $("#spnLimitExceedSM").css("visibility", "hidden");
+            
+            $("#attr_limitSM").hide();
+            $("#spnChooseLimitSM").css("visibility", "hidden");
         }
     });
 
@@ -169,7 +181,18 @@ $(document).ready(function() {
     $("#attr_chooseSM").change(function()
     {
 		makeStringSM();
-		$("#txtAttTitleSM").focus();	
+		$("#txtAttTitleSM").focus();
+                if($("#attr_chooseSM").val()=="4")
+                {
+//                    $("#txtAttTitleSM").width(320);
+                    $('#txtAttTitleSM').attr('placeholder','Type your message here');
+
+                }
+                else
+                {
+//                    $("#txtAttTitleSM").width(255);
+                    $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+                }
     });
 
     $("#txtAttTitleSM").focusout(function()
@@ -308,6 +331,7 @@ $(document).ready(function() {
 			{
 				mStr = mStr+" (up to "+$("#attr_limitSM option:selected").text()+")";
 			}
+                        $('#txtAttTitleSM').attr('placeholder','Type your message here');
 		}
 		else if ($("#attr_chooseSM").val() != "")
 		{
@@ -320,6 +344,7 @@ $(document).ready(function() {
 			{
 				mStr = mStr+" "+$("#txtAttTitleSM").val();
 			}
+                        $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
 		}
 		else
 		{
@@ -568,16 +593,27 @@ $(document).ready(function() {
                             mAttributeArray = AttrData[i]['attr_name'].replace("&#39;", "'").split("~");
                             $("#txtAttNameSM").val(mAttributeArray[1]);
                             $("#attr_chooseSM").val(mAttributeArray[0]);
+                            if($("#attr_chooseSM").val()=="4")
+                            {
+//                                $("#txtAttTitleSM").width(320);
+                            }
+                            else
+                            {
+//                                $("#txtAttTitleSM").width(255);
+                            }
                             $("#attr_limitSM").val(mAttributeArray[2]);
                             if(AttrData[i]['extra_charge']!=''&& AttrData[i]['extra_charge']!='0')
                             {
                                 $("#txtLimitExceedSM").val(AttrData[i]['extra_charge']);
                                 $("#chkLimitExceedYesSM").attr('checked', 'checked');
                                 $("#txtLimitExceedSM").show();
+                                $("#attr_limitSM").show();
                             }
                             else
                             {
                                 $("#chkLimitExceedNoSM").attr('checked', 'checked');
+                                $("#txtLimitExceedSM").hide();
+                                $("#attr_limitSM").hide();
                             }
                         }
                         else
@@ -639,10 +675,10 @@ $(document).ready(function() {
          $('#txtAttNameSM').attr('placeholder','');
      });
 
-     $( "#txtAttTitleSM" ).blur(function() {
-
-         $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
-     });
+//     $( "#txtAttTitleSM" ).blur(function() {
+//
+//         $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+//     });
 
      $( "#txtAttTitleSM" ).focus(function() {
 
@@ -781,7 +817,7 @@ $(document).ready(function() {
         }
 
         var updatedOptionPriceFixedValue = "NA";
-        if ($.trim(updatedOptionPrice)!="")
+		if (($.trim(updatedOptionPrice)!="") && ($.trim(updatedOptionPrice).replace(/-/g, "")!=""))
         {
             updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
         }
@@ -858,10 +894,13 @@ $(document).ready(function() {
     $("#span_attr_nameSM").text('');
     $("#attr_chooseSM").val("");
     $("#attr_limitSM").val("");
+    $("#attr_limitSM").hide();
     $("#txtLimitExceedSM").val("");
     $("#hdnAttributesSM").val("");
     $("#txtLimitExceedSM").hide();
     $("#chkLimitExceedNoSM").attr('checked', 'checked');
+    $('#txtAttTitleSM').attr('placeholder','Display Title (Example - "Choose Sauce")');
+    $("#txtAttTitleSM").width(255);
 
     }
 

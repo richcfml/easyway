@@ -21,7 +21,6 @@ class cydne
 	 	$objfun=new clsFunctions();
 		$message= $objfun->_esc_xmlchar(str_replace("!","",str_replace("'","",$message)));
 		$to= $objfun->esc_special($to);
-		
 		$json='{
 			   		"LicenseKey":"'. $this->APIkey .'",
 			   		"SMSRequests":[{
@@ -383,13 +382,13 @@ class SMSTrace
 						$card_type="Discover";
 					}
 					
-					$mPaymentMethod = $loggedinuser->SelectPaymentMethodByFavoriteID($this->easyway_id);
-					
 					if ($objRestaurant->delivery_offer==0)
 					{
 						$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 2);
 						$cart->setdelivery_type(2);
 					}
+					
+					$mPaymentMethod = $loggedinuser->SelectPaymentMethodByFavoriteID($this->easyway_id);
 					
 					if ($mPaymentMethod==1)
 					{

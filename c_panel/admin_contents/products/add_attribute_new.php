@@ -3,12 +3,17 @@ require_once ("../../../includes/config.php");
 
 if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
     $scat_id = $_REQUEST['subcat_id'];
+	
+	$mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$scat_id);
+	$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+	$mMenuID = $mMenuIDRow->menu_id;
+	
     $attribute_id = $_GET['itemcheckAttribute'];
-    mysql_query("DELETE FROM attribute where ProductID in (Select prd_id from product where sub_cat_id = " . $scat_id . ")");
+    mysql_query("DELETE FROM attribute where ProductID in (Select prd_id from product where sub_cat_id  IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID."))");
         $prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
     while ($prodRs = mysql_fetch_array($prodQry)) {
         for ($i = 0; $i < count($_GET['itemcheckAttribute']); $i++) {
-        $getattr = mysql_query("Select * from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid =" . $scat_id . "");
+        $getattr = mysql_query("Select * from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid  IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.")");
         while ($attr = mysql_fetch_array($getattr)) {
             // echo "INSERT INTO attribute SET product_id = '".$prodRs['prd_id']."', option_name = '".$attribute_id[$i]."',Title = '".$attr['Title']."',Price = '".$attr['Price']."',option_display_preference = '".$attr['option_display_preference']."',apply_sub_cat=0,rest_price = '".$attr['rest_price']."'";
 
@@ -49,9 +54,16 @@ if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
 }else {
     mysql_query("DELETE FROM attribute where ProductID  = '" . $_GET['prod_id'] . "' ");
     $scat_id = $_REQUEST['subcat_id'];
+	
+	$mMenuIDRes = mysql_query("SELECT menu_id FROM categories WHERE cat_id = ".$scat_id);
+	$mMenuIDRow = mysql_fetch_object($mMenuIDRes);
+	$mMenuID = $mMenuIDRow->menu_id;
+	
+	
+	
     $attribute_id = $_GET['itemcheckAttribute'];
     for ($i = 0; $i < count($_GET['itemcheckAttribute']); $i++) {
-        $getattr = mysql_query("Select *,`Default`+0 AS `Default1` from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid =" . $scat_id . "");
+        $getattr = mysql_query("Select *,`Default`+0 AS `Default1` from new_attribute where display_Name = '" . $attribute_id[$i] . "' and  sub_catid IN (SELECT cat_id FROM categories WHERE menu_id=".$mMenuID.")");
         while ($attr = mysql_fetch_array($getattr)) {
             $default = $attr['Default1']?1:0;
             //$query = "INSERT INTO attribute SET productid = '" . $_GET['prod_id'] . "', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat=0,Type	 = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name = '".$attr['display_Name']."'";
