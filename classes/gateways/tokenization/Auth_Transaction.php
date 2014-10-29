@@ -196,5 +196,4 @@ Class AuthNetTokenizationModel{
         }
     }
 }
-
  ?>

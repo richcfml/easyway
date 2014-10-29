@@ -89,15 +89,9 @@ if (isset($_POST["btnSubmit"])) {
        $udpSql  = mysql_query("UPDATE menus SET menu_name= '" . prepareStringForMySQL($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id);
        //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
 
-//--------------------------------------------------------------------------------------------     
-        
         $link =  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname'];
         $escaped_link = htmlspecialchars($link, ENT_QUOTES, 'UTF-8');
         header("Location: ".$link);
-
-//--------------------------------------------------------------------------------------------
-      
-       
 //----------------------------------------------------------------------------------------------------
 //         redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id);
 //       redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname']);
@@ -475,7 +469,6 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                     </body>
                 </html>
                
-<!-----------------------------Start NK(11-10-2014)--------------------------------------->
 	<div style="display: none; font-family: Arial; border: 1px solid #CCC; width: 600px;" id="dvAddAttributeSM">
 		<table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
 			<tr style="height: 50px; background-color:#25AAE1 !important; text-align: center; vertical-align: middle;">
@@ -795,6 +788,5 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
        </div>
     
     
-	<!--------------------------END NK(11-10-2014)------------------------------------------>
         </body>
                 </html>

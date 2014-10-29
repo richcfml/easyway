@@ -10,6 +10,7 @@
 		//$amount='26.86';
 		
 		$transaction = new AuthorizeNetAIM;
+                $transaction->setSandbox(AUTHORIZENET_SANDBOX);
 		//Modified01082013
 		$response = $transaction->void($transactionid);
 		$response1 = $transaction->credit($transactionid,$amount,$cc);

@@ -38,9 +38,7 @@
         
     </div>
         <a class="fancyloadAttributeItem" href="#BrowseAttributefancyBox"></a>
-<!--------------------------------------------------------------------------------------------->
         <div id="BrowseAttributefancyBox" style="display:none;width:1150px;min-height:600px;" class="handle_fancyBox">
-<!--------------------------------------------------------------------------------------------->
             <div>
                  
                 <form action="admin_contents/products/add_attribute_new.php" method="get" name="frm2" >
@@ -424,7 +422,7 @@
 
                                     var updatedOptionPriceFixedValue = "NA";
 
-									if (($.trim(updatedOptionPrice)!="") && ($.trim(updatedOptionPrice).replace(/-/g, "")!=""))
+				    if (($.trim(updatedOptionPrice)!="") && ($.trim(updatedOptionPrice).replace(/-/g, "")!=""))
                                     {
                                         updatedOptionPriceFixedValue = Number(updatedOptionPrice).toFixed(2);
                                     }
