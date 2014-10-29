@@ -146,7 +146,7 @@ function SendHtmlMail($email, $subject_mail, $body, $from){
 EOD;
 } else {
 	echo  <<<EOD
-			<img src="thum_creater/phpThumb.php?src=http://localhost/carry4u/images/resturant_logos/default_200_by_200.jpg&zc=1&w=$w&h=$h" border="0" >
+			<img src="thum_creater/phpThumb.php?src=http://localhost/carry4u/images/default_200_by_200.jpg&zc=1&w=$w&h=$h" border="0" >
 EOD;
 }
 	}	
@@ -465,15 +465,14 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 	
 	);
  
-	$url="http://74.85.240.60:8080/easywayordering";
-
 	$json_sent=1;
 
 	try 
 	{
 		if($rest_rs['phone_notification'] == 1) //If phone notifications are ON then send JSON to phone server.
 		{
-    		$this->do_post_request($url,json_encode ($order),"");
+			global $VcsURL;
+    		$this->do_post_request($VcsURL,json_encode ($order),""); //$VcsURL is defined in includes/config.php
 		}
 	}
 	catch (Exception $e)  
@@ -507,7 +506,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
         $order_rs  = mysql_fetch_assoc($order_qry);
 
 
-        $order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price, 0 as item_tax, quantity as item_qty,prd.retail_price as item_price, RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
+        $order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price, 0 as item_tax, 0 as item_tax_rate, quantity as item_qty,prd.retail_price as item_price, RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
                                                                          FROM orderdetails  ord Inner join product prd
                                                                          on ord.pid=prd.prd_id
                                                                          WHERE orderid = ". $order_rs['OrderID'] ."");
@@ -558,6 +557,11 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
             $order_detail_rs->item_total_price  =($order_detail_rs->item_price  + $extra_items_price + $associated_items_price)  * $order_detail_rs->item_qty;
 
             $order_detail_rs->item_tax = number_format(($order_detail_rs->item_total_price * $restTaxRate)/100,2);
+
+            $order_detail_rs->item_tax_rate = $restTaxRate;
+
+            // format total price upto 2 decimal places
+            $order_detail_rs->item_total_price = number_format($order_detail_rs->item_total_price,2);
 
             $order_detail_rs->extra=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->extra)),"|");
             $order_detail_rs->associated_items=ltrim(str_replace('~','|',str_replace('|','=',$order_detail_rs->associated_items)),"|");
@@ -678,14 +682,10 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
         $encoded=$pos_jason_result->pos_json;
     }
 
-    $mURL="http://www.ordrsrvr.net/index.php";
-    //$mURL="http://posapi.easywayordering.com/index.php";
-    
     Log::write("Post to Order Server", "Curl Initialization for OrderId: ".$orderId."", 'orderserver', 1 , '');
-
+	global $PosApiURL;
     $cURL = curl_init();
-
-    curl_setopt($cURL,CURLOPT_URL,$mURL);
+    curl_setopt($cURL,CURLOPT_URL,$PosApiURL); //$PosApiURL is defined in includes/config.php
     curl_setopt($cURL,CURLOPT_POST,true);
     curl_setopt($cURL,CURLOPT_POSTFIELDS,$encoded);
     curl_setopt($cURL,CURLOPT_RETURNTRANSFER, true);
@@ -715,8 +715,8 @@ function replaceSpecial($data) {
 	}
 	
 	function sendcall($data){
-		   $url="http://74.85.240.60:8080/easywayordering";
-		   $this->do_post_request($url,$data,"");
+			global $VcsURL;
+		   $this->do_post_request($VcsURL,$data,""); //$VcsURL is defined in includes/config.php
 		   
 		
  }

@@ -2,7 +2,6 @@
 	require_once("../includes/config.php");
 	include_once("../includes/phaxio.php"); 
 		
-	
 	if (isset($_GET["orderid"]))
 	{
 		$mFax = json_decode_ewo($_POST["fax"]);

@@ -147,7 +147,7 @@
 {
     background-color: #464646;
     color: white;
-    height: 22px;
+    height: auto;
     padding: 20px;
     font-size: 23px;
     width: 92%;
@@ -861,6 +861,7 @@ table tr {background-color: transparent !important;}
     background-color: #d0d0d0;
     margin-bottom: 3px;
     min-height: 75px;
+    overflow: auto;
     width: 300px;
 }
 

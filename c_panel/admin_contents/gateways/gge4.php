@@ -1,6 +1,4 @@
 <?php
-$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
-//$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
 $mSQLQuery=mysql_query("SELECT Authorization_Num FROM gge4_authorization_num WHERE UserID=".$gUID." AND transaction_id='".$transactionid."'");
 if(mysql_num_rows($mSQLQuery) > 0) 
 {
@@ -18,7 +16,7 @@ if(mysql_num_rows($mSQLQuery) > 0)
 				</Transaction>';
         Log::write("GGE4 Post XML - Refund ", $mXML, 'gge4', 1);
 
-	$ch = curl_init($url);
+	$ch = curl_init($GGe4URL); //$GGe4URL is defined in includes/config.php
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $mXML);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

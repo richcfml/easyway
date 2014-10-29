@@ -196,8 +196,20 @@ else if (isset($_GET['add_menu_item']))
                  $price = '0'.$price;
            }
     }
-    Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "'", 'menu', 1 , 'cpanel');                                                   
-    mysql_query("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "'");
+
+    Log::write("Select MaxSortOrder product - menu_ajax.php", "QUERY -- Select max(SortOrder) as maxOrder from product where sub_cat_id = ".$sub_cat, 'menu', 1 , 'cpanel');
+
+    $maxSortOrderNo = mysql_fetch_object(mysql_query("Select max(SortOrder) as maxOrder from product where sub_cat_id = ".$sub_cat));
+
+    $maxOrderNo = 0;
+    if($maxSortOrderNo->maxOrder != null) {
+        // MaxOrder is present -- Get it and use it for adding new products;
+        $maxOrderNo = $maxSortOrderNo->maxOrder;
+        $maxOrderNo++;
+    }
+
+    Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 'menu', 1 , 'cpanel');
+    mysql_query("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . "");
     $lastid = mysql_insert_id();
     if (!empty($_GET['ext']))
     {
@@ -328,15 +340,9 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
 //-------------------------------Start NK(10-10-2014)----------------------------------------------------------------------------------------------    
     $CatOrder = mysql_query("SELECT IFNULL(MAX(cat_ordering), 0) AS cat_ordering FROM categories Where menu_id=".$_GET['menuid']."");
     $CatOrderRow = mysql_fetch_object($CatOrder);
-    $ResCatOrder = $CatOrderRow->cat_ordering+1;
+    $ResCatOrder = $CatOrderRow->cat_ordering+1; 
     
     $cat_id = $_GET['cat_id'];
-    $query = mysql_query("SELECT * FROM categories where menu_id=".$_GET['menuid']."");
-    while ($select = mysql_fetch_array($query))
-    {
-        Log::write("Update category - menu_ajax.php", "QUERY --UPDATE categories SET cat_ordering='$select[cat_ordering]'+1 where cat_id = '$select[cat_id]'", 'menu', 1 , 'cpanel');
-        $update = mysql_query("UPDATE categories SET cat_ordering='$select[cat_ordering]'+1 where cat_id = '$select[cat_id]'");
-    }
     $cat_rs = mysql_fetch_object(mysql_query("select * from categories where cat_id =" . $cat_id . ""));
     Log::write("Add new category - menu_ajax.php", "QUERY --insert into categories(`parent_id`, `menu_id`, `cat_name`, `cat_des`, `cat_ordering`, `status`) values (
                 '" . $cat_rs->parent_id . "','" . $cat_rs->menu_id . "','" . $cat_rs->cat_name . "','" . $cat_rs->cat_des . "',1
@@ -352,7 +358,7 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
     while ($product_rs = mysql_fetch_object($mysql_cat_products))
     {
         Log::write("Add new product - menu_ajax.php", "QUERY --insert into product(
-				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`
+				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`, `SortOrder`
 
 					) values ( '" . $product_rs->cat_id . "', '" . $newCatId . "', '" . $product_rs->item_num . "'
 					, '" . $product_rs->item_title . "'
@@ -370,10 +376,11 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
 					, '" . $product_rs->status . "'
 					, '" . $product_rs->pos_id . "'
                                         , '" . $product_rs->item_type . "'
+                                        , " . $product_rs->SortOrder . "
 
 					 )", 'menu', 1 , 'cpanel');
         mysql_query("insert into product(
-				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`
+				`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status`,`pos_id`,`item_type`, `SortOrder`
 
 					) values ( '" . $product_rs->cat_id . "', '" . $newCatId . "', '" . $product_rs->item_num . "'
 					, '" . $product_rs->item_title . "'
@@ -391,6 +398,7 @@ else if (isset($_GET['copy']) && $_GET['copy'] == 1 && !empty($_GET['cat_id']))
 					, '" . $product_rs->status . "'
 					, '" . $product_rs->pos_id . "'
                                         , '" . $product_rs->item_type . "'
+                                        , " . $product_rs->SortOrder . "
 
 					 )");
 

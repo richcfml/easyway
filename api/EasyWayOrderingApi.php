@@ -7,7 +7,8 @@ class Authentication {
         /*$query = "SELECT * from user_info where user_name = '" . $UserName . "' and password = '" . $Password . "'";
         $row = mysql_query($query);
         */
-        $result = (array)json_decode(Authentication::sendData('http://www.easywayordering.com/services.php?op=authenticate', array('user'=>$UserName, 'pass'=>md5($Password))));
+		//$EasywayOrderingApiURL is defined in includes/config.php
+        $result = (array)json_decode(Authentication::sendData($EasywayOrderingApiURL."services.php?op=authenticate", array('user'=>$UserName, 'pass'=>md5($Password))));
 
         if ($result['message'] == 'authenticated') {
             //generate token.
@@ -119,7 +120,8 @@ class Confirmation {
     }
 
     public static function setConfirmationOnEWO($OrderId, $RestId) {
-        Authentication::sendData('http://www.easywayordering.com/services.php?op=confirmOrder', array('rest_id'=>$RestId, 'order_id' =>$OrderId));
+		//$EasywayOrderingApiURL is defined in includes/config.php
+        Authentication::sendData($EasywayOrderingApiURL."services.php?op=confirmOrder", array('rest_id'=>$RestId, 'order_id' =>$OrderId));
     }
 
 }
