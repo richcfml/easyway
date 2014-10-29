@@ -1,6 +1,4 @@
 <?php
-//$url = 'https://api.demo.globalgatewaye4.firstdata.com/transaction/v11';
-$url = 'https://api.globalgatewaye4.firstdata.com/transaction/v11';
 $mXML ="";
 	
 $card_token=0; 
@@ -17,7 +15,7 @@ $mXML = '<?xml version="1.0" encoding="utf-8" ?>
 			</Transaction>';
 
 
-$ch = curl_init($url);
+$ch = curl_init($GGe4URL); //$GGe4URL is defined in includes/config.php
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POSTFIELDS, $mXML);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

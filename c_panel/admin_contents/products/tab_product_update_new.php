@@ -1,8 +1,8 @@
 <!--https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=baa71229d8d85d5eba66427133455eea&per_page=500&format=json&user_id=fadedfilmstrips-->
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
-<script type="text/javascript" src="js/new-menu.js?v=2"></script>
-<link rel="stylesheet" type="text/css" href="css/new_menu.css?v=1">
+<script type="text/javascript" src="js/new-menu.js<?php echo $jsParameter;?>"></script>
+<link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
 <script src="../js/mask.js" type="text/javascript"></script>
 <script src="../js/jquery.validate.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/tab.css">

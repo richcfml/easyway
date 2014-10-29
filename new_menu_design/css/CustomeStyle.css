@@ -32,7 +32,7 @@ text-decoration: underline; width: 100%; }
 .HrDiv{width:350px; height:2px}
 .LabelTxt2{ float:left; width:270px; margin-left:75px; text-align:left; color:#959595; font-size:12px; font-family:Arial, Helvetica, sans-serif;}
 #SubmitButton{ position:relative; width:125px; margin-top:15px; float:left; margin-left:140px}
-.SubmitButton{ background-color:#c09308; color:#fff; font-size:16px; padding: 5px 25px; border:none; border-radius:2px;}
+.SubmitButton{ background-color:#c09308; color:#fff; font-size:16px; padding: 5px 25px; border:none; border-radius:2px; border-bottom: 4px solid #9B7603;}
 #SubmitButtonDiv2{color:#fff; font-size:16px; padding: 5px 25px; border:none; border-radius:2px; position:relative; 
 text-align:center; float:left}
 #BecomeAVipMember{ position:relative; margin:0 auto; width:412px; border-radius:10px; background-color:#ebebeb; box-shadow:0px 0px 6px 1px #888; height:180px;
@@ -131,7 +131,7 @@ font-size: 14px; margin-top: 15px; padding: 5px 0px 5px 25px;}
 .VisaCardSeperator { float: left; position: relative; width: 2px; height: 70px; border-right: 2px solid #e5e5e5;}
 .AddNewCardMargin { margin-left: 20px; margin-top: 20px;}
 @media (max-width: 768px) {.AddNewCardMargin{ margin-left:0px; text-align:center;} }
-.AddNewCardButton { background-color: #25aae1; color: #ffffff; border-bottom: 2px solid #2093c3; border-radius: 3px; padding: 6px 20px; text-decoration: none;
+.AddNewCardButton { background-color: #25aae1; color: #ffffff; border-bottom: 4px solid #2093c3; border-radius: 3px; padding: 6px 20px; text-decoration: none;
 font-size: 12px; }
 .SecondSolumnMarginLeft{margin-left: 30px;}
 @media (max-width: 480px) {.SecondSolumnMarginLeft{ margin-left:0px;} }
@@ -197,6 +197,14 @@ font-size: 12px; }
 @media (max-width: 767px) {#ReOrder{ text-align:center; margin-left:0px;} }
 
 
+
+.LoginButton:hover{margin-top:2px; border-bottom: 2px solid #2093c3;}
+.ProceedAsGuest:hover{margin-top:2px; border-bottom: 2px solid #2093c3;}
+.RegisterButton:hover{margin-top:2px; border-bottom: 2px solid #2093c3;}
+.StartGroupOrder:hover{margin-top:2px; border-bottom: 2px solid #2093c3;}
+.SubmitButton:hover{margin-top:2px;border-bottom: 2px solid #9B7603;}
+.AddNewCardButton:hover{margin-top:2px; border-bottom: 2px solid #2093c3;}
+
 #AddNewCreditPopUp { width: 595px; position: absolute; border-radius: 10px; height: 410px; background-color: #ededed; box-shadow: -6px 0px 8px 1px #888;
 margin-left: 15%; margin-top: 6%; }
 #CrossButton { float: right; margin-top: -10px; margin-right: -10px;}
@@ -235,7 +243,7 @@ margin-left: 15%; margin-top: 6%; }
 #AddNewAddressCenterForm { margin: 0 auto; position: relative; width: 210px;}
 #DeliveryAddressDiv { float: left; position: relative; width: 210px; margin-left: 15px;}
 .AddSubmitButton { width: 145px; float: left; text-align: center; border: none; border-bottom: 2px solid #2093c3; font-size: 16px; margin-top: 1px;}
-.AddNewCardButton { background-color: #25aae1; color: #ffffff; border-bottom: 2px solid #2093c3; border-radius: 3px; padding: 6px 20px; text-decoration: none;
+.AddNewCardButton { background-color: #25aae1; color: #ffffff; border-bottom: 4px solid #2093c3; border-radius: 3px; padding: 6px 20px; text-decoration: none;
 font-size: 12px;}
 /*Account*/
 
@@ -418,7 +426,7 @@ margin-bottom: 5px; padding-left:5px; color:#fff; font-size:12px; padding-top: 1
 #ForgotPassword{ float:right; color:#0054a6; font-size:11px; margin-right:5px; margin-top:5px; margin-bottom: 10px;}
 .ForgotPassword{ color:#0054a6;}
 #LoginButton{ margin:0 auto; width:90px; position:relative;}
-.LoginButton{ background-color:#25aae1; color:#fff; font-size:12px; border-bottom:2px solid #2093c3; border-radius:2px; padding:7px 30px; border-top:none; border-left:none; border-right:none;}
+.LoginButton{ background-color:#25aae1; color:#fff; font-size:12px; border-bottom:4px solid #2093c3; border-radius:2px; padding:7px 30px; border-top:none; border-left:none; border-right:none;}
 #HrLine{ float:left; position:relative; margin-top: 20px;width: 100%;text-align: center;}
 #Or{ position:relative; float:left; width:100%; color:#363636; font-weight:bold; font-size:14px; text-align:center; margin-top:5px; margin-bottom:10px;}
 #ProceedAsGuest{ margin:0 auto; position:relative; width:175px;}
@@ -431,7 +439,7 @@ margin-bottom: 5px; padding-left:5px; color:#fff; font-size:12px; padding-top: 1
 #RegisterOr{ float:left; width:100px; position:relative; text-align:center; color:#363636; font-weight:bold; font-size:14px; margin-top: 95px;}
 #RegisterTextBox{ float:left; position:relative; width:210px; margin-top: 17px;}
 #RegisterButton{ margin:0 auto; position:relative; width:140px; padding-top:170px; float:left}
-.RegisterButton{background-color: #25aae1;color: #fff;font-size: 14px;border-bottom: 2px solid #2093c3;border-radius: 2px;padding: 7px 40px;border-top: none;
+.RegisterButton{background-color: #25aae1;color: #fff;font-size: 14px;border-bottom: 4px solid #2093c3;border-radius: 2px;padding: 7px 40px;border-top: none;
 border-left: none;border-right: none;}
 #AlreadyHaveAccount{color: #777;float: left;position: relative;width: 100%;text-align: center;font-size: 12px;font-weight: bold; margin-top: 10px;}
 .RegisterLogin{color: #777;}
@@ -470,6 +478,7 @@ box-shadow:0px 0px 6px 1px #888; }
 .FrontendTabsLi { float: left; position: relative; color: #464646; font-weight: bold; font-size: 16px; width: 100px; padding: 10px; cursor: pointer;
 text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px;}
 .FrontendTabsLi:hover { background-color: #ebebeb;}
+.FrontendTabsLi:active { background-color: #ebebeb;}
 .FrontendTabsLiLink { color: #464646 !important; text-decoration: none !important;}
 
 #FrontendContentTab1 { float: left; position: relative; width: 730px; margin-top: 20px;}
@@ -765,7 +774,10 @@ color: #acacac;
 
 
 
-#CheckinBigDiv { position: relative; margin: 0 auto; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888;}
+/*Position changed from Relative to absolute*/
+/*#CheckinBigDiv { position: relative; margin: 0 auto; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888;}*/
+#CheckinBigDiv { position: absolute; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888; margin-left: 15%; z-index:101; margin-top: -10%;}
+.BodyColor{ background-color:rgba(145, 145, 145, 0.82);}
 #LoginHeading { color: #363636; text-align: center; position: relative; width: 100%; float: left; font-weight: bold; font-size: 28px; margin-top: 25px;}
 #CrossButton {
 float: right;
@@ -838,7 +850,7 @@ position: relative;
 background-color: #25aae1;
 color: #fff;
 font-size: 12px;
-border-bottom: 2px solid #2093c3;
+border-bottom: 4px solid #2093c3;
 border-radius: 2px;
 padding: 7px 30px;
 border-top: none;
@@ -872,7 +884,7 @@ width: 175px;
 background-color: #25aae1;
 color: #fff;
 font-size: 14px;
-border-bottom: 2px solid #2093c3;
+border-bottom: 4px solid #2093c3;
 border-radius: 2px;
 padding: 7px 30px;
 border-top: none;
@@ -890,7 +902,9 @@ border: 1px solid #e5e5e5;
 padding: 10px;
 }
 
-#RegisterBigDiv { position: relative; margin: 0 auto; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888;}
+/*Position changed from relative to absolute*/
+/*#RegisterBigDiv { position: relative; margin: 0 auto; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888;}*/
+#RegisterBigDiv { position: absolute; width: 530px; height: 490px; background-color: #ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888; margin-left:15%; margin-top:-10%; z-index:102;}
 #SaveFavourite {
 color: #363636;
 float: left;
@@ -946,7 +960,7 @@ padding-top: 170px;
 background-color: #25aae1;
 color: #fff;
 font-size: 14px;
-border-bottom: 2px solid #2093c3;
+border-bottom: 4px solid #2093c3;
 border-radius: 2px;
 padding: 7px 40px;
 border-top: none;
@@ -1038,7 +1052,7 @@ font-size: 12px;}
 #SaveThisStar{ float:left; position:relative; width:100%; border:1px solid #25aae1; padding: 1px 0;}
 .SpanStarImg{ float:left; position:relative; margin-left: 12%;}
 .SpanStarText{ float:left; position:relative; color:#25aae1; font-size:12px; margin-left:5px; margin-top:3px;}
-.StarText{ color:#25aae1; text-decoration:underline;}
+.StarText{ color:#25aae1; text-decoration:underline; cursor:pointer;}
 .SpanBackPlygon{ position:relative; float:left;}
 .SpanBackToCart{ position:relative; margin-left:5px; float:left; margin-top:1px;}
 #NeedHelp{ float:left; position:relative; text-align:center; width:100%; color:#25aae1; font-size:12px; font-weight:bold; margin-top: 5px;}
@@ -1096,6 +1110,32 @@ border-left: none; border-right: none;}
 #CancelSaveChange{ float:left; position:relative; text-align:center; width:100%; font-size:12px; color:#363636; margin-top:5px;}
 .CancelSaveChange{ color:#363636;}
 
+#DDLList{ float:left; position:relative; width:100%;}
+.UlList{ float:left; position:relative; list-style:none; width:100%; padding-left:0px;}
+.LiList{ float:left; position:relative; width:100%; padding:10px; border-bottom:1px solid #ccc;}
+.LiList:hover{ background-color:#f9f9f9;}
+.LiList a{ color:#30abdf; font-size:14px; float:left; width:100%;}
+.LiList a:hover{ text-decoration:none;}
+.LastLiBold{font-weight:bold;}
+
+#YourFavouritePopup{ position:absolute; width:560px; background-color:#ebebeb; border-radius: 10px; box-shadow: 0px 0px 6px 1px #888;
+margin-left: 19%; z-index: 100; padding-bottom:30px;}
+.GrayStar{position:relative;}
+.YourFavouriteSpan{position:relative; margin-left: 10px;}
+#InnerWhiteDivFavouriteOrder{ margin:0 auto; width:500px; background-color:#fbfbfb; border-radius:5px; height:330px;}
+#CenterTableDiv{ margin:0 auto; width:365px; position:relative;}
+.FavouriteListRow{ float:left; position:relative; width:100%; padding:15px 0;}
+.FavouriteListRowHeading{ color:#4b4b4b; text-decoration:underline; font-weight:bold;font-size: 16px;}
+.FavouriteListRowColumn1{ float:left; position:relative; width:185px; color:#b0b0b0;}
+.FavouriteListRowColumn1 a{ color:#b0b0b0; text-decoration:underline;}
+.FavouriteListRowColumn2{ float:left; position:relative; width:75px; color:#9b9b9b;}
+.FavouriteListRowColumn3{ float:left; position:relative; width:60px; color:#73b993; font-size:12px;}
+.FavouriteListRowColumn3 a{ color:#73b993; font-weight:bold; text-decoration:underline;}
+.FavouriteListRowColumn4{ float:left; position:relative; width:40px; color:#999; font-size:12px;}
+.FavouriteListRowColumn4 a{ color:#999; font-weight:bold; text-decoration:underline;}
+.RowBorder{ border-bottom:1px solid #e5e5e5;}
+.NeedHelpFavourite{ float:left; position:relative; width:100%; text-align:center; font-size:12px; font-weight:bold;}
+.NeedHelpFavouriteLink{ color:#30abdf; text-decoration:underline; font-weight:bold;}
 /*Favourite Order*/
 
 /*Group Order*/
@@ -1104,7 +1144,7 @@ border-left: none; border-right: none;}
 #SimplifyLargOrders{ float:left; position:relative; width:100%; text-align:center; padding:3px 15px; font-size:12px; font-weight:bold; color:#252525;}
 .LearnMoreLink{ color:#252525; text-decoration:underline;}
 #StartGroupOrder{ margin:0 auto; width:185px; position:relative; padding-top: 15px;}
-.StartGroupOrder{ background-color: #25aae1; border-bottom: 2px solid #2093c3; border-radius: 2px; padding: 4px 10px; float:left;}
+.StartGroupOrder{ background-color: #25aae1; border-bottom: 4px solid #2093c3; border-radius: 2px; padding: 4px 10px; float:left;}
 .SpanGroupOrderIcon{ float:left; position:relative; width:30px;}
 .SpanGroupOrderText{ float:left; position:relative; font-size:16px; color:#ffffff; margin-top: 2px;}
 .StartGroupOrderHeight{ height:770px;}
@@ -1464,6 +1504,10 @@ height: 340px; }
 #PhoneText{ text-align:center;}
 .VipheaderTxtDiv{ width:28%; float:none; margin:0 auto;}
 /*Viparea*/
+/*LoginRegisterPopUp*/
+#CheckinBigDiv{ margin-left:5%;}
+#RegisterBigDiv{ margin-left:5%;}
+/*LoginRegisterPopUp*/
 
 }
 @media screen and (min-width:481px) and (max-width:640px)
@@ -1509,12 +1553,12 @@ height: 340px; }
 /*Group Order Sidebar*/
 
 /*Login Popup*/	
-#CheckinBigDiv{ width:95%;}
+#CheckinBigDiv{ width:95%; margin-left:0px;}
 #HrLine img{ width:100%;}
 /*Login Popup*/
 
 /*Register Popup*/
-#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; }
+#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; margin-left:0px;}
 #RegisterWithSocialBigDiv{ width: 195px;}
 #RegisterOr{width: 195px; margin-top: 15px;}
 #RegisterButton{padding-top: 30px;}
@@ -1642,12 +1686,12 @@ height: 340px; }
 /*Group Order Sidebar*/
 
 /*Login Popup*/	
-#CheckinBigDiv{ width:95%;}
+#CheckinBigDiv{ width:95%; margin-left:0px;}
 #HrLine img{ width:100%;}
 /*Login Popup*/	
 
 /*Register Popup*/
-#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; }
+#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; margin-left:0px;}
 #RegisterWithSocialBigDiv{ width: 195px;}
 #RegisterOr{width: 195px; margin-top: 15px;}
 #RegisterButton{padding-top: 30px;}
@@ -1780,13 +1824,13 @@ s
 /*Group Order Sidebar*/
 
 /*Login Popup*/	
-#CheckinBigDiv{ width:95%; height: 100%; padding-bottom: 30px;}
+#CheckinBigDiv{ width:92%; height: 100%; padding-bottom: 30px; margin-left:0px;}
 #HrLine img{ width:100%;}
 #LoginFbGPlusDiv{ width:186px;}
 /*Login Popup*/	
 
 /*Register Popup*/
-#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; }
+#RegisterBigDiv{ width:92%; height: 100%; padding-bottom: 35px; margin-left:0px;}
 #RegisterWithSocialBigDiv{ width: 195px;}
 #RegisterOr{width: 195px; margin-top: 15px;}
 #RegisterButton{padding-top: 30px;}
@@ -1899,7 +1943,7 @@ s
 #RegisterYouCard2{ width:95%;}
 .TextBoxRow{ margin-left:60px;}
 #SubmitButtonDiv2{ margin-left:90px; margin-top:15px !important;}
-#CrossButton{ margin-top:-8px !important;}
+/*#CrossButton{ margin-top:-8px !important;}*/
 /*WelcomeMessage popup*/
 #WelcomeMessage{ width:95%}
 /*Viparea*/
@@ -1961,13 +2005,13 @@ s
 /*Group Order Sidebar*/
 
 /*Login Popup*/	
-#CheckinBigDiv{ width:95%; height: 100%; padding-bottom: 30px;}
+#CheckinBigDiv{ width:92%; height: 100%; padding-bottom: 30px; margin-left:0px;}
 #HrLine img{ width:100%;}
 #LoginFbGPlusDiv{ width:186px;}
 /*Login Popup*/	
 
 /*Register Popup*/
-#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; }
+#RegisterBigDiv{ width:92%; height: 100%; padding-bottom: 35px; margin-left:0px;}
 #RegisterWithSocialBigDiv{ width: 195px;}
 #RegisterOr{width: 195px; margin-top: 15px;}
 #RegisterButton{padding-top: 30px;}
@@ -2092,7 +2136,7 @@ s
 #VipBorderDiv{ width:93%}
 .TextBoxRow{ margin-left:30px; width:200px}
 #SubmitButtonDiv2{ margin-left:52px; margin-top:0px !important;}
-#CrossButton{ margin-top:-8px !important;}
+/*#CrossButton{ margin-top:-8px !important;}*/
 #BecomeVipHeading{ font-size:26px}
 /*WelcomeMessage popup*/
 #WelcomeMessage{ width:95%}
@@ -2156,13 +2200,13 @@ s
 /*Group Order Sidebar*/
 
 /*Login Popup*/	
-#CheckinBigDiv{ width:95%; height: 100%; padding-bottom: 30px;}
+#CheckinBigDiv{ width:92%; height: 100%; padding-bottom: 30px; margin-left:0px;}
 #HrLine img{ width:100%;}
 #LoginFbGPlusDiv{ width:186px;}
 /*Login Popup*/	
 
 /*Register Popup*/
-#RegisterBigDiv{ width:95%; height: 100%; padding-bottom: 35px; }
+#RegisterBigDiv{ width:92%; height: 100%; padding-bottom: 35px; margin-left:0px; }
 #RegisterWithSocialBigDiv{ width: 195px;}
 #RegisterOr{width: 195px; margin-top: 15px;}
 #RegisterButton{padding-top: 30px;}
@@ -2289,7 +2333,7 @@ s
 #VipBorderDiv{ width:93%}
 .TextBoxRow{ margin-left:30px; width:200px}
 #SubmitButtonDiv2{ margin-left:52px; margin-top:0px !important;}
-#CrossButton{ margin-top:-8px !important;}
+/*#CrossButton{ margin-top:-8px !important;}*/
 #BecomeVipHeading{ font-size:26px}
 /*WelcomeMessage popup*/
 #WelcomeMessage{ width:95%}

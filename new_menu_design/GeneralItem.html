@@ -14,19 +14,37 @@
     <script>
 $(document).ready(function(){
 						   
+	/*$("#LoginPopup").click(function(){
+		$('body').addClass('BodyColor');	
+		$('.Cross').click(function()
+			{
+				$('body').removeClass('BodyColor');
+			});
+	});
+	
+	$("#RegisterPopup").click(function(){
+		$('body').addClass('BodyColor');	
+		$('.Cross').click(function()
+			{
+				$('body').removeClass('BodyColor');
+			});
+	});*/
+	
 	$("#LoginPopup").click(function(){
-    	$("#CheckinBigDiv").fadeIn() && $("#RegisterBigDiv").fadeOut();
+    	$("#CheckinBigDiv").fadeIn(500) && $("#RegisterBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#CheckinBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
 	$("#RegisterPopup").click(function(){
-    	$("#RegisterBigDiv").fadeIn() && $("#CheckinBigDiv").fadeOut();
+    	$("#RegisterBigDiv").fadeIn(500) && $("#CheckinBigDiv").fadeOut() && $('body').addClass('BodyColor');
 		$('.Cross').click(function()
 			{
 				$('#RegisterBigDiv').fadeOut();
+				$('body').removeClass('BodyColor');
 			});
   	});	
 	
@@ -64,6 +82,14 @@ $(document).ready(function(){
 				$('#ComplementryItemPopup').fadeOut();
 			});
   	});	
+	
+	$("#FrontendTab1").css("background-color","#ebebeb")&& $("#FrontendTab2").css("background","none")
+  	$("#FrontendTab1").click(function(){
+    	$("#FrontendTab1").css("background-color","#ebebeb")&& $("#FrontendTab2").css("background","none")
+  });
+  $("#FrontendTab2").click(function(){
+    	$("#FrontendTab2").css("background-color","#ebebeb")&& $("#FrontendTab1").css("background","none")
+  });
 	
 });
 </script>
@@ -160,17 +186,15 @@ $(document).ready(function(){
                             	<span class="SpanInputNumber"><input type="number" min="0" class="InputNumber"></span>
                                 <span class="SpanCalculatedValue">$6.99</span>
                             </div>
-                            <div id="For">For?:</div>
+                            <div id="For">Who is this item for?</div>
                             <div id="ForTextBoxDiv"><input type="text" class="ForTextBox"></div>
                         </div>
                     </div>
                     <div class="clear"></div>
                     <div class="PopupSeperator"><img src="Images/PopupSeperator.png"></div>
                     <div id="ChooseToopingBigDiv">
-                   <div class="NewPopupInnerDivWithHeading">	
                     	<div class="ChooseToopingHeading">Choose Toppings<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                        
-                    <div class="NewPopupInnerDiv">
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
@@ -220,11 +244,8 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Hot Sauce</span>
                             </div>
                         </div>
-                      </div>
-                     </div> 
-                     <div class="NewPopupInnerDivWithHeading"> 
                         <div class="ChooseToopingHeading">Choose Bun<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-					 <div class="NewPopupInnerDiv">
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
@@ -235,12 +256,9 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Ciabatta Roll - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
                             </div>
                         </div>
-                      </div>
-                      </div>
-                      <div class="MusteredSeperator" style="margin-top: 15px; width:100%;"></div>
-                      <div class="NewPopupInnerDivWithHeading">
-                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                        <div class="NewPopupInnerDiv">
+                        
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
@@ -251,11 +269,9 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Ranch</span>
                             </div>
                         </div>
-                       </div>
-                       </div>
-                       <div class="NewPopupInnerDivWithHeading">
+                        
                         <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                        <div class="NewPopupInnerDiv">
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
@@ -266,22 +282,24 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Ranch</span>
                             </div>
                         </div>
-                       </div>
-                       </div>
                         <div id="SpecialInstruction">
-                         <div id="SpecialInstructionsLeftDiv">
                         	<div id="SpecialInstructionsText">Special Instructions:</div>
                             <div id="SpecialTextarea"><textarea class="SpecialTextarea"></textarea></div>
-                         </div>
-                        <div id="SpecialInstructionsRightDiv">
+                        </div>
                         <div class="clear"></div>
                         <div id="SaveChangesMidDiv"><input type="submit" value="Add to Cart" style="width: 135px;" class="AddNewCardButton SaveChangesChangePassword"></div>
-                        <div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>
-                        </div><!--RightDiv-->
-                        </div><!--SpecialInsDiv-->
+                        <!--<div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>-->
                     </div>
                     <div id="CustomerAlsoOrderedText">Customers also ordered:</div>
+                 
+                 
                     <div id="CustomersAlsoOrderedDiv">
+                    
+                    
+                    
+                    
+                    
+                    
                     	<div class="OrderedItemsDiv">
                         	<div class="OrderItemImg"><img src="Images/OrderFries.png" class="OrderItemImgSize"></div>
                             <div class="OrderItemName">Large Fry</div>
@@ -305,8 +323,20 @@ $(document).ready(function(){
                         </div>
                     </div>
                 </div>
+               
+               
+               
+               
+               
                 <!--No Special Elements -->
-                <div id="ComplementryItemPopupNoSpecialElements" style=" display:none; ">
+               
+               
+               
+               
+               
+               
+               
+                <div id="ComplementryItemPopupNoSpecialElements" style=" display:none ">
                 	<div id="ComplementryItemPopupHeading">
                     	<span class="SpanComplementryItemPopupHeading">Burger</span>
                         <span class="SpanSpanComplementryItemPopupBadge"><img src="Images/PopularBadge.png"></span>
@@ -321,7 +351,7 @@ $(document).ready(function(){
                                 <span class="SpanCalculatedValueNoSpecial">$6.99</span>
                             </div>
                             <div id="ForNoSpecialDiv">
-                            	<div id="For">For?:</div>
+                            	<div id="For">Who is this item for?</div>
                             	<div id="ForTextBoxDiv"><input type="text" class="ForTextBox"></div>
                             </div>
                         <!--</div>-->
@@ -330,10 +360,9 @@ $(document).ready(function(){
                     <div class="clear"></div>
                     <div class="PopupSeperator"><img src="Images/PopupSeperator.png"></div>
                     <div id="ChooseToopingBigDiv">
-                      <div class="NewPopupInnerDivWithHeading">
                     	<div class="ChooseToopingHeading">Choose Toppings<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-					  <div class="NewPopupInnerDiv">
-                         <div class="ToopingContent">
+                        <div class="MusteredSeperator"></div>
+                        <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
                                 <span class="SpanToppingItemText">Lettuce</span>
@@ -382,11 +411,8 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Hot Sauce</span>
                             </div>
                         </div>
-                      </div>
-                      </div>
-                      <div class="NewPopupInnerDivWithHeading">
                         <div class="ChooseToopingHeading">Choose Bun<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                      <div class="NewPopupInnerDiv">
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="radio" name="bun"></span>
@@ -397,12 +423,9 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Ciabatta Roll - <span class="SpanAddPrice"><i>add $2.00</i></span></span>
                             </div>
                         </div>
-                      </div>
-                      </div>  
-                      <div class="MusteredSeperator" style="width:100%; margin-top:15px;"></div>
-                      <div class="NewPopupInnerDivWithHeading">
-                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                      <div class="NewPopupInnerDiv">  
+                        
+                        <div class="ChooseToopingHeading">Choose Up to 2 Sauces<span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
@@ -413,11 +436,9 @@ $(document).ready(function(){
                                 <span class="SpanToppingItemText">Ranch</span>
                             </div>
                         </div>
-                      </div>
-                      </div>
-                      <div class="NewPopupInnerDivWithHeading">  
+                        
                         <div class="ChooseToopingHeading">Choose Up to 2 Sauces<i class="EachAdditional"> (each additional sauce add $.50)</i><span class="SpanClearTooping"><a href="#" class="ClearToopingLink">Clear</a></span></div>
-                        <div class="NewPopupInnerDiv">
+                        <div class="MusteredSeperator"></div>
                         <div class="ToopingContent">
                         	<div class="ToppingItemsDiv">
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
@@ -427,8 +448,6 @@ $(document).ready(function(){
                             	<span class="SpanToppingItemRadio"><input type="checkbox"></span>
                                 <span class="SpanToppingItemText">Ranch</span>
                             </div>
-                        </div>
-                        </div>
                         </div>
                         <div id="SpecialInstruction">
                         	<div id="SpecialInstructionsText">Special Instructions:</div>
@@ -436,13 +455,13 @@ $(document).ready(function(){
                         </div>
                         <div class="clear"></div>
                         <div id="SaveChangesMidDiv"><input type="submit" value="Add to Cart" style="width: 135px;" class="AddNewCardButton SaveChangesChangePassword"></div>
-                        <div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>
+                        <!--<div id="OrderCancel"><a href="#" class="OrderCancel">Cancel</a></div>-->
                     </div>
                 </div>
                 <!--No Special Elements -->
             	<div id="CheckinBigDiv" style="display:none;">
                 	<div id="LoginHeading">Log In</div>
-                    <div id="CrossButton" style="margin-top: -15px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
+                    <div id="CrossButton" style="margin-top: -10px; margin-right: 20px;"><img src="Images/CrossButton.png" class="Cross"></div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.<br>Don’t have any account?  <a href="#" class="RegisterinLine">Register Now!</a></div>
                     <div id="LoginFbGPlusDiv">
                     	<div id="LoginWithFb"><a href="#"><img src="Images/LoginWithFb.png"></a></div>
@@ -460,12 +479,12 @@ $(document).ready(function(){
                     </div>
                     <div id="HrLine"><img src="Images/HrLine.png"></div>
                     <div id="Or">or</div>
-                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest">Proceed as a Guest!</a></div>
+                    <div id="ProceedAsGuest"><a href="#" class="ProceedAsGuest" style="float:left">Proceed as a Guest!</a></div>
                 </div>
                 
                 <div id="RegisterBigDiv" style="display:none;">
             		<div id="CrossButton" style="margin-top: 15px; margin-right: 15px;"><img src="Images/CrossButton.png" class="Cross"></div>
-                    <div id="LoginHeading" style="margin-top:-15px;">Register</div>
+                    <div id="LoginHeading" style="margin-top:-5px;">Register</div>
                     <div id="SaveFavourite">Save Favorite orders, delivery info and so much more.</div>
                     <div id="RegisterWithSocialBigDiv">
                     	<div id="RegisterWithFbGPlus">
@@ -482,7 +501,7 @@ $(document).ready(function(){
                         </form></div>
                     </div>
                     <div class="clear"></div>
-                    <div id="RegisterButton"><input type="submit" value="Register" class="RegisterButton"></div>
+                    <div id="RegisterButton" style="float:none;"><input type="submit" value="Register" class="RegisterButton"></div>
                     
                     <div id="AlreadyHaveAccount">Already have an account yet? <a href="#" class="RegisterLogin">Log in!</a></div>
            	 	</div>
