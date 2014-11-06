@@ -339,7 +339,7 @@ if($_SESSION['admin_type']!="admin")
       <th width="113"><strong>License status</strong></th>
       <th width="113"><strong>Resturant</strong></th>
       <th width="113"><strong>Activation Date</strong></th>
-      <th width="250"><strong>Action</strong></th>
+      <th width="150"><strong>Action</strong></th>
 
     </tr>
     <?  if($_SESSION['admin_type']=="store owner")
@@ -386,17 +386,19 @@ if($_SESSION['admin_type']!="admin")
       <td class="links_class">
 
 
-
+<?if($_SESSION['admin_type'] == 'reseller')
+          {?>
 		  <?php if($licenseRs->status == 'activated') { ?>
               <a href="?mod=changepass&action=suspend&license_id=<?=$licenseRs->license_key ?>&rest_id=<?=$licenseRs->resturant_id?>" onClick="return confirm('Are you sure you want to change the status of this License')" style="text-decoration:underline;display: block;float: left;width: 50px;">Suspend</a>
           <?php } else if( $licenseRs->status == 'suspended' ) { ?>
            	<span class="openFancyDiv" style="text-decoration:underline;color:#0000ee;cursor:pointer;display: block;float: left;width: 50px;" license_id="<?=$licenseRs->license_key ?>">Activate</span>
 		  <? }else if( $licenseRs->status == 'unused' ) { ?>
           &nbsp;&nbsp;<a href="?action=del<?= $_SESSION['admin_type'] == 'admin' ? "&reseller_id=".$reseller_id:""?>&license_id=<?=$licenseRs->license_key  ?>"  onclick="return confirm('Are you sure you want to Delete this License')" style="text-decoration:underline;">Delete</a>
-        <? }?>
+        <? }}?>
+
           <?if($_SESSION['admin_type'] == 'store owner')
           {?>
-            <span class="change_plan" style="text-decoration:underline;color:#0000ee;cursor:pointer;margin-left: 21px;display: block;float: left;width: 85px;" license_id="<?=$licenseRs->license_key ?>">Change Plan</span>
+<!--            <span class="change_plan" style="text-decoration:underline;color:#0000ee;cursor:pointer;margin-left: 21px;display: block;float: left;width: 85px;" license_id="<?=$licenseRs->license_key ?>">Change Plan</span>-->
             <a href="loadSubcription.php?license_id=<?=$licenseRs->license_key ?>&<?php echo time() ?>" style="text-decoration:underline;color:#0000ee;cursor:pointer;margin-left: 12px;" class="loadSubscripstion">View</a>
 
          <?}?>

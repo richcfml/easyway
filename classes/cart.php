@@ -279,7 +279,7 @@ class cart{
 								if ($discount_cat==$product->category_id){
 									 
 									if ($discount_in == "%") {
-											$this->coupon_discount += round((($this->sub_total/100)*$coupon_discount),2);
+											$this->coupon_discount += round(((($product->sale_price*$product->quantity)/100)*$coupon_discount),2);
 										} else if ($discount_in == "$") {
 											$this->coupon_discount += $coupon_discount;
 										}
