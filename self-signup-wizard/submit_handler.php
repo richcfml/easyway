@@ -3,12 +3,15 @@ function get_file_extesion($file_name) {
 	return substr($file_name, strrpos($file_name, '.')+1);
 }
 
-function prepareStringForMySQL($string){
-    $string=str_replace ( "\r" , "<br/>",$string);
-    $string=str_replace ( "\n" , "<br/>",$string);
-    $string=str_replace ( "\t" , " ",$string);
-    $string=mysql_real_escape_string($string);
-    return $string;
+if (!(function_exists("prepareStringForMySQL")))
+{
+	function prepareStringForMySQL($string){
+		$string=str_replace ( "\r" , "<br/>",$string);
+		$string=str_replace ( "\n" , "<br/>",$string);
+		$string=str_replace ( "\t" , " ",$string);
+		$string=mysql_real_escape_string($string);
+		return $string;
+	}
 }
 
 extract($_REQUEST);
