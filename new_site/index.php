@@ -115,7 +115,7 @@
 			</script>   
         
 			<div style="float:left">
-                <div class="footer_Logo_Left" style="width: 150px;height: 150px;"><a href="http://easywayordering.com"><img src="/images/Footer_Left_Logo.png" width="150px" height="150px" border="0"></a></div>
+                <div class="footer_Logo_Left"><a href="http://easywayordering.com"><img src="/images/Footer_Left_Logo.png" border="0" width="150px" height="60px"></a></div>
 				<div class="footer_Text_Left">Powered by Easy Way Ordering</div>
 			</div>
 		  
@@ -125,7 +125,7 @@
 			{ 
 			?>
            	<div style="float:right;">
-                    <div class="footer_Logo_Left" style="width: 150px;height: 150px;"><a href="http://<?=$objRestaurant->reseller->company_logo_link?>"><img  src=<?=$imgPath?> border="0" width="150px" height="150px" /></a></div>
+                    <div class="footer_Logo_Left"><a href="http://<?=$objRestaurant->reseller->company_logo_link?>"><img  src=<?=$imgPath?> border="0" width="150px" height="60px"></a></div>
            		<div class="footer_Text_Left">Distributed by <?=$objRestaurant->reseller->company_name?></div>
            	</div>
 			<?php 

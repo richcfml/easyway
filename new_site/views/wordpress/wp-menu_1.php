@@ -122,7 +122,7 @@ $loop_index_check = FALSE;
                 $('<img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
             }
         }
-        $('#retail_price').html('$' + productDetails.retail_price);
+        $('#retail_price').html('<?=$currency?>' + productDetails.retail_price);
         $('#product_sale_price').val(productDetails.sale_price);
     }
     
@@ -284,7 +284,7 @@ $loop_index_check = FALSE;
                             {
                                 if (mStrRe=='<tr><td colspan="3" style="width: 100%; font-size: 11px !important; color: red;">&nbsp;<i>')
                                 {
-                                    mStrRe = mStrRe + '$'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes';
+                                    mStrRe = mStrRe + '<?=$currency?>'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes';
                                 }
                                 else
                                 {
@@ -381,16 +381,16 @@ $loop_index_check = FALSE;
                             if (!isNaN(attribute_option.Price) && attribute_option.Price != 0) {
                                 if (attribute_option.Price[0] == '-') {
                                     if (attribute_option.add_to_price == 1 || attribute_option.add_to_price == '') {
-                                        attribute_option.displayprice = "<span class='red'> - Subtract $" + attribute_option.Price.replace("/[^0-9.]+/", '') + "</span>";
+                                        attribute_option.displayprice = "<span class='red'> - Subtract <?=$currency?>" + attribute_option.Price.replace("/[^0-9.]+/", '') + "</span>";
                                     } else {
-                                        attribute_option.displayprice = "<span class='red'>  $" + (parseFloat(attribute_option.Price) + parseFloat(productDetails.retail_price))+''.replace("/[^0-9.]+/", '') + "</span>";
+                                        attribute_option.displayprice = "<span class='red'>  <?=$currency?>" + (parseFloat(attribute_option.Price) + parseFloat(productDetails.retail_price))+''.replace("/[^0-9.]+/", '') + "</span>";
                                     }
                                 } else {
                                     attribute_option.add_to_price;
                                     if (attribute_option.add_to_price == 1 || attribute_option.add_to_price == '') {
-                                        attribute_option.displayprice = "<span class='red'> + Add $" + attribute_option.Price.replace("/[^0-9.]+/", '') + "</span>";
+                                        attribute_option.displayprice = "<span class='red'> + Add <?=$currency?>" + attribute_option.Price.replace("/[^0-9.]+/", '') + "</span>";
                                     } else {
-                                        attribute_option.displayprice = "<span class='red'>  $" + (parseFloat(attribute_option.Price) + parseFloat(productDetails.retail_price))+''.replace("/[^0-9.]+/", '') + "</span>";
+                                        attribute_option.displayprice = "<span class='red'>  <?=$currency?>" + (parseFloat(attribute_option.Price) + parseFloat(productDetails.retail_price))+''.replace("/[^0-9.]+/", '') + "</span>";
                                     }
                                 }
                             } else {
@@ -411,10 +411,11 @@ $loop_index_check = FALSE;
                                         if (!isNaN(attribute_option.Price))
                                         {
                                             mPreviousPrice = $('#retail_price').html();
-                                            mPreviousPrice = mPreviousPrice.replace('$', '');
+                                            mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+											mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
                                             mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price);
                                             mPreviousPrice = mPreviousPrice.toFixed(2);
-                                            mPreviousPrice = '$'+mPreviousPrice;
+                                            mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
                                             $('#retail_price').html(mPreviousPrice);
                                         }
                                     }
@@ -438,7 +439,8 @@ $loop_index_check = FALSE;
 												if (mCheckCount>mLimit)
 												{
 													mPreviousPrice = $('#retail_price').html();
-													mPreviousPrice = mPreviousPrice.replace('$', '');
+													mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+													mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 													if (isNumeric(attribute_option.Price))
 													{
 														mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price) + parseFloat(mLimitPrice);
@@ -448,14 +450,15 @@ $loop_index_check = FALSE;
 														mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(mLimitPrice);
 													}
 													mPreviousPrice = mPreviousPrice.toFixed(2);
-													mPreviousPrice = '$'+mPreviousPrice;
+													mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 													$('#retail_price').html(mPreviousPrice);
 													mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 												}
 												else
 												{
 													mPreviousPrice = $('#retail_price').html();
-													mPreviousPrice = mPreviousPrice.replace('$', '');
+													mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+													mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 													if (isNumeric(attribute_option.Price))
 													{
 														mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price);
@@ -466,7 +469,7 @@ $loop_index_check = FALSE;
 													}
 
 													mPreviousPrice = mPreviousPrice.toFixed(2);
-													mPreviousPrice = '$'+mPreviousPrice;
+													mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 													$('#retail_price').html(mPreviousPrice);
 													mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 												}
@@ -474,7 +477,8 @@ $loop_index_check = FALSE;
 											else
 											{
 												mPreviousPrice = $('#retail_price').html();
-												mPreviousPrice = mPreviousPrice.replace('$', '');
+												mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+												mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 												if (isNumeric(attribute_option.Price))
 												{
 													mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price);
@@ -486,7 +490,7 @@ $loop_index_check = FALSE;
 												
 												
 												mPreviousPrice = mPreviousPrice.toFixed(2);
-												mPreviousPrice = '$'+mPreviousPrice;
+												mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 												$('#retail_price').html(mPreviousPrice);
 												mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 											}
@@ -500,7 +504,8 @@ $loop_index_check = FALSE;
 	                                        if (mCheckCount>mLimit)
 	                                        {
 	                                            mPreviousPrice = $('#retail_price').html();
-	                                            mPreviousPrice = mPreviousPrice.replace('$', '');
+	                                            mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+												mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 												if (isNumeric(attribute_option.Price))
 												{
 		                                            mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price) + parseFloat(mLimitPrice);
@@ -511,14 +516,15 @@ $loop_index_check = FALSE;
 												}
 
 	                                            mPreviousPrice = mPreviousPrice.toFixed(2);
-	                                            mPreviousPrice = '$'+mPreviousPrice;
+	                                            mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 	                                            $('#retail_price').html(mPreviousPrice);
 	                                            mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 	                                        }
 	                                        else
 	                                        {
 	                                            mPreviousPrice = $('#retail_price').html();
-	                                            mPreviousPrice = mPreviousPrice.replace('$', '');
+	                                            mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+												mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 												if (isNumeric(attribute_option.Price))
 												{
 		                                            mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price);
@@ -529,7 +535,7 @@ $loop_index_check = FALSE;
 												}
 
 	                                            mPreviousPrice = mPreviousPrice.toFixed(2);
-	                                            mPreviousPrice = '$'+mPreviousPrice;
+	                                            mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 	                                            $('#retail_price').html(mPreviousPrice);
 	                                            mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 	                                        }
@@ -537,7 +543,8 @@ $loop_index_check = FALSE;
 	                                    else
 	                                    {
 	                                        mPreviousPrice = $('#retail_price').html();
-	                                        mPreviousPrice = mPreviousPrice.replace('$', '');
+	                                        mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+											mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 											if (isNumeric(attribute_option.Price))
 											{
 		                                        mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(attribute_option.Price);
@@ -548,7 +555,7 @@ $loop_index_check = FALSE;
 											}
 
 	                                        mPreviousPrice = mPreviousPrice.toFixed(2);
-	                                        mPreviousPrice = '$'+mPreviousPrice;
+	                                        mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 	                                        $('#retail_price').html(mPreviousPrice);
 	                                        mTxtCheckedLoad = mTxtCheckedLoad+attribute_option.id+",";
 	                                    }
@@ -607,10 +614,11 @@ $loop_index_check = FALSE;
                                 {
                                     selected = 'checked="checked"';
                                     mPreviousPrice = $('#retail_price').html();
-                                    mPreviousPrice = mPreviousPrice.replace('$', '');
+                                    mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+									mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
                                     mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(item[productId]['0'].retail_price);
                                     mPreviousPrice = mPreviousPrice.toFixed(2);
-                                    mPreviousPrice = '$'+mPreviousPrice;
+                                    mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
                                     $('#retail_price').html(mPreviousPrice);
                                 }
                                 if (index % 3 == 0) {
@@ -782,7 +790,8 @@ $(document).ready(function()
 				if (isNumeric(mPrice))
 				{
 					mPreviousPrice = $('span[id=retail_price]:last').html();
-					mPreviousPrice = mPreviousPrice.replace('$', '');
+					mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+					mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 					mTxtChecked = $('input[id=txtAssoc]:last').val();
 					
 					if (mChecked==1)
@@ -799,7 +808,7 @@ $(document).ready(function()
 					}
 				}
 				mPreviousPrice = mPreviousPrice.toFixed(2);
-				$('span[id=retail_price]:last').html("$"+mPreviousPrice);
+				$('span[id=retail_price]:last').html("<?=$currency?>"+mPreviousPrice);
 			}
 		});
 		
@@ -826,7 +835,8 @@ $(document).ready(function()
 				if (isNumeric(mPrice))
 				{
 					mPreviousPrice = $('span[id=retail_price]:last').html();
-					mPreviousPrice = mPreviousPrice.replace('$', '');
+					mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+					mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 					mTxtChecked = $('input[id=txtChecked'+mAttributeID+']:last').val();
 					if (mChecked==1)
 					{
@@ -873,13 +883,14 @@ $(document).ready(function()
 						$('input[id=txtChecked'+mAttributeID+']:last').val(mTxtChecked);
 					}
 					mPreviousPrice = mPreviousPrice.toFixed(2);
-					mPreviousPrice = '$'+mPreviousPrice;
+					mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 					$('span[id=retail_price]:last').html(mPreviousPrice);
 				}
 				else
 				{
 					mPreviousPrice = $('span[id=retail_price]:last').html();
-					mPreviousPrice = mPreviousPrice.replace('$', '');
+					mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+					mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 					mTxtChecked = $('input[id=txtChecked'+mAttributeID+']:last').val();
 					if (mChecked==1)
 					{
@@ -910,14 +921,15 @@ $(document).ready(function()
 						$('input[id=txtChecked'+mAttributeID+']:last').val(mTxtChecked);
 					}
 					mPreviousPrice = mPreviousPrice.toFixed(2);
-					mPreviousPrice = '$'+mPreviousPrice;
+					mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 					$('span[id=retail_price]:last').html(mPreviousPrice);
 				}
 			}
 			else
 			{
 				mPreviousPrice = $('span[id=retail_price]:last').html();
-				mPreviousPrice = mPreviousPrice.replace('$', '');
+				mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+				mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 				mTxtChecked = $('input[id=txtChecked'+mAttributeID+']:last').val();
 				if (mChecked==1)
 				{
@@ -948,7 +960,7 @@ $(document).ready(function()
 					$('input[id=txtChecked'+mAttributeID+']:last').val(mTxtChecked);
 				}
 				mPreviousPrice = mPreviousPrice.toFixed(2);
-				mPreviousPrice = '$'+mPreviousPrice;
+				mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 				$('span[id=retail_price]:last').html(mPreviousPrice);
 			}
 		});
@@ -971,7 +983,8 @@ $(document).ready(function()
 					if ($.trim(mTxtChecked).indexOf(mLoopID+",")>=0)
 					{
 						mPreviousPrice = $('span[id=retail_price]:last').html();
-						mPreviousPrice = mPreviousPrice.replace('$', '');
+						mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+						mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 						mPreviousPrice = parseFloat(mPreviousPrice) - parseFloat(mLoopPrice);
 
 						if ($.trim(mPrice)!="")
@@ -980,7 +993,7 @@ $(document).ready(function()
 						}
 						
 						mPreviousPrice = mPreviousPrice.toFixed(2);
-						mPreviousPrice = '$'+mPreviousPrice;
+						mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 						$('input[id=txtChecked'+mAttributeID+']:last').val(mID+",")
 						$('span[id=retail_price]:last').html(mPreviousPrice);
 						return false;
@@ -990,7 +1003,8 @@ $(document).ready(function()
 			else
 			{
 				mPreviousPrice = $('span[id=retail_price]:last').html();
-				mPreviousPrice = mPreviousPrice.replace('$', '');
+				mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+				mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 
 				if ($.trim(mPrice)!="")
 				{
@@ -998,7 +1012,7 @@ $(document).ready(function()
 				}
 				
 				mPreviousPrice = mPreviousPrice.toFixed(2);
-				mPreviousPrice = '$'+mPreviousPrice;
+				mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 				$('input[id=txtChecked'+mAttributeID+']:last').val(mID+",")
 				$('span[id=retail_price]:last').html(mPreviousPrice);
 			}
@@ -1024,7 +1038,8 @@ $(document).ready(function()
 							if ($.trim($("#"+mTextboxId).val()).indexOf(mOptionIDLoop+",")>=0)
 							{
 								mPreviousPrice = $('span[id=retail_price]:last').html();
-								mPreviousPrice = mPreviousPrice.replace('$', '');
+								mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+								mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 								mPreviousPrice = parseFloat(mPreviousPrice) - parseFloat(mPriceLoop);
 		
 								if ($.trim(mPrice)!="")
@@ -1033,7 +1048,7 @@ $(document).ready(function()
 								}
 								
 								mPreviousPrice = mPreviousPrice.toFixed(2);
-								mPreviousPrice = '$'+mPreviousPrice;
+								mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 								$("#"+mTextboxId).val($("#"+mTextboxId).val().replace(mOptionIDLoop+",", ""));
 								$("#"+mTextboxId).val(mOptionID+",")
 								$('span[id=retail_price]:last').html(mPreviousPrice);
@@ -1047,10 +1062,11 @@ $(document).ready(function()
 					{
 						$("#"+mTextboxId).val($('option:selected', this).attr('optionid')+",")
 						mPreviousPrice = $('span[id=retail_price]:last').html();
-						mPreviousPrice = mPreviousPrice.replace('$', '');
+						mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+						mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 						mPreviousPrice = parseFloat(mPreviousPrice) + parseFloat(mPrice);
 						mPreviousPrice = mPreviousPrice.toFixed(2);
-						mPreviousPrice = '$'+mPreviousPrice;
+						mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 						$('span[id=retail_price]:last').html(mPreviousPrice);
 					}
 				}
@@ -1069,13 +1085,14 @@ $(document).ready(function()
 							if ($.trim($("#"+mTextboxId).val()).indexOf($.trim(mOptionIDLoop)+",")>=0)
 							{
 								mPreviousPrice = $('span[id=retail_price]:last').html();
-								mPreviousPrice = mPreviousPrice.replace('$', '');
+								mPreviousPrice = mPreviousPrice.replace('<?=$currency?>', '');
+								mPreviousPrice = mPreviousPrice.replace(/\u00A3/g, '');
 								if (isNumeric(mPriceLoop))
 								{
 									mPreviousPrice = parseFloat(mPreviousPrice) - parseFloat(mPriceLoop);
 									mPreviousPrice = mPreviousPrice.toFixed(2);
 								}
-								mPreviousPrice = '$'+mPreviousPrice;
+								mPreviousPrice = '<?=$currency?>'+mPreviousPrice;
 								$("#"+mTextboxId).val($("#"+mTextboxId).val().replace(mOptionIDLoop+",", ""));
 								$('span[id=retail_price]:last').html(mPreviousPrice);
 							}
@@ -1191,7 +1208,7 @@ $(document).ready(function()
                                 document.form1.submit();
                             }
                         } else if (subtotal < minitotal && receiving_method == 'delivery') {
-                            alert('$' + minitotal + ' of food required to checkout. Please add more items');
+                            alert('<?=$currency?>' + minitotal + ' of food required to checkout. Please add more items');
                         }
                     }
 
