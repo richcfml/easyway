@@ -184,7 +184,7 @@
 						<a rel="facebox" href="<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&ifrm=favdetail&ajax=1&favoriteindex=<?=$mCount?>" class="favTitle"><?= $favorite->title ?></a>
 					</td>
 					<td align="left" valign="middle" width="12%">
-						<span class="favPrice"><?= '$'.$mTotal ?></span>
+						<span class="favPrice"><?= $currency.$mTotal ?></span>
 					</td>
 					<td align="center" valign="middle" width="52%">
 						<a rel="facebox" href="<?=$SiteUrl?><?=$objRestaurant->url?>/?item=favdetail&ifrm=favdetail&ajax=1&favoriteindex=<?=$mCount?>" class="favTitle">view order / reorder</a>

@@ -177,7 +177,7 @@ $index=-1;
         </li>
         <li>
             <div class="tiptext"><input type="radio" name="rbd_tip"  value="2" class="rdbclass"/>Enter my own Amount:
-     <input type="text" id="delivery_tip" value="$0" size="4" maxlength="4" name="delivery_tip" class="valid inputtiptext" style="margin-left: 21px;">
+     <input type="text" id="delivery_tip" value="<?=$currency?>0" size="4" maxlength="4" name="delivery_tip" class="valid inputtiptext" style="margin-left: 21px;">
    <input type="button" name="btn_delivery_tip" id="btn_delivery_tip" value="Add gratuity" class="button small blue inputtip"></div>
     </li>
     <li>
