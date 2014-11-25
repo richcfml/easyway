@@ -295,7 +295,7 @@ $loop_index_check = FALSE;
                                 }
                                 else
                                 {
-                                    mStrRe = mStrRe + '&nbsp;&nbsp;-&nbsp;&nbsp;($'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes)';
+                                    mStrRe = mStrRe + '&nbsp;&nbsp;-&nbsp;&nbsp;(<?=$currency?>'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes)';
                                 }
                             }
                         }

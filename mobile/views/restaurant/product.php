@@ -446,7 +446,7 @@ if (isset($_POST['addtocart']))
                 {
 					if (($mLimit>0) && ($mLimitPrice>0))
 					{
-						$mStrRe = $mStrRe.'$'.$mLimitPrice.' will be added for each attribute on more than '.$mLimit.' attributes';	
+						$mStrRe = $mStrRe.$currency.$mLimitPrice.' will be added for each attribute on more than '.$mLimit.' attributes';	
 					}
 				}
                 $attribute_index +=1;
