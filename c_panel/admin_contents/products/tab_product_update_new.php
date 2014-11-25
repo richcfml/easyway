@@ -362,7 +362,7 @@ if (isset($_GET['prd_id'])) {
                             <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name" >
                         </td>
                         <td>
-                            <input type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:$4.50)">
+                            <input onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:<?=$currency?>4.50)">
                         </td>
                     </tr>
                     <tr><td>

@@ -456,7 +456,7 @@ setTimeout("leave()", 2000);
             </tr>
             <tr id="selected_items2" style="display:<?=$none_str?>; border:#DFDFDF solid thin; padding:5px;">
               <td width="120px" ><input type="radio"  name="type" id="type3" value="3" />
-                &nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: $1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
+                &nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: <?=$currency?>1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
               <td><input name="coupon_discount_type3" type="text" size="5" id="coupon_discount_type3" value="<?=@$coupon_discount_type3?>" onfocus="radioselect('type3');">
                 &nbsp; OFF any
                 <? if($_SESSION['couponitem3'] != "")  

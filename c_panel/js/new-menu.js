@@ -401,11 +401,6 @@ $.noty.defaults.template_menu_delete= '<div id="popup_box" class="popup_box" sty
          $('#item_name').attr('placeholder','');
      });
 
-     $( "#price" ).blur(function() {
-
-         $('#price').attr('placeholder','Price(ex:$4.50)');
-     });
-
      $( "#price" ).focus(function() {
 
          $('#price').attr('placeholder','');

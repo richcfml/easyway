@@ -11,7 +11,7 @@
      <input type="text" id="item_name" name="item_name" style="margin-left: 107px;margin-top: 30px;width:360px;height: 36px;padding:8px" placeholder="Item Name">
      </td>
      <td>
-     <input type="text" id="price" name="price" style="margin-left: 38px;margin-top: 30px;width: 237px;height: 36px;padding: 8px;" placeholder="Price(ex: $10.00) ">
+     <input type="text" id="price" name="price" style="margin-left: 38px;margin-top: 30px;width: 237px;height: 36px;padding: 8px;" placeholder="Price(ex: <?=$currency?>10.00) " onblur="$('#price').attr('placeholder','Price(ex: <?=$currency?>10.00)');">
     </td>
     </tr>
     <tr><td>

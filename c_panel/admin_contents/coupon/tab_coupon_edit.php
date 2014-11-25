@@ -331,7 +331,7 @@ document.onmousemove=positiontip
           </tr>
           <tr height="5px;"><td colspan="2"></td></tr>
           <tr id="selected_items2" style="display:<?=$none_str?>; border:#DFDFDF solid thin; padding:5px;">
-            <td width="120px" ><input type="radio"  name="type" id="type3" value="3" <? if ($coupon_type == 3) { ?> checked <? }?> />&nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: $1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
+            <td width="120px" ><input type="radio"  name="type" id="type3" value="3" <? if ($coupon_type == 3) { ?> checked <? }?> />&nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: <?=$currency?>1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
             <td><input name="coupon_discount_type3" type="text" size="5" id="coupon_discount_type3" value="<? if($coupon_type == 3) { echo @$coupon_discount; }?>" onfocus="radioselect('type3');"> OFF any 
              <? 
 			 $items_str2="";
