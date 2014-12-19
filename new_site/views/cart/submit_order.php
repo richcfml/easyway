@@ -32,14 +32,30 @@
 	$is_guest = 0;
 	Log::write(" In Submit Order","LoggedinUser Data:".print_r($loggedinuser,true),'order', 0 , 'user');
 //--------------------Start Nk(1-10-2014)--------------------------------------------------------	
-        if(isset($_POST['x_first_name']))
+        //Gulfam (19 December 2014) - Commenting below code of Naveed because its converting Billing address 
+        //as Delivery address - Start19122014
+        /*if(isset($_POST['x_first_name']))
         {
             $loggedinuser->street1=$_POST[x_address];
             $loggedinuser->cust_ord_city=$_POST[x_city];
             $loggedinuser->cust_ord_state=$_POST[x_state];        
             $loggedinuser->cust_ord_zip=$_POST[x_zip];
-        }
+        }*/
+        //End19122014
 //--------------------End Nk(1-10-2014)--------------------------------------------------------	                
+        //Gulfam - 19 December 2014    
+        //These billing variables don't have any use other than this and Thank you page
+        //Start
+        if(isset($_POST['x_first_name']))
+        {
+            $loggedinuser->billing_fname=$_POST[x_first_name];
+            $loggedinuser->billing_lname=$_POST[x_last_name];
+            $loggedinuser->billing_address=$_POST[x_address];
+            $loggedinuser->billing_city=$_POST[x_city];
+            $loggedinuser->billing_state=$_POST[x_state];        
+            $loggedinuser->billing_zip=$_POST[x_zip];
+        }    
+        //End
         if(isset($_POST['customer_name']))
 	{
 		$loggedinuser->	cust_your_name= trim($customer_name) ;
@@ -145,6 +161,11 @@
 	if(isset($_POST['special_notes']))
 	{
 		$del_special_notes=$_POST['special_notes'];
+	}
+	else if (isset($DeliveryInstructionsFO)) //Call from favorite Order/Rapid ReOrder module
+	{
+		$del_special_notes=$DeliveryInstructionsFO;
+		$serving_date = date('m-d-Y H:i');
 	}
 		 
 	$cart->invoice_number=$invoice_number;

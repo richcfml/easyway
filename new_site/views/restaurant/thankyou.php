@@ -342,13 +342,13 @@ else
 						<strong>Billing Information</strong>
 					</li>
 					<li>
-						<?= $loggedinuser->cust_your_name.' '.$loggedinuser->LastName ?>
+						<?= $loggedinuser->billing_fname.' '.$loggedinuser->billing_lname ?>
 					</li>
 					<li>
-						<?= $loggedinuser->street1 ." ". $loggedinuser->street2   ?>
+						<?= $loggedinuser->billing_address ?>
 					</li>
 					<li>
-						<?php echo $loggedinuser->cust_ord_city ." ". $loggedinuser->cust_ord_state ." ". $loggedinuser->cust_ord_zip; ?>
+						<?php echo $loggedinuser->billing_city ." ". $loggedinuser->billing_state ." ". $loggedinuser->billing_zip; ?>
 					</li>
 					<li> 
 						USA 

@@ -32,6 +32,15 @@ class users {
 	public $valuetec_points;
 	public $valuetec_reward;
 	public $valutec_registeration_date;
+        
+        //Gulfam - 19 December 2014 Follwing 6 billing variables are just to show billing information on 
+        //Thank you page. Other than Thanyou page there is no use of these variables
+        public $billing_fname;
+	public $billing_lname;
+	public $billing_address;
+	public $billing_city;
+	public $billing_state;
+        public $billing_zip;
 	
     public $delivery_address_choice;
 	 public $arrTokens;
@@ -122,7 +131,7 @@ class users {
 					Fax:  ". $objRestaurant->fax ;
 
 
-			  	$objMail->from="info@". $objRestaurant->name  .".com";
+			  	$objMail->from="info@easywayordering.com";
 				$objMail->sendTo($body,$subject,$email);
 				return true;
 			 }
