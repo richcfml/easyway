@@ -291,11 +291,11 @@ $loop_index_check = FALSE;
                             {
                                 if (mStrRe=='<tr><td colspan="3" style="width: 100%; font-size: 11px !important; color: red;">&nbsp;<i>')
                                 {
-                                    mStrRe = mStrRe + '<?=$currency?>'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes';
+                                    mStrRe = mStrRe + '<?=$currency?>'+mLimitPrice+' will be added for each additional selection';
                                 }
                                 else
                                 {
-                                    mStrRe = mStrRe + '&nbsp;&nbsp;-&nbsp;&nbsp;(<?=$currency?>'+mLimitPrice+' will be added for each attribute on more than '+mLimit+' attributes)';
+                                    mStrRe = mStrRe + '&nbsp;&nbsp;-&nbsp;&nbsp;(<?=$currency?>'+mLimitPrice+' will be added for each additional selection)';
                                 }
                             }
                         }

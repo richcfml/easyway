@@ -439,14 +439,14 @@ if (isset($_POST['addtocart']))
 				
 				if ($attribute->Required == 1)
                 {
-	                $mStrRe = 'Choose at least one';
+	                $mStrRe = 'Choose at least one. ';
                 }
 				
 				if ((trim($mLimit)!="") && (trim($mLimitPrice)!=""))
                 {
 					if (($mLimit>0) && ($mLimitPrice>0))
 					{
-						$mStrRe = $mStrRe.$currency.$mLimitPrice.' will be added for each attribute on more than '.$mLimit.' attributes';	
+						$mStrRe = $mStrRe.$currency.$mLimitPrice.' will be added for each additional selection';	
 					}
 				}
                 $attribute_index +=1;

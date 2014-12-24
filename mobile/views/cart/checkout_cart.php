@@ -68,13 +68,13 @@ $index=-1;
 <div>
 <div class="border_box left cart_stats" style="width:auto; margin-right:auto;">  
 <div class="bold strip">You chose: <span class="normal red"><?= $cart->delivery_type==cart::Delivery ?"Delivery":"Pickup" ?></span>
-<input type="hidden" name="customer_name"  value="<?=$loggedinuser->cust_your_name ?>" />
-<input type="hidden" name="customer_phone"  value="<?=$loggedinuser->cust_phone1 ?>" />
-<input type="hidden" name="customer_email"  value="<?=$loggedinuser->cust_email ?>" />
-<input type="hidden" name="customer_address"  value="<?=$loggedinuser->street1 ?>" />
-<input type="hidden" name="customer_city"  value="<?=$loggedinuser->cust_ord_city ?>" />
-<input type="hidden" name="customer_state"  value="<?=$loggedinuser->cust_ord_state ?>" />
-<input type="hidden" name="customer_zip"  value="<?=$loggedinuser->cust_ord_zip ?>" />
+<input type="hidden" name="customer_name" id="customer_name"  value="<?=$loggedinuser->cust_your_name ?>" />
+<input type="hidden" name="customer_phone" id="customer_phone" value="<?=$loggedinuser->cust_phone1 ?>" />
+<input type="hidden" name="customer_email" id="customer_email" value="<?=$loggedinuser->cust_email ?>" />
+<input type="hidden" name="customer_address" id="customer_address" value="<?=$loggedinuser->street1 ?>" />
+<input type="hidden" name="customer_city" id="customer_city" value="<?=$loggedinuser->cust_ord_city ?>" />
+<input type="hidden" name="customer_state" id="customer_state"  value="<?=$loggedinuser->cust_ord_state ?>" />
+<input type="hidden" name="customer_zip" id="customer_zip"  value="<?=$loggedinuser->cust_ord_zip ?>" />
 
 </div>
 
