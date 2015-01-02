@@ -106,6 +106,7 @@ class SMSTrace
 	{
 		global $cart, $loggedinuser, $objRestaurant, $function_obj, $objMail, $objGO3;
 		global $easyway_id, $GGe4URL, $AuthorizeDotNetSandBox, $AuthorizeDotNetTestRequest, $SureGateURL, $SureGateTestFlag;
+                $cdynePNRef="";
 		$this->reply_phone_number=$this->cydne->phonenumber;
 		$this->phone_number=$this->cydne->phonenumber;
 		
@@ -264,6 +265,8 @@ class SMSTrace
 											}
 											
 											include "new_site/views/cart/submit_order.php";
+                                                                                        $mSQL = "UPDATE ordertbl SET PNRef='".$cdynePNRef."' WHERE OrderID=".$cart->order_id;
+                                                                                        @mysql_query($mSQL);
 											$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successfully ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
 										}
 										else
@@ -306,6 +309,8 @@ class SMSTrace
 											$DeliveryInstructionsFO = "";
 										}
 										include "new_site/views/cart/submit_order.php";
+                                                                                $mSQL = "UPDATE ordertbl SET PNRef='".$cdynePNRef."' WHERE OrderID=".$cart->order_id;
+                                                                                @mysql_query($mSQL);
 										$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successfully ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
 									}
 									else

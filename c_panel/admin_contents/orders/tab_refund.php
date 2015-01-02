@@ -32,13 +32,14 @@ if(isset($_POST['btnsubmit']))
 else if(isset($_POST['btnrefund']))
 {
 	$transactionid=$function_obj->decrypt($_POST['trasaction_key'],$key);
-    $qry=mysql_query("SELECT c.id AS ID, c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,o.cdata,o.Totel
+    $qry=mysql_query("SELECT c.id AS ID, c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,IFNULL(o.CardToken, '') AS CardToken,o.cdata,o.Totel
 					FROM `ordertbl` o inner join `customer_registration` c on o. UserID=c.id where transaction_id='". $transactionid ."' and cat_id=". $Objrestaurant->id  ." and transaction_id >0 and payment_approv=1");
 	$details=mysql_fetch_object($qry);
 	//Modified01082013
 	$gUID = $details->ID; //UserID 
 	$amount = $details->Totel;
 	$cc = $details->cdata;
+	$gCardToken = $details->CardToken;
     //Log::write('refund page', 'Transaction Id#'.$transactionid);
  	if( $Objrestaurant->payment_gateway=="authoriseDotNet")  
 	{

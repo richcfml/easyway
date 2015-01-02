@@ -1,4 +1,4 @@
-<?
+<?php
 
 class cart{
 	public $restaurant_id;
@@ -17,9 +17,10 @@ class cart{
 	public $order_created;
 	public $vip_discount;
 	public $payment_menthod;
+        public $PNRef;
 	const GATEWAY = 1;
  	const CASH = 2;
-	
+        
 	public $invoice_number;
 	
 	   function __construct() {
@@ -30,6 +31,7 @@ class cart{
 		   $this->coupon_discount=0.00;
 		   $this->order_created=0;
 		   $this->vip_discount=0.00;
+                   $this->PNRef="";
    	}
 	public function addfavorites($products) {
 		foreach($products as $product){
@@ -298,7 +300,7 @@ class cart{
 			}
 		
 	//Modified01082013
-	public function createNewOrder($userId,$userAddress,$serving_date,$asap,$payment_method,$invoice_number,$payment_approve,$type,$cc,$data_2,$transaction_id, $platform_used, $is_guest=0,$del_special_notes){
+	public function createNewOrder($userId,$userAddress,$serving_date,$asap,$payment_method,$invoice_number,$payment_approve,$type,$cc,$data_2,$transaction_id, $platform_used, $is_guest=0,$del_special_notes, $pCarkTokenOrderTbl = ""){
 	//	"Delivery": "Pickup";
 	
 	
@@ -312,7 +314,7 @@ class cart{
 		
 //		mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (2, '".$userAddress."', '".$userAddress."')");
 		
-		$mPhoneRes = mysql_query("SELECT phone FROM resturants WHERE id=".$this->restaurant_id);
+		$mPhoneRes = mysql_query("SELECT phone, payment_gateway FROM resturants WHERE id=".$this->restaurant_id);
 		$mPhoneRow = mysql_fetch_object($mPhoneRes);
 		$mPhone = $mPhoneRow->phone;
                 
@@ -377,6 +379,12 @@ class cart{
 				, PhoneNumber='". prepareStringForMySQL($mPhone) ."'
 		");
 		$this->order_id = mysql_insert_id();	
+		
+		if (($mPhoneRow->payment_gateway=="suregate") && ($pCarkTokenOrderTbl!=""))
+		{
+			mysql_query("UPDATE ordertbl SET CardToken='".$pCarkTokenOrderTbl."' WHERE OrderID=".$this->order_id);
+		}
+		
 		$this->saveOrderdetail();
  
 		if($payment_method=='Credit Card' && $cc!='' && $data_2!='')

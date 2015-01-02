@@ -8,6 +8,8 @@ if(isset($_POST['submit']))
 	$tokenization				 = @$_POST['tokenization'];
 	$payment_gateway_login_id	 = @$_POST['payment_gateway_login_id'];
 	$payment_gateway_trans_Key	 = @$_POST['payment_gateway_trans_Key']; 
+	$vendor_id					 = @$_POST['vendor_id']; 
+	
 	$did_number=$_POST['did_number']; 
  	$refund_password= @$_POST['refund_password']; 
 	
@@ -36,13 +38,13 @@ if(isset($_POST['submit']))
 	
 	if (!$mDupFlag)
 	{
-		mysql_query("UPDATE resturants SET order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
+		mysql_query("UPDATE resturants SET VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
 		$Objrestaurant->did_number=$did_number;
 		$mMessage = "Restaurant updated successfully.";
 	}
 	else
 	{
-		mysql_query("UPDATE resturants SET order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
+		mysql_query("UPDATE resturants SET VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
 	}
 
 	$Objrestaurant->order_destination=$order_destination;
@@ -52,6 +54,7 @@ if(isset($_POST['submit']))
 	$Objrestaurant->authoriseLoginID=$payment_gateway_login_id;
 	$Objrestaurant->transKey=$payment_gateway_trans_Key;
 	$Objrestaurant->refund_password=$refund_password;
+	$Objrestaurant->VendorID=$vendor_id;
 	$Objrestaurant->saveToSession();
 }
  
@@ -116,7 +119,15 @@ include "nav.php"; ?>
                         }
                         ?>
                                onclick="changelabels(this)"/>
-                        First Data GGe4
+                        First Data GGe4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="payment_gateway" type="radio" value="suregate"  id="payment_gateway" <?php
+                        if ($Objrestaurant->payment_gateway == "suregate") 
+						{
+                            echo "checked";
+                        }
+                        ?>
+                               onclick="changelabels(this)"/>
+                        Suregate
                     <?php 
 					}
 					?>
@@ -141,9 +152,41 @@ include "nav.php"; ?>
                     &nbsp;&nbsp No
                 </td>
             </tr>
+			<?php
+				if ($Objrestaurant->payment_gateway == "authoriseDotNet")
+				{
+					$mUserNameLabel = "Payment gateway login ID";
+					$mPasswordLabel = "Payment gateway transaction key";
+					$mSureGateDisplay = " style='visibility: hidden;' ";					
+				}
+				else if ($Objrestaurant->payment_gateway == "nmi")
+				{
+					$mUserNameLabel = "NMI user name";
+					$mPasswordLabel = "NMI password";
+					$mSureGateDisplay = " style='visibility: hidden;' ";					
+				}
+				else if ($Objrestaurant->payment_gateway == "gge4")
+				{
+					$mUserNameLabel = "GGe4 Gateway ID/Exact ID";
+					$mPasswordLabel = "GGe4 Password";
+					$mSureGateDisplay = " style='visibility: hidden;' ";					
+				}
+				else if ($Objrestaurant->payment_gateway == "suregate")
+				{
+					$mUserNameLabel = "Suregate user name";
+					$mPasswordLabel = "Suregate password";
+					$mSureGateDisplay = " style='visibility: visible;' ";
+				}
+				else
+				{
+					$mUserNameLabel = "Gateway user name";
+					$mPasswordLabel = "Gateway password";
+					$mSureGateDisplay = " style='visibility: hidden;' ";
+				}
+			?>
             <tr align="left" valign="top">
                 <td id="gatewaynamelabel">
-                    <?= $Objrestaurant->payment_gateway == "nmi" ? "NMI user name" : "Payment gateway login ID" ?>
+                    <?=$mUserNameLabel?>
                 </td>
                 <td>
                     <input name="payment_gateway_login_id" type="text" size="40" id="payment_gateway_login_id" value="<?= $Objrestaurant->authoriseLoginID ?>" />
@@ -151,10 +194,18 @@ include "nav.php"; ?>
             </tr>
             <tr align="left" valign="top">
                 <td id="gatewaykeylabel">
-                    <?= $Objrestaurant->payment_gateway == "nmi" ? "NMI password" : "Payment gateway transaction key" ?>  
+                    <?=$mPasswordLabel?>
                 </td>
                 <td>
-                    <input name="payment_gateway_trans_Key" type="text" size="40" id="transKey" value="<?= $Objrestaurant->transKey ?>" />
+                    <input name="payment_gateway_trans_Key" type="text" size="20" id="transKey" value="<?= $Objrestaurant->transKey ?>" />
+					&nbsp;&nbsp;
+					<span <?=$mSureGateDisplay?> id="trSureGate1">
+						Vendor ID
+					</span>
+					&nbsp;&nbsp;
+					<span <?=$mSureGateDisplay?> id="trSureGate2">
+						<input name="vendor_id" type="text" size="15" id="vendor_id" value="<?= $Objrestaurant->VendorID ?>" />
+					</span>
                 </td>
             </tr>
             <tr align="left" valign="top">
@@ -194,18 +245,32 @@ include "nav.php"; ?>
     {
         if ($(nmi).val() == 'nmi' && $(nmi).is(':checked'))
         {
-            $("#gatewaynamelabel").html("NMI user name")
-            $("#gatewaykeylabel").html("NMI password")
+            $("#gatewaynamelabel").html("NMI user name");
+            $("#gatewaykeylabel").html("NMI password");
+			$("#trSureGate").hide();			
+			$("#trSureGate1").attr("style", "visibility: hidden;");			
+			$("#trSureGate2").attr("style", "visibility: hidden;");			
         }
         else if ($(nmi).val() == 'gge4' && $(nmi).is(':checked'))
         {
-            $("#gatewaynamelabel").html("GGe4 Gateway ID/Exact ID")
-            $("#gatewaykeylabel").html("GGe4 Password")
+            $("#gatewaynamelabel").html("GGe4 Gateway ID/Exact ID");
+            $("#gatewaykeylabel").html("GGe4 Password");
+			$("#trSureGate1").attr("style", "visibility: hidden;");			
+			$("#trSureGate2").attr("style", "visibility: hidden;");			
+        }
+		else if ($(nmi).val() == 'suregate' && $(nmi).is(':checked'))
+        {
+            $("#gatewaynamelabel").html("Suregate user name")
+            $("#gatewaykeylabel").html("Suregate password")
+			$("#trSureGate1").attr("style", "visibility: visible;");			
+			$("#trSureGate2").attr("style", "visibility: visible;");			
         }
         else
         {
             $("#gatewaynamelabel").html("Payment gateway login ID")
             $("#gatewaykeylabel").html("Payment gateway transaction key")
+			$("#trSureGate1").attr("style", "visibility: hidden;");			
+			$("#trSureGate2").attr("style", "visibility: hidden;");			
         }
     }
 

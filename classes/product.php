@@ -48,7 +48,7 @@ class product{
 	}
 	
 	public function getattributes() {
-		$cat_qry = mysql_query("SELECT  *,`Default`+0 AS `Default` FROM attribute  WHERE ProductID =". $this->prd_id . " Order by id");
+		$cat_qry = mysql_query("SELECT  *,`Default`+0 AS `Default` FROM attribute  WHERE ProductID =". $this->prd_id . "  Order by OderingNO, id");
 		$this->attributes = array();
 		$this->distinct_attributes = array();
 		while($attribute = mysql_fetch_object($cat_qry,'attribute')) {

@@ -23,6 +23,7 @@
 	  $cart_total=$cart->grand_total();
 	if(isset($_POST['btnconfirmorder1'])){
 		$success=0;
+		$CarkTokenOrderTbl = "";
 		if( $objRestaurant->payment_gateway=="authoriseDotNet")  $objRestaurant->payment_gateway="AuthorizeNet";
 //		 echo "<pre>";print_r(objRestaurant);echo"</pre>";
  		require_once 'classes/gateways/'. $objRestaurant->payment_gateway .'.php';
@@ -237,6 +238,23 @@ h4 {
     <div class="unit">
       <div class="left col_heading">Phone Number:</div>
       <div class="left normal">
+	  	<script src="<?=$js_root?>mask.js" type="text/javascript"></script>
+		<script type="text/javascript" language="javascript">
+			$(document).ready(function() 
+			{
+				var region = <?php echo $objRestaurant->region ?>;
+				if (region==0) //UK
+				{
+					$('#x_phone').unmask();
+					$('#x_phone').mask('(9999) 999-9999');
+				}
+				else //US, Canada
+				{
+					$('#x_phone').unmask();
+					$('#x_phone').mask('(999) 999-9999');
+				}
+			});
+		</script>
         <input type="text"  size="30"  maxlength="150" title="Phone Number" tabindex="11" id="x_phone" name="x_phone"  value="<?= $x_phone ?>"/>
       </div>
       <div class="clear"></div>

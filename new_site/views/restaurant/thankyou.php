@@ -323,6 +323,14 @@ else
 					<li>Merchant:</li>
 					<li>Description:</li>
 					<li>Invoice Number:</li>
+            <?php 
+            if ($objRestaurant->payment_gateway=="suregate")
+            {
+            ?>
+                <li>PNRef:</li>
+            <?php
+            }
+            ?>
 				</ul>
 				<ul>
 					<li>
@@ -334,6 +342,18 @@ else
 					<li>
 					  <?=  $cart->invoice_number; ?>
 					</li>
+                <?php 
+                if ($objRestaurant->payment_gateway=="suregate")
+                {
+                    $mSQL = "UPDATE ordertbl SET PNRef='".$cart->PNRef."' WHERE OrderID=".$cart->order_id;
+                    @mysql_query($mSQL);
+                ?>
+                <li>
+                    <?=$cart->PNRef?>
+                </li>
+                <?php
+                }
+                ?>
 				</ul>
 				<div style="clear:left"></div>
 				<div class="vertical_line" style="margin:0px 10px 10px 0px;">&nbsp;</div>
@@ -369,6 +389,7 @@ else
 					<li>
 						<?= $loggedinuser->cust_your_name .' '. $loggedinuser->LastName; ?>
 					</li>
+			                <li>
 						<?= ($loggedinuser->delivery_address_choice==1 ? $loggedinuser->street1 ." ". $loggedinuser->street2 : $loggedinuser->delivery_street1 ." ". $loggedinuser->delivery_street2 ) ?>
 					</li>
 					<li>

@@ -21,6 +21,7 @@ if ($objRestaurant->region == "2") //Canada
 
 if (isset($_POST['btnconfirmorder1'])) {
     $success = 0;
+	$CarkTokenOrderTbl = "";
     if ($objRestaurant->payment_gateway == "authoriseDotNet")
         $objRestaurant->payment_gateway = "AuthorizeNet";
     require_once 'classes/gateways/' . $objRestaurant->payment_gateway . '.php';
