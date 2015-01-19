@@ -434,7 +434,7 @@ function login()
     $objMail = new testmail();
     $loggedinuser = new users();
     $objRestaurant = new restaurant();
-    error_reporting(0);
+    error_reporting(E_ALL);
     $loggedinuser->cust_email=  $_GET['email'];
     $loggedinuser->password= '12345' ;
     $loggedinuser->cust_your_name= trim($_GET['Fname']);
@@ -456,7 +456,7 @@ function login()
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
-            $user_qry  = mysql_query("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0");
+            $user_qry  = mysql_query("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
             if(mysql_num_rows($user_qry)>1)
             { 
                 return NULL;
