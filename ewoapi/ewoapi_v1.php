@@ -590,6 +590,18 @@ function checkDistance()
             @$timezoneRs = mysql_fetch_array($timezoneQry);
             date_default_timezone_set($timezoneRs['time_zone']);
             $current_time = date("Hi", time());
+            
+            $mSourceLatLang = array();
+            $mDestinationLatLang = array();
+            
+            $mSQLLatLang = "SELECT rest_latitude, rest_longitude FROM rest_langitude_latitude WHERE rest_id=".$rest_id->id;
+            $mResLatLang  = mysql_query($mSQLLatLang);
+            if (mysql_num_rows($mResLatLang)>0)
+            {
+                $mRowLatLang = mysql_fetch_object($mResLatLang);
+                $mDestinationLatLang = array($mRowLatLang->rest_latitude, $mRowLatLang->rest_longitude);
+            }
+            
             if (isset($_GET["OPEN"]) || isset($_GET["open"]))
             {
                 $mOpenVal = strtolower(trim($_GET["OPEN"]));
@@ -603,7 +615,11 @@ function checkDistance()
                         $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                         $mUserAddress = $_GET['address'];
                         $mSourceLatLang = getLatLong($mUserAddress);
-                        $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                        
+                        if (count($mDestinationLatLang)==0)
+                        {
+                            $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                        }
                         $mDistance = getDistance($mSourceLatLang, $mDestinationLatLang);
                         if ($mDistance<=$_GET["distance"])
                         {
@@ -628,7 +644,10 @@ function checkDistance()
                     $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                     $mUserAddress = $_GET['address'];
                     $mSourceLatLang = getLatLong($mUserAddress);
-                    $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                    if (count($mDestinationLatLang)==0)
+                    {
+                        $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                    }
                     $mDistance = getDistance($mSourceLatLang, $mDestinationLatLang);
                     if ($mDistance<=$_GET["distance"])
                     {
@@ -653,7 +672,11 @@ function checkDistance()
                 $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                 $mUserAddress = $_GET['address'];
                 $mSourceLatLang = getLatLong($mUserAddress);
-                $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                
+                if (count($mDestinationLatLang)==0)
+                {
+                    $mDestinationLatLang = getLatLong($mRestaurantAddress);
+                }
                 $mDistance = getDistance($mSourceLatLang, $mDestinationLatLang);
                 if ($mDistance<=$_GET["distance"])
                 {
@@ -669,6 +692,7 @@ function checkDistance()
                     );
                 }
             }
+            break;
         }
         
         $json = json_encode($result,true);
@@ -703,6 +727,6 @@ function getDistance($pSourceLatLang, $pDestinationLatLang)
     $mDistance = rad2deg($mDistance);
     $mDistance = $mDistance * 60 * 1.1515;
  
-    return round($mDistance * 1.609344, 2); 
+    return round($mDistance, 2); 
 }
 ?>
