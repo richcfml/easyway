@@ -456,7 +456,11 @@ function login()
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
+            echo("1<br />");
             $user_qry  = mysql_query("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
+            echo("2<br />");
+            echo("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1<br />");
+            echo("3<br />");
             if(mysql_num_rows($user_qry)>1)
             { 
                 return NULL;
@@ -512,6 +516,8 @@ function login()
 
 function checkDistance()
 {
+    set_time_limit(300);
+    ini_set('max_execution_time', 300);
     global $SiteUrl;
     $mAPIKey = $_GET['apikey'];
     $rest_url = array();
@@ -524,7 +530,6 @@ function checkDistance()
     $address = array();
     $phone = array();
     $res_name = array();
-
     $day_name = date('l');
     if ($day_name == 'Monday') 
     {
@@ -581,7 +586,6 @@ function checkDistance()
         }
         
         $result = array();
-        
         while ($rest_id = mysql_fetch_object($activeres)) 
         {
             $businessHrQry = mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_id->id);
