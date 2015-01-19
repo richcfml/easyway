@@ -456,11 +456,7 @@ function login()
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
-            echo("1<br />");
             $user_qry  = mysql_query("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
-            echo("2<br />");
-            echo("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1<br />");
-            echo("3<br />");
             if(mysql_num_rows($user_qry)>1)
             { 
                 return NULL;
@@ -584,7 +580,6 @@ function checkDistance()
             echo("Error: User type not found.");
             exit;
         }
-        
         $result = array();
         while ($rest_id = mysql_fetch_object($activeres)) 
         {
@@ -605,7 +600,6 @@ function checkDistance()
                 $mRowLatLang = mysql_fetch_object($mResLatLang);
                 $mDestinationLatLang = array($mRowLatLang->rest_latitude, $mRowLatLang->rest_longitude);
             }
-            
             if (isset($_GET["OPEN"]) || isset($_GET["open"]))
             {
                 $mOpenVal = strtolower(trim($_GET["OPEN"]));
@@ -696,9 +690,7 @@ function checkDistance()
                     );
                 }
             }
-            break;
         }
-        
         $json = json_encode($result,true);
         echo($json);
     }
