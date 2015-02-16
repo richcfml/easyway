@@ -86,7 +86,7 @@
                         {
                             $mNewProductID=mysql_insert_id();
 
-                            $mSQL = "INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price) SELECT ".$mNewProductID.", option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price FROM attribute WHERE ProductID=".$mRow1->prd_id;
+                            $mSQL = "INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price) SELECT ".$mNewProductID.", option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price FROM attribute WHERE ProductID=".$mRow1->prd_id." ORDER BY id";
                             if (mysql_query($mSQL))
                             {
                                 $mSQL = "INSERT INTO product_association (product_id, association_id, SortOrder)  SELECT ".$mNewProductID.", association_id, SortOrder FROM product_association WHERE product_id =".$mRow1->prd_id;
