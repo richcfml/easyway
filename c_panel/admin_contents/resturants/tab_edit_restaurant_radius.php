@@ -218,9 +218,7 @@
 
 
 
-<?
-
-
+<?php
 $errMessage = '';
 include "includes/resturant_header.php";
 $catid = $mRestaurantIDCP;
@@ -372,6 +370,30 @@ if (isset($_POST['submit'])) {
         } else {
             $name3 = $_REQUEST['header_images'];
         }
+        //--------------VIP List Image Start---------------------------
+        if (!empty($_FILES['userfile5']['name'])) 
+        {
+            $path5 = '../images/resturant_vip_headers/';
+            $exe5 = GetFileExt($_FILES['userfile5']['name']);
+            $name5 = "img_" . $catid . "_cat_header_vip_list." . $exe5;
+
+            $newWidth = 570;
+            $newHeight = 60;
+                
+            $uploadfile5 = $path5.$name5;
+            move_uploaded_file($_FILES['userfile5']['tmp_name'], $uploadfile5);
+            list($width, $height, $type, $attr) = getimagesize("$uploadfile5");
+            
+            $ratio = min(array(570 / $width, 60 / $height));
+            $newWidth = $ratio * $width;
+            $newHeight = $ratio * $height;
+            
+            $image = new SimpleImage();
+            $image->load($uploadfile5);
+            $image->resizeToWidth($newWidth, $newHeight);
+            $image->save($uploadfile5);
+        } 
+        //--------------VIP List Image End---------------------------
         ///////////////////////////////////////////////////////////
 
         $homefeatute = 0;
@@ -410,6 +432,7 @@ if (isset($_POST['submit'])) {
 						,owner_id='" . addslashes($owner_name) . "'
 						,license_id='" . $license_key . "'
 						,header_image= '$name3'
+                                                ,VIP_List_Image= '$name5'
 						,time_zone_id = '$time_zone'
 						,payment_method= '$payment_method'
 						,announcement='" . $rest_announcements . "'
@@ -463,6 +486,7 @@ if (isset($_POST['submit'])) {
 						,order_minimum=$order_minimum
 						,tax_percent=$tax_percent
 						,header_image= '$name3'
+                                                ,VIP_List_Image= '$name5'
 						,time_zone_id = '$time_zone'
 						,announcement='" . $rest_announcements . "'
 						,announce_status=$announce_status
@@ -574,6 +598,15 @@ if (isset($_POST['submit'])) {
     } //end else 
 	$Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 } //end submit2		
+else if (isset($_POST["btnRemoveVIP"]))
+{
+    mysql_query("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid);
+    if (file_exists(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>")))
+    {
+        unlink(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>"));
+    }
+    $errMessage = "VIP list image removed successfully.";
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 
@@ -778,8 +811,23 @@ if (isset($_POST['submit'])) {
                     resize to 130x130)--></font>
                     <input name="userfile3" type="file" id="userfile3"></td>
             </tr>
-
-
+            <!----------------VIP LIST Image Start----------------------------->
+            <tr align="left" valign="top">
+                <td>&nbsp;</td>
+                <td><strong>VIP List Image</strong><br> <font color="#666666"><!--(system will
+                    resize to 570x60)--></font>
+                    <input name="userfile5" type="file" id="userfile5">
+                    <?php
+                    if (trim($Objrestaurant->VIP_List_Image)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove VIP list image" id="btnRemoveVIP" name="btnRemoveVIP" />
+                    <?php
+                    }
+                    ?>
+                </td>
+            </tr>
+            <!--//--------------VIP LIST Image End----------------------------->
             <tr align="left" valign="top">
                 <td></td>
                 <td><strong>Order Minimum:</strong><br />

@@ -28,9 +28,18 @@ if($objRestaurant->useValutec==false)
 { 
 ?>
 	<!-- VIP MAIL LIST/ DEFAULT BANNER -->  
-	<div id="banner">
+        <?php
+        $mMarginTopbanner = "";
+        $mVipDisplay = "Join our VIP list and get discounts sent to your phone or email";
+        if (trim($objRestaurant->VIP_List_Image)!= "")
+        {
+            $mMarginTopbanner = " style='margin-top: 5px !important;' ";
+            $mVipDisplay = "<img src='../images/resturant_vip_headers/$objRestaurant->VIP_List_Image' alt='Join our VIP list and get discounts sent to your phone or email' title='Join our VIP list and get discounts sent to your phone or email' >";
+        }
+        ?>
+	<div id="banner" <?=$mMarginTopbanner?>>
 		<a style="text-decoration:none" rel="facebox" href="?item=mailinglist&rest_id=<?=$objRestaurant->id?>&ajax=1">
-			Join our VIP list and get discounts sent to your phone or email
+                    <?=$mVipDisplay?>
 		</a>
 	</div>
 	<!-- VIP MAIL LIST/ DEFAULT BANNER ENDS HERE -->  
