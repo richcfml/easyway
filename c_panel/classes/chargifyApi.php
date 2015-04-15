@@ -799,5 +799,35 @@ class chargifyApi
         $mResult = (object) $mResult;
         return $mResult;
    }
+   
+   function chargeExtraAmpunt($subcription_id )
+   {
+        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/charges.json";
+		$paramater = '{"charge":{
+         "amount": "150.00",
+         "memo": "charges for tablet "
+       }}';
+        $username = '2aRl08rsgL3H3WiWl5ar';
+        $password = 'x';
+
+        $post_array = json_decode($paramater);
+        Log::write('CHARGIFY Post Array - Create Charges URL: \\n'.$url, print_r($post_array, true), 'chargify', 1);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $paramater);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        $mResult = curl_exec($ch);
+        curl_close($ch);
+        unset($ch);
+        $mResult = json_decode($mResult);
+
+        Log::write('CHARGIFY Response Array - Create Charges for tablet', print_r($mResult,true), 'chargify', 1);
+   }
 }
 ?>

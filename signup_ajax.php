@@ -46,7 +46,7 @@ if ($_GET["call"]=="saveuser")
         {
                 $mEchoFlag = 0;
 
-                $mParentID = '269';
+                $mParentID = '481';
                 $mProductID = $rbProducts;
                 $mSQL = "SELECT IFNULL(`premium_account`, 0) AS `premium_account` FROM `chargify_products` WHERE product_id=".$mProductID and "user_id =".$mParentID;
                 $mResPre = mysql_query($mSQL);
@@ -100,6 +100,10 @@ if ($_GET["call"]=="saveuser")
 
                                                         $mResultSubRes->subscription = (object) $mResultSubRes->subscription;
                                                         $mRestSubscriptionID = $mResultSubRes->subscription->id;
+                                                        if($rbOrders == 4)
+                                                        {
+                                                            $mResultChargeExtra = $mObjCAPI->chargeExtraAmpunt($mRestSubscriptionID);
+                                                        }
                                                         $mSRID ="";
                                                         if ((trim($mPremiumAccount)==0) || (trim($mPremiumAccount)=="0") || (trim($mPremiumAccount)==""))
                                                         {

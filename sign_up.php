@@ -392,7 +392,14 @@ function json_decode_ewo($json)
                             $("#txtCity").val(city);
                             state = state.replace(' ','');
                             $("#txtState").val(state);
+                            country = country.replace(' ','');
                             $("#ddlCountry1").val(country);
+                            if(country=="US")
+                            {
+                                $("#ddlTimeZone").children('option:contains("London")').hide();
+                                $("#ddlTimeZone").children('option:contains("Canada")').hide();
+                                $("#ddlTimeZone").children('option:contains("US")').show();
+                            }
                         }
                     }
                 });
@@ -980,8 +987,9 @@ function json_decode_ewo($json)
                     width: 20%;
                     float: left;
                     position: relative;
-                    background: #f0f0f0;
+                    /*background: #f0f0f0;*/
                     box-shadow: 0 0 2px 0px #999;
+                    border-bottom: 1px solid #f0f0f0;
                 }
 
                 /*progressbar connectors*/
