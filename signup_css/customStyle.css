@@ -1,0 +1,123 @@
+#SelectYourBusinessBigDiv {
+    margin: 0 auto;
+    width: 860px;
+    position: relative;
+    padding: 55px 0;
+    }
+    #SelectYouBusinessHeading {
+    float: left;
+    margin-left: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #222222;
+    }
+    #DontSeeHeading {
+    float: left;
+    color: #777777;
+    font-size: 16px;
+    margin: 20px;
+    font-weight: bold;
+    }
+    #SearchResultsDiv {
+    width: 860px;
+    border: 2px solid #777777;
+    position: relative;
+    float: left;
+    padding-bottom: 35px;
+    }
+    .ResultsDiv {
+    float: left;
+    width: 855px;
+    padding: 35px 20px;
+    padding-bottom: 0px;
+    position: relative;
+    }
+    .ResultImg {
+    float: left;
+    position: relative;
+    width: 180px;
+    height: 150px;
+    }
+    .RestaurantName {
+    font-size: 24px;
+    float: left;
+    font-weight: bold;
+    color: #222222;
+    margin-left: 40px;
+    width: 280px;
+    }
+    .RestaurantAddress {
+    float: left;
+    position: relative;
+    margin-left: 20px;
+    width: 100px;
+    font-size: 14px;
+    color: #222222;
+    }
+    .ThisIsMeDiv {
+    float: left;
+    position: relative;
+    margin-left: 75px;
+    margin-top: 60px;
+    width: 120px;
+    }
+    .HrDiv {
+    float: left;
+    width: 95%;
+    margin-top: 35px;
+    border-top: 1px solid #777;
+    }
+    .ThisIsMe {
+    background-color: #f7941d;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 20px 10px;
+    text-decoration: none;
+    border-radius: 2px;
+    }
+    #SearchRestaurantError {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #790000;
+    font-weight: bold;
+    padding: 10px 0;
+    }
+    .errorDiv
+    {
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        color: #790000;
+        font-weight: bold;
+        padding: 10px 0;
+    }
+    .SpanClickTo {
+    color: #f7941d;
+    text-decoration: none;
+    cursor:pointer;
+    }
+    .SearchRestaurantError {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #790000;
+    font-weight: bold;
+    padding: 10px 0;
+    }
+    label.myLabel input[type="file"] {
+    position: fixed;
+    top: 0px;
+}
+
+/***** Example custom styling *****/
+.myLabel {
+    border: 2px solid #AAA;
+    border-radius: 4px;
+    padding: 0px 105px;
+    margin: 2px;
+    background: #DDD;
+    display: inline-block;
+}
+

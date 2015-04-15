@@ -1,0 +1,7 @@
+section.widget-lt { float: left; width: 100%; }
+section.widget-lt ul { list-style: none; }
+section.widget-lt ul li { border-bottom: 1px dotted #2C3E50; clear: both; float: left; margin-bottom: 5px;	padding-bottom: 5px; font-size: 13px; width: 310px; }
+section.widget-lt ul li img { float: left; margin-right: 10px; }
+section.widget-lt ul li span { float: right; width: 250px; text-align: justify; }
+section.widget-lt ul li span a { color: #F45850; }
+section.widget-lt ul li span a:hover { text-decoration: underline; }

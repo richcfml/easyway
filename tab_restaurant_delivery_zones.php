@@ -4,13 +4,14 @@ require_once("includes/config.php");
 
 <style>
     #map_canvas {
-        width:930px;
-        height:630px;
+        width:100%;
+        height:500px;
+        border:2px solid gray;
 
     }
 </style>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-
+<script src="signup_js/jquery.easing.min.js" type="text/javascript"></script>
 <script type="text/javascript" language="javascript">
 	$("#txtRestIDMap").val(window.parent.$("#txtRestaurantID").val());
 	function initialize() 
@@ -79,17 +80,17 @@ require_once("includes/config.php");
 
         }
 		
-		$("#zone1_coordinates").val(Zone1.Coordinates());
+        $("#zone1_coordinates").val(Zone1.Coordinates());
         $("#zone2_coordinates").val(Zone2.Coordinates());
         $("#zone3_coordinates").val(Zone3.Coordinates());
        
-	   	var zone1_coordinates = Zone1.Coordinates();
+        var zone1_coordinates = Zone1.Coordinates();
         var zone2_coordinates = Zone2.Coordinates();
         var zone3_coordinates = Zone3.Coordinates();
 	   
 	   
 		   $.ajax({
-			url:"ajax.php?call=delivery_zone",
+			url:"signup_ajax.php?call=delivery_zone",
 			type:"POST",
 			data: {id: mIDMp,zone1: zone1, zone1_delivery_charges: zone1_delivery_charges, zone1_min_total: zone1_min_total, zone2: zone2, zone2_delivery_charges: zone2_delivery_charges, zone2_min_total: zone2_min_total, zone3: zone3, zone3_delivery_charges: zone3_delivery_charges, zone3_min_total: zone3_min_total, zone1_coordinates: zone1_coordinates, zone2_coordinates: zone2_coordinates, zone3_coordinates: zone3_coordinates},
 			success:function(data)
@@ -100,7 +101,22 @@ require_once("includes/config.php");
 					{
 						$("#txtRestIDMap").val(data);
 						window.parent.$("#txtRestaurantID").val(data);
-						alert('Changes Saved');
+                                                $("#hzone1").val(zone1);
+                                                $("#hzone1_delivery_charges").val(zone1_delivery_charges);
+                                                $("#hzone1_min_total").val(zone1_min_total);
+                                                $("#hzone1_coordinates").val(zone1_coordinates);
+
+                                                $("#hzone2").val(zone2);
+                                                $("#hzone2_delivery_charges").val(zone2_delivery_charges);
+                                                $("#hzone2_min_total").val(zone2_min_total);
+                                                $("#hzone2_coordinates").val(zone2_coordinates);
+
+                                                $("#hzone3").val(zone3);
+                                                $("#hzone3_delivery_charges").val(zone3_delivery_charges);
+                                                $("#hzone3_min_total").val(zone3_min_total);
+                                                $("#hzone3_coordinates").val(zone3_coordinates);
+						$("#facebox_overlay").click();
+                                                $("#lnkMap").text("Custom Delivery Zones Saved").css("color","#279577").prepend("<img src='signup_images/check.png' style='margin-right:10px'/>")
 					}
 					else
 					{
@@ -131,29 +147,29 @@ require_once("includes/config.php");
 	<input type="hidden" id="txtRestIDMap" name="txtRestIDMap"/>
 </div>
 <div style="clear:both"></div>
-<div style="border:1px solid;width:100%;margin-bottom:5px;">
+<div style="width:100%;margin-bottom:5px;">
 
     <div style="clear:right"></div>
 
     <div style="background-color:#eed000;padding:10px;"><strong>Delivery Area Information ( Resturant Location: <span id="restlocation"></span> )</strong></div>
     <div style="padding:10px;">
         <div style="float:left;margin-right:15px;font-weight:bold;">Delivery Area Charges  </div>
-        <div style="float:left;margin-right:40px;"><input type="checkbox"  id="zone1" name="zone1"  class="zonehaldler" zone="1"  />Zone 1:
+        <div style="float:left;margin-right:40px;"><input type="checkbox"  id="zone1" name="zone1"  class="zonehaldler" zone="1"  style="width:auto;height:auto"/>Zone 1:
             <br/>
-            Charges:<input type="text" name="zone1_delivery_charges" id="zone1_delivery_charges"  size="3"  style="background-color:#00CC00;color:#FFF;"/><br/>
-            Min Total:<input type="text"  size="3" name="zone1_min_total"  id="zone1_min_total" style="background-color:#00CC00;color:#FFF;"/>
+            Charges:<input type="text" name="zone1_delivery_charges" id="zone1_delivery_charges"  size="3"  style="background-color:#00CC00;color:#FFF;width:auto;height:auto"/><br/>
+            Min Total:<input type="text"  size="3" name="zone1_min_total"  id="zone1_min_total" style="background-color:#00CC00;color:#FFF;width:auto;height:auto"/>
         </div> 
-        <div style="float:left;margin-right:40px;">Zone 2:<input type="checkbox"  id="zone2" name="zone2" class="zonehaldler" zone="2" />
+        <div style="float:left;margin-right:40px;">Zone 2:<input type="checkbox"  id="zone2" name="zone2" class="zonehaldler" zone="2" style="width:auto;height:auto"/>
 
             <br/>
-            Charges:<input type="text"  size="3"  name="zone2_delivery_charges" id="zone2_delivery_charges" style="background-color:#003595;color:#FFF;"/><br/>
-            Min Total:<input type="text"  size="3"   name="zone2_min_total"  id="zone2_min_total" style="background-color:#003595;color:#FFF;"/>
+            Charges:<input type="text"  size="3"  name="zone2_delivery_charges" id="zone2_delivery_charges" style="background-color:#003595;color:#FFF;width:auto;height:auto"/><br/>
+            Min Total:<input type="text"  size="3"   name="zone2_min_total"  id="zone2_min_total" style="background-color:#003595;color:#FFF;width:auto;height:auto"/>
 
         </div> 
-        <div style="float:left;margin-right:40px;">Zone 3:<input type="checkbox"  id="zone3" name="zone3"  class="zonehaldler" zone="3"  />
+        <div style="float:left;margin-right:40px;">Zone 3:<input type="checkbox"  id="zone3" name="zone3"  class="zonehaldler" zone="3"  style="width:auto;height:auto"/>
             <br/>
-            Charges:<input type="text" size="3"  name="zone3_delivery_charges" id="zone3_delivery_charges"style="background-color:#f33f00;color:#FFF;"/> <br/>
-            Min Total:<input type="text" size="3"   name="zone3_min_total"  id="zone3_min_total"style="background-color:#f33f00;color:#FFF;"/> </div> 
+            Charges:<input type="text" size="3"  name="zone3_delivery_charges" id="zone3_delivery_charges"style="background-color:#f33f00;color:#FFF;width:auto;height:auto"/> <br/>
+            Min Total:<input type="text" size="3"   name="zone3_min_total"  id="zone3_min_total"style="background-color:#f33f00;color:#FFF;width:auto;height:auto"/> </div>
 
 
     </div>
@@ -174,7 +190,7 @@ require_once("includes/config.php");
 <script type="text/javascript">
 
     $(function() {
-	   var restaurant_location = '<?=$_GET["address"]." ".$_GET["city"]." ".$_GET["state"]?>';
+	   var restaurant_location = $("#txtStreetAddress").val() + " " + $("#txtCity").val() + " " + $("#txtState").val();
 		
         $("#restlocation").html(restaurant_location)
         $("#map_canvas").html('<div class="msg_warning"><img src="images/loading.gif">Please wait loading map</div>');
@@ -184,16 +200,23 @@ require_once("includes/config.php");
         });
 
 		
-        $("#zone1_delivery_charges").val("0");
-        $("#zone1_min_total").val("0");
+        if ($("#hzone1").val() == '1')
+            $("#zone1").attr('checked', 'checked');
+        $("#zone1_delivery_charges").val($("#hzone1_delivery_charges").val());
+        $("#zone1_min_total").val($("#hzone1_min_total").val());
 
-        $("#zone2_delivery_charges").val("0");
-        $("#zone2_min_total").val("0");
 
-        $("#zone3_delivery_charges").val("0");
-        $("#zone3_min_total").val("0");
-		
-		
+
+        if ($("#hzone2").val() == '1')
+            $("#zone2").attr('checked', 'checked');
+        $("#zone2_delivery_charges").val($("#hzone2_delivery_charges").val());
+        $("#zone2_min_total").val($("#hzone2_min_total").val());
+
+        if ($("#hzone3").val() == '1')
+            $("#zone3").attr('checked', 'checked');
+        $("#zone3_delivery_charges").val($("#hzone3_delivery_charges").val());
+        $("#zone3_min_total").val($("#hzone3_min_total").val());
+
         var zones = [];
         var restaurantlocation = "";
         var showgreen = ($("#zone1").is(':checked'));
@@ -209,9 +232,9 @@ require_once("includes/config.php");
                 var position = results[0].geometry.location;
                 var restaurantlocation = new google.maps.LatLng(parseFloat(position.lat()), parseFloat(position.lng()));
 
-                var Zone1Coordinates = "";
-                var Zone2Coordinates = "";
-                var Zone3Coordinates = "";
+                var Zone1Coordinates = $("#hzone1_coordinates").val();
+                var Zone2Coordinates = $("#hzone2_coordinates").val();
+                var Zone3Coordinates = $("#hzone3_coordinates").val();
 
                 var canvas = document.getElementById("map_canvas");
 
@@ -241,7 +264,7 @@ require_once("includes/config.php");
                 Zone1 = new DeliveryZone(Zone1Coordinates, '#00CC00', 3, 1, '#00A333', 0.2, 0.02, position);
                 Zone2 = new DeliveryZone(Zone2Coordinates, '#003595', 3, 1, '#000088', 0.2, 0.025, position);
                 Zone3 = new DeliveryZone(Zone3Coordinates, '#f33f00', 3, 1, '#ffaa00', 0.2, 0.03, position);
-				console.log(Zone1);
+
                 Zone1.drawZone(showgreen, defaultZone1);
                 Zone2.drawZone(showblue, defaultZone2);
                 Zone3.drawZone(showred, defaultZone3);

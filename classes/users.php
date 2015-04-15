@@ -98,7 +98,7 @@ class users {
 		 }
 	 public function remindPassword($email,$objRestaurant,$objMail) {
 		 $userQuery = mysql_query("SELECT cust_email, password,cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' 
-										and resturant_id=". $objRestaurant->id  ."");
+										and resturant_id=". $objRestaurant->id  ."  AND LENGTH(password)>0");
 			$numrow=mysql_num_rows($userQuery);		
 			 if ($numrow==0){ 
 				 return false;
