@@ -25,7 +25,7 @@ class chargifyApi
         $post_array = json_decode($paramater);
         Log::write('CHARGIFY Post Array - Create Customer', print_r($post_array,true), 'chargify', 1);
 
-        $url = "https://easywayordering.chargify.com/customers.json";
+        $url = "https://easyway-ordering.chargify.com/customers.json";
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $ch = curl_init();
@@ -145,7 +145,7 @@ class chargifyApi
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easywayordering.chargify.com/subscriptions.json";
+        $url = "https://easyway-ordering.chargify.com/subscriptions.json";
         if($payment_profile_id !="-1" && !empty($payment_profile_id))
         {
             $parameters ='{"subscription":{
