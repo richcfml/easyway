@@ -1,4 +1,5 @@
 <?php
+    require_once("includes/config.php");
     $page = end(explode('/', $_SERVER["REQUEST_URI"]));
 ?>
 <script>
