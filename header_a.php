@@ -47,7 +47,7 @@ height: 98px;
         <header id="ewo-header">
          <div class="pagewrap" style="position:relative; width: 100%; max-width:1200px;margin:0 auto;background:#fff; z-index:9999;">
              <div class="ewo-logo floatleft">
-                   <a href="http://new.easywayordering.com/Home.php" ><img src="signup_images/logo.png"/></a>
+                   <a href="<?php echo $SiteUrl;?>" ><img src="signup_images/logo.png"/></a>
               </div>
                 <nav class="floatright">
                     <button type="button" class="btn" data-toggle="show">
