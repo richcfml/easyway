@@ -56,7 +56,6 @@
                         <li <?php if ($page == "features.php") { ?> class="active" <?php } ?>><a href="features.php">FEATURES</a></li>
                         <li <?php if ($page == "pricing.php") { ?> class="active" <?php } ?>><a href="pricing.php">PRICING</a> </li>
                         <li <?php if ($page == "about.php") { ?> class="active" <?php } ?>><a href="about.php">ABOUT</a></li>
-                        <li <?php if ($page == "feature.php") { ?> class="active" <?php } ?>><a href="blogs">BLOG</a></li>
                         <li <?php if ($page == "reseller.php") { ?> class="active" <?php } ?>><a href="reseller.php" class="darkgray">RESELLER?</a></li>
                         <li <?php if ($page == "features.php") { ?> class="active" <?php } ?>><a href="freedemo.php" class="darkgray">FREE DEMO!</a></li>
                         <li <?php if ($page == "features.php") { ?> class="active" <?php } ?>><a href="client_login.php"><img src="signup_images/user_icon.png" align="top"/> LOGIN</a></li>
@@ -65,7 +64,6 @@
                         <li <?php if ($page == "features.php") { ?> class="active" <?php } ?>><a href="features.php">FEATURES</a></li>
                         <li <?php if ($page == "pricing.php") { ?> class="active" <?php } ?>><a href="pricing.php">PRICING</a> </li>
                         <li <?php if ($page == "about.php") { ?> class="active" <?php } ?>><a href="about.php">ABOUT</a></li>
-                        <li <?php if ($page == "feature.php") { ?> class="active" <?php } ?>><a href="blogs">BLOG</a></li>
                         <li <?php if ($page == "reseller.php") { ?> class="active" <?php } ?>><a href="reseller.php" class="darkgray">RESELLER?</a></li>
                         <li <?php if ($page == "freedemo.php") { ?> class="active" <?php } ?>><a href="freedemo.php" class="darkgray">FREE DEMO!</a></li>
                         <a href="client_login.php" <?php if ($page == "client_login.php") { ?> class="active" <?php } ?>><img src="signup_images/user_icon.png" align="top" height="18"/> LOGIN</a>
