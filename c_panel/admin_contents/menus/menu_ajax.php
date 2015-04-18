@@ -504,7 +504,7 @@ else if (isset($_GET['delete_submenu']) && $_GET['delete_submenu'] == 1 && !empt
       
     while($prd = mysql_fetch_object($prdQry))
     {
-          Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID = ".$prd->prd_id."", 'menu', 1 , 'cpanel');
+          Log::write("Delete attribute - menu_ajax.php - LINE 508", "QUERY -- Delete from attribute where ProductID = ".$prd->prd_id."", 'menu', 1 , 'cpanel');
           mysql_query("Delete from attribute where ProductID = ".$prd->prd_id."");
           Log::write("Delete product association - menu_ajax.php", "QUERY -- Delete from product_association where product_id = ".$prd->prd_id." or association_id = ".$prd->prd_id."", 'menu', 1 , 'cpanel');
           mysql_query("Delete from product_association where product_id = ".$prd->prd_id." or association_id = ".$prd->prd_id."");
@@ -584,8 +584,9 @@ else if (isset($_GET['remove_attributes']) && $_GET['remove_attributes'] == 1 &&
     }
     $productIDs = substr($productIDs,0,-1);
     
-    Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where in (".$attrributeid.") and ProductID = ".$_GET['prd_id']."", 'menu', 1 , 'cpanel');
-    $result =mysql_query("Delete from attribute where id in (".$attrributeid.") and ProductID = ".$_GET['prd_id']."");
+    $mQuery = "Delete from attribute where id in (".$attrributeid.") and ProductID = ".$_GET['prd_id']."";
+    Log::write("Delete attribute - menu_ajax.php - LINE 589", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
+    $result =mysql_query($mQuery);
     
     $mDisplayQryChk = mysql_fetch_array(mysql_query("Select 1 as count from attribute where option_name = '".$_GET['option_name']."' and ProductID in (".$productIDs.") limit 1"));
 
@@ -991,7 +992,9 @@ else if (isset($_GET['addAttributeinCategory']) && $_GET['addAttributeinCategory
 {
     $option_name = '';
     $scat_id = $_GET['sub_catid'];
-    mysql_query("DELETE FROM attribute where ProductID in (Select prd_id from product where sub_cat_id = " . $_GET['sub_catid'] . "");
+    $mQuery = "DELETE FROM attribute where ProductID in (Select prd_id from product where sub_cat_id = " . $_GET['sub_catid'] . "";
+    mysql_query($mQuery);
+    Log::write("Delete Attribute - menu_ajax.php - LINE 998", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
 
     $prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
     while ($prodRs = mysql_fetch_array($prodQry))
@@ -1275,20 +1278,24 @@ else if (isset($_GET['UpdateAttribute']))
 
         if($mApplySubCat!=1)
         {
-            Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID = ".$mPrd_id." and option_name = '".$mOldOptionName."'", 'menu', 1 , 'cpanel');
-             mysql_query("Delete from attribute where ProductID = ".$mPrd_id." and option_name = '".$mOldOptionName."'");
+            
+            $mQuery = "Delete from attribute where ProductID = ".$mPrd_id." and option_name = '".$mOldOptionName."'";
+            mysql_query($mQuery);
+            Log::write("Delete Attribute - menu_ajax.php - LINE 1285", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
         }
         else if($mApplySubCat==1)
         {
-             $mProductIdQry = mysql_query("Select distinct(ProductID),OderingNO from attribute where option_name = '".$mOldOptionName."' and ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.")");
-                while($prdids = mysql_fetch_array($mProductIdQry))
-                {
-                    $ProductIDs[$prdids['ProductID']][0] = $prdids['ProductID'];
-                    $ProductIDs[$prdids['ProductID']][1] = $prdids['OderingNO'];
-                    $ProdIDs[] = $prdids['ProductID'];
-                }
-                Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID in  (".implode(",",$ProdIDs).") and option_name = '".$mOldOptionName."'", 'menu', 1 , 'cpanel');
-                mysql_query("Delete from attribute where ProductID in  (".implode(",",$ProdIDs).") and option_name = '".$mOldOptionName."'");
+            $mProductIdQry = mysql_query("Select distinct(ProductID),OderingNO from attribute where option_name = '".$mOldOptionName."' and ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.")");
+            while($prdids = mysql_fetch_array($mProductIdQry))
+            {
+                $ProductIDs[$prdids['ProductID']][0] = $prdids['ProductID'];
+                $ProductIDs[$prdids['ProductID']][1] = $prdids['OderingNO'];
+                $ProdIDs[] = $prdids['ProductID'];
+            }
+            
+            $mQuery = "Delete from attribute where ProductID in  (".implode(",",$ProdIDs).") and option_name = '".$mOldOptionName."'";
+            mysql_query($mQuery);
+            Log::write("Delete Attribute - menu_ajax.php - LINE 1299", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
         }
 
         
@@ -1497,9 +1504,11 @@ else if (isset($_GET['UpdateAttributeInCategory']))
             }
             else
             {
-                //echo "Delete from attribute where ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.") and option_name = '".$mOldOptionName."'";
-                Log::write("Delete attribute - menu_ajax.php", "QUERY --Delete from attribute where ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.") and option_name = '".$mOldOptionName."'", 'menu', 1 , 'cpanel');
-                mysql_query("Delete from attribute where ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.") and option_name = '".$mOldOptionName."'");
+                
+            $mQuery = "Delete from attribute where ProductID in (Select prd_id from product where sub_cat_id = ".$mSubCatID.") and option_name = '".$mOldOptionName."'";
+            mysql_query($mQuery);
+            Log::write("Delete attribute - menu_ajax.php - LINE 1511", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
+
                 Log::write("Insert attribute into new_attribute - menu_ajax.php", "QUERY --INSERT INTO new_attribute (sub_catid, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$mSubCatID.", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$mOrderNo.",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."',".$mExtraCharger.")", 'menu', 1 , 'cpanel');
                 if (mysql_query("INSERT INTO new_attribute (sub_catid, option_name, Title, Price, option_display_preference, apply_sub_cat, Type, Required, OderingNO, rest_price, display_Name, `Default`, add_to_price,attr_name,extra_charge) VALUES (".$mSubCatID.", '".$mOptionName."', '".$mTitle."', '".$mPrice."', 0, ".$mApplySubCat.", ".$mLayout.", ".$mRequired.", ".$mOrderNo.",'', '".$mName."', ".$mDefault.",".$mAdd_to_Price.",'".$mAttrFields."','".$mExtraCharger."')"))
                 {

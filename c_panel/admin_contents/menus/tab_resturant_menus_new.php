@@ -45,7 +45,8 @@ function getdata($catid) {
 
             });
         </script>
-    <?}
+<?php
+    }
     return mysql_query($mSQL);
 }
 
@@ -121,8 +122,11 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
     }
     $getProductdIds = substr($getProductdIds,0,-1);
     
-    mysql_query("Delete from attribute where ProductID in( ".$getProductdIds.")");
-    Log::write("Delete attribute - menu_ajax.php", "QUERY -- Delete from attribute where ProductID in( ".$getProductdIds.")", 'menu', 1 , 'cpanel');
+    
+    $mQuery = "Delete from attribute where ProductID in( ".$getProductdIds.")";
+    mysql_query($mQuery);
+    Log::write("Delete attribute - tab_resturant_menus_new.php - LINE 128", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
+
     mysql_query("Delete from product_association where product_id in( ".$getProductdIds.") or association_id in( ".$getProductdIds.")");
     Log::write("Delete product association - menu_ajax.php", "QUERY -- Delete from product_association where product_id in( ".$getProductdIds.") or association_id in( ".$getProductdIds.")", 'menu', 1 , 'cpanel');
     

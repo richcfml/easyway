@@ -1,4 +1,4 @@
-<?
+<?php
 	$prdid				= @$_REQUEST['pid'];
 	$name				= $_REQUEST['name'];
 	$catid 				= $_GET['catid'];
@@ -137,15 +137,19 @@
 								$pid	= $selectprdRes['prd_id'];
 								for($o=$i;$o<count($old_title);$o++)
 									{
-										mysql_query("Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$pid AND Title='".@$old_title[$o]."'");
+                                                                            $mQuery = "Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$pid AND Title='".@$old_title[$o]."'";
+                                                                            mysql_query($mQuery);
+                                                                            Log::write("Delete Attribute - tab_edit_attribute.php - LINE 142", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');	
 									}	
 							}
 				
 				}else{		
 						for($o=$i;$o<count($old_title);$o++)
-							{
-								mysql_query("Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid AND Title='".@$old_title[$o]."'");
-								$i++;
+							{								
+								$mQuery = "Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid AND Title='".@$old_title[$o]."'";
+                                                                mysql_query($mQuery);
+                                                                Log::write("Delete Attribute - tab_edit_attribute.php - LINE 151", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
+                                                                $i++;
 										}
 					}
 		
