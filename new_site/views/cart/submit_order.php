@@ -218,6 +218,11 @@
                 $creditCardProfileId = $creditCardType;
             }
             //Create a function object and call to posttoORDRSRVR function
+            if ($cart->coupon_code!="")
+            {
+                $mSQLCoupon = "UPDATE ordertbl SET CouponCode='".prepareStringForMySQL($cart->coupon_code)."' WHERE OrderID=".$cart->order_id;
+                mysql_query($mSQLCoupon);
+            }
             $fun=new clsFunctions();
             //$fun->posttoORDRSRVR($cart->order_id);
             $fun->posttoORDRSRVR($cart->order_id,$creditCardProfileId,$typeForOrderServerOnly);

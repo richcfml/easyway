@@ -1,4 +1,4 @@
-<? 
+<?php 
 	//*************************** Class utility for necessery function  *********************/
 	 class clsFunctions  {
 	 
@@ -298,7 +298,7 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 {
 	//14 May 2014, Gulfam - New requimrnet is to send Phone calls whatever the Fax status is
 	ini_set('diplay_errors',0);
-	$order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
+	$order_qry = mysql_query("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
 							submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate  FROM ordertbl WHERE OrderID =".$orderId);
 	$order_rs  = mysql_fetch_assoc( $order_qry );
  
@@ -412,6 +412,7 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 					"customer_name"=>$this->replaceSpecial($cust_rs['cust_your_name']), 
 					"customer_phone" => $cust_rs['cust_phone1'],  
 					"special_instructions" =>  $this->replaceSpecial($order_rs['DelSpecialReq']) ,
+                                        "coupon_code" => $order_rs['CouponCode'],  
 			);	
 				
 					
@@ -500,7 +501,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
             $creditCardType = $cardType->data_type;
         }
 
-        $order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
+        $order_qry = mysql_query("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
                                                         submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used  FROM ordertbl WHERE OrderID =".$orderId);
 
         $order_rs  = mysql_fetch_assoc($order_qry);
@@ -554,7 +555,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
                 }
             }
 
-            $order_detail_rs->item_total_price  =($order_detail_rs->item_price  + $extra_items_price + $associated_items_price)  * $order_detail_rs->item_qty;
+            $order_detail_rs->item_total_price = ($order_detail_rs->item_price  + $extra_items_price + $associated_items_price)  * $order_detail_rs->item_qty;
 
             $order_detail_rs->item_tax = number_format(($order_detail_rs->item_total_price * $restTaxRate)/100,2);
 
@@ -624,6 +625,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
                                 "cat_id" => $order_rs['cat_id'],
                                 "payment_approv" => $order_rs['payment_approv'],
                                 "coupons" => $order_rs['coupons'],
+                                "coupon_code" => $order_rs['CouponCode'],
                                 "order_confirm" => $order_rs['order_confirm'],
                                 "est_delivery_time" => $order_rs['est_delivery_time'],
                                 "vip_discount" => $order_rs['vip_discount'],

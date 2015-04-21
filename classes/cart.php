@@ -269,7 +269,7 @@ class cart{
 						} else if ($discount_in == "$") {
 							$this->coupon_discount = $coupon_discount;
 						}
-							$this->coupon_code=$coupon_code;
+							$this->coupon_code=@$couponRs->coupon_code;
 					return true;
 				
 				} else if ($couponRs->coupon_type==3) {
@@ -285,7 +285,7 @@ class cart{
 										} else if ($discount_in == "$") {
 											$this->coupon_discount += $coupon_discount;
 										}
-										$this->coupon_code=$coupon_code;
+										$this->coupon_code=@$couponRs->coupon_code;
 										$applied=true;
 									}
 								}
