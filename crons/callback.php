@@ -5,15 +5,15 @@
 	if (isset($_GET["orderid"]))
 	{
 		$mFax = json_decode_ewo($_POST["fax"]);
-		mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'CallBack', 'OrderID: ".$_GET["orderid"].", FaxID: ".$mFax["id"].", FaxStatus: ".$mFax["status"]."')");
 		mysql_query("UPDATE ordertbl SET PhaxioCallBack=1 WHERE OrderID=".$_GET["orderid"]);
-		
+		Log::write("callback.php - Update Query - Line 11", "UPDATE ordertbl SET PhaxioCallBack=1 WHERE OrderID=".$_GET["orderid"], 'crons');
 		$mObjFax=new EWOphaxio();
 		$mFaxStatus = 0;
 		$mFaxStatus = $mObjFax->CheckFaxStatus($mFax["id"]);
 		$mObjFun=new clsFunctions();
 		$mObjFun->posttoVCS($_GET["orderid"], $mFaxStatus, $mFax["id"]);
 		mysql_query("UPDATE ordertbl SET PhoneCallCount=1 WHERE OrderID=".$_GET["orderid"]);
+                Log::write("callback.php - Update Query - Line 16", "UPDATE ordertbl SET PhoneCallCount=1 WHERE OrderID=".$_GET["orderid"], 'crons');
 		unset($mObjFax);
 		unset($mObjFun);
 	}

@@ -9,15 +9,17 @@
 	$mysql_query=mysql_query($mQuery);
 	$fun=new clsFunctions();
 	$mFax=new EWOphaxio();
-	
+	Log::write("posttovcs.php - Query1 - Line 12", $mQuery , 'crons');
 	while($callstosend=mysql_fetch_object($mysql_query))
 	{
 		$mPhoneCallCount = $callstosend->PhoneCallCount;
-		
+		Log::write("posttovcs.php - Calltosend Array - Line 16", print_r($callstosend) , 'crons');
 		$mQuery = "SELECT IFNULL(order_destination, 'fax') AS order_destination, name FROM resturants WHERE id=".$callstosend->cat_id;
+                Log::write("posttovcs.php - Query2 - Line 18", $mQuery , 'crons');
 		$mResult = mysql_query($mQuery);
 		if (mysql_num_rows($mResult)>0)
 		{
+                        Log::write("posttovcs.php - Result - Line 22", print_r($mResult) , 'crons');
 			$mRow = mysql_fetch_object($mResult);
 			$mDestination =  strtolower($mRow->order_destination);
 			$mName = $mRow->name;
@@ -34,6 +36,7 @@
 			
 			if ($mPhoneCallCount<2) //Call should go out only twice
 			{
+                                Log::write("posttovcs.php - Details - Line 39", "OrderID: ".$callstosend->OrderID.", Fax Status: ".$mFaxStatus.", Fax Tracking Number: ".$callstosend->fax_tracking_number.", Phone Call Count: ".$mPhoneCallCount , 'crons');
 				$fun->posttoVCS($callstosend->OrderID, $mFaxStatus, $callstosend->fax_tracking_number);
 			}
 			else if ($mPhoneCallCount==2)//If two calls have been made then an email should be sent to easywayordering
@@ -56,6 +59,7 @@
 				unset($mObjMail);*/
 			}
 			$mQuery = "UPDATE ordertbl SET PhoneCallCount=PhoneCallCount+1 WHERE OrderID=".$callstosend->OrderID;
+                        Log::write("posttovcs.php - Update Query - Line 62", $mQuery , 'crons');
 			mysql_query($mQuery);
 		}
 	}
