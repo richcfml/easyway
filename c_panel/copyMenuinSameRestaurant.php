@@ -1,6 +1,6 @@
 <?php require_once ("../includes/config.php");
         $id = 735;
-		$menu_id = 1633;
+		$menu_id = 1824;
         $mysqlqry=mysql_query("select * from menus where id =".$menu_id ."");
 
          while($menu_rs = mysql_fetch_object($mysqlqry)){
