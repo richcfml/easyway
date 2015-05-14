@@ -144,7 +144,7 @@ class cart{
  
  
  		public function sales_tax(){
-			return    round((($this->sales_tax_ratio/100)  * $this->sub_total),2);
+			return    round((($this->sales_tax_ratio/100)  * ($this->sub_total-$this->coupon_discount)),2);
 	    }
 		public function setdriver_tip($tip){
 			 $this->driver_tip=$tip;
