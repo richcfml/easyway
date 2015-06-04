@@ -104,15 +104,22 @@ else if(isset($_POST['x_sid']))
 		$_SESSION["mobile_qc"] = 1;
 		$mobileapp = true;
 	}
-	
-	if ($mobileapp)
-	{
+
+        if (isset($_GET["kiosk"]))
+        {
+            include("kiosk/index.php");
+        }
+        else
+        {
+            if ($mobileapp)
+            {
 		$platform_used = 2;
 		include("mobile/index.php");
-	}
- 	else 
-	{
+            }
+            else 
+            {
  		include("new_site/index.php");
-	}
+            }
+        }
 ?>
 	
