@@ -125,9 +125,6 @@ if ($objRestaurant->isOpenHour == 1)
                 <a style="text-decoration: none;" href="testDMPOSApp://EWO-EVE1/<?= str_replace(".", "", number_format($cart->grand_total(),2)) ?>/<?=date('YmdHis')?>/C02/USD/FALSE/<?=urlencode($SiteUrl.$objRestaurant->url."/?item=parseresponse&kiosk=1") ?>">
                     <input type="button" name="btncheckout" value="Pay & Order" class="delivery_button"> 
                 </a>
-                <a style="text-decoration: none;" href="../kiosk/api.php?MerchantID=EWO-EVE1&Amount=<?= number_format($cart->grand_total(),2) ?>&InvoiceNum=<?=date('YmdHis')?>&PaymentType=C02&CurrencyIso=USD&SignCapture=FALSE&RedirectURL=<?=urlencode($SiteUrl.$objRestaurant->url."/?item=parseresponse&kiosk=1") ?>">
-                    <input type="button" name="btncheckout" value="Pay & Order-Test" class="delivery_button"> 
-                </a>
                 <?php
                 }
                 else
@@ -145,7 +142,6 @@ if ($objRestaurant->isOpenHour == 1)
                     }
                 </script>
                     <input style="cursor: pointer; cursor: hand;" type="button" name="btncheckout" value="Pay & Order" class="delivery_button" onclick="cartEmpty();">
-                    <input style="cursor: pointer; cursor: hand;" type="button" name="btncheckout" value="Pay & Order - Test" class="delivery_button" onclick="cartEmpty();">
                 <?php
                 }
                 ?>
