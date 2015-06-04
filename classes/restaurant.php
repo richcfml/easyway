@@ -1,4 +1,4 @@
-<? 
+<?php 
 class restaurant  {
 	public $id;
 	public $name;
@@ -272,6 +272,55 @@ class restaurant  {
 			
 		 }
 
+                 public function DayBusinessHours($pDayNumber){
+			$qry= mysql_query("SELECT *,'' as dayName FROM business_hours WHERE rest_id='". $this->id."' AND day=".$pDayNumber." ORDER BY open ASC");
+			$arr_days=array();
+			while($day=mysql_fetch_object($qry)){
+				
+				  if($day->day == 0) {
+				 	 $day->dayName = 'Monday';
+				  }else if($day->day == 1) {
+					   $day->dayName= 'Tuesday';
+				  }else if($day->day == 2) {
+					   $day->dayName = 'Wednesday';
+				  }else if($day->day == 3) {
+					   $day->dayName = 'Thursday';
+				  }else if($day->day == 4) {
+					   $day->dayName = 'Friday';
+				  }else if($day->day == 5) {
+					   $day->dayName = 'Saturday';
+				  }else if($day->day == 6) {
+					   $day->dayName = 'Sunday';
+				  }
+
+                                if ((strrpos($day->open,"-") === FALSE) && (strrpos($day->close,"-") === FALSE))
+                                {
+                                    $day->open=date("g:i A",strtotime($day->open));
+                                    $day->close=date("g:i A",strtotime($day->close));
+                                }
+                                else if ((strrpos($day->open,"-") !== FALSE) && (strrpos($day->close,"-") !== FALSE))
+                                {
+                                    $day->open = "Closed";
+                                    $day->close = "Closed";
+                                }
+                                else if (strrpos($day->open,"-") !== FALSE)
+                                {
+                                    $day->open = "0000";
+                                    $day->open=date("g:i A",strtotime($day->open));
+                                    $day->close=date("g:i A",strtotime($day->close));
+                                }
+                                else if (strrpos($day->close,"-") !== FALSE)
+                                {
+                                    $day->close = "2359";
+                                    $day->open=date("g:i A",strtotime($day->open));
+                                    $day->close=date("g:i A",strtotime($day->close));
+                                }
+				$arr_days[]=$day;
+			 }
+			 return $arr_days;
+			
+		 }
+                 
 	public function saveToSession() {
 		$_SESSION['restaurant_detail']=serialize($this);
 	}
