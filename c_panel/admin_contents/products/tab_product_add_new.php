@@ -412,7 +412,7 @@ if($_POST['cropimg'])
                                                                         var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a> <span id='"+mEID+"'></span>";
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
                                                                         placeCaretAtEnd(document.getElementById(mEID));
-                                                                        $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("Â®", "&#174;"));
+                                                                        $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
                                                                 }
