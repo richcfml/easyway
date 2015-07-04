@@ -59,7 +59,7 @@
 </script>
 <!--End script for dependent list-->
 
-<?
+<?php
 $and_sch = '';
 $search_by = '';
 $search_field = '';
@@ -194,7 +194,16 @@ if ($_SESSION['admin_type'] == 'admin') {
         $first_letter = "first_letter != 'all'";
         $letter = 'all';
     }
+} 
+else if ($_SESSION['admin_type'] == 'bh') 
+{
+    $qry = " WHERE bh_restaurant = 1 ";
+    if (empty($_REQUEST['first'])) {
+        $first_letter = "first_letter != 'all'";
+        $letter = 'all';
+    }
 }
+
 
 
 $restaurant_query = "";
@@ -446,36 +455,67 @@ if ($numrows1 > 0) {
 		  ?>
 			
 			<img src="images/<? echo $img; ?>" /><? //var_dump($cat_status); ?>
-		  <? } ?>
+		  <?php
+                  } 
+                  ?>
 		  <a href="./?mod=resturant&item=restedit&cid=<?=$cat_id?>">
 		  <?=stripslashes(stripcslashes($cat_name))?>
 		  </a> </div>
           
 		<br style="clear:both" >
-		<?php if($_SESSION['admin_type'] == 'admin' || $_SESSION['admin_type'] == 'reseller') { ?>
+		<?php
+                if($_SESSION['admin_type'] == 'admin' || $_SESSION['admin_type'] == 'reseller') 
+                { 
+                ?>
 		<div id="actions" <?= $cat_status == 2 ?"style='width:88px';":"" ?>>
 		  <div id="icons"><a href="./?mod=resturant&item=restedit&cid=<?=$cat_id?>">Edit</a></div>
 		 
-          <?php if(  $cat_status == 0 )  { ?>
+          <?php 
+            if(  $cat_status == 0 )  
+            { 
+            ?>
 		  <div id="icons"><a href="./?mod=<?=$mod?>&item=reststatus&rest_activ_id=<?=$cat_id?>" data-id="<?=$cat_id?>" data-status="1" class="statuslink" onClick="return confirm('Are you sure you want to change the status of this resturant?')">Activate</a></div>
 		  <br style="clear:right;" />
 		 
-          <?php } else if($cat_status == 1) { ?>
+          <?php 
+            } 
+            else if($cat_status == 1) 
+            { 
+            ?>
 		  <div id="icons" ><a href="./?mod=<?=$mod?>&item=reststatus&rest_deactive_id=<?=$cat_id?>" data-id="<?=$cat_id?>" data-status="0" class="statuslink" onClick="return confirm('Are you sure you want to change the status of this resturant?')">Deactivate</a></div>
 		  <br style="clear:right;" />
-		  <?   
-		  } else if($cat_status == 2) { ?>
+            <?php
+            } 
+            else if($cat_status == 2) 
+            { 
+            ?>
 		  <div id="icons" ><a href="javascript:void(0);" data-id="<?=$cat_id?>" class="suspendedstatuslink">SUSPENDED</a></div>
 		  <br style="clear:right;" />
-		  <? } ?>
+            <?php 
+            } 
+            ?>
 		</div>
-		<? }?>
+            <?php 
+            }
+            else
+            {
+                if ($_SESSION['admin_type'] == 'bh')
+                {
+            ?>
+                <div id="actions" style="width: auto;">
+                    <div id="icons"><a href="./?mod=resturant&item=restedit&cid=<?=$cat_id?>">Edit</a></div>
+                </div>
+            <?php
+                }
+            }
+            ?>
 		<div id="Site_URL">
 			Site URL:&nbsp;<a href="<?php echo $SiteUrl.$url_name;?>/" target="_blank"><?php echo $SiteUrl.$url_name;?>/</a>
 		</div>
-		<?php
-			if($_SESSION['admin_type'] == "admin" || $_SESSION['admin_type'] == "reseller" || $_SESSION['admin_type'] == "store owner") {
-		?>
+            <?php
+			if($_SESSION['admin_type'] == "admin" || $_SESSION['admin_type'] == "reseller" || $_SESSION['admin_type'] == "store owner") 
+                        {
+            ?>
 				<div class='analytics'>
 					<a href="?mod=analytics&item=orders&cid=<?=$cat_id?>" class="tooltip" title="You had <? echo $last_month_count; ?> orders over the last 30 days. That's <? echo abs($last_but_second_month_count - $last_month_count); ?> <? if($last_month_count > $last_but_second_month_count) { ?> more <? } else { ?> fewer <? } ?> compared to the previous 30 day period.">
 						<span class="orders_count_container">
@@ -517,16 +557,25 @@ if ($numrows1 > 0) {
 						</span>
 					</a>
 				</div>
-		<? } ?>
+		<?php
+                } 
+                ?>
         </div>
 	  </div>
-	  <? 
+	  <?php 
 		$i++;
-	} ?>
+	} 
+        ?>
    
-<? } else { ?>
+<?php
+} 
+else 
+{ 
+?>
         <strong>There is no restaurant under this Client.</strong>
-<? }?>
+<?php
+}
+?>
     </div>
 	 <br style="clear:both;" />
 

@@ -1,4 +1,4 @@
-<? 
+<?php
 require_once("../includes/config.php");
 require("includes/SimpleImage.php");
 require("includes/snapshot.class.php");
@@ -16,24 +16,35 @@ $ajax=0;
 
 //echo 'user'.$_SESSION['admin_session_user_name'];
 //echo 'pass'.$_SESSION['admin_session_pass'];
-if(!$_SESSION['admin_session_user_name'] && !$_SESSION['admin_session_pass']){ header("location:login.php");	
-//echo 'index if';
-} ?>
+if(!$_SESSION['admin_session_user_name'] && !$_SESSION['admin_session_pass'])
+{ 
+        header("location:login.php");	
+    //echo 'index if';
+} 
+?>
 
-<?
-if($_SESSION['admin_type'] == 'admin') {
-	$resturantQuery = mysql_query("SELECT * FROM resturants");
-} else if($_SESSION['admin_type'] == 'reseller') {
+<?php
+if($_SESSION['admin_type'] == 'admin') 
+{
+    $resturantQuery = mysql_query("SELECT * FROM resturants");
+} 
+else if($_SESSION['admin_type'] == 'reseller') 
+{
+    $resellerId = $_SESSION['owner_id'];
+    $client_ids = resellers_client( $resellerId );
 
-	$resellerId = $_SESSION['owner_id'];
-	$client_ids = resellers_client( $resellerId );
+    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id IN ( $client_ids ) ");
+    $licenseQry		=	mysql_query("select * from licenses WHERE reseller_id = '".$resellerId."'");
+    $totalLicenses  = 	mysql_num_rows($licenseQry);
 
-	$resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id IN ( $client_ids ) ");
-	$licenseQry		=	mysql_query("select * from licenses WHERE reseller_id = '".$resellerId."'");
-	$totalLicenses  = 	mysql_num_rows($licenseQry);
-
-} else if($_SESSION['admin_type'] == 'store owner') {
-	$resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id = '".$_SESSION['owner_id']."'");
+} 
+else if($_SESSION['admin_type'] == 'store owner') 
+{
+    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id = '".$_SESSION['owner_id']."'");
+}
+else if($_SESSION['admin_type'] == 'bh') 
+{
+    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE bh_restaurant = 1");
 }
 @$totalResturants = mysql_num_rows($resturantQuery);
 

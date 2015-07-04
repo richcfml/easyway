@@ -1,6 +1,6 @@
 <?php
 require("../../includes/SimpleImage.php");
-
+include("../../../includes/config.php");
 if (isset($_GET['importimage']))
 {
 	$newWidth = "";
@@ -40,6 +40,48 @@ if (isset($_GET['importimage']))
 	$mImage->save($mPath);
 	
 	echo($mName."~".$newWidth."~".$newHeight);
+}
+else if (isset($_GET["sku"]))
+{
+    $q=$_POST['searchword'];
+    $q=str_replace("@","",$q);
+    $q=trim($q);
+    
+    $sql_res=mysql_query("SELECT * from bh_items WHERE ItemCode LIKE '$q%' ORDER BY ID LIMIT 3");
+?>
+<div>
+    <img class="imgCloseBH" src="images/cross2.png" style="float: right; cursor: hand; cursor: pointer; margin-top: 3px; margin-right: 3px;" />
+<?php
+    while($row=mysql_fetch_array($sql_res))
+    {
+    $mItemName=$row['ItemName'];
+    ?>
+    <div class="display_box" contenteditable="false">
+    <a href="#" class='addname' style='color: #06C; font-size: 15px; line-height: 1.5; width: 95%;' title='<?php echo $mItemName; ?>'>
+    <?php echo $mItemName ?> </a>
+    </div>
+    <?php
+    }
+?>
+</div>
+<?php
+}
+else if (isset($_GET["sku1"]))
+{
+    $q=$_POST['searchword'];
+    $q=str_replace("@","",$q);
+    $q=trim($q);
+    
+    $sql_res=mysql_query("SELECT * from bh_items WHERE ItemCode = '$q'");
+    if (mysql_num_rows($sql_res)>0)
+    {
+        $row=mysql_fetch_array($sql_res);
+        echo($row['ItemName']);
+    }
+    else
+    {
+        echo("");
+    }
 }
 
 function GetFileExt($fileName) 

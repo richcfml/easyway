@@ -484,6 +484,7 @@ $.noty.defaults.template_menu_delete= '<div id="popup_box" class="popup_box" sty
     $('#vegan1').darkTooltip();
     $('#LOWFAT1').darkTooltip();
     $('#Vegetarian1').darkTooltip();
+    $('#bh_item1').darkTooltip();
     $('.spicy1').darkTooltip();
     $('#glutenfree1').darkTooltip();
     $('#imgAttDelSM').darkTooltip();

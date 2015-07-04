@@ -48,7 +48,10 @@
 		$admin_include_content = "admin_contents/advanced_settings/apikey.php";
 	} 
 	
-	
+	if($mod == 'ssoaccount')	
+	{ 
+		$admin_include_content = "admin_contents/advanced_settings/ssoaccount.php";
+	}
 	if($mod == 'news')			
 	{ 
 		$admin_include_content = "admin_contents/news/tab_news_main.php";
@@ -79,7 +82,7 @@
 		$admin_include_content = "admin_contents/analytics/tab_analytics_main.php";
 	}
 	
-    if($mod == 'new_menu')	
+        if($mod == 'new_menu')	
 	{
 		$admin_include_content = "admin_contents/menus/new_menu.php";
 	}
@@ -136,7 +139,8 @@
 			<?php 
 			} 
 			?> 
-			<div class="links <?=$mod=='apikey' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=apikey" >API Key</a></div> 		  
+			<div class="links <?=$mod=='apikey' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=apikey" >API Key</a></div> 	
+                        <div class="links <?=$mod=='ssoaccount' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=ssoaccount" >SSO Accounts</a></div> 	
 			<br style="clear:both" />
 		</div>
 <?php 

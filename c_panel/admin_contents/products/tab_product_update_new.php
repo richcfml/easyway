@@ -77,8 +77,28 @@ if (isset($_GET['prd_id'])) {
     $price = $prd_data->retail_price;
     $price = preg_replace('/[\$,]/', '', $price);
     $description = $prd_data->item_des;
-    $imgSource = $prd_data->item_image;
-	
+    $description1 = $prd_data->item_des;
+
+    if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
+    {
+        $mSQLBH = "SELECT ItemName FROM bh_items";
+        $mResBH = mysql_query($mSQLBH);
+        
+        $mPrevItem = "";
+        
+        while ($mRowBH = mysql_fetch_object($mResBH))
+        {
+            if (strpos($description, $mRowBH->ItemName)!==FALSE)
+            {
+                if ($mPrevItem!=$mRowBH->ItemName)
+                {
+                    $mPrevItem = $mRowBH->ItemName;
+                    $description = str_replace($mRowBH->ItemName, " <a contentEditable='false' href='#' style='color: #0066CC;'>".$mRowBH->ItemName."</a> " ,$description);
+                }
+            }
+        }
+    }
+    
 	$size = getimagesize("../images/item_images/". $imgSource);
 	
 	if (($size[0]>=450) || ($size[1]>=450))
@@ -359,17 +379,211 @@ if (isset($_GET['prd_id'])) {
                 <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td>
-                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name" >
+                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40">
                         </td>
                         <td>
                             <input onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:<?=$currency?>4.50)">
                         </td>
                     </tr>
                     <tr><td>
-                            <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item" >
-                                <?= trim($description) ?>
-                            </textarea>
-                            
+                            <?php
+                            if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=="1"))
+                            {
+                            ?>
+                            <script type="text/javascript">
+                                $(document).ready(function()
+                                {
+                                    var start=/@/ig; // @ Match
+                                    
+                                    $("#product_description1").blur(function()
+                                    {
+                                        if ($.trim($("#product_description1").text())=="")
+                                        {
+                                            $("#product_description1").text("Description of Item");
+                                            $("#product_description1").css("color", "#917591");
+                                        }
+                                    });
+                                    
+                                    $("#product_description1").focus(function()
+                                    {
+                                        if ($.trim($("#product_description1").text())=="Description of Item")
+                                        {
+                                            $("#product_description1").text("");
+                                            $("#product_description1").css("color", "#000000");
+                                        }
+                                    });
+                                    
+                                    $("#product_description1").live("keyup",function(e)
+                                    {
+                                        var search = "";
+                                        var content=$(this).text(); //Content Box Data
+                                        if (content=="")
+                                        {
+                                            $("#display").hide();
+                                            $("#product_description").val("");
+                                            return;
+                                        }
+                                        
+                                        /*search = content.substring(content.lastIndexOf("@") + 1);
+                                        if (content.indexOf(" ")>=0)
+                                        {
+                                            search = content.substring(content.lastIndexOf(" ") + 1);
+                                            if (content.indexOf(",")>=0)
+                                            {
+                                                search = content.substring(content.lastIndexOf(",") + 1);    
+                                            }
+                                            
+                                            if (content.indexOf("@")>=0)
+                                            {
+                                                search = content.substring(content.lastIndexOf("@"));    
+                                            }
+                                        }
+                                        else if (content.indexOf(",")>=0)
+                                        {
+                                            search = content.substring(content.lastIndexOf(",") + 1);    
+                                            
+                                            if (content.indexOf("@")>=0)
+                                            {
+                                                search = content.substring(content.lastIndexOf("@"));    
+                                            }
+                                        }
+                                        else if (content.indexOf("@")>=0)
+                                        {
+                                            search = content.substring(content.lastIndexOf("@"));    
+                                        }
+                                        else
+                                        {
+                                            search = content;
+                                        }
+                                        */
+                                        
+                                        
+                                        search = content.substring(content.indexOf("@"));
+                                        
+                                        if (search.indexOf(" ")>=0)
+                                        {   
+                                            search = search.substring(0, search.indexOf(" "));
+                                        }
+                                        
+                                        if (search.indexOf(",")>=0)
+                                        {   
+                                            search = search.substring(0, search.indexOf(","));
+                                        }
+                                        
+                                        search = $.trim(search);
+                                        
+                                        var go= content.match(start); //Content Matching @
+
+                                        var dataString = 'searchword='+ search;
+                                        
+                                        if (go)
+                                        {
+                                            if(go.length>0)
+                                            {
+                                                if (e.keyCode==32)
+                                                {
+                                                    if ((search!="") && (search!="@"))
+                                                    {
+                                                        $("#hdnSearch").val(search);
+                                                        setTimeout(function()
+                                                        {
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "admin_contents/products/ajax.php?sku1=1", // Database name search
+                                                                data: dataString,
+                                                                cache: false,
+                                                                success: function(data)
+                                                                {
+                                                                    if ($.trim(data)!="")
+                                                                    {
+                                                                        var username=data;
+                                                                        var mEID = Math.floor((Math.random() * 10000) + 1); 
+                                                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a> <span id='"+mEID+"'></span>";
+                                                                        $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
+                                                                        placeCaretAtEnd(document.getElementById(mEID));
+                                                                        $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("®", "&#174;"));
+                                                                        $("#bh_item").attr('checked', true);
+                                                                    }
+                                                                }
+                                                            });
+                                                        }, 100);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $("#product_description").val($("#product_description1").text());
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $("#product_description").val($("#product_description1").text());
+                                        }
+                                        
+                                        if ($("#product_description1").html().indexOf("<a ")<0)
+                                        {
+                                            $("#bh_item").attr('checked', false);
+                                        }
+                                        
+                                        return false;
+                                    });
+                                    
+                                    function placeCaretAtEnd(el) {
+                                        el.focus();
+                                        if (typeof window.getSelection != "undefined"
+                                                && typeof document.createRange != "undefined") {
+                                            var range = document.createRange();
+                                            range.selectNodeContents(el);
+                                            range.collapse(false);
+                                            var sel = window.getSelection();
+                                            sel.removeAllRanges();
+                                            sel.addRange(range);
+                                        } else if (typeof document.body.createTextRange != "undefined") {
+                                            var textRange = document.body.createTextRange();
+                                            textRange.moveToElementText(el);
+                                            textRange.collapse(false);
+                                            textRange.select();
+                                        }
+                                    }
+                                    
+                                    $(".addname").live("click",function()
+                                    {
+                                        var username=$(this).attr('title');
+                                        //$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), ""));
+                                        var E=" &nbsp;<a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a>&nbsp; ";
+                                        //$("#product_description1").append(E);
+                                        $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
+                                        $("#display").hide();
+                                        $("#product_description").val($("#product_description1").text());
+                                    });
+                                    
+                                    $(".imgCloseBH").live("click",function()
+                                    {
+                                        $("#display").hide();
+                                    });
+                                });
+                                
+                                
+                                
+                                
+                            </script>
+                                <textarea id="product_description" name="product_description" style="display: none;"><?= trim($description1) ?></textarea>
+                                <input type="hidden" id="hdnSearch" />
+                                <div id="container">
+                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;"><?= trim($description) ?>
+                                </div>
+                                <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
+                                </div>
+                                </div>
+                            <?php
+                            }
+                            else
+                            {
+                            ?>
+                                <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= trim($description) ?></textarea>
+                            <?php
+                            }
+                            ?>
                         </td>
                         <td>
                             <div class="photo_div_before" id="show_photo_before" <?
@@ -887,8 +1101,30 @@ if (isset($_GET['prd_id'])) {
                         <td class="padding_td"><input type="checkbox" name ="type[]" class="chk_style" id ="LOWFAT" value="5" <?if (strpos($type,'5') !== false) {?> checked<?}?>/><label for="LOWFAT"></label>
                             <div style="margin-left: 30px;"><img src="img/LOWFAT_icon.png" data-tooltip="Low Fat" id ="LOWFAT1" style="width: 36px;"></div></td>
                     </tr>
-                    <tr><td class="padding_td"><input type="checkbox" name ="type[]" class="chk_style" id ="vegetarian"  value="6" <?if (strpos($type,'6') !== false) {?> checked<?}?>/><label for="vegetarian"></label>
-                            <div style="margin-left: 27px;"><img src="img/vegetarian_icon.png" data-tooltip="Vegetarian" id ="Vegetarian1" style="width: 36px;"></div></td>
+                    <tr>
+                        <td class="padding_td">
+                            <input type="checkbox" name ="type[]" class="chk_style" id ="vegetarian"  value="6" <?if (strpos($type,'6') !== false) {?> checked<?}?>/><label for="vegetarian"></label>
+                            <div style="margin-left: 27px;">
+                                <img src="img/vegetarian_icon.png" data-tooltip="Vegetarian" id ="Vegetarian1" style="width: 36px;">
+                            </div>
+                        </td>
+                        <?php
+                        if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
+                        {
+                            if ($Objrestaurant->bh_restaurant=="1")
+                            {
+                    ?> 
+                        <td class="padding_td">
+                            <input type="checkbox" name ="type[]" class="chk_style" id ="bh_item" value="B" <?if (strpos($type,'B') !== false) {?> checked<?}?>/>
+                            <label for="bh_item"></label>
+                            <div style="margin-left: 27px;">
+                                <img src="img/bh_item.png" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;">
+                            </div>
+                        </td>
+                    <?php
+                            }
+                        }
+                    ?>
                     </tr>
                     <tr>
                         <td class="padding_td"><input type="checkbox" name ="type[]" class="chk_style" id ="spicy" value="7" <?if (strpos($type,'7') !== false) {?> checked<?}?>/><label for="spicy"></label>

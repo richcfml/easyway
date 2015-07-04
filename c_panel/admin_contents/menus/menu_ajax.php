@@ -197,6 +197,41 @@ else if (isset($_GET['add_menu_item']))
            }
     }
 
+    $mRestBH = 0;
+    $mSQLBH = "SELECT COUNT(*) AS RestCount FROM resturants WHERE id = ".$_GET['restid']. " AND bh_restaurant=1";
+    $mResBH = mysql_fetch_object(mysql_query($mSQLBH));
+    
+    if ($mResBH)
+    {
+        if ($mResBH->RestCount>0)
+        {
+            $mRestBH = 1;
+        }
+    }
+    
+    $product_description = replaceBhSpecialChars($product_description);
+    
+    $mBHItem = 0;
+    if ($mRestBH==1)
+    {
+        $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemName, '".$product_description."')>0";
+        $mResBH = mysql_fetch_object(mysql_query($mSQLBH));
+        if ($mResBH)
+        {
+            if ($mResBH->ItemCount>0)
+            {
+                if ($type=="")
+                {
+                    $type = "B";
+                }
+                else
+                {
+                    $type = $type.",B";
+                }
+            }
+        }
+    }
+    
     Log::write("Select MaxSortOrder product - menu_ajax.php", "QUERY -- Select max(SortOrder) as maxOrder from product where sub_cat_id = ".$sub_cat, 'menu', 1 , 'cpanel');
 
     $maxSortOrderNo = mysql_fetch_object(mysql_query("Select max(SortOrder) as maxOrder from product where sub_cat_id = ".$sub_cat));
@@ -207,8 +242,9 @@ else if (isset($_GET['add_menu_item']))
         $maxOrderNo = $maxSortOrderNo->maxOrder;
         $maxOrderNo++;
     }
-
+    
     Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 'menu', 1 , 'cpanel');
+        
     mysql_query("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . "");
     $lastid = mysql_insert_id();
     if (!empty($_GET['ext']))
@@ -303,7 +339,78 @@ else if (isset($_GET['update_menu_item']))
         $price = '0'.$price;
       }
     }
+    
+    
+    $mRestBH = 0;
+    $mProductIDBH = $_GET['prd_id'];
+    $mSQLBH = "SELECT cat_id FROM product WHERE prd_id=".$mProductIDBH;
+    $mResBH = mysql_fetch_object(mysql_query($mSQLBH));
+    if ($mResBH)
+    {
+        $mRestaurantIDBH = $mResBH->cat_id;
+        $mSQLBH = "SELECT COUNT(*) AS RestCount FROM resturants WHERE id = ".$mRestaurantIDBH. " AND bh_restaurant=1";
+        $mResBH = mysql_fetch_object(mysql_query($mSQLBH));
+
+        if ($mResBH)
+        {
+            if ($mResBH->RestCount>0)
+            {
+                $mRestBH = 1;
+            }
+        }
+        
+        $product_description = replaceBhSpecialChars($product_description);
+
+        $mBHItem = 0;
+        if ($mRestBH==1)
+        {
+            $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemName, '".$product_description."')>0";
+            $mResBH = mysql_fetch_object(mysql_query($mSQLBH));
+            if ($mResBH)
+            {
+                if ($mResBH->ItemCount>0)
+                {
+                    if ($type=="")
+                    {
+                        $type = "B";
+                    }
+                    else
+                    {
+                        $type = $type.",B";
+                    }
+                }
+                else
+                {
+                    if (trim($type)=="B")
+                    {
+                        $type = "";
+                    }
+                    else
+                    {
+                        $type = str_replace(",B", "", $type);
+                        $type = str_replace(", B", "", $type);
+                    }
+                }
+            }
+            else
+            {
+                if (trim($type)=="B")
+                {
+                    $type = "";
+                }
+                else
+                {
+                    $type = str_replace(",B", "", $type);
+                    $type = str_replace(", B", "", $type);
+                }
+            }
+        }
+    }
+    
+    
+    
     Log::write("Update Product Title, Desc, Retail Pric, Type - menu_ajax.php", "QUERY -- update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).", item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 'menu', 1 , 'cpanel');
+    
     mysql_query("update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).",pos_id = '$pos_id', item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "");
 
     if (!empty($_GET['ext']))
@@ -1652,6 +1759,16 @@ function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);
     $ext = strtolower($ext);
     return $ext;
+}
+
+function replaceBhSpecialChars($pDescription)
+{
+    $pDescription = str_replace("'", "&#39;", $pDescription);
+    $pDescription = str_replace("®", "&#174;", $pDescription);
+    $pDescription = str_replace("ä", "&#228;", $pDescription);
+    $pDescription = str_replace("è", "&#232;", $pDescription);
+    $pDescription = str_replace("ñ", "&#241;", $pDescription);
+    return $pDescription;
 }
 
 ?>

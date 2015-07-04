@@ -37,6 +37,9 @@ class restaurant  {
 	public $openTime,$closeTime;
 	public $reseller,$did_number;
 	public $srid;
+        public $bh_restaurant;
+        public $bh_featured;
+        public $URL;
 
 	public $active_menu_link_color, 
 		$appearence, 

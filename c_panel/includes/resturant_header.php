@@ -85,8 +85,24 @@
 		redirect("./?mod=resturant");
 	}
 	
+        if ($_SESSION['admin_type'] == 'bh') 
+        {
+            $mSQLBH = mysql_fetch_object(mysql_query("SELECT bh_restaurant FROM resturants WHERE id=".$mRestaurantIDCP));
+            if ($mSQLBH)
+            {
+                if ($mSQLBH->bh_restaurant<=0)
+                {
+                    redirect("./?mod=resturant");
+                }
+            }
+            else
+            {
+                redirect("./?mod=resturant");
+            }
+        }
+        
 	$Objrestaurant= $Objrestaurant_data->getDetail($mRestaurantIDCP);
-		 
+        
 	if (($Objrestaurant->region == 1)  || ($Objrestaurant->region == 2))
 	{
 		  $currency = "$";

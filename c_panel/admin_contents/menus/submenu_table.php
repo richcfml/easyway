@@ -258,6 +258,9 @@
                                                                 echo '<img src="img/spicy_icon22.png" style="margin-left: 10px;" data-tooltip="Hot" class ="spicy1"/>';
                                                                 echo '<img src="img/spicy_icon22.png" style="margin-left: 10px;" data-tooltip="Hot" class ="spicy1"/>';
                                                             }
+                                                            if (strpos($mRowPr["item_type"], 'B') !== false) {
+                                                                echo '<img src="img/bh_item1.png" style="margin-left: 10px;" data-tooltip="BH Item" class ="spicy1"/>';
+                                                            }
                                             ?>      </div>
                                                         </td>
 

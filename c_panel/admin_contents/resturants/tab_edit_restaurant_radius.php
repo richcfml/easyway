@@ -596,7 +596,33 @@ if (isset($_POST['submit'])) {
         $_GET['cid'] = $catid;
         unset($_SESSION['restaurant_detail']);
     } //end else 
-	$Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    
+    if (isset($_POST["bh_restaurant"]))
+    {
+        if ($_POST["bh_restaurant"]=="1")
+        {
+            mysql_query("UPDATE resturants SET bh_restaurant = 1 WHERE id=".$catid);
+        }
+        else if ($_POST["bh_restaurant"]=="0")
+        {
+            mysql_query("UPDATE resturants SET bh_restaurant = 0 WHERE id=".$catid);
+            mysql_query("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid);
+        }
+    }
+    
+    if (isset($_POST["bh_featured"]))
+    {
+        if ($_POST["bh_featured"]=="1")
+        {
+            mysql_query("UPDATE resturants SET bh_featured = 1 WHERE id=".$catid);
+        }
+        else if ($_POST["bh_featured"]=="0")
+        {
+            mysql_query("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid);
+        }
+    }
+    
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 } //end submit2		
 else if (isset($_POST["btnRemoveVIP"]))
 {
@@ -1002,8 +1028,29 @@ else if (isset($_POST["btnRemoveVIP"]))
                     </td>
                 </tr>
 <? } ?>
-
-
+<?php
+    if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
+    {
+?>       
+            <tr align="left" valign="top"> 
+                <td></td>
+                <td>
+                    <strong>BH Restaurant:</strong><br />
+                    <input name="bh_restaurant" type="radio" value="1" id="bh_restaurant_yes" <?=($Objrestaurant->bh_restaurant>0?"checked":"")?>>Yes&nbsp;&nbsp;
+                    <input name="bh_restaurant" type="radio" value="0" id="bh_restaurant_no" <?=($Objrestaurant->bh_restaurant<=0?"checked":"")?>>No
+                </td>
+            </tr>
+            <tr align="left" valign="top"> 
+                <td></td>
+                <td>
+                    <strong>BH Featured:</strong><br />
+                    <input name="bh_featured" type="radio" value="1" id="bh_featured_yes" <?=($Objrestaurant->bh_featured>0?"checked":"")?>>Yes&nbsp;&nbsp;
+                    <input name="bh_featured" type="radio" value="0" id="bh_featured_no" <?=($Objrestaurant->bh_featured<=0?"checked":"")?>>No
+                </td>
+            </tr>
+<?php
+    }
+?>
             <tr align="left" valign="top"> 
                 <td>&nbsp;</td>
                 <td>Facebook Link<br /><input name="facebookLink" type="text" size="40" id="facebookLink" value="<?= $Objrestaurant->facebookLink ?>" /></td>

@@ -9,6 +9,7 @@ if(isset($_POST['submit']))
 	$payment_gateway_login_id	 = @$_POST['payment_gateway_login_id'];
 	$payment_gateway_trans_Key	 = @$_POST['payment_gateway_trans_Key']; 
 	$vendor_id					 = @$_POST['vendor_id']; 
+        $mURL					 = @$_POST['txtURL'];
 	
 	$did_number=$_POST['did_number']; 
  	$refund_password= @$_POST['refund_password']; 
@@ -38,13 +39,13 @@ if(isset($_POST['submit']))
 	
 	if (!$mDupFlag)
 	{
-		mysql_query("UPDATE resturants SET VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
+		mysql_query("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
 		$Objrestaurant->did_number=$did_number;
 		$mMessage = "Restaurant updated successfully.";
 	}
 	else
 	{
-		mysql_query("UPDATE resturants SET VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
+		mysql_query("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
 	}
 
 	$Objrestaurant->order_destination=$order_destination;
@@ -55,6 +56,7 @@ if(isset($_POST['submit']))
 	$Objrestaurant->transKey=$payment_gateway_trans_Key;
 	$Objrestaurant->refund_password=$refund_password;
 	$Objrestaurant->VendorID=$vendor_id;
+        $Objrestaurant->URL=$mURL;
 	$Objrestaurant->saveToSession();
 }
  
@@ -223,6 +225,14 @@ include "nav.php"; ?>
                 <td>
                     <input name="did_number" type="text" size="30" maxlength="30" id="did_number" value="<?php if (trim($mDIDNumber)!="") { echo($mDIDNumber); } else { echo($Objrestaurant->did_number); } ?>" />
 					<input name="did_number_p" type="hidden" id="did_number_p" value="<?= $Objrestaurant->did_number ?>" />
+                </td>
+            </tr>
+            <tr align="left" valign="top">
+                <td> 
+                    URL (Domain)
+                </td>
+                <td>
+                    <input name="txtURL" type="text" size="45" maxlength="200" id="txtURL" value="<?=$Objrestaurant->URL?>" />
                 </td>
             </tr>
             <tr>
