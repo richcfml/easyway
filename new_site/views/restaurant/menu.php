@@ -19,6 +19,7 @@
         color:#000;
     }	
 </style>
+
 <a href="#BodyLeftArea" rel="facebox" id="showPopupLink"></a>
 <div id="dhtmltooltip"></div>
 <script src="<? echo $js_root; ?>dhtmltip.js" type="text/javascript"></script>
