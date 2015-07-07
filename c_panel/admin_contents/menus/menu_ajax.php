@@ -308,7 +308,7 @@ else if (isset($_GET['update_menu_item']))
 		$mRegioRow = mysql_fetch_object($mRegioRes);
 		if (($mRegioRow->RestaurantRegion!=1) && ($mRegioRow->RestaurantRegion!=2))
 		{
-				$price = str_replace("£",",",$price);
+				$price = str_replace("ï¿½",",",$price);
 		}
 		else
 		{
@@ -1764,11 +1764,11 @@ function GetFileExt($fileName) {
 function replaceBhSpecialChars($pDescription)
 {
     $pDescription = str_replace("'", "&#39;", $pDescription);
-    $pDescription = str_replace("®", "&#174;", $pDescription);
-    $pDescription = str_replace("ä", "&#228;", $pDescription);
-    $pDescription = str_replace("è", "&#232;", $pDescription);
-    $pDescription = str_replace("ñ", "&#241;", $pDescription);
-    $pDescription = str_replace(" ", " ", $pDescription);
+    $pDescription = str_replace("Â®", "&#174;", $pDescription);
+    $pDescription = str_replace("Ã¤", "&#228;", $pDescription);
+    $pDescription = str_replace("Ã¨", "&#232;", $pDescription);
+    $pDescription = str_replace("Ã±", "&#241;", $pDescription);
+    $pDescription = str_replace("Â ", " ", $pDescription);
     return $pDescription;
 }
 
