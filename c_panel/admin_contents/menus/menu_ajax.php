@@ -1769,7 +1769,6 @@ function replaceBhSpecialChars($pDescription)
     $pDescription = str_replace("è", "&#232;", $pDescription);
     $pDescription = str_replace("ñ", "&#241;", $pDescription);
     return $pDescription;
-    
 }
 
 ?>

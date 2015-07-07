@@ -92,8 +92,9 @@ if (isset($_GET['prd_id'])) {
             {
                 if ($mPrevItem!=$mRowBH->ItemName)
                 {
+                    $mEID = rand(1, 10000);
                     $mPrevItem = $mRowBH->ItemName;
-                    $description = str_replace($mRowBH->ItemName, " <a contentEditable='false' href='#' style='color: #0066CC;'>".$mRowBH->ItemName."</a> " ,$description);
+                    $description = str_replace($mRowBH->ItemName, "<a contentEditable='false' href='#' style='color: #0066CC;'>".$mRowBH->ItemName."</a><span id='".$mEID."'></span>" ,$description);
                 }
             }
         }
@@ -496,9 +497,8 @@ if (isset($_GET['prd_id'])) {
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-                                                                        var username=data;
                                                                         var mEID = Math.floor((Math.random() * 10000) + 1); 
-                                                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a> <span id='"+mEID+"'></span>";
+                                                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+data+"</a><span id='"+mEID+"'></span>";
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
                                                                         placeCaretAtEnd(document.getElementById(mEID));
                                                                         $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
