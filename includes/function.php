@@ -1070,8 +1070,31 @@ function redirect($to){
 	
 function prepareStringForMySQL($string)
 {
-    $string=str_replace ( "\r" , "<br/>",$string);
-    $string=str_replace ( "\n" , "<br/>",$string);
+    if (strtolower(substr(php_uname('s'), 0, 3))=="win")
+    {
+        $string = str_replace("\r\n", "<br/>", $string);
+    }
+    else if (strtolower(php_uname('s'))=='linux')
+    {
+        $string = str_replace("\n", "<br/>", $string);
+    }
+    else if (strtolower(php_uname('s'))=='unix')
+    {
+        $string = str_replace("\n", "<br/>", $string);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 6))=="darwin")
+    {
+        $string = str_replace("\r", "<br/>", $string);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 3))=="mac")
+    {
+        $string = str_replace("\r", "<br/>", $string);
+    }
+    else
+    {
+        $string=str_replace("\n" , "<br/>",$string);
+    }
+    
     $string=str_replace ( "\t" , " ",$string);
     $string=mysql_real_escape_string($string);
     return $string;

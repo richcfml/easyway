@@ -324,6 +324,20 @@ if($_POST['cropimg'])
                                         }
                                     });
                                     
+                                    $("#product_description1").live("keydown",function(e)
+                                    {
+                                        // trap the return key being pressed
+                                        if (jQuery.browser.safari)
+                                        {
+                                            if (e.keyCode === 13) {
+                                              // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
+                                              document.execCommand('insertHTML', false, '<br><br>');
+                                              // prevent the default behaviour of return key pressed
+                                              return false;
+                                            }
+                                        }
+                                      });
+                                    
                                     $("#product_description1").live("keyup",function(e)
                                     {
                                         var search = "";
@@ -334,40 +348,6 @@ if($_POST['cropimg'])
                                             $("#product_description").val("");
                                             return;
                                         }
-                                        
-                                        /*search = content.substring(content.lastIndexOf("@") + 1);
-                                        if (content.indexOf(" ")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf(" ") + 1);
-                                            if (content.indexOf(",")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf(",") + 1);    
-                                            }
-                                            
-                                            if (content.indexOf("@")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf("@"));    
-                                            }
-                                        }
-                                        else if (content.indexOf(",")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf(",") + 1);    
-                                            
-                                            if (content.indexOf("@")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf("@"));    
-                                            }
-                                        }
-                                        else if (content.indexOf("@")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf("@"));    
-                                        }
-                                        else
-                                        {
-                                            search = content;
-                                        }
-                                        */
-                                        
                                         
                                         search = content.substring(content.indexOf("@"));
                                         
@@ -407,11 +387,11 @@ if($_POST['cropimg'])
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-                                                                        var mEID = Math.floor((Math.random() * 10000) + 1); 
-                                                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+data+"</a><span id='"+mEID+"'></span>";
+                                                                        var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                                                        placeCaretAtEnd(document.getElementById(mEID));
-                                                                        $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
+                                                                        mTmpHTML = removeAnchors($("#product_description1").html());
+                                                                        $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
                                                                 }
@@ -422,21 +402,58 @@ if($_POST['cropimg'])
                                             }
                                             else
                                             {
-                                                $("#product_description").val($("#product_description1").text());
+                                                mTmpHTML = removeAnchors($("#product_description1").html());
+                                                $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                             }
                                         }
                                         else
                                         {
-                                            $("#product_description").val($("#product_description1").text());
+                                            mTmpHTML = removeAnchors($("#product_description1").html());
+                                            $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                         }
                                         
                                         if ($("#product_description1").html().indexOf("<a ")<0)
                                         {
                                             $("#bh_item").attr('checked', false);
                                         }
-                                        
+
                                         return false;
                                     });
+                                    
+                                    function removeAnchors(pStr)
+                                    {
+                                        mTmpHTML = pStr;
+                                        if (mTmpHTML.indexOf("<a")!=-1)
+                                        {
+                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<a"), mTmpHTML.indexOf("</i>") + 4);
+
+                                            mTmpHTML = mTmpHTML.replace(mStr, "").replace("</a>","");
+                                            if (mTmpHTML.indexOf("</i>")!=-1)
+                                            {
+                                                mTmpHTML = removeAnchors(mTmpHTML);
+                                            }
+
+                                            //mTmpHTML =  removeSpans(mTmpHTML);
+                                        }
+                                        return mTmpHTML;
+                                    }
+                                    
+                                    function removeSpans(pStr)
+                                    {
+                                        mTmpHTML = pStr;
+                                        if (mTmpHTML.indexOf("<span")!=-1)
+                                        {
+                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<span"), mTmpHTML.indexOf("</span>") + 7);
+
+                                            mTmpHTML = mTmpHTML.replace(mStr, "");
+
+                                            if (mTmpHTML.indexOf("</span>")!=-1)
+                                            {
+                                                mTmpHTML = removeSpans(mTmpHTML);
+                                            }
+                                        }
+                                        return mTmpHTML;
+                                    }
                                     
                                     function placeCaretAtEnd(el) {
                                         el.focus();
@@ -455,22 +472,6 @@ if($_POST['cropimg'])
                                             textRange.select();
                                         }
                                     }
-                                    
-                                    $(".addname").live("click",function()
-                                    {
-                                        var username=$(this).attr('title');
-                                        //$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), ""));
-                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a> ";
-                                        //$("#product_description1").append(E);
-                                        $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                        $("#display").hide();
-                                        $("#product_description").val($("#product_description1").text());
-                                    });
-                                    
-                                    $(".imgCloseBH").live("click",function()
-                                    {
-                                        $("#display").hide();
-                                    });
                                 });
                                 
                                 
@@ -480,7 +481,7 @@ if($_POST['cropimg'])
                                 <textarea id="product_description" name="product_description" style="display: none;"></textarea>
                                 <input type="hidden" id="hdnSearch" />
                                 <div id="container">
-                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
+                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
                                 </div>
                                 <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
                                 </div>

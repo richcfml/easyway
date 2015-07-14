@@ -78,10 +78,46 @@ if (isset($_GET['prd_id'])) {
     $price = preg_replace('/[\$,]/', '', $price);
     $description = $prd_data->item_des;
     $description1 = $prd_data->item_des;
-
+    if (strtolower(substr(php_uname('s'), 0, 3))=="win")
+    {
+        $description1 = str_replace("<br/>", "\r\n", $description1);
+        $description1 = str_replace("<br>", "\r\n", $description1);
+        $description1 = str_replace("<br />", "\r\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='linux')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='unix')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 6))=="darwin")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 3))=="mac")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else
+    {
+        $description1=str_replace ("<br/>", "\n", $description1);
+        $description1=str_replace ("<br>", "\n", $description1);
+        $description1=str_replace ("<br />", "\n", $description1);
+    }
+    
     if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
     {
-        $mSQLBH = "SELECT ItemName FROM bh_items";
+        $mSQLBH = "SELECT * FROM `bh_items` ORDER BY LENGTH(ItemName) DESC";
         $mResBH = mysql_query($mSQLBH);
         
         $mPrevItem = "";
@@ -92,9 +128,8 @@ if (isset($_GET['prd_id'])) {
             {
                 if ($mPrevItem!=$mRowBH->ItemName)
                 {
-                    $mEID = rand(1, 10000);
                     $mPrevItem = $mRowBH->ItemName;
-                    $description = str_replace($mRowBH->ItemName, "<a contentEditable='false' href='#' style='color: #0066CC;'>".$mRowBH->ItemName."</a><span id='".$mEID."'></span>" ,$description);
+                    $description = str_replace($mRowBH->ItemName, "<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>".$mRowBH->ItemName."</a>" ,$description);
                 }
             }
         }
@@ -414,6 +449,20 @@ if (isset($_GET['prd_id'])) {
                                         }
                                     });
                                     
+                                    $("#product_description1").live("keydown",function(e)
+                                    {
+                                        // trap the return key being pressed
+                                        if (jQuery.browser.safari)
+                                        {
+                                            if (e.keyCode === 13) {
+                                              // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
+                                              document.execCommand('insertHTML', false, '<br><br>');
+                                              // prevent the default behaviour of return key pressed
+                                              return false;
+                                            }
+                                        }
+                                    });
+                                    
                                     $("#product_description1").live("keyup",function(e)
                                     {
                                         var search = "";
@@ -423,41 +472,7 @@ if (isset($_GET['prd_id'])) {
                                             $("#display").hide();
                                             $("#product_description").val("");
                                             return;
-                                        }
-                                        
-                                        /*search = content.substring(content.lastIndexOf("@") + 1);
-                                        if (content.indexOf(" ")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf(" ") + 1);
-                                            if (content.indexOf(",")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf(",") + 1);    
-                                            }
-                                            
-                                            if (content.indexOf("@")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf("@"));    
-                                            }
-                                        }
-                                        else if (content.indexOf(",")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf(",") + 1);    
-                                            
-                                            if (content.indexOf("@")>=0)
-                                            {
-                                                search = content.substring(content.lastIndexOf("@"));    
-                                            }
-                                        }
-                                        else if (content.indexOf("@")>=0)
-                                        {
-                                            search = content.substring(content.lastIndexOf("@"));    
-                                        }
-                                        else
-                                        {
-                                            search = content;
-                                        }
-                                        */
-                                        
+                                        }                                       
                                         
                                         search = content.substring(content.indexOf("@"));
                                         
@@ -497,11 +512,11 @@ if (isset($_GET['prd_id'])) {
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-                                                                        var mEID = Math.floor((Math.random() * 10000) + 1); 
-                                                                        var E=" <a contentEditable='false' href='#' style='color: #0066CC;'>"+data+"</a><span id='"+mEID+"'></span>";
+                                                                        var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                                                        placeCaretAtEnd(document.getElementById(mEID));
-                                                                        $("#product_description").val($("#product_description1").text().replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
+                                                                        mTmpHTML = removeAnchors($("#product_description1").html());
+                                                                        $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
                                                                 }
@@ -512,12 +527,14 @@ if (isset($_GET['prd_id'])) {
                                             }
                                             else
                                             {
-                                                $("#product_description").val($("#product_description1").text());
+                                                mTmpHTML = removeAnchors($("#product_description1").html());
+                                                $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                             }
                                         }
                                         else
                                         {
-                                            $("#product_description").val($("#product_description1").text());
+                                            mTmpHTML = removeAnchors($("#product_description1").html());
+                                            $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                         }
                                         
                                         if ($("#product_description1").html().indexOf("<a ")<0)
@@ -527,6 +544,41 @@ if (isset($_GET['prd_id'])) {
                                         
                                         return false;
                                     });
+                                    
+                                    function removeAnchors(pStr)
+                                    {
+                                        mTmpHTML = pStr;
+                                        if (mTmpHTML.indexOf("<a")!=-1)
+                                        {
+                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<a"), mTmpHTML.indexOf("</i>") + 4);
+
+                                            mTmpHTML = mTmpHTML.replace(mStr, "").replace("</a>","");
+                                            if (mTmpHTML.indexOf("</i>")!=-1)
+                                            {
+                                                mTmpHTML = removeAnchors(mTmpHTML);
+                                            }
+
+                                            //mTmpHTML =  removeSpans(mTmpHTML);
+                                        }
+                                        return mTmpHTML;
+                                    }
+                                    
+                                    function removeSpans(pStr)
+                                    {
+                                        mTmpHTML = pStr;
+                                        if (mTmpHTML.indexOf("<span")!=-1)
+                                        {
+                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<span"), mTmpHTML.indexOf("</span>") + 7);
+
+                                            mTmpHTML = mTmpHTML.replace(mStr, "");
+
+                                            if (mTmpHTML.indexOf("</span>")!=-1)
+                                            {
+                                                mTmpHTML = removeSpans(mTmpHTML);
+                                            }
+                                        }
+                                        return mTmpHTML;
+                                    }
                                     
                                     function placeCaretAtEnd(el) {
                                         el.focus();
@@ -545,22 +597,6 @@ if (isset($_GET['prd_id'])) {
                                             textRange.select();
                                         }
                                     }
-                                    
-                                    $(".addname").live("click",function()
-                                    {
-                                        var username=$(this).attr('title');
-                                        //$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), ""));
-                                        var E=" &nbsp;<a contentEditable='false' href='#' style='color: #0066CC;'>"+username+"</a>&nbsp; ";
-                                        //$("#product_description1").append(E);
-                                        $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                        $("#display").hide();
-                                        $("#product_description").val($("#product_description1").text());
-                                    });
-                                    
-                                    $(".imgCloseBH").live("click",function()
-                                    {
-                                        $("#display").hide();
-                                    });
                                 });
                                 
                                 
@@ -570,7 +606,7 @@ if (isset($_GET['prd_id'])) {
                                 <textarea id="product_description" name="product_description" style="display: none;"><?= trim($description1) ?></textarea>
                                 <input type="hidden" id="hdnSearch" />
                                 <div id="container">
-                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;"><?= trim($description) ?>
+                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;"><?= trim($description) ?>
                                 </div>
                                 <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
                                 </div>
@@ -580,7 +616,7 @@ if (isset($_GET['prd_id'])) {
                             else
                             {
                             ?>
-                                <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= trim($description) ?></textarea>
+                                <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= trim($description1) ?></textarea>
                             <?php
                             }
                             ?>

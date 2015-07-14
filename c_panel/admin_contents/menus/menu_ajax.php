@@ -208,7 +208,7 @@ else if (isset($_GET['add_menu_item']))
             $mRestBH = 1;
         }
     }
-    Log::write("Add- Description1", $product_description, 'debug');
+    
     $product_description = replaceBhSpecialChars($product_description);
     
     $mBHItem = 0;
@@ -244,7 +244,7 @@ else if (isset($_GET['add_menu_item']))
     }
     
     Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 'menu', 1 , 'cpanel');
-    Log::write("Add- Description2", $product_description, 'debug');
+        
     mysql_query("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . "");
     $lastid = mysql_insert_id();
     if (!empty($_GET['ext']))
@@ -358,7 +358,7 @@ else if (isset($_GET['update_menu_item']))
                 $mRestBH = 1;
             }
         }
-        Log::write("Update- Description1", $product_description, 'debug');
+        
         $product_description = replaceBhSpecialChars($product_description);
 
         $mBHItem = 0;
@@ -412,7 +412,7 @@ else if (isset($_GET['update_menu_item']))
     Log::write("Update Product Title, Desc, Retail Pric, Type - menu_ajax.php", "QUERY -- update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).", item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 'menu', 1 , 'cpanel');
     
     mysql_query("update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).",pos_id = '$pos_id', item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "");
-    Log::write("Update- Description2", $product_description, 'debug');
+
     if (!empty($_GET['ext']))
     {
         $exe = array_pop(explode(".", $_GET['ext']));
