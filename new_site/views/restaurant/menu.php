@@ -19,7 +19,6 @@
         color:#000;
     }	
 </style>
-
 <a href="#BodyLeftArea" rel="facebox" id="showPopupLink"></a>
 <div id="dhtmltooltip"></div>
 <script src="<? echo $js_root; ?>dhtmltip.js" type="text/javascript"></script>
@@ -1127,7 +1126,7 @@ $.each(attributeRequired, function(index, value) {
                                     <td style="width: 2%;">
                                     </td>
                                     <td align="left" style="width: 88%; font-size:12px;" valign="top">
-                                        <div class="product_name"><a id='showProductPopup'  myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "®", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> ><?= stripslashes($menulist->item_title) ?></a></div>
+                                        <div class="product_name"><a id='showProductPopup'  myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "Â®", str_replace("&#228;", "Ã¤", str_replace("&#232;", "Ã¨", str_replace("&#241;", "Ã±", $menulist->item_des))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> ><?= stripslashes($menulist->item_title) ?></a></div>
                                     </td>
                                     <td align="right" valign="top" style="width: 10%; font-size:12px;">
                                         <div class="product_price"><?= $menulist->retail_price ?>&nbsp;&nbsp;</div>
