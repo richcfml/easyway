@@ -11,7 +11,7 @@
 			$cat_id			=	$firstcat_rs->cat_id;
 						
 			$date_end = date("Y-m-d",time());
-			list($year,$month,$day)	= split("-",$date_end);
+			list($year,$month,$day)	= explode("-",$date_end);
 			$date_start = date("Y-m-d", mktime(0, 0, 0, $month,$day-6,$year));
 			
 		}else{

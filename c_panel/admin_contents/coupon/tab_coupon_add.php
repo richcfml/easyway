@@ -300,11 +300,11 @@ document.onmousemove=positiontip
                                                     $errMessage="Coupon Added Successfully";
                                                 }
                                         }
-					/*session_unregister(couponitem1);
-					session_unregister(couponitem2);
-					session_unregister(couponitem3);*/
+/*unset($_SESSION['couponitem1']);
+unset($_SESSION['couponitem2']);
+unset($_SESSION['couponitem3']);*/
 					 
-			?>
+?>
 
 <script type="text/javascript">
 function leave() {

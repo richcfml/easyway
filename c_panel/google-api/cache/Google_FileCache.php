@@ -97,7 +97,10 @@ class Google_FileCache extends Google_Cache {
       $now = time();
       if (! $expiration || (($mtime = @filemtime($storageFile)) !== false && ($now - $mtime) < $expiration)) {
         if (($data = @file_get_contents($storageFile)) !== false) {
-          $data = unserialize($data);
+          $data = @unserialize($data);
+		  if($data === false){
+			  $data = unserialize($data);
+		  }
           return $data;
         }
       }

@@ -53,7 +53,7 @@
 						if($i==0){	$StrorderNoSeconday=$StrorderNoSeconday.$OrdSecondaryRs[1];	}
 							 else{	$StrorderNoSeconday=$StrorderNoSeconday."~".$OrdSecondaryRs[1];	}
 					}
-			$Second_Order_no	= split("~",$StrorderNoSeconday);
+			$Second_Order_no	= explode("~",$StrorderNoSeconday);
 		
 			
 		//*************************************************
@@ -77,12 +77,12 @@
 							}
 		
 					$option	= trim($_POST['option_title']);
-					$arr 	= split("\r\n", $option);
+					$arr 	= preg_split("/\r\n/", $option);
 					$i 		= 0;
 					while($i<count($arr))
 						{
 											
-							$arr1	= split("=", $arr[$i]);
+							$arr1	= explode("=", $arr[$i]);
 							$name	= @$arr1[0];
 							$rate_ary = explode("|", $arr1[1]);
 							$value	= @$rate_ary[0];

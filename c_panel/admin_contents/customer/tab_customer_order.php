@@ -58,7 +58,7 @@ function backto(){
         <td align="left" valign="top">&nbsp;</td>
         <td align="left" valign="top"><strong><? echo stripslashes(stripcslashes($saerchQry['item_title']));?>  </strong></td>
         <td> 
-                <? $attribueArray=split("~", $saerchQry['extra'])?>
+                <? $attribueArray=explode("~", $saerchQry['extra'])?>
                 <? $Tot_atrib_price_Plus=0;
 				$Tot_atrib_price_mines=0;
 				$Option_N="";
@@ -69,7 +69,7 @@ function backto(){
 										//  echo $attribueArray[$t]."<br>";
 										
 										$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
-										 $ATrOptions= split("~", $attribueArrayString);
+										 $ATrOptions= explode("~", $attribueArrayString);
 									
 									//	  echo $ATrOptions[0]."<br>";
 									//	    echo $ATrOptions[1]."<br>";
@@ -127,7 +127,7 @@ function backto(){
 											} 
 											if(isset($attribueArray[$t+1])){
  												$attribueArrayString=str_replace("|","~",$attribueArray[$t+1]);
-												 $ATrOptions= split("~", $attribueArrayString);
+												 $ATrOptions= explode("~", $attribueArrayString);
 
 												if(!empty($ATrOptions[0])){
 													$Atribut_Opt=trim($ATrOptions[0]);

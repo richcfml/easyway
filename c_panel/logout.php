@@ -1,29 +1,34 @@
-<? session_start();
-session_unregister('admin_session_user_name'); 
-session_unregister('admin_session_pass');
-//session_unregister('admin_session_id');
-//session_unregister('admin_login');
-session_unregister('cart');
-session_unregister('dtip');
-session_unregister('coupon_code');
-session_unregister('coupon_discount');
-session_unregister('calculated_tip');
-session_unregister('customer_name');
-session_unregister('customer_room');
-session_unregister('customer_cell');
-session_unregister('customer_email');
-session_unregister('catg_id');
-session_unregister('sub_catg_id');
-session_unregister('p_id');
-session_unregister('hotel_adres');
-session_unregister('SessionPID');
-  session_unregister('payment');
-   session_unregister('delveryspecialrequest');
-session_unregister('selectdate');
-session_unregister('selectime');
-session_unregister('rest_opt');
+<? 
+session_start();
 
-session_unregister('Clentid');
+function unset_sess($sess_val){
+	unset($_SESSION[$sess_val]);
+}
+
+unset_sess('admin_session_user_name'); 
+unset_sess('admin_session_pass');
+//unset_sess('admin_session_id');
+//unset_sess('admin_login');
+unset_sess('cart');
+unset_sess('dtip');
+unset_sess('coupon_code');
+unset_sess('coupon_discount');
+unset_sess('calculated_tip');
+unset_sess('customer_name');
+unset_sess('customer_room');
+unset_sess('customer_cell');
+unset_sess('customer_email');
+unset_sess('catg_id');
+unset_sess('sub_catg_id');
+unset_sess('p_id');
+unset_sess('hotel_adres');
+unset_sess('SessionPID');
+unset_sess('payment');
+unset_sess('delveryspecialrequest');
+unset_sess('selectdate');
+unset_sess('selectime');
+unset_sess('rest_opt');
+unset_sess('Clentid');
 ?>
 <script language="javascript">
 window.location = "login.php";

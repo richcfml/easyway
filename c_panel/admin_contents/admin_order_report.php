@@ -47,7 +47,7 @@
                 <td width="3%">&nbsp;</td>
               </tr>
               <tr> 
-                <? $customer_address=split("~",$Ord_RS["cust_odr_address"]);
+                <? $customer_address=explode("~",$Ord_RS["cust_odr_address"]);
 						$str_Cust_add="";
 						for($i=0;$i<count($customer_address);$i++){
 						$str_Cust_add=$str_Cust_add.$customer_address[$i];
@@ -158,12 +158,12 @@
 					$TemOptNme="";
 					$OptType=0;
 					?>
-                  <? $attribueArray=split("~", $Ord_RS2['extra'])?>
+                  <? $attribueArray=explode("~", $Ord_RS2['extra'])?>
                   <? for( $t=0;$t <count($attribueArray);$t++){
 										//  echo $attribueArray[$t]."<br>";
 										
 										$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
-										 $ATrOptions= split("~", $attribueArrayString);
+										 $ATrOptions= explode("~", $attribueArrayString);
 									
 									//	  echo $ATrOptions[0]."<br>";
 									//	    echo $ATrOptions[1]."<br>";
@@ -220,7 +220,7 @@
 											} 
 											if(isset($attribueArray[$t+1])){
  												$attribueArrayString=str_replace("|","~",$attribueArray[$t+1]);
-												 $ATrOptions= split("~", $attribueArrayString);
+												 $ATrOptions= explode("~", $attribueArrayString);
 
 												if(!empty($ATrOptions[0])){
 													$Atribut_Opt=trim($ATrOptions[0]);
@@ -302,7 +302,7 @@
             
            	 <tr> 
 			  <? 
-			  $assocItemArr = split("~",$Ord_RS2[associations]);
+			  $assocItemArr = explode("~",$Ord_RS2[associations]);
 			  $assocTotalPrice = 0;
 			  for($j=0; $j<count($assocItemArr); $j++) {
 				  $assocOptions= explode("|", $assocItemArr[$j]);

@@ -65,7 +65,7 @@
 									$name = $logo;
 								}
 						  $r_price = str_replace("$",",",$r_price);
-						   $r_price = split(",",$r_price);
+						   $r_price = explode(",",$r_price);
 						   $r_price = trim(end($r_price));
 						   if (strstr($r_price, ".")==FALSE) {
 								$r_price = $r_price.".00";				

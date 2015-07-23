@@ -91,7 +91,7 @@ if (isset($_POST["btnSubmit"])) {
        //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
 
         $link =  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname'];
-        $escaped_link = htmlspecialchars($link, ENT_QUOTES, 'UTF-8');
+        $escaped_link = htmlentities($link, ENT_QUOTES, 'UTF-8');
         header("Location: ".$link);
 //----------------------------------------------------------------------------------------------------
 //         redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id);

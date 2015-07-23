@@ -24,10 +24,10 @@
 						$sub_cat_id 		= $prdandsubcatRes['sub_cat_id'];
 						
 						$option = trim($_POST['option_title']);
-						$arr = split("\r\n", $option);
+						$arr = preg_split("/\r\n/", $option);
 						$i = 0;
 						while($i<count($arr)){
-												$arr1	= split("=", $arr[$i]);
+												$arr1	= explode("=", $arr[$i]);
 												$name	= @$arr1[0];
 												$rate_ary = explode("|", $arr1[1]);
 												$value	= @$rate_ary[0];

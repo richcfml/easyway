@@ -84,14 +84,14 @@ function saveSelectedItems(couponItem){
 		}
 			if ($_GET['coupon_item'] == 1){
 	
-					$coponids_split = split(",",$coupontbl_cats_selc_arr['coupon_items1']);
+					$coponids_split = explode(",",$coupontbl_cats_selc_arr['coupon_items1']);
 				
 			} else if ($_GET['coupon_item'] == 2){
 				
-					$coponids_split = split(",",$coupontbl_cats_selc_arr['coupon_items2']);
+					$coponids_split = explode(",",$coupontbl_cats_selc_arr['coupon_items2']);
 				
 			}else if ($_GET['coupon_item'] == 3){
-					$coponids_split = split(",",$coupontbl_cats_selc_arr['coupon_items1']);
+					$coponids_split = explode(",",$coupontbl_cats_selc_arr['coupon_items1']);
 				
 			}
 	

@@ -264,13 +264,13 @@ function updateOrder(id){
 						$OptType=0;
 					?>
                     <?php 
-						$attribueArray=split("~", $Ord_RS2['extra'])
+						$attribueArray=explode("~", $Ord_RS2['extra'])
 					?>
                     <?php 
 						for( $t=0;$t <count($attribueArray);$t++)
 						{
 							$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
-						 	$ATrOptions= split("~", $attribueArrayString);
+						 	$ATrOptions= explode("~", $attribueArrayString);
 							if(!empty($ATrOptions[0]))
 							{
 								$Atribut_Opt=trim($ATrOptions[0]);
@@ -411,7 +411,7 @@ function updateOrder(id){
                 </tr>
                 <tr> 
                 	<? 
-						$assocItemArr = split("~",$Ord_RS2['associations']);
+						$assocItemArr = explode("~",$Ord_RS2['associations']);
 						$assocTotalPrice = 0;
 						for($j=0; $j<count($assocItemArr); $j++) {
 							$assocOptions= explode("|", $assocItemArr[$j]);

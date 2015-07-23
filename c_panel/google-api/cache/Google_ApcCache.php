@@ -76,7 +76,11 @@ class googleApcCache extends Google_Cache {
       $this->delete($key);
       return false;
     }
-    return unserialize($ret['data']);
+    $data = @unserialize($ret['data']);
+	if($data === false){
+		$data = unserialize($ret['data']);
+	}
+	return $data;
   }
 
   /**
