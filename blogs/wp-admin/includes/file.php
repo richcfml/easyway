@@ -208,7 +208,7 @@ function wp_tempnam($filename = '', $dir = '') {
 	if ( empty($filename) )
 		$filename = time();
 
-	$filename = preg_replace('|\..*$|', '.tmp', $filename);
+	$filename = func_pregreplace('|\..*$|', '.tmp', $filename);
 	$filename = $dir . wp_unique_filename($dir, $filename);
 	touch($filename);
 	return $filename;
@@ -929,7 +929,7 @@ function request_filesystem_credentials($form_post, $type = '', $error = false, 
 	$credentials['private_key'] = defined('FTP_PRIKEY') ? FTP_PRIKEY : (!empty($_POST['private_key']) ? stripslashes($_POST['private_key']) : '');
 
 	//sanitize the hostname, Some people might pass in odd-data:
-	$credentials['hostname'] = preg_replace('|\w+://|', '', $credentials['hostname']); //Strip any schemes off
+	$credentials['hostname'] = func_pregreplace('|\w+://|', '', $credentials['hostname']); //Strip any schemes off
 
 	if ( strpos($credentials['hostname'], ':') ) {
 		list( $credentials['hostname'], $credentials['port'] ) = explode(':', $credentials['hostname'], 2);

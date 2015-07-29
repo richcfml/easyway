@@ -23,7 +23,7 @@ if ( is_admin() ) {
 		preg_match('#/wp-admin/?(.*?)$#i', $PHP_SELF, $self_matches);
 	$pagenow = $self_matches[1];
 	$pagenow = trim($pagenow, '/');
-	$pagenow = preg_replace('#\?.*?$#', '', $pagenow);
+	$pagenow = func_pregreplace('#\?.*?$#', '', $pagenow);
 	if ( '' === $pagenow || 'index' === $pagenow || 'index.php' === $pagenow ) {
 		$pagenow = 'index.php';
 	} else {

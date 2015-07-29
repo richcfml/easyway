@@ -331,7 +331,7 @@ function sanitize_bookmark_field($field, $value, $bookmark_id, $context) {
 		return $value;
 		break;
 	case 'link_visible' : // bool stored as Y|N
-		$value = preg_replace('/[^YNyn]/', '', $value);
+		$value = func_pregreplace('/[^YNyn]/', '', $value);
 		break;
 	case 'link_target' : // "enum"
 		$targets = array('_top', '_blank');

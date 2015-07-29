@@ -1,17 +1,16 @@
 <?php 
 	if(isset($_POST['action'])){
 		if($_POST['action']=='updatetip'){
-			$tip=preg_replace("/[^0-9.]+/","",$_POST['tip']); 
+			$tip = currencyToNumber($_POST['tip']);
+			//$tip=preg_replace("/[^0-9.]+/","",$_POST['tip']); 
 			$cart->setdriver_tip($tip);
 		}elseif($_POST['action']=='redeemcoupon'){
-				$cart->redeemcoupon($_POST['coupon_code']);
-		//Added Below Code By Asher
-
-                }elseif($_POST['action']=='vipreward'){
-				$cart->apply_vip_discount($_POST['vipreward']);
+			$cart->redeemcoupon($_POST['coupon_code']);
+			//Added Below Code By Asher
+		}elseif($_POST['action']=='vipreward'){
+			$cart->apply_vip_discount($_POST['vipreward']);
 		}
-                //------------------------
-
+		//------------------------
 	}	 
 ?>
 <div class="bold strip">Subtotal: <span class="normal"><?=$currency?><?= $cart->sub_total?></span></div>

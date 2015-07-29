@@ -175,7 +175,7 @@ function core_upgrade_preamble() {
 function list_plugin_updates() {
 	global $wp_version;
 
-	$cur_wp_version = preg_replace('/-.*$/', '', $wp_version);
+	$cur_wp_version = func_pregreplace('/-.*$/', '', $wp_version);
 
 	require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 	$plugins = get_plugin_updates();

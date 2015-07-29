@@ -37,9 +37,9 @@ class restaurant  {
 	public $openTime,$closeTime;
 	public $reseller,$did_number;
 	public $srid;
-        public $bh_restaurant;
-        public $bh_featured;
-        public $URL;
+	public $bh_restaurant;
+	public $bh_featured;
+	public $URL;
 
 	public $active_menu_link_color, 
 		$appearence, 
@@ -80,6 +80,7 @@ class restaurant  {
 	public function setemailformat($rest_order_email_fromat) {
 		$this->rest_order_email_fromat =  ($rest_order_email_fromat=="" ?  "pdf" : $rest_order_email_fromat);
 	}
+	
 	public function setorderdestination($order_destination) {
 		$this->order_destination =  ($order_destination=="" ?  "fax" : $order_destination);
 	}	
@@ -117,7 +118,8 @@ class restaurant  {
 	
 		return $objRestaurant;
 
-	} 
+	}
+	
 	public function getResturantIdbyUrl($url) {
 		$qry	=	mysql_query("select id from resturants where url_name = '".$url ."'");
 		@$objRestaurant	=	mysql_fetch_object($qry, "restaurant");
@@ -329,8 +331,9 @@ class restaurant  {
 	}
 	
 	public function getSession() {
-		return unserialize($_SESSION['restaurant_detail']); 
+		return unserializeData($_SESSION['restaurant_detail']); 
 	}
+	
 	public function loadreseller() {
 			$this->reseller=new reseller();
 			$ResellerInfoQry=mysql_query("select reseller_id from reseller_client where client_id=".$this->owner_id);

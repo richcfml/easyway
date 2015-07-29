@@ -14,7 +14,7 @@ require( dirname(__FILE__) . '/wp-load.php' );
 // Redirect to https login if forced to use SSL
 if ( force_ssl_admin() && !is_ssl() ) {
 	if ( 0 === strpos($_SERVER['REQUEST_URI'], 'http') ) {
-		wp_redirect(preg_replace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
+		wp_redirect(func_pregreplace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
 		exit();
 	} else {
 		wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -176,6 +176,7 @@ function retrieve_password() {
 		if ( empty($user_data) )
 			$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));
 	} else {
+		
 		$login = trim($_POST['user_login']);
 		$user_data = get_userdatabylogin($login);
 	}
@@ -250,7 +251,7 @@ function retrieve_password() {
 function check_password_reset_key($key, $login) {
 	global $wpdb;
 
-	$key = preg_replace('/[^a-z0-9]/i', '', $key);
+	$key = func_pregreplace('/[^a-z0-9]/i', '', $key);
 
 	if ( empty( $key ) || !is_string( $key ) )
 		return new WP_Error('invalid_key', __('Invalid key'));
@@ -557,7 +558,7 @@ default:
 		$redirect_to = $_REQUEST['redirect_to'];
 		// Redirect to https if user wants ssl
 		if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
-			$redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
+			$redirect_to = func_pregreplace('|^http://|', 'https://', $redirect_to);
 	} else {
 		$redirect_to = admin_url();
 	}

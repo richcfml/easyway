@@ -96,7 +96,7 @@ function get_file($path) {
 require(ABSPATH . '/wp-includes/script-loader.php');
 require(ABSPATH . '/wp-includes/version.php');
 
-$load = preg_replace( '/[^a-z0-9,_-]+/i', '', $_GET['load'] );
+$load = func_pregreplace( '/[^a-z0-9,_-]+/i', '', $_GET['load'] );
 $load = explode(',', $load);
 
 if ( empty($load) )

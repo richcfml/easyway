@@ -211,7 +211,7 @@ if ( ! class_exists( 'OT_Meta_Box' ) ) {
             );
             
             /* get the settings array */
-            $settings = isset( $_POST[$field['id'] . '_settings_array'] ) ? unserialize( ot_decode( $_POST[$field['id'] . '_settings_array'] ) ) : array();
+            $settings = isset( $_POST[$field['id'] . '_settings_array'] ) ? unserializeData( ot_decode( $_POST[$field['id'] . '_settings_array'] ) ) : array();
             
             /* settings are empty for some odd ass reason get the defaults */
             if ( empty( $settings ) ) {

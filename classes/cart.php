@@ -204,7 +204,8 @@ class cart{
 					$_SESSION['CART']=serialize($this);
 			 }
 		   public function apply_vip_discount($discount){
-			   $this->vip_discount=preg_replace("/[^0-9.]+/","",$discount); 
+			   $this->vip_discount = currencyToNumber($discount);
+			   //$this->vip_discount=preg_replace("/[^0-9.]+/","",$discount); 
 			   if(!is_numeric($this->vip_discount)) $this->vip_discount=0.0;
 			   if($this->vip_discount>$this->grand_total(0))  $this->vip_discount=$this->grand_total(0);
 			   $this->vip_discount=$this->vip_discount;
@@ -217,7 +218,7 @@ class cart{
 			$this->vip_discount=0.00;
 			$this->coupon_code='';
 			
-			$coupon		=   mysql_escape_string(addslashes($coupon_code));	
+			$coupon		=   mysql_real_escape_string(addslashes($coupon_code));	
 			$couponQry	=	mysql_query("select * from coupontbl where coupon_code = '$coupon' and resturant_id=".$this->restaurant_id." ");
 						
  $msg='';
@@ -225,7 +226,8 @@ class cart{
 			 
 	//'/	 and min_order_total <=". $this->sub_total .""
 			$coupon_discount = @$couponRs->coupon_discount;
-		 	$coupon_discount=preg_replace("/[^0-9.]+/","",$coupon_discount); 
+			$coupon_discount=currencyToNumber($coupon_discount); 
+		 	//$coupon_discount=preg_replace("/[^0-9.]+/","",$coupon_discount); 
 			$discount_in = @$couponRs->discount_in; // discount offered in  = $ or % 
 			$current_time = date("Hi");
 
@@ -258,7 +260,8 @@ class cart{
 		}//function
 		public function ApplyCoupon($couponRs) {
 				$coupon_discount = @$couponRs->coupon_discount;
-				$coupon_discount=preg_replace("/[^0-9.]+/","",$coupon_discount); 
+				$coupon_discount=currencyToNumber($coupon_discount); 
+				//$coupon_discount=preg_replace("/[^0-9.]+/","",$coupon_discount); 
 				$discount_in = @$couponRs->discount_in; // discount offered in  = $ or % 
 				$this->coupon_discount=0;
 				$this->coupon_code='';
@@ -492,7 +495,7 @@ private function saveOrderdetail()
 	}
 	 public function myclone(){
 		 if(isset($_SESSION['ClONECART']))
-	 		return unserialize($_SESSION['ClONECART']);
+	 		return unserializeData($_SESSION['ClONECART']);
 		else 
 		   return NULL;
 	}

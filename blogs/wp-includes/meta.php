@@ -303,7 +303,7 @@ function update_meta_cache($meta_type, $object_ids) {
 	global $wpdb;
 
 	if ( !is_array($object_ids) ) {
-		$object_ids = preg_replace('|[^0-9,]|', '', $object_ids);
+		$object_ids = func_pregreplace('|[^0-9,]|', '', $object_ids);
 		$object_ids = explode(',', $object_ids);
 	}
 

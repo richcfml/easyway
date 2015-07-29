@@ -147,7 +147,7 @@ class Custom_Background {
 
 		if ( isset($_POST['background-color']) ) {
 			check_admin_referer('custom-background');
-			$color = preg_replace('/[^0-9a-fA-F]/', '', $_POST['background-color']);
+			$color = func_pregreplace('/[^0-9a-fA-F]/', '', $_POST['background-color']);
 			if ( strlen($color) == 6 || strlen($color) == 3 )
 				set_theme_mod('background_color', $color);
 			else

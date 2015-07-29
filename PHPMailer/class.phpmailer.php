@@ -466,7 +466,7 @@ class PHPMailer {
       $to .= $this->AddrFormat($this->to[$i]);
     }
 
-    $toArr = split(',', $to);
+    $toArr = explode(',', $to);
 
     $params = sprintf("-oi -f %s", $this->Sender);
     if ($this->Sender != '' && strlen(ini_get('safe_mode')) < 1) {
@@ -1295,7 +1295,8 @@ class PHPMailer {
       $encoded = str_replace('='.$this->LE, "\n", trim($encoded));
     }
 
-    $encoded = preg_replace('/^(.*)$/m', " =?".$this->CharSet."?$encoding?\\1?=", $encoded);
+    $encoded = preg_replace_callback('/^(.*)$/m', function ($matches) { return " =?".$this->CharSet."?$encoding?\\1?="; }, $encoded);
+	//$encoded = preg_replace('/^(.*)$/m', " =?".$this->CharSet."?$encoding?\\1?=", $encoded);
     $encoded = trim(str_replace("\n", $this->LE, $encoded));
 
     return $encoded;
@@ -1408,19 +1409,25 @@ class PHPMailer {
    */
   function EncodeQ ($str, $position = 'text') {
     /* There should not be any EOL in the string */
-    $encoded = preg_replace("[\r\n]", '', $str);
+    $encoded = preg_replace_callback("[\r\n]", function ($matches) { return ''; }, $str);
+	//$encoded = preg_replace("[\r\n]", '', $str);
 
     switch (strtolower($position)) {
       case 'phrase':
-        $encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
+        $encoded = preg_replace_callback("/([^A-Za-z0-9!*+\/ -])/e", function ($matches) { return "'='.sprintf('%02X', ord('\\1'))"; }, $encoded);
+		//$encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
         break;
       case 'comment':
-        $encoded = preg_replace("/([\(\)\"])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
+        $encoded = preg_replace_callback("/([\(\)\"])/e", function ($matches) { return "'='.sprintf('%02X', ord('\\1'))"; }, $encoded);
+		//$encoded = preg_replace("/([\(\)\"])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
       case 'text':
       default:
         /* Replace every high ascii, control =, ? and _ characters */
-        $encoded = preg_replace('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/e',
-              "'='.sprintf('%02X', ord('\\1'))", $encoded);
+		$encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/e', 
+										function ($matches) { return "'='.sprintf('%02X', ord('\\1'))"; }, $encoded);
+										
+        /*$encoded = preg_replace('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/e',
+              "'='.sprintf('%02X', ord('\\1'))", $encoded);*/
         break;
     }
 
@@ -1705,21 +1712,26 @@ class PHPMailer {
           $directory = dirname($url);
           ($directory == '.')?$directory='':'';
           $cid = 'cid:' . md5($filename);
-          $fileParts = split("\.", $filename);
+          $fileParts = explode(".", $filename);
           $ext = $fileParts[1];
           $mimeType = $this->_mime_types($ext);
           if ( strlen($basedir) > 1 && substr($basedir,-1) != '/') { $basedir .= '/'; }
           if ( strlen($directory) > 1 && substr($basedir,-1) != '/') { $directory .= '/'; }
           $this->AddEmbeddedImage($basedir.$directory.$filename, md5($filename), $filename, 'base64', $mimeType);
           if ( $this->AddEmbeddedImage($basedir.$directory.$filename, md5($filename), $filename, 'base64',$mimeType) ) {
-            $message = preg_replace("/".$images[1][$i]."=\"".preg_quote($url, '/')."\"/Ui", $images[1][$i]."=\"".$cid."\"", $message);
+			$message = preg_replace_callback("/".$images[1][$i]."=\"".preg_quote($url, '/')."\"/Ui", 
+											function ($matches) { return $images[1][$i]."=\"".$cid."\""; }, 
+											$message);
+											
+            /*$message = preg_replace("/".$images[1][$i]."=\"".preg_quote($url, '/')."\"/Ui", $images[1][$i]."=\"".$cid."\"", $message);*/
           }
         }
       }
     }
     $this->IsHTML(true);
     $this->Body = $message;
-    $textMsg = trim(strip_tags(preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/s','',$message)));
+	$textMsg = trim(strip_tags(preg_replace_callback('/<(head|title|style|script)[^>]*>.*?<\/\\1>/s', function ($matches) { return ''; }, $message)));
+    /*$textMsg = trim(strip_tags(preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/s','',$message)));*/
     if ( !empty($textMsg) && empty($this->AltBody) ) {
       $this->AltBody = $textMsg;
     }

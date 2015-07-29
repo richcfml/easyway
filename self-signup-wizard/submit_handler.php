@@ -65,7 +65,8 @@ if($cash_payment == "yes" && $credit_card_payment == "yes") {
 
 
 //create restaurant url from restaurant name
-$rest_url_name = strtolower(trim(preg_replace('/-+/', '_', preg_replace('/[^a-zA-Z0-9]+/', '_', $restaurant_name)), '_'));
+$rest_url_name = strtolower(trim(preg_replace_callback('/[^a-zA-Z0-9]+/', function ($matches) { return '_'; }, $restaurant_name)));
+//$rest_url_name = strtolower(trim(preg_replace('/-+/', '_', preg_replace('/[^a-zA-Z0-9]+/', '_', $restaurant_name)), '_'));
 
 // search if a license is unused else create one new
 $unused_licenses = mysql_query("SELECT id,license_key FROM licenses WHERE status='unused' AND reseller_id=$reseller_id LIMIT 1");
@@ -235,8 +236,12 @@ if(!empty($catid)) {
         if($premium_account_true){
             $uri = 'https://reputation-intelligence-api.vendasta.com/api/v2/account/create/?apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1&apiUser=ESWY';
             $vendastaaccount = array();
-	     $restaurant_phone = preg_replace('/[^0-9.]+/', '', $restaurant_phone);
-            $restaurant_fax = preg_replace('/[^0-9.]+/', '', $restaurant_fax);
+	     	$restaurant_phone = preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $restaurant_phone);
+			//$restaurant_phone = preg_replace('/[^0-9.]+/', '', $restaurant_phone);
+            
+			$restaurant_fax = preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $restaurant_fax);
+			//$restaurant_fax = preg_replace('/[^0-9.]+/', '', $restaurant_fax);
+			
            /* $vendastaaccount = array("address" => "$restaurant_address",
                 "city" => "$restaurant_city",
                 "companyName" => "$restaurant_name",

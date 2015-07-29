@@ -100,7 +100,8 @@ class product{
         $subCatIDs="";
         while ($cat = mysql_fetch_object($catResult)) 
         {
-            $cat->cat_des = preg_replace( "/\r|\n/", " ", $cat->cat_des);
+			$cat->cat_des = preg_replace_callback("/\r|\n/", function ($matches) { return " "; }, $cat->cat_des);
+			//$cat->cat_des = preg_replace( "/\r|\n/", " ", $cat->cat_des);
             $cat->cat_des = str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$cat->cat_des)));
             $arrCats[$cat->cat_id]=$cat;
             $subCatIDs.=$cat->cat_id.",";
@@ -136,7 +137,8 @@ class product{
             $arrProductList[$mIndex]->item_title = $prodRow->item_title;
             $arrProductList[$mIndex]->item_type = $prodRow->item_type;
             $arrProductList[$mIndex]->prd_id=$prodRow->prd_id;
-            $itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
+			$itemDesc = preg_replace_callback("/\r|\n/", function ($matches) { return " "; }, $prodRow->item_des);
+			//$itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
             $itemDesc=  str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)));
             $arrProductList[$mIndex]->item_des = $itemDesc;
             $arrProductList[$mIndex]->retail_price = $prodRow->retail_price;
@@ -246,7 +248,8 @@ class product{
         $productDetails->prd_id=$prodRow->prd_id;
         $productDetails->item_title = str_replace("'", "&#39;", $prodRow->item_title);
         $productDetails->item_type = $prodRow->item_type;
-        $itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
+		$itemDesc = preg_replace_callback("/\r|\n/", function ($matches) { return " "; }, $prodRow->item_des);
+        //$itemDesc = preg_replace( "/\r|\n/", " ", $prodRow->item_des);
         $itemDesc=  str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)));
         $productDetails->item_des = $itemDesc;
         $productDetails->retail_price = $prodRow->retail_price;

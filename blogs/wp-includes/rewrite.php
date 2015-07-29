@@ -233,7 +233,7 @@ function add_rewrite_endpoint($name, $places) {
  */
 function _wp_filter_taxonomy_base( $base ) {
 	if ( !empty( $base ) ) {
-		$base = preg_replace( '|^/index\.php/|', '', $base );
+		$base = func_pregreplace( '|^/index\.php/|', '', $base );
 		$base = trim( $base, '/' );
 	}
 	return $base;
@@ -314,7 +314,7 @@ function url_to_postid($url) {
 		if ( preg_match("!^$match!", $request_match, $matches) ) {
 			// Got a match.
 			// Trim the query of everything up to the '?'.
-			$query = preg_replace("!^.+\?!", '', $query);
+			$query = func_pregreplace("!^.+\?!", '', $query);
 
 			// Substitute the substring matches into the query.
 			$query = addslashes(WP_MatchesMapRegex::apply($query, $matches));
@@ -922,7 +922,7 @@ class WP_Rewrite {
 		$structure = str_replace('%monthnum%', '', $structure);
 		$structure = str_replace('%day%', '', $structure);
 
-		$structure = preg_replace('#/+#', '/', $structure);
+		$structure = func_pregreplace('#/+#', '/', $structure);
 
 		return $structure;
 	}
@@ -946,7 +946,7 @@ class WP_Rewrite {
 
 		$structure = str_replace('%day%', '', $structure);
 
-		$structure = preg_replace('#/+#', '/', $structure);
+		$structure = func_pregreplace('#/+#', '/', $structure);
 
 		return $structure;
 	}
@@ -1259,7 +1259,7 @@ class WP_Rewrite {
 		$num_dirs = count($dirs);
 
 		//strip slashes from the front of $front
-		$front = preg_replace('|^/+|', '', $front);
+		$front = func_pregreplace('|^/+|', '', $front);
 
 		//the main workhorse loop
 		$post_rewrite = array();

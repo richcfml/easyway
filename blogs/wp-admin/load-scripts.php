@@ -98,7 +98,7 @@ function get_file($path) {
 	return @file_get_contents($path);
 }
 
-$load = preg_replace( '/[^a-z0-9,_-]+/i', '', $_GET['load'] );
+$load = func_pregreplace( '/[^a-z0-9,_-]+/i', '', $_GET['load'] );
 $load = explode(',', $load);
 
 if ( empty($load) )

@@ -16,10 +16,10 @@ function lt_init() {
 	register_widget('lt_widget');
 }
 function parseTweet($text) {
-	$text = preg_replace('#http://[a-z0-9._/-]+#i', '<a  target="_blank" href="$0">$0</a>', $text); 
-	$text = preg_replace('#@([a-z0-9_]+)#i', '@<a  target="_blank" href="http://twitter.com/$1">$1</a>', $text); 
-	$text = preg_replace('# \#([a-z0-9_-]+)#i', ' #<a target="_blank" href="http://twitter.com/search?q=%23$1">$1</a>', $text); 
-	$text = preg_replace('#https://[a-z0-9._/-]+#i', '<a  target="_blank" href="$0">$0</a>', $text); 
+	$text = func_pregreplace('#http://[a-z0-9._/-]+#i', '<a  target="_blank" href="$0">$0</a>', $text); 
+	$text = func_pregreplace('#@([a-z0-9_]+)#i', '@<a  target="_blank" href="http://twitter.com/$1">$1</a>', $text); 
+	$text = func_pregreplace('# \#([a-z0-9_-]+)#i', ' #<a target="_blank" href="http://twitter.com/search?q=%23$1">$1</a>', $text); 
+	$text = func_pregreplace('#https://[a-z0-9._/-]+#i', '<a  target="_blank" href="$0">$0</a>', $text); 
 	
 	return $text;
 }
@@ -52,7 +52,7 @@ class lt_widget extends WP_widget {
 			$tweets = $connect->get('statuses/user_timeline', array('count' => $data['nbTweets']));
 			file_put_contents($cache, serialize($tweets));
 		} else {
-			$tweets = unserialize(file_get_contents($cache));
+			$tweets = unserializeData(file_get_contents($cache));
 		}
 		
 		?>

@@ -13,10 +13,10 @@
  * @name $self
  * @var string
  */
-$self = preg_replace('|^.*/wp-admin/network/|i', '', $_SERVER['PHP_SELF']);
-$self = preg_replace('|^.*/wp-admin/|i', '', $self);
-$self = preg_replace('|^.*/plugins/|i', '', $self);
-$self = preg_replace('|^.*/mu-plugins/|i', '', $self);
+$self = func_pregreplace('|^.*/wp-admin/network/|i', '', $_SERVER['PHP_SELF']);
+$self = func_pregreplace('|^.*/wp-admin/|i', '', $self);
+$self = func_pregreplace('|^.*/plugins/|i', '', $self);
+$self = func_pregreplace('|^.*/mu-plugins/|i', '', $self);
 
 global $menu, $submenu, $parent_file; //For when admin-header is included from within a function.
 $parent_file = apply_filters("parent_file", $parent_file); // For plugins to move submenu tabs around.
@@ -60,7 +60,7 @@ function _wp_menu_output( $menu, $submenu, $submenu_as_parent = true ) {
 
 		$class = $class ? ' class="' . join( ' ', $class ) . '"' : '';
 		$tabindex = ' tabindex="1"';
-		$id = ! empty($item[5]) ? ' id="' . preg_replace( '|[^a-zA-Z0-9_:.]|', '-', $item[5] ) . '"' : '';
+		$id = ! empty($item[5]) ? ' id="' . func_pregreplace( '|[^a-zA-Z0-9_:.]|', '-', $item[5] ) . '"' : '';
 		$img = '';
 		if ( ! empty($item[6]) ) {
 			if ( 'div' === $item[6] )

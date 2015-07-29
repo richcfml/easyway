@@ -43,7 +43,7 @@ class Authentication {
         $result = mysql_fetch_array(mysql_query($query));
         if($result){
             //$restaurant = mysql_fetch_array(mysql_query('SELECT * FROM user_info WHERE user_id = '.$result['user_id']));
-            return unserialize($result['rest_id']);
+            return unserializeData($result['rest_id']);
         }else{
             return false;
         }
@@ -81,7 +81,7 @@ class OrderInfo {
         if($rest_id){
             $result = mysql_query("SELECT * from orders where rest_id = '" . $rest_id_[$rest_id] . "' AND status = 0");
             while($rec = mysql_fetch_object($result)){
-                $orders[$rec->order_id] = unserialize($rec->payload);
+                $orders[$rec->order_id] = unserializeData($rec->payload);
             }
         }
 

@@ -506,7 +506,7 @@ function wp_save_image($post_id) {
 
 	$fwidth = !empty($_REQUEST['fwidth']) ? intval($_REQUEST['fwidth']) : 0;
 	$fheight = !empty($_REQUEST['fheight']) ? intval($_REQUEST['fheight']) : 0;
-	$target = !empty($_REQUEST['target']) ? preg_replace('/[^a-z0-9_-]+/i', '', $_REQUEST['target']) : '';
+	$target = !empty($_REQUEST['target']) ? func_pregreplace('/[^a-z0-9_-]+/i', '', $_REQUEST['target']) : '';
 	$scale = !empty($_REQUEST['do']) && 'scale' == $_REQUEST['do'];
 
 	if ( $scale && $fwidth > 0 && $fheight > 0 ) {
@@ -564,7 +564,7 @@ function wp_save_image($post_id) {
 			$new_path = $path;
 	} else {
 		while( true ) {
-			$filename = preg_replace( '/-e([0-9]+)$/', '', $filename );
+			$filename = func_pregreplace( '/-e([0-9]+)$/', '', $filename );
 			$filename .= "-e{$suffix}";
 			$new_filename = "{$filename}.{$path_parts['extension']}";
 			$new_path = "{$path_parts['dirname']}/$new_filename";

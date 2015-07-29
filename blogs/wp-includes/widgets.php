@@ -91,7 +91,7 @@ class WP_Widget {
 	 *	 - height: currently not used but may be needed in the future
 	 */
 	function __construct( $id_base = false, $name, $widget_options = array(), $control_options = array() ) {
-		$this->id_base = empty($id_base) ? preg_replace( '/(wp_)?widget_/', '', strtolower(get_class($this)) ) : strtolower($id_base);
+		$this->id_base = empty($id_base) ? func_pregreplace( '/(wp_)?widget_/', '', strtolower(get_class($this)) ) : strtolower($id_base);
 		$this->name = $name;
 		$this->option_name = 'widget_' . $this->id_base;
 		$this->widget_options = wp_parse_args( $widget_options, array('classname' => $this->option_name) );
@@ -1211,5 +1211,5 @@ function the_widget($widget, $instance = array(), $args = array()) {
  * Private
  */
 function _get_widget_id_base($id) {
-	return preg_replace( '/-[0-9]+$/', '', $id );
+	return func_pregreplace( '/-[0-9]+$/', '', $id );
 }

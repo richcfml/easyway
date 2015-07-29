@@ -210,7 +210,7 @@ function wp_nav_menu( $args = array() ) {
 		$wrap_id = 'menu-' . $menu->slug;
 		while ( in_array( $wrap_id, $menu_id_slugs ) ) {
 			if ( preg_match( '#-(\d+)$#', $wrap_id, $matches ) )
-				$wrap_id = preg_replace('#-(\d+)$#', '-' . ++$matches[1], $wrap_id );
+				$wrap_id = func_pregreplace('#-(\d+)$#', '-' . ++$matches[1], $wrap_id );
 			else
 				$wrap_id = $wrap_id . '-1';
 		}
@@ -362,7 +362,7 @@ function _wp_menu_item_classes_by_context( &$menu_items ) {
 		} elseif ( 'custom' == $menu_item->object ) {
 			$current_url = untrailingslashit( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
 			$item_url = untrailingslashit( strpos( $menu_item->url, '#' ) ? substr( $menu_item->url, 0, strpos( $menu_item->url, '#' ) ) : $menu_item->url );
-			$_indexless_current = untrailingslashit( preg_replace( '/index.php$/', '', $current_url ) );
+			$_indexless_current = untrailingslashit( func_pregreplace( '/index.php$/', '', $current_url ) );
 
 			if ( in_array( $item_url, array( $current_url, $_indexless_current ) ) ) {
 				$classes[] = 'current-menu-item';

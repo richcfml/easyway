@@ -95,7 +95,7 @@
 						$attribute->id = $ob->id;
 						$attribute->Title = $ob->Title;
 						$attribute->Price = $ob->Price;
-						$attribute->Price = preg_replace("/[^0-9+-.]+/", "", $attribute->Price);
+						$attribute->Price = currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/", "", $attribute->Price);
 						if ($attribute->Price == '')
 						{
 							$attribute->Price = 0;
@@ -119,7 +119,7 @@
 					$attribute->id = $ob->id;
 					$attribute->Title = $ob->Title;
 					$attribute->Price = $ob->Price;
-					$attribute->Price = preg_replace("/[^0-9+-.]+/", "", $attribute->Price);
+					$attribute->Price = currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/", "", $attribute->Price);
 					$attribute->Option_name = $$attribute_parent_name;
 					if ($attribute->Price == '')
 					{
@@ -400,11 +400,11 @@
 				$Tot_atrib_price_mines=0;
 				$TemOptNme="";
 				$OptType=0;
-			    $attribueArray=split("~", $mRow['extra']);
+			    $attribueArray=explode("~", $mRow['extra']);
                 for( $t=0;$t <count($attribueArray);$t++)
 				{
 					$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
-					$ATrOptions= split("~", $attribueArrayString);					    
+					$ATrOptions= explode("~", $attribueArrayString);					    
 					if(!empty($ATrOptions[0]))
 					{
 						$Atribut_Opt=trim($ATrOptions[0]);
@@ -458,7 +458,7 @@
 							if(isset($attribueArray[$t+1]))
 							{
  								$attribueArrayString=str_replace("|","~",$attribueArray[$t+1]);
-								$ATrOptions= split("~", $attribueArrayString);
+								$ATrOptions= explode("~", $attribueArrayString);
 								if(!empty($ATrOptions[0]))
 								{
 									$Atribut_Opt=trim($ATrOptions[0]);
@@ -571,7 +571,7 @@
         <tr>
 		<?php
 		}
-			$assocItemArr = split("~",$mRow['associations']);
+			$assocItemArr = explode("~",$mRow['associations']);
 			$assocTotalPrice = 0;
 			for($j=0; $j<count($assocItemArr); $j++) 
 			{

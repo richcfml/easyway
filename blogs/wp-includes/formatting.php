@@ -79,7 +79,7 @@ function wptexturize($text) {
 			// static strings
 			$curl = str_replace($static_characters, $static_replacements, $curl);
 			// regular expressions
-			$curl = preg_replace($dynamic_characters, $dynamic_replacements, $curl);
+			$curl = func_pregreplace($dynamic_characters, $dynamic_replacements, $curl);
 		} elseif (!empty($curl)) {
 			/*
 			 * Only call _wptexturize_pushpop_element if first char is correct
@@ -91,7 +91,7 @@ function wptexturize($text) {
 				_wptexturize_pushpop_element($curl, $no_texturize_shortcodes_stack, $no_texturize_shortcodes, '[', ']');
 		}
 
-		$curl = preg_replace('/&([^#])(?![a-zA-Z1-4]{1,8};)/', '&#038;$1', $curl);
+		$curl = func_pregreplace('/&([^#])(?![a-zA-Z1-4]{1,8};)/', '&#038;$1', $curl);
 		$output .= $curl;
 	}
 
@@ -183,40 +183,40 @@ function wpautop($pee, $br = 1) {
 	if ( trim($pee) === '' )
 		return '';
 	$pee = $pee . "\n"; // just to make things a little easier, pad the end
-	$pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
+	$pee = func_pregreplace('|<br />\s*<br />|', "\n\n", $pee);
 	// Space things out a little
 	$allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|style|input|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
-	$pee = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
-	$pee = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
+	$pee = func_pregreplace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
+	$pee = func_pregreplace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
 	$pee = str_replace(array("\r\n", "\r"), "\n", $pee); // cross-platform newlines
 	if ( strpos($pee, '<object') !== false ) {
-		$pee = preg_replace('|\s*<param([^>]*)>\s*|', "<param$1>", $pee); // no pee inside object/embed
-		$pee = preg_replace('|\s*</embed>\s*|', '</embed>', $pee);
+		$pee = func_pregreplace('|\s*<param([^>]*)>\s*|', "<param$1>", $pee); // no pee inside object/embed
+		$pee = func_pregreplace('|\s*</embed>\s*|', '</embed>', $pee);
 	}
-	$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
+	$pee = func_pregreplace("/\n\n+/", "\n\n", $pee); // take care of duplicates
 	// make paragraphs, including one at the end
 	$pees = preg_split('/\n\s*\n/', $pee, -1, PREG_SPLIT_NO_EMPTY);
 	$pee = '';
 	foreach ( $pees as $tinkle )
 		$pee .= '<p>' . trim($tinkle, "\n") . "</p>\n";
-	$pee = preg_replace('|<p>\s*</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
-	$pee = preg_replace('!<p>([^<]+)</(div|address|form)>!', "<p>$1</p></$2>", $pee);
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee); // don't pee all over a tag
-	$pee = preg_replace("|<p>(<li.+?)</p>|", "$1", $pee); // problem with nested lists
-	$pee = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
+	$pee = func_pregreplace('|<p>\s*</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
+	$pee = func_pregreplace('!<p>([^<]+)</(div|address|form)>!', "<p>$1</p></$2>", $pee);
+	$pee = func_pregreplace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee); // don't pee all over a tag
+	$pee = func_pregreplace("|<p>(<li.+?)</p>|", "$1", $pee); // problem with nested lists
+	$pee = func_pregreplace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
 	$pee = str_replace('</blockquote></p>', '</p></blockquote>', $pee);
-	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
+	$pee = func_pregreplace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
+	$pee = func_pregreplace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
 	if ($br) {
 		$pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s', '_autop_newline_preservation_helper', $pee);
-		$pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
+		$pee = func_pregreplace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
 		$pee = str_replace('<WPPreserveNewline />', "\n", $pee);
 	}
-	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
-	$pee = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
+	$pee = func_pregreplace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
+	$pee = func_pregreplace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
 	if (strpos($pee, '<pre') !== false)
 		$pee = preg_replace_callback('!(<pre[^>]*>)(.*?)</pre>!is', 'clean_pre', $pee );
-	$pee = preg_replace( "|\n</p>$|", '</p>', $pee );
+	$pee = func_pregreplace( "|\n</p>$|", '</p>', $pee );
 
 	return $pee;
 }
@@ -249,7 +249,7 @@ function shortcode_unautop($pee) {
 	if ( !empty($shortcode_tags) && is_array($shortcode_tags) ) {
 		$tagnames = array_keys($shortcode_tags);
 		$tagregexp = join( '|', array_map('preg_quote', $tagnames) );
-		$pee = preg_replace('/<p>\\s*?(\\[(' . $tagregexp . ')\\b.*?\\/?\\](?:.+?\\[\\/\\2\\])?)\\s*<\\/p>/s', '$1', $pee);
+		$pee = func_pregreplace('/<p>\\s*?(\\[(' . $tagregexp . ')\\b.*?\\/?\\](?:.+?\\[\\/\\2\\])?)\\s*<\\/p>/s', '$1', $pee);
 	}
 
 	return $pee;
@@ -352,7 +352,7 @@ function _wp_specialchars( $string, $quote_style = ENT_NOQUOTES, $charset = fals
 		$string = wp_kses_normalize_entities($string);
 
 		// Now proceed with custom double-encoding silliness
-		$string = preg_replace( '/&(#?x?[0-9a-z]+);/i', '|wp_entity|$1|/wp_entity|', $string );
+		$string = func_pregreplace( '/&(#?x?[0-9a-z]+);/i', '|wp_entity|$1|/wp_entity|', $string );
 	}
 
 	$string = @htmlspecialchars( $string, $quote_style, $charset );
@@ -695,7 +695,7 @@ function sanitize_file_name( $filename ) {
 	$special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", chr(0));
 	$special_chars = apply_filters('sanitize_file_name_chars', $special_chars, $filename_raw);
 	$filename = str_replace($special_chars, '', $filename);
-	$filename = preg_replace('/[\s-]+/', '-', $filename);
+	$filename = func_pregreplace('/[\s-]+/', '-', $filename);
 	$filename = trim($filename, '.-_');
 
 	// Split the filename into a base and extension[s]
@@ -754,16 +754,16 @@ function sanitize_user( $username, $strict = false ) {
 	$username = wp_strip_all_tags( $username );
 	$username = remove_accents( $username );
 	// Kill octets
-	$username = preg_replace( '|%([a-fA-F0-9][a-fA-F0-9])|', '', $username );
-	$username = preg_replace( '/&.+?;/', '', $username ); // Kill entities
+	$username = func_pregreplace( '|%([a-fA-F0-9][a-fA-F0-9])|', '', $username );
+	$username = func_pregreplace( '/&.+?;/', '', $username ); // Kill entities
 
 	// If strict, reduce to ASCII for max portability.
 	if ( $strict )
-		$username = preg_replace( '|[^a-z0-9 _.\-@]|i', '', $username );
+		$username = func_pregreplace( '|[^a-z0-9 _.\-@]|i', '', $username );
 
 	$username = trim( $username );
 	// Consolidate contiguous whitespace
-	$username = preg_replace( '|\s+|', ' ', $username );
+	$username = func_pregreplace( '|\s+|', ' ', $username );
 
 	return apply_filters( 'sanitize_user', $username, $raw_username, $strict );
 }
@@ -781,7 +781,7 @@ function sanitize_user( $username, $strict = false ) {
 function sanitize_key( $key ) {
 	$raw_key = $key;
 	$key = strtolower( $key );
-	$key = preg_replace( '/[^a-z0-9_\-]/', '', $key );
+	$key = func_pregreplace( '/[^a-z0-9_\-]/', '', $key );
 	return apply_filters( 'sanitize_key', $key, $raw_key );
 }
 
@@ -831,11 +831,11 @@ function sanitize_title_for_query($title) {
 function sanitize_title_with_dashes($title) {
 	$title = strip_tags($title);
 	// Preserve escaped octets.
-	$title = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
+	$title = func_pregreplace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
 	// Remove percent signs that are not part of an octet.
 	$title = str_replace('%', '', $title);
 	// Restore octets.
-	$title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
+	$title = func_pregreplace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
 
 	if (seems_utf8($title)) {
 		if (function_exists('mb_strtolower')) {
@@ -845,11 +845,11 @@ function sanitize_title_with_dashes($title) {
 	}
 
 	$title = strtolower($title);
-	$title = preg_replace('/&.+?;/', '', $title); // kill entities
+	$title = func_pregreplace('/&.+?;/', '', $title); // kill entities
 	$title = str_replace('.', '-', $title);
-	$title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
-	$title = preg_replace('/\s+/', '-', $title);
-	$title = preg_replace('|-+|', '-', $title);
+	$title = func_pregreplace('/[^%a-z0-9 _-]/', '', $title);
+	$title = func_pregreplace('/\s+/', '-', $title);
+	$title = func_pregreplace('|-+|', '-', $title);
 	$title = trim($title, '-');
 
 	return $title;
@@ -890,10 +890,10 @@ function sanitize_sql_orderby( $orderby ){
  */
 function sanitize_html_class( $class, $fallback = '' ) {
 	//Strip out any % encoded octets
-	$sanitized = preg_replace('|%[a-fA-F0-9][a-fA-F0-9]|', '', $class);
+	$sanitized = func_pregreplace('|%[a-fA-F0-9][a-fA-F0-9]|', '', $class);
 
 	//Limit to A-Z,a-z,0-9,'-'
-	$sanitized = preg_replace('/[^A-Za-z0-9-]/', '', $sanitized);
+	$sanitized = func_pregreplace('/[^A-Za-z0-9-]/', '', $sanitized);
 
 	if ( '' == $sanitized )
 		$sanitized = $fallback;
@@ -955,11 +955,11 @@ function convert_chars($content, $deprecated = '') {
 	);
 
 	// Remove metadata tags
-	$content = preg_replace('/<title>(.+?)<\/title>/','',$content);
-	$content = preg_replace('/<category>(.+?)<\/category>/','',$content);
+	$content = func_pregreplace('/<title>(.+?)<\/title>/','',$content);
+	$content = func_pregreplace('/<category>(.+?)<\/category>/','',$content);
 
 	// Converts lone & characters into &#38; (a.k.a. &amp;)
-	$content = preg_replace('/&([^#])(?![a-z1-4]{1,8};)/i', '&#038;$1', $content);
+	$content = func_pregreplace('/&([^#])(?![a-z1-4]{1,8};)/i', '&#038;$1', $content);
 
 	// Fix Word pasting
 	$content = strtr($content, $wp_htmltranswinuni);
@@ -1019,7 +1019,7 @@ function force_balance_tags( $text ) {
 	// WP bug fix for comments - in case you REALLY meant to type '< !--'
 	$text = str_replace('< !--', '<    !--', $text);
 	// WP bug fix for LOVE <3 (and other situations with '<' before a number)
-	$text = preg_replace('#<([0-9]{1})#', '&lt;$1', $text);
+	$text = func_pregreplace('#<([0-9]{1})#', '&lt;$1', $text);
 
 	while ( preg_match("/<(\/?[\w:]*)\s*([^>]*)>/", $text, $regex) ) {
 		$newtext .= $tagqueue;
@@ -1173,8 +1173,8 @@ function zeroise($number, $threshold) {
  * @return string String with backslashes inserted.
  */
 function backslashit($string) {
-	$string = preg_replace('/^([0-9])/', '\\\\\\\\\1', $string);
-	$string = preg_replace('/([a-z])/i', '\\\\\1', $string);
+	$string = func_pregreplace('/^([0-9])/', '\\\\\\\\\1', $string);
+	$string = func_pregreplace('/([a-z])/i', '\\\\\1', $string);
 	return $string;
 }
 
@@ -1394,7 +1394,7 @@ function make_clickable($ret) {
 	$ret = preg_replace_callback('#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', '_make_web_ftp_clickable_cb', $ret);
 	$ret = preg_replace_callback('#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', '_make_email_clickable_cb', $ret);
 	// this one is not in an array because we need it to run last, for cleanup of accidental links within links
-	$ret = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $ret);
+	$ret = func_pregreplace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $ret);
 	$ret = trim($ret);
 	return $ret;
 }
@@ -1699,7 +1699,7 @@ function iso8601_to_datetime($date_string, $timezone = 'user') {
 		return gmdate('Y-m-d H:i:s', $timestamp);
 
 	} else if ($timezone == 'user') {
-		return preg_replace('#([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(Z|[\+|\-][0-9]{2,4}){0,1}#', '$1-$2-$3 $4:$5:$6', $date_string);
+		return func_pregreplace('#([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(Z|[\+|\-][0-9]{2,4}){0,1}#', '$1-$2-$3 $4:$5:$6', $date_string);
 	}
 }
 
@@ -1716,7 +1716,7 @@ function iso8601_to_datetime($date_string, $timezone = 'user') {
  * @return string Content that has filtered links.
  */
 function popuplinks($text) {
-	$text = preg_replace('/<a (.+?)>/i', "<a $1 target='_blank' rel='external'>", $text);
+	$text = func_pregreplace('/<a (.+?)>/i', "<a $1 target='_blank' rel='external'>", $text);
 	return $text;
 }
 
@@ -1744,14 +1744,14 @@ function sanitize_email( $email ) {
 
 	// LOCAL PART
 	// Test for invalid characters
-	$local = preg_replace( '/[^a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\.-]/', '', $local );
+	$local = func_pregreplace( '/[^a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\.-]/', '', $local );
 	if ( '' === $local ) {
 		return apply_filters( 'sanitize_email', '', $email, 'local_invalid_chars' );
 	}
 
 	// DOMAIN PART
 	// Test for sequences of periods
-	$domain = preg_replace( '/\.{2,}/', '', $domain );
+	$domain = func_pregreplace( '/\.{2,}/', '', $domain );
 	if ( '' === $domain ) {
 		return apply_filters( 'sanitize_email', '', $email, 'domain_period_sequence' );
 	}
@@ -1779,7 +1779,7 @@ function sanitize_email( $email ) {
 		$sub = trim( $sub, " \t\n\r\0\x0B-" );
 
 		// Test for invalid characters
-		$sub = preg_replace( '/[^a-z0-9-]+/i', '', $sub );
+		$sub = func_pregreplace( '/[^a-z0-9-]+/i', '', $sub );
 
 		// If there's anything left, add it to the valid subs
 		if ( '' !== $sub ) {
@@ -2258,7 +2258,7 @@ function esc_url( $url, $protocols = null, $_context = 'display' ) {
 
 	if ( '' == $url )
 		return $url;
-	$url = preg_replace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\\x80-\\xff]|i', '', $url);
+	$url = func_pregreplace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\\x80-\\xff]|i', '', $url);
 	$strip = array('%0d', '%0a', '%0D', '%0A');
 	$url = _deep_replace($strip, $url);
 	$url = str_replace(';//', '://', $url);
@@ -2312,7 +2312,7 @@ function esc_url_raw( $url, $protocols = null ) {
 function htmlentities2($myHTML) {
 	$translation_table = get_html_translation_table( HTML_ENTITIES, ENT_QUOTES );
 	$translation_table[chr(38)] = '&';
-	return preg_replace( "/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/", "&amp;", strtr($myHTML, $translation_table) );
+	return func_pregreplace( "/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/", "&amp;", strtr($myHTML, $translation_table) );
 }
 
 /**
@@ -2330,7 +2330,7 @@ function htmlentities2($myHTML) {
 function esc_js( $text ) {
 	$safe_text = wp_check_invalid_utf8( $text );
 	$safe_text = _wp_specialchars( $safe_text, ENT_COMPAT );
-	$safe_text = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes( $safe_text ) );
+	$safe_text = func_pregreplace( '/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes( $safe_text ) );
 	$safe_text = str_replace( "\r", '', $safe_text );
 	$safe_text = str_replace( "\n", '\\n', addslashes( $safe_text ) );
 	return apply_filters( 'js_escape', $safe_text, $text );
@@ -2386,7 +2386,7 @@ function esc_textarea( $text ) {
  * @return string
  */
 function tag_escape($tag_name) {
-	$safe_tag = strtolower( preg_replace('/[^a-zA-Z_:]/', '', $tag_name) );
+	$safe_tag = strtolower( func_pregreplace('/[^a-zA-Z_:]/', '', $tag_name) );
 	return apply_filters('tag_escape', $safe_tag, $tag_name);
 }
 
@@ -2414,7 +2414,7 @@ function like_escape($text) {
  * @return string Absolute path.
  */
 function wp_make_link_relative( $link ) {
-	return preg_replace( '|https?://[^/]+(/.*)|i', '$1', $link );
+	return func_pregreplace( '|https?://[^/]+(/.*)|i', '$1', $link );
 }
 
 /**
@@ -2502,7 +2502,7 @@ function sanitize_option($option, $value) {
 			break;
 
 		case 'blog_charset':
-			$value = preg_replace('/[^a-zA-Z0-9_-]/', '', $value); // strips slashes
+			$value = func_pregreplace('/[^a-zA-Z0-9_-]/', '', $value); // strips slashes
 			break;
 
 		case 'date_format':
@@ -2519,7 +2519,7 @@ function sanitize_option($option, $value) {
 			break;
 
 		case 'gmt_offset':
-			$value = preg_replace('/[^0-9:.-]/', '', $value); // strips slashes
+			$value = func_pregreplace('/[^0-9:.-]/', '', $value); // strips slashes
 			break;
 
 		case 'siteurl':
@@ -2732,7 +2732,7 @@ function wp_html_excerpt( $str, $count ) {
 	$str = wp_strip_all_tags( $str, true );
 	$str = mb_substr( $str, 0, $count );
 	// remove part of an entity at the end
-	$str = preg_replace( '/&[^;\s]{0,6}$/', '', $str );
+	$str = func_pregreplace( '/&[^;\s]{0,6}$/', '', $str );
 	return $str;
 }
 
@@ -2809,7 +2809,7 @@ function links_add_target( $content, $target = '_blank', $tags = array('a') ) {
 function _links_add_target( $m ) {
 	global $_links_add_target;
 	$tag = $m[1];
-	$link = preg_replace('|(target=[\'"](.*?)[\'"])|i', '', $m[2]);
+	$link = func_pregreplace('|(target=[\'"](.*?)[\'"])|i', '', $m[2]);
 	return '<' . $tag . $link . ' target="' . esc_attr( $_links_add_target ) . '">';
 }
 
@@ -2817,7 +2817,7 @@ function _links_add_target( $m ) {
 function normalize_whitespace( $str ) {
 	$str  = trim($str);
 	$str  = str_replace("\r", "\n", $str);
-	$str  = preg_replace( array( '/\n+/', '/[ \t]+/' ), array( "\n", ' ' ), $str );
+	$str  = func_pregreplace( array( '/\n+/', '/[ \t]+/' ), array( "\n", ' ' ), $str );
 	return $str;
 }
 
@@ -2831,11 +2831,11 @@ function normalize_whitespace( $str ) {
  * @return string The processed string.
  */
 function wp_strip_all_tags($string, $remove_breaks = false) {
-	$string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
+	$string = func_pregreplace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
 	$string = strip_tags($string);
 
 	if ( $remove_breaks )
-		$string = preg_replace('/[\r\n\t ]+/', ' ', $string);
+		$string = func_pregreplace('/[\r\n\t ]+/', ' ', $string);
 
 	return trim($string);
 }
@@ -2862,7 +2862,7 @@ function sanitize_text_field($str) {
 		// This will strip extra whitespace for us.
 		$filtered = wp_strip_all_tags( $filtered, true );
 	} else {
-		$filtered = trim( preg_replace('/[\r\n\t ]+/', ' ', $filtered) );
+		$filtered = trim( func_pregreplace('/[\r\n\t ]+/', ' ', $filtered) );
 	}
 
 	$match = array();
@@ -2874,7 +2874,7 @@ function sanitize_text_field($str) {
 
 	if ( $found ) {
 		// Strip out the whitespace that may now exist after removing the octets.
-		$filtered = trim( preg_replace('/ +/', ' ', $filtered) );
+		$filtered = trim( func_pregreplace('/ +/', ' ', $filtered) );
 	}
 
 	return apply_filters('sanitize_text_field', $filtered, $str);
@@ -2924,7 +2924,7 @@ function capital_P_dangit( $text ) {
  * @return string Sanitized mime type
  */
 function sanitize_mime_type( $mime_type ) {
-	$sani_mime_type = preg_replace( '/[^-+*.a-zA-Z0-9\/]/', '', $mime_type );
+	$sani_mime_type = func_pregreplace( '/[^-+*.a-zA-Z0-9\/]/', '', $mime_type );
 	return apply_filters( 'sanitize_mime_type', $sani_mime_type, $mime_type );
 }
 

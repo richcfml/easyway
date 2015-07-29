@@ -170,10 +170,10 @@ class WP_Plugin_Install_List_Table extends WP_List_Table {
 			if ( strlen( $description ) > 400 )
 				$description = mb_substr( $description, 0, 400 ) . '&#8230;';
 			//remove any trailing entities
-			$description = preg_replace( '/&[^;\s]{0,6}$/', '', $description );
+			$description = func_pregreplace( '/&[^;\s]{0,6}$/', '', $description );
 			//strip leading/trailing & multiple consecutive lines
 			$description = trim( $description );
-			$description = preg_replace( "|(\r?\n)+|", "\n", $description );
+			$description = func_pregreplace( "|(\r?\n)+|", "\n", $description );
 			//\n => <br>
 			$description = nl2br( $description );
 			$version = wp_kses( $plugin['version'], $plugins_allowedtags );

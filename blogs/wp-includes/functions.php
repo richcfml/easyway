@@ -109,12 +109,12 @@ function date_i18n( $dateformatstring, $unixtimestamp = false, $gmt = false ) {
 		$datemeridiem = $wp_locale->get_meridiem( $datefunc( 'a', $i ) );
 		$datemeridiem_capital = $wp_locale->get_meridiem( $datefunc( 'A', $i ) );
 		$dateformatstring = ' '.$dateformatstring;
-		$dateformatstring = preg_replace( "/([^\\\])D/", "\\1" . backslashit( $dateweekday_abbrev ), $dateformatstring );
-		$dateformatstring = preg_replace( "/([^\\\])F/", "\\1" . backslashit( $datemonth ), $dateformatstring );
-		$dateformatstring = preg_replace( "/([^\\\])l/", "\\1" . backslashit( $dateweekday ), $dateformatstring );
-		$dateformatstring = preg_replace( "/([^\\\])M/", "\\1" . backslashit( $datemonth_abbrev ), $dateformatstring );
-		$dateformatstring = preg_replace( "/([^\\\])a/", "\\1" . backslashit( $datemeridiem ), $dateformatstring );
-		$dateformatstring = preg_replace( "/([^\\\])A/", "\\1" . backslashit( $datemeridiem_capital ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])D/", "\\1" . backslashit( $dateweekday_abbrev ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])F/", "\\1" . backslashit( $datemonth ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])l/", "\\1" . backslashit( $dateweekday ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])M/", "\\1" . backslashit( $datemonth_abbrev ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])a/", "\\1" . backslashit( $datemeridiem ), $dateformatstring );
+		$dateformatstring = func_pregreplace( "/([^\\\])A/", "\\1" . backslashit( $datemeridiem_capital ), $dateformatstring );
 
 		$dateformatstring = substr( $dateformatstring, 1, strlen( $dateformatstring ) -1 );
 	}
@@ -129,7 +129,7 @@ function date_i18n( $dateformatstring, $unixtimestamp = false, $gmt = false ) {
 				if ( false !== strpos( $dateformatstring, $timezone_format ) ) {
 					$formatted = date_format( $date_object, $timezone_format );
 					$dateformatstring = ' '.$dateformatstring;
-					$dateformatstring = preg_replace( "/([^\\\])$timezone_format/", "\\1" . backslashit( $formatted ), $dateformatstring );
+					$dateformatstring = func_pregreplace( "/([^\\\])$timezone_format/", "\\1" . backslashit( $formatted ), $dateformatstring );
 					$dateformatstring = substr( $dateformatstring, 1, strlen( $dateformatstring ) -1 );
 				}
 			}
@@ -233,6 +233,16 @@ function maybe_unserialize( $original ) {
 	return $original;
 }
 
+function unserializeData($data){
+	if(is_serialized($data)){
+		$result = @unserialize($data);
+		if($result === false){
+			$result = unserialize($data);
+		}
+		return $result;
+	}
+	return $data;
+}
 /**
  * Check value to find if it was serialized.
  *
@@ -831,14 +841,14 @@ function wp_user_settings() {
 	$settings = get_user_option( 'user-settings', $user->ID );
 
 	if ( isset( $_COOKIE['wp-settings-' . $user->ID] ) ) {
-		$cookie = preg_replace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE['wp-settings-' . $user->ID] );
+		$cookie = func_pregreplace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE['wp-settings-' . $user->ID] );
 
 		if ( ! empty( $cookie ) && strpos( $cookie, '=' ) ) {
 			if ( $cookie == $settings )
 				return;
 
 			$last_time = (int) get_user_option( 'user-settings-time', $user->ID );
-			$saved = isset( $_COOKIE['wp-settings-time-' . $user->ID]) ? preg_replace( '/[^0-9]/', '', $_COOKIE['wp-settings-time-' . $user->ID] ) : 0;
+			$saved = isset( $_COOKIE['wp-settings-time-' . $user->ID]) ? func_pregreplace( '/[^0-9]/', '', $_COOKIE['wp-settings-time-' . $user->ID] ) : 0;
 
 			if ( $saved > $last_time ) {
 				update_user_option( $user->ID, 'user-settings', $cookie, false );
@@ -891,7 +901,7 @@ function set_user_setting( $name, $value ) {
 		return false;
 
 	$all = get_all_user_settings();
-	$name = preg_replace( '/[^A-Za-z0-9_]+/', '', $name );
+	$name = func_pregreplace( '/[^A-Za-z0-9_]+/', '', $name );
 
 	if ( empty($name) )
 		return false;
@@ -955,7 +965,7 @@ function get_all_user_settings() {
 
 	$all = array();
 	if ( isset($_COOKIE['wp-settings-' . $user->ID]) ) {
-		$cookie = preg_replace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE['wp-settings-' . $user->ID] );
+		$cookie = func_pregreplace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE['wp-settings-' . $user->ID] );
 
 		if ( $cookie && strpos($cookie, '=') ) // the '=' cannot be 1st char
 			parse_str($cookie, $all);
@@ -988,7 +998,7 @@ function wp_set_all_user_settings($all) {
 	$_updated_user_settings = $all;
 	$settings = '';
 	foreach ( $all as $k => $v ) {
-		$v = preg_replace( '/[^A-Za-z0-9_]+/', '', $v );
+		$v = func_pregreplace( '/[^A-Za-z0-9_]+/', '', $v );
 		$settings .= $k . '=' . $v . '&';
 	}
 
@@ -1096,8 +1106,8 @@ function xmlrpc_getpostcategory( $content ) {
  * @return string XMLRPC XML Request content without title and category elements.
  */
 function xmlrpc_removepostdata( $content ) {
-	$content = preg_replace( '/<title>(.+?)<\/title>/si', '', $content );
-	$content = preg_replace( '/<category>(.+?)<\/category>/si', '', $content );
+	$content = func_pregreplace( '/<title>(.+?)<\/title>/si', '', $content );
+	$content = func_pregreplace( '/<category>(.+?)<\/category>/si', '', $content );
 	$content = trim( $content );
 	return $content;
 }
@@ -1446,7 +1456,7 @@ function add_query_arg() {
 
 	$ret = build_query( $qs );
 	$ret = trim( $ret, '?' );
-	$ret = preg_replace( '#=(&|$)#', '$1', $ret );
+	$ret = func_pregreplace( '#=(&|$)#', '$1', $ret );
 	$ret = $protocol . $base . $ret . $frag;
 	$ret = rtrim( $ret, '?' );
 	return $ret;
@@ -1730,7 +1740,7 @@ function do_feed() {
 	$feed = get_query_var( 'feed' );
 
 	// Remove the pad, if present.
-	$feed = preg_replace( '/^_+/', '', $feed );
+	$feed = func_pregreplace( '/^_+/', '', $feed );
 
 	if ( $feed == '' || $feed == 'feed' )
 		$feed = get_default_feed();
@@ -2245,7 +2255,7 @@ function wp_unique_filename( $dir, $filename, $unique_filename_callback = null )
 		// change '.ext' to lower case
 		if ( $ext && strtolower($ext) != $ext ) {
 			$ext2 = strtolower($ext);
-			$filename2 = preg_replace( '|' . preg_quote($ext) . '$|', $ext2, $filename );
+			$filename2 = func_pregreplace( '|' . preg_quote($ext) . '$|', $ext2, $filename );
 
 			// check for both lower and upper case extension or image sub-sizes may be overwritten
 			while ( file_exists($dir . "/$filename") || file_exists($dir . "/$filename2") ) {
@@ -3231,7 +3241,7 @@ function absint( $maybeint ) {
 function url_is_accessable_via_ssl($url)
 {
 	if (in_array('curl', get_loaded_extensions())) {
-		$ssl = preg_replace( '/^http:\/\//', 'https://',  $url );
+		$ssl = func_pregreplace( '/^http:\/\//', 'https://',  $url );
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $ssl);
@@ -3263,7 +3273,7 @@ function url_is_accessable_via_ssl($url)
 function atom_service_url_filter($url)
 {
 	if ( url_is_accessable_via_ssl($url) )
-		return preg_replace( '/^http:\/\//', 'https://',  $url );
+		return func_pregreplace( '/^http:\/\//', 'https://',  $url );
 	else
 		return $url;
 }
@@ -3597,7 +3607,7 @@ function wp_guess_url() {
 		$url = WP_SITEURL;
 	} else {
 		$schema = is_ssl() ? 'https://' : 'http://';
-		$url = preg_replace('|/wp-admin/.*|i', '', $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		$url = func_pregreplace('|/wp-admin/.*|i', '', $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 	return rtrim($url, '/');
 }
@@ -4214,7 +4224,7 @@ function wp_timezone_choice( $selected_zone ) {
  * @return string
  */
 function _cleanup_header_comment($str) {
-	return trim(preg_replace("/\s*(?:\*\/|\?>).*/", '', $str));
+	return trim(func_pregreplace("/\s*(?:\*\/|\?>).*/", '', $str));
 }
 
 /**
@@ -4492,6 +4502,16 @@ function wp_find_hierarchy_loop_tortoise_hare( $callback, $start, $override = ar
  */
 function send_frame_options_header() {
 	@header( 'X-Frame-Options: SAMEORIGIN' );
+}
+
+function func_pregreplace($re, $replacement, $str){
+	$result='';
+	$result .= preg_replace_callback($re,
+										function ($matches) use($replacement) {
+											return $replacement;
+										}, $str);
+						
+	return $result;
 }
 
 ?>

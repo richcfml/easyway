@@ -1,7 +1,7 @@
 <?php global $incart_lite_shortname, $incart_lite_themename, $post; ?>
 <?php
 function skeHex2RGB($hexStr, $returnAsString = false, $seperator = ',') {
-    $hexStr = preg_replace("/[^0-9A-Fa-f]/", '', $hexStr); // Gets a proper hex string
+    $hexStr = func_pregreplace("/[^0-9A-Fa-f]/", '', $hexStr); // Gets a proper hex string
     $rgbArray = array();
     if (strlen($hexStr) == 6) { //If a proper hex code, convert using bitwise operation. No overhead... faster
         $colorVal = hexdec($hexStr);

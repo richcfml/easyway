@@ -435,7 +435,7 @@ if ( ! class_exists( 'PT_CV_Values' ) ) {
 						$this_size = array( 0, 0 );
 					}
 
-					$sizes_to_sort[$size_name] = ucfirst( preg_replace( '/[\-_]/', ' ', $size_name ) ) . ' (' . implode( ' &times; ', $this_size ) . ')';
+					$sizes_to_sort[$size_name] = ucfirst( func_pregreplace( '/[\-_]/', ' ', $size_name ) ) . ' (' . implode( ' &times; ', $this_size ) . ')';
 				}
 
 				if ( ! empty($_size_name) && $_size_name == $size_name ) {

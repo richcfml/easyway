@@ -77,7 +77,8 @@
 						$attribute->id = $ob->id;
 						$attribute->Title = $ob->Title;
 						$attribute->Price = $ob->Price;
-						$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+						$attribute->Price =  preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $attribute->Price);
+						//$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 						if($attribute->Price=='') 
 						{
 							$attribute->Price=0;
@@ -100,7 +101,8 @@
 					$attribute->id = $ob->id;
 					$attribute->Title = $ob->Title;
 					$attribute->Price = $ob->Price;
-					$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+					$attribute->Price =  preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $attribute->Price);
+					//$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 					$attribute->Option_name=$$attribute_parent_name;
 					if($attribute->Price=='') 
 					{
@@ -273,17 +275,22 @@
 				  	}
 			 	}
 			 	$attribute_option->Price=trim($attribute_option->Price);
-		     	$attribute_option->Price =  preg_replace("/[^0-9+-.]+/","",$attribute_option->Price);
+		     	$attribute_option->Price =  preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $attribute_option->Price);
+				//$attribute_option->Price =  preg_replace("/[^0-9+-.]+/","",$attribute_option->Price);
 	 			
 				if (is_numeric($attribute_option->Price) && $attribute_option->Price !=0) 
 				{
 					if ($attribute_option->Price[0]=='-') 
 					{
-						$attribute_option->displayprice = "<span class='red'> - Subtract $". preg_replace("/[^0-9.]+/","",$attribute_option->Price)."</span>";
+						$attribute_option->displayprice = "<span class='red'> - Subtract $". 
+						preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $attribute_option->Price)
+						/*preg_replace("/[^0-9.]+/","",$attribute_option->Price)*/."</span>";
 					} 
 					else 
 					{
-						$attribute_option->displayprice = "<span class='red'> + Add $".   preg_replace("/[^0-9.]+/","",$attribute_option->Price)."</span>";
+						$attribute_option->displayprice = "<span class='red'> + Add $".   
+						preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $attribute_option->Price)
+						/*preg_replace("/[^0-9.]+/","",$attribute_option->Price)*/."</span>";
 					}
 				}
 				else

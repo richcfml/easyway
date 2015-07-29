@@ -2280,7 +2280,7 @@ function delete_usermeta( $user_id, $meta_key, $meta_value = '' ) {
 	global $wpdb;
 	if ( !is_numeric( $user_id ) )
 		return false;
-	$meta_key = preg_replace('|[^a-z0-9_]|i', '', $meta_key);
+	$meta_key = func_pregreplace('|[^a-z0-9_]|i', '', $meta_key);
 
 	if ( is_array($meta_value) || is_object($meta_value) )
 		$meta_value = serialize($meta_value);
@@ -2331,7 +2331,7 @@ function get_usermeta( $user_id, $meta_key = '' ) {
 		return false;
 
 	if ( !empty($meta_key) ) {
-		$meta_key = preg_replace('|[^a-z0-9_]|i', '', $meta_key);
+		$meta_key = func_pregreplace('|[^a-z0-9_]|i', '', $meta_key);
 		$user = wp_cache_get($user_id, 'users');
 		// Check the cached user object
 		if ( false !== $user && isset($user->$meta_key) )
@@ -2381,7 +2381,7 @@ function update_usermeta( $user_id, $meta_key, $meta_value ) {
 	global $wpdb;
 	if ( !is_numeric( $user_id ) )
 		return false;
-	$meta_key = preg_replace('|[^a-z0-9_]|i', '', $meta_key);
+	$meta_key = func_pregreplace('|[^a-z0-9_]|i', '', $meta_key);
 
 	/** @todo Might need fix because usermeta data is assumed to be already escaped */
 	if ( is_string($meta_value) )

@@ -123,7 +123,7 @@ class WP_Importer {
 		if ( is_numeric( $blog_id ) ) {
 			$blog_id = (int) $blog_id;
 		} else {
-			$blog = 'http://' . preg_replace( '#^https?://#', '', $blog_id );
+			$blog = 'http://' . func_pregreplace( '#^https?://#', '', $blog_id );
 			if ( ( !$parsed = parse_url( $blog ) ) || empty( $parsed['host'] ) ) {
 				fwrite( STDERR, "Error: can not determine blog_id from $blog_id\n" );
 				exit();
@@ -235,7 +235,7 @@ class WP_Importer {
 	 * @return string
 	 */
 	function min_whitespace( $string ) {
-		return preg_replace( '|[\r\n\t ]+|', ' ', $string );
+		return func_pregreplace( '|[\r\n\t ]+|', ' ', $string );
 	}
 
 	/**
@@ -273,7 +273,7 @@ function get_cli_args( $param, $required = false ) {
 	for ( $i = 1, $il; $i < $il; $i++ ) {
 		if ( (bool) preg_match( "/^--(.+)/", $args[$i], $match ) ) {
 			$parts = explode( "=", $match[1] );
-			$key = preg_replace( "/[^a-z0-9]+/", "", $parts[0] );
+			$key = func_pregreplace( "/[^a-z0-9]+/", "", $parts[0] );
 
 			if ( isset( $parts[1] ) ) {
 				$out[$key] = $parts[1];

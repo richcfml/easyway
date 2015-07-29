@@ -124,7 +124,7 @@ class WP_Locale {
 		$this->weekday_initial[__('Saturday')]  = /* translators: one-letter abbreviation of the weekday */ __('S_Saturday_initial');
 
 		foreach ($this->weekday_initial as $weekday_ => $weekday_initial_) {
-			$this->weekday_initial[$weekday_] = preg_replace('/_.+_initial$/', '', $weekday_initial_);
+			$this->weekday_initial[$weekday_] = func_pregreplace('/_.+_initial$/', '', $weekday_initial_);
 		}
 
 		// Abbreviations for each day.
@@ -166,7 +166,7 @@ class WP_Locale {
 		$this->month_abbrev[__('December')] = /* translators: three-letter abbreviation of the month */ __('Dec_December_abbreviation');
 
 		foreach ($this->month_abbrev as $month_ => $month_abbrev_) {
-			$this->month_abbrev[$month_] = preg_replace('/_.+_abbreviation$/', '', $month_abbrev_);
+			$this->month_abbrev[$month_] = func_pregreplace('/_.+_abbreviation$/', '', $month_abbrev_);
 		}
 
 		// The Meridiems

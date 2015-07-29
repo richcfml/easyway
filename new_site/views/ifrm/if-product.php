@@ -77,7 +77,7 @@
 						$attribute->id = $ob->id;
 						$attribute->Title = $ob->Title;
 						$attribute->Price = $ob->Price;
-						$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+						$attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 						if($attribute->Price=='') 
 						{
 							$attribute->Price=0;
@@ -100,7 +100,7 @@
 					$attribute->id = $ob->id;
 					$attribute->Title = $ob->Title;
 					$attribute->Price = $ob->Price;
-					$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+					$attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 					$attribute->Option_name=$$attribute_parent_name;
 					if($attribute->Price=='') 
 					{
@@ -273,17 +273,18 @@
 				  	}
 			 	}
 			 	$attribute_option->Price=trim($attribute_option->Price);
-		     	$attribute_option->Price =  preg_replace("/[^0-9+-.]+/","",$attribute_option->Price);
+		     	$attribute_option->Price = currencyToNumber_WPM($attribute_option->Price);
+				//preg_replace("/[^0-9+-.]+/","",$attribute_option->Price);
 	 			
 				if (is_numeric($attribute_option->Price) && $attribute_option->Price !=0) 
 				{
 					if ($attribute_option->Price[0]=='-') 
 					{
-						$attribute_option->displayprice = "<span class='red'> - Subtract ".$currency. preg_replace("/[^0-9.]+/","",$attribute_option->Price)."</span>";
+						$attribute_option->displayprice = "<span class='red'> - Subtract ".$currency. currencyToNumber($attribute_option->Price) /*preg_replace("/[^0-9.]+/","",$attribute_option->Price)*/."</span>";
 					} 
 					else 
 					{
-						$attribute_option->displayprice = "<span class='red'> + Add ".$currency.   preg_replace("/[^0-9.]+/","",$attribute_option->Price)."</span>";
+						$attribute_option->displayprice = "<span class='red'> + Add ".$currency. currencyToNumber($attribute_option->Price)  /*preg_replace("/[^0-9.]+/","",$attribute_option->Price)*/."</span>";
 					}
 				}
 				else

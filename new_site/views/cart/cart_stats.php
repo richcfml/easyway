@@ -1,7 +1,7 @@
 <? 
 	if(isset($_POST['action'])){
 		if($_POST['action']=='updatetip'){
-			$tip=preg_replace("/[^0-9.]+/","",$_POST['tip']); 
+			$tip=currencyToNumber($_POST['tip']);	//preg_replace("/[^0-9.]+/","",$_POST['tip']); 
 			$cart->setdriver_tip($tip);
 		}elseif($_POST['action']=='redeemcoupon'){
 			$msg=	$cart->redeemcoupon($_POST['coupon_code']);

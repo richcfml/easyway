@@ -190,7 +190,7 @@ class ftp extends ftp_base {
 
 		while(($block=@socket_read($this->_ftp_temp_sock, $this->_ftp_buff_size, PHP_BINARY_READ))!==false) {
 			if($block==="") break;
-			if($mode!=FTP_BINARY) $block=preg_replace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_local], $block);
+			if($mode!=FTP_BINARY) $block=func_pregreplace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_local], $block);
 			if(is_resource($fp)) $out+=fwrite($fp, $block, strlen($block));
 			else $out.=$block;
 		}
@@ -220,7 +220,7 @@ class ftp extends ftp_base {
 	}
 
 	function _data_write_block($mode, $block) {
-		if($mode!=FTP_BINARY) $block=preg_replace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_remote], $block);
+		if($mode!=FTP_BINARY) $block=func_pregreplace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_remote], $block);
 		do {
 			if(($t=@socket_write($this->_ftp_temp_sock, $block))===FALSE) {
 				$this->PushError("_data_write","socket_write", socket_strerror(socket_last_error($this->_ftp_temp_sock)));

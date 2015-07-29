@@ -118,7 +118,7 @@ function retrieve_widgets() {
 		if ( in_array($key, $shown_widgets, true) )
 			continue;
 
-		$number = preg_replace('/.+?-([0-9]+)$/', '$1', $key);
+		$number = func_pregreplace('/.+?-([0-9]+)$/', '$1', $key);
 
 		if ( 2 > (int) $number )
 			continue;

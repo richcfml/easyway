@@ -195,13 +195,13 @@ function wp_cookie_constants( ) {
 	 * @since 1.2.0
 	 */
 	if ( !defined('COOKIEPATH') )
-		define('COOKIEPATH', preg_replace('|https?://[^/]+|i', '', get_option('home') . '/' ) );
+		define('COOKIEPATH', func_pregreplace('|https?://[^/]+|i', '', get_option('home') . '/' ) );
 
 	/**
 	 * @since 1.5.0
 	 */
 	if ( !defined('SITECOOKIEPATH') )
-		define('SITECOOKIEPATH', preg_replace('|https?://[^/]+|i', '', get_option('siteurl') . '/' ) );
+		define('SITECOOKIEPATH', func_pregreplace('|https?://[^/]+|i', '', get_option('siteurl') . '/' ) );
 
 	/**
 	 * @since 2.6.0
@@ -213,7 +213,7 @@ function wp_cookie_constants( ) {
 	 * @since 2.6.0
 	 */
 	if ( !defined('PLUGINS_COOKIE_PATH') )
-		define( 'PLUGINS_COOKIE_PATH', preg_replace('|https?://[^/]+|i', '', WP_PLUGIN_URL)  );
+		define( 'PLUGINS_COOKIE_PATH', func_pregreplace('|https?://[^/]+|i', '', WP_PLUGIN_URL)  );
 
 	/**
 	 * @since 2.0.0

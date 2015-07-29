@@ -55,7 +55,7 @@ class users {
 	
 	public function loadfromsession() {
 		if(isset($_SESSION['loggedinuser']))
-		 	return unserialize($_SESSION['loggedinuser']); 
+		 	return unserializeData($_SESSION['loggedinuser']); 
 		else 
 			return NULL;
 	}
@@ -177,7 +177,7 @@ class users {
 			$this->arrFavorites=array();
 			$favorites  = mysql_query("select * from customer_favorites where  customer_id=". $this->id ."");
 	 			while($favorite = mysql_fetch_object($favorites)) {
-					$favorite->food=unserialize($favorite->food);
+					$favorite->food=unserializeData($favorite->food);
 					$this->arrFavorites[]=$favorite;
 				}
 			}
@@ -197,7 +197,7 @@ class users {
 		 
 			$favorites  = mysql_query("select * from customer_favorites where  customer_id=". $this->id ." and title='". addslashes($title) ."' and rapidreorder=1 order by id desc limit 0,1 ");
 	 			while($favorite = mysql_fetch_object($favorites)) {
-					$favorite->food=unserialize($favorite->food);
+					$favorite->food=unserializeData($favorite->food);
 					$this->arrFavorites[]=$favorite;
 				}
 				return $this->arrFavorites;
@@ -610,7 +610,7 @@ public function get_delivery_address($formated=1)
         
         public static function loggedinUserEmail(){
             if(isset($_SESSION['loggedinuser'])){
-                $user = unserialize($_SESSION['loggedinuser']); 
+                $user = unserializeData($_SESSION['loggedinuser']); 
                 return $user->cust_email;
             } else {
                 return "";

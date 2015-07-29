@@ -52,7 +52,7 @@ public $faxid;
  
  
 	if ($uploadResult['ResultCode']=="-1") {
-		 mysql_query("update fax_log set fax_message='fax sending failed unable to upload file ". mysql_escape_string( json_encode($uploadResult)) ." where id=". $log_id ."");
+		 mysql_query("update fax_log set fax_message='fax sending failed unable to upload file ". mysql_real_escape_string( json_encode($uploadResult)) ." where id=". $log_id ."");
 		
 		 mysql_query("update ordertbl set fax_tracking_number=123,fax_tries=1,resend_fax=0  where 	OrderID=". $orderid ." ");
 			 
@@ -97,7 +97,7 @@ public $faxid;
 	 
 	if ($sendFaxResult['ResultCode']=="-1") {
 		
-	  	 mysql_query("update fax_log set fax_message='fax sending failed, fax logging failed  ". mysql_escape_string(json_encode($sendFaxResult)) ."'  where id=". $log_id ."");
+	  	 mysql_query("update fax_log set fax_message='fax sending failed, fax logging failed  ". mysql_real_escape_string(json_encode($sendFaxResult)) ."'  where id=". $log_id ."");
 		  mysql_query("update ordertbl set fax_tracking_number=123,fax_tries=1,resend_fax=0 where 	OrderID=". $orderid ." ");
 
 		

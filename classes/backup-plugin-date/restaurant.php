@@ -210,7 +210,7 @@ class restaurant  {
 	}
 	
 	public function getSession() {
-		return unserialize($_SESSION['restaurant_detail']); 
+		return unserializeData($_SESSION['restaurant_detail']); 
 	}
 	public function loadreseller() {
 			$this->reseller=new reseller();

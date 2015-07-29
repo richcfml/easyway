@@ -740,7 +740,7 @@ function get_raw_theme_root( $stylesheet_or_template, $no_cache = false ) {
  * @return string Full path to file.
  */
 function get_query_template( $type, $templates = array() ) {
-	$type = preg_replace( '|[^a-z0-9-]+|', '', $type );
+	$type = func_pregreplace( '|[^a-z0-9-]+|', '', $type );
 
 	if ( empty( $templates ) )
 		$templates = array("{$type}.php");
@@ -1145,7 +1145,7 @@ function preview_theme() {
 	if ( isset( $_GET['preview_iframe'] ) )
 		show_admin_bar( false );
 
-	$_GET['template'] = preg_replace('|[^a-z0-9_./-]|i', '', $_GET['template']);
+	$_GET['template'] = func_pregreplace('|[^a-z0-9_./-]|i', '', $_GET['template']);
 
 	if ( validate_file($_GET['template']) )
 		return;
@@ -1153,7 +1153,7 @@ function preview_theme() {
 	add_filter( 'template', '_preview_theme_template_filter' );
 
 	if ( isset($_GET['stylesheet']) ) {
-		$_GET['stylesheet'] = preg_replace('|[^a-z0-9_./-]|i', '', $_GET['stylesheet']);
+		$_GET['stylesheet'] = func_pregreplace('|[^a-z0-9_./-]|i', '', $_GET['stylesheet']);
 		if ( validate_file($_GET['stylesheet']) )
 			return;
 		add_filter( 'stylesheet', '_preview_theme_stylesheet_filter' );
@@ -1216,7 +1216,7 @@ function preview_theme_ob_filter( $content ) {
  */
 function preview_theme_ob_filter_callback( $matches ) {
 	if ( strpos($matches[4], 'onclick') !== false )
-		$matches[4] = preg_replace('#onclick=([\'"]).*?(?<!\\\)\\1#i', '', $matches[4]); //Strip out any onclicks from rest of <a>. (?<!\\\) means to ignore the '" if its escaped by \  to prevent breaking mid-attribute.
+		$matches[4] = func_pregreplace('#onclick=([\'"]).*?(?<!\\\)\\1#i', '', $matches[4]); //Strip out any onclicks from rest of <a>. (?<!\\\) means to ignore the '" if its escaped by \  to prevent breaking mid-attribute.
 	if (
 		( false !== strpos($matches[3], '/wp-admin/') )
 	||

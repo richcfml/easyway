@@ -12,7 +12,7 @@ if(isset($_GET['op'])){
         $username = $_POST['user'];
         $password = $_POST['pass'];
         
-        $result = mysql_query('SELECT * FROM users WHERE username = "'.  mysql_escape_string($username).'" AND md5(password) ="'.  mysql_escape_string($password).'"');
+        $result = mysql_query('SELECT * FROM users WHERE username = "'.  mysql_real_escape_string($username).'" AND md5(password) ="'.  mysql_real_escape_string($password).'"');
 
         $authenticated = mysql_num_rows($result) > 0 ? true : false;
 
@@ -27,7 +27,7 @@ if(isset($_GET['op'])){
             }
 
 
-            $message['rest'] = mysql_escape_string(serialize($rests));
+            $message['rest'] = mysql_real_escape_string(serialize($rests));
             $message['user'] = $user->id;
             
         }else{

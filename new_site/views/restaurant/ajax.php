@@ -227,8 +227,8 @@ else if (isset($_GET['addtocart']))
                     $attribute->id = $ob->id;
                     $attribute->Title = $ob->Title;
                     $attribute->Price = $ob->Price;
-                    $attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
-                    $attribute->ExtraPriceCharge = preg_replace("/[^0-9+-.]+/","",$ob->extra_charge);
+                    $attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+                    $attribute->ExtraPriceCharge = currencyToNumber_WPM($ob->extra_charge); //preg_replace("/[^0-9+-.]+/","",$ob->extra_charge);
                     if($attribute->Price=='')
                     {
                         $attribute->Price=0;
@@ -266,9 +266,9 @@ else if (isset($_GET['addtocart']))
                 $attribute->id = $ob->id;
                 $attribute->Title = $ob->Title;
                 $attribute->Price = $ob->Price;
-                $attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+                $attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
                 $attribute->Option_name=$$attribute_parent_name;
-                $attribute->ExtraPriceCharge = preg_replace("/[^0-9+-.]+/","",$ob->extra_charge);
+                $attribute->ExtraPriceCharge = currencyToNumber_WPM($ob->extra_charge); //preg_replace("/[^0-9+-.]+/","",$ob->extra_charge);
                 
                 if($attribute->Price=='')
                 {

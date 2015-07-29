@@ -110,8 +110,8 @@ switch ( $_GET['action'] ) {
 		if ( is_email( $_POST['admin_email'] ) )
 			update_site_option( 'admin_email', $_POST['admin_email'] );
 
-		$illegal_names = split( ' ', $_POST['illegal_names'] );
-		foreach ( (array) $illegal_names as $name ) {
+		$illegal_names = explode(' ', $_POST['illegal_names'] );
+		foreach ($illegal_names as $name ) {
 			$name = trim( $name );
 			if ( $name != '' )
 				$names[] = trim( $name );
@@ -120,7 +120,7 @@ switch ( $_GET['action'] ) {
 
 		if ( $_POST['limited_email_domains'] != '' ) {
 			$limited_email_domains = str_replace( ' ', "\n", $_POST['limited_email_domains'] );
-			$limited_email_domains = split( "\n", stripslashes( $limited_email_domains ) );
+			$limited_email_domains = explode( "\n", stripslashes( $limited_email_domains ) );
 			$limited_email = array();
 			foreach ( (array) $limited_email_domains as $domain ) {
 					$domain = trim( $domain );
@@ -133,7 +133,7 @@ switch ( $_GET['action'] ) {
 		}
 
 		if ( $_POST['banned_email_domains'] != '' ) {
-			$banned_email_domains = split( "\n", stripslashes( $_POST['banned_email_domains'] ) );
+			$banned_email_domains = explode( "\n", stripslashes( $_POST['banned_email_domains'] ) );
 			$banned = array();
 			foreach ( (array) $banned_email_domains as $domain ) {
 				$domain = trim( $domain );

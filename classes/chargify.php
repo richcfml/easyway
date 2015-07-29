@@ -27,8 +27,11 @@ class chargifyMeteredUsage
 			$rapid_reorder_text_messages = $resturant["rapid_reorder_text_messages"];
 			$return_url = $resturant["hosted_page_url"];
                         
-			$return_url= preg_replace("/^https:\/\//", "", $return_url);
-			$return_url= preg_replace("/^http:\/\//", "", $return_url);
+			$return_url= preg_replace_callback("/^https:\/\//", function ($matches) { return ''; }, $return_url);
+			$return_url= preg_replace_callback("/^http:\/\//", function ($matches) { return ''; }, $return_url);
+			
+			//$return_url= preg_replace("/^https:\/\//", "", $return_url);
+			//$return_url= preg_replace("/^http:\/\//", "", $return_url);
 			
 			$subdomain = substr($return_url, 0, strpos($return_url, '.')-strlen($return_url));
 			$args = array(

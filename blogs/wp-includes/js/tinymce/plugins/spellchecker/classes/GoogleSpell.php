@@ -106,8 +106,8 @@ class GoogleSpell extends SpellChecker {
 	}
 
 	function _unhtmlentities($string) {
-		$string = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $string);
-		$string = preg_replace('~&#([0-9]+);~e', 'chr(\\1)', $string);
+		$string = func_pregreplace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $string);
+		$string = func_pregreplace('~&#([0-9]+);~e', 'chr(\\1)', $string);
 
 		$trans_tbl = get_html_translation_table(HTML_ENTITIES);
 		$trans_tbl = array_flip($trans_tbl);

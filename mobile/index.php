@@ -26,7 +26,7 @@
 	if(is_null($cart)) {
 	   $cart=new cart();
 	  }else{
-		$cart=unserialize($_SESSION['CART']); 
+		$cart=unserializeData($_SESSION['CART']); 
 	 }
 	$cart->restaurant_id=$objRestaurant->id;
 	$cart->sales_tax_ratio=$objRestaurant->tax_percent;

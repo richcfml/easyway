@@ -153,7 +153,8 @@ class TCPDF_FILTERS {
 		// intialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
-		$data = preg_replace('/[\s]/', '', $data);
+		$data = preg_replace_callback('/[\s]/', function($matches){ return ''; }, $data);
+		//$data = preg_replace('/[\s]/', '', $data);
 		// check for EOD character: GREATER-THAN SIGN (3Eh)
 		$eod = strpos($data, '>');
 		if ($eod !== false) {
@@ -193,7 +194,8 @@ class TCPDF_FILTERS {
 		// intialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
-		$data = preg_replace('/[\s]/', '', $data);
+		$data = preg_replace_callback('/[\s]/', function ($matches) { return ''; }, $data);
+		//$data = preg_replace('/[\s]/', '', $data);
 		// remove start sequence 2-character sequence <~ (3Ch)(7Eh)
 		if (strpos($data, '<~') !== false) {
 			// remove EOD and extra data (if any)

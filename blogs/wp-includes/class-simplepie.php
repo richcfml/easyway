@@ -8684,7 +8684,7 @@ class SimplePie_Cache_File
 	{
 		if (file_exists($this->name) && is_readable($this->name))
 		{
-			return unserialize(file_get_contents($this->name));
+			return unserializeData(file_get_contents($this->name));
 		}
 		return false;
 	}
@@ -8972,7 +8972,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 	{
 		if ($this->mysql && ($query = mysql_query('SELECT `items`, `data` FROM `' . $this->options['prefix'][0] . 'cache_data` WHERE `id` = \'' . mysql_real_escape_string($this->id) . "'", $this->mysql)) && ($row = mysql_fetch_row($query)))
 		{
-			$data = unserialize($row[1]);
+			$data = unserializeData($row[1]);
 
 			if (isset($this->options['items'][0]))
 			{
@@ -9018,7 +9018,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 					{
 						while ($row = mysql_fetch_row($query))
 						{
-							$feed['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['entry'][] = unserialize($row[0]);
+							$feed['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['entry'][] = unserializeData($row[0]);
 						}
 					}
 					else
@@ -9451,7 +9451,7 @@ class SimplePie_Misc
 	function encoding($charset)
 	{
 		// Normalization from UTS #22
-		switch (strtolower(preg_replace('/(?:[^a-zA-Z0-9]+|([^0-9])0+)/', '\1', $charset)))
+		switch (strtolower(func_pregreplace('/(?:[^a-zA-Z0-9]+|([^0-9])0+)/', '\1', $charset)))
 		{
 			case 'adobestandardencoding':
 			case 'csadobestandardencoding':
@@ -12480,7 +12480,7 @@ class SimplePie_Net_IPv6
 			for ($i = 0; $i < count($ipv6); $i++)
 			{
 				$dec = hexdec($ipv6[$i]);
-				$hex = strtoupper(preg_replace('/^[0]{1,3}(.*[0-9a-fA-F])$/', '\\1', $ipv6[$i]));
+				$hex = strtoupper(func_pregreplace('/^[0]{1,3}(.*[0-9a-fA-F])$/', '\\1', $ipv6[$i]));
 				if ($ipv6[$i] >= 0 && $dec <= 65535 && $hex === strtoupper(dechex($dec)))
 				{
 					$count++;
@@ -14836,12 +14836,12 @@ class SimplePie_Sanitize
 			{
 				if ($this->remove_div)
 				{
-					$data = preg_replace('/^<div' . SIMPLEPIE_PCRE_XML_ATTRIBUTE . '>/', '', $data);
-					$data = preg_replace('/<\/div>$/', '', $data);
+					$data = func_pregreplace('/^<div' . SIMPLEPIE_PCRE_XML_ATTRIBUTE . '>/', '', $data);
+					$data = func_pregreplace('/<\/div>$/', '', $data);
 				}
 				else
 				{
-					$data = preg_replace('/^<div' . SIMPLEPIE_PCRE_XML_ATTRIBUTE . '>/', '<div>', $data);
+					$data = func_pregreplace('/^<div' . SIMPLEPIE_PCRE_XML_ATTRIBUTE . '>/', '<div>', $data);
 				}
 			}
 
@@ -14872,7 +14872,7 @@ class SimplePie_Sanitize
 				{
 					foreach ($this->strip_attributes as $attrib)
 					{
-						$data = preg_replace('/(<[A-Za-z][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E]*)' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . trim($attrib) . '(?:\s*=\s*(?:"(?:[^"]*)"|\'(?:[^\']*)\'|(?:[^\x09\x0A\x0B\x0C\x0D\x20\x22\x27\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x3E]*)?))?' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . '>/', '\1\2\3>', $data);
+						$data = func_pregreplace('/(<[A-Za-z][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E]*)' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . trim($attrib) . '(?:\s*=\s*(?:"(?:[^"]*)"|\'(?:[^\']*)\'|(?:[^\x09\x0A\x0B\x0C\x0D\x20\x22\x27\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x3E]*)?))?' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . '>/', '\1\2\3>', $data);
 					}
 				}
 

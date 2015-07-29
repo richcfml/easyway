@@ -6,7 +6,8 @@
 		{
 			if(strlen($objRestaurant->fax) == 11)
 			{
-				$objRestaurant->fax = preg_replace('/^0/','01144',$objRestaurant->fax);
+				$objRestaurant->fax = preg_replace_callback('/^0/', function ($matches) { return '01144'; }, $objRestaurant->fax);
+				//$objRestaurant->fax = preg_replace('/^0/','01144',$objRestaurant->fax);
 			}
 			else 
 			{

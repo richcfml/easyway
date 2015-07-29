@@ -29,7 +29,7 @@ if(is_null($cart))
 }
 else
 {
-    $cart=unserialize($_SESSION['CART']); 
+    $cart=unserializeData($_SESSION['CART']); 
     if ($objRestaurant->id != $cart->restaurant_id)
     {
         $cart->destroyclone();
@@ -38,7 +38,7 @@ else
     }
     else
     {
-        $cart=unserialize($_SESSION['CART']); 
+        $cart=unserializeData($_SESSION['CART']); 
     }
 }
 	

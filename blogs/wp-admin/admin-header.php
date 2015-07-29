@@ -46,7 +46,7 @@ if ( is_multisite() )
 	wp_admin_css( 'ms' );
 wp_enqueue_script('utils');
 
-$admin_body_class = preg_replace('/[^a-z0-9_-]+/i', '-', $hook_suffix);
+$admin_body_class = func_pregreplace('/[^a-z0-9_-]+/i', '-', $hook_suffix);
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -175,7 +175,7 @@ unset($title_class, $blog_name, $total_update_count, $update_title);
 require(ABSPATH . 'wp-admin/menu-header.php');
 
 $current_screen->parent_file = $parent_file;
-$current_screen->parent_base = preg_replace('/\?.*$/', '', $parent_file);
+$current_screen->parent_base = func_pregreplace('/\?.*$/', '', $parent_file);
 $current_screen->parent_base = str_replace('.php', '', $current_screen->parent_base);
 ?>
 

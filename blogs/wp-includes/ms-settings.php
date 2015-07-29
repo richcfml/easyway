@@ -44,9 +44,9 @@ if ( !isset( $current_site ) || !isset( $current_blog ) ) {
 	if ( substr( $cookie_domain, 0, 4 ) == 'www.' )
 		$cookie_domain = substr( $cookie_domain, 4 );
 
-	$path = preg_replace( '|([a-z0-9-]+.php.*)|', '', $_SERVER['REQUEST_URI'] );
+	$path = func_pregreplace( '|([a-z0-9-]+.php.*)|', '', $_SERVER['REQUEST_URI'] );
 	$path = str_replace ( '/wp-admin/', '/', $path );
-	$path = preg_replace( '|(/[a-z0-9-]+?/).*|', '$1', $path );
+	$path = func_pregreplace( '|(/[a-z0-9-]+?/).*|', '$1', $path );
 
 	$current_site = wpmu_current_site();
 	if ( ! isset( $current_site->blog_id ) )

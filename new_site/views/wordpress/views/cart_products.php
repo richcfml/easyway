@@ -40,7 +40,9 @@ $index=-1;
                       if($attr->Option_name!=$last_att) {$arr_index=0; $last_att=$attr->Option_name;
                       echo " <strong>".$attr->Option_name .":</strong>"
                         ?>
-      <? } echo ($arr_index>0 ? ", ":"") . $attr->Title ." ".  ($attr->Price=='0' ?'' : ($attr->Price[0]=='-' ? ' - Subtract': ' - Add'   ).$currency.preg_replace("/[^0-9.]+/","",number_format($attr->Price,2))) ;?>
+      <? } echo ($arr_index>0 ? ", ":"") . $attr->Title ." ".  ($attr->Price=='0' ?'' : ($attr->Price[0]=='-' ? ' - Subtract': ' - Add'   ).$currency.
+	  preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, number_format($attr->Price,2))
+	  /*preg_replace("/[^0-9.]+/","",number_format($attr->Price,2))*/) ;?>
       <? $arr_index +=1;
                           }
                       // FO RACH ATTR 

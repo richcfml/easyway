@@ -23,14 +23,14 @@
 		 if($this->id!="")
 		 {
 			 $sql="update trackers set Name='". addslashes($this->Name) ."'     ";
-			  $sql .=", HtmlCode='". mysql_escape_string($this->HtmlCode) . "'";
+			  $sql .=", HtmlCode='". mysql_real_escape_string($this->HtmlCode) . "'";
 			  $sql .=" where id=". $this->id ."";
 			   
 			  
 		 }
 		 else{
 				$sql="insert into trackers set Name='". addslashes($this->Name) ."'     ";
-				$sql .=", HtmlCode='". mysql_escape_string($this->HtmlCode) . "'";
+				$sql .=", HtmlCode='". mysql_real_escape_string($this->HtmlCode) . "'";
 				$sql .=", type='".  $this->type . "'";
 				$sql .=", RestaurantId='".  $this->RestaurantId . "'";
 				  

@@ -51,7 +51,7 @@ function press_it() {
 
 				// Replace the POSTED content <img> with correct uploaded ones. Regex contains fix for Magic Quotes
 				if ( !is_wp_error($upload) )
-					$content = preg_replace('/<img ([^>]*)src=\\\?(\"|\')'.preg_quote(htmlspecialchars($image), '/').'\\\?(\2)([^>\/]*)\/*>/is', $upload, $content);
+					$content = func_pregreplace('/<img ([^>]*)src=\\\?(\"|\')'.preg_quote(htmlspecialchars($image), '/').'\\\?(\2)([^>\/]*)\/*>/is', $upload, $content);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ if ( !empty($_GET['s']) ) {
 }
 
 if ( ! empty($selection) ) {
-	$selection = preg_replace('/(\r?\n|\r)/', '</p><p>', $selection);
+	$selection = func_pregreplace('/(\r?\n|\r)/', '</p><p>', $selection);
 	$selection = '<p>' . str_replace('<p></p>', '', $selection) . '</p>';
 }
 
@@ -204,7 +204,7 @@ if ( !empty($_REQUEST['ajax']) ) {
 		 * @return string
 		 */
 		function get_images_from_uri($uri) {
-			$uri = preg_replace('/\/#.+?$/','', $uri);
+			$uri = func_pregreplace('/\/#.+?$/','', $uri);
 			if ( preg_match('/\.(jpg|jpe|jpeg|png|gif)$/', $uri) && !strpos($uri,'blogger.com') )
 				return "'" . esc_attr( html_entity_decode($uri) ) . "'";
 			$content = wp_remote_fopen($uri);
@@ -386,12 +386,12 @@ var photostorage = false;
 					<?php
 					$content = '';
 					if ( preg_match("/youtube\.com\/watch/i", $url) ) {
-						list($domain, $video_id) = split("v=", $url);
+						list($domain, $video_id) = explode("v=", $url);
 						$video_id = esc_attr($video_id);
 						$content = '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/' . $video_id . '"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/' . $video_id . '" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350"></embed></object>';
 
 					} elseif ( preg_match("/vimeo\.com\/[0-9]+/i", $url) ) {
-						list($domain, $video_id) = split(".com/", $url);
+						list($domain, $video_id) = explode(".com/", $url);
 						$video_id = esc_attr($video_id);
 						$content = '<object width="400" height="225"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://www.vimeo.com/moogaloop.swf?clip_id=' . $video_id . '&amp;server=www.vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" />	<embed src="http://www.vimeo.com/moogaloop.swf?clip_id=' . $video_id . '&amp;server=www.vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="225"></embed></object>';
 
@@ -591,7 +591,7 @@ var photostorage = false;
 	</div>
 	<div class="posting">
 		<?php if ( isset($posted) && intval($posted) ) { $post_ID = intval($posted); ?>
-		<div id="message" class="updated"><p><strong><?php _e('Your post has been saved.'); ?></strong> <a onclick="window.opener.location.replace(this.href); window.close();" href="<?php echo get_permalink( $post_ID); ?>"><?php _e('View post'); ?></a> | <a href="<?php echo get_edit_post_link( $post_ID ); ?>" onclick="window.opener.location.replace(this.href); window.close();"><?php _e('Edit Post'); ?></a> | <a href="#" onclick="window.close();"><?php _e('Close Window'); ?></a></p></div>
+		<div id="message" class="updated"><p><strong><?php _e('Your post has been saved.'); ?></strong> <a onClick="window.opener.location.replace(this.href); window.close();" href="<?php echo get_permalink( $post_ID); ?>"><?php _e('View post'); ?></a> | <a href="<?php echo get_edit_post_link( $post_ID ); ?>" onClick="window.opener.location.replace(this.href); window.close();"><?php _e('Edit Post'); ?></a> | <a href="#" onClick="window.close();"><?php _e('Close Window'); ?></a></p></div>
 		<?php } ?>
 
 		<div id="titlediv">
@@ -617,9 +617,9 @@ var photostorage = false;
 				<li id="switcher">
 					<?php wp_print_scripts( 'quicktags' ); ?>
 					<?php add_filter('the_editor_content', 'wp_richedit_pre'); ?>
-					<a id="edButtonHTML" onclick="switchEditors.go('content', 'html');"><?php _e('HTML'); ?></a>
-					<a id="edButtonPreview" class="active" onclick="switchEditors.go('content', 'tinymce');"><?php _e('Visual'); ?></a>
-					<div class="zerosize"><input accesskey="e" type="button" onclick="switchEditors.go('content')" /></div>
+					<a id="edButtonHTML" onClick="switchEditors.go('content', 'html');"><?php _e('HTML'); ?></a>
+					<a id="edButtonPreview" class="active" onClick="switchEditors.go('content', 'tinymce');"><?php _e('Visual'); ?></a>
+					<div class="zerosize"><input accesskey="e" type="button" onClick="switchEditors.go('content')" /></div>
 				</li>
 				<?php } ?>
 			</ul>

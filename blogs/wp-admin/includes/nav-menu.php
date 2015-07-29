@@ -727,7 +727,7 @@ function wp_nav_menu_item_post_type_meta_box( $object, $post_type ) {
 				$checkbox_items = walk_nav_menu_tree( array_map('wp_setup_nav_menu_item', $posts), 0, (object) $args );
 
 				if ( 'all' == $current_tab && ! empty( $_REQUEST['selectall'] ) ) {
-					$checkbox_items = preg_replace('/(type=(.)checkbox(\2))/', '$1 checked=$2checked$2', $checkbox_items);
+					$checkbox_items = func_pregreplace('/(type=(.)checkbox(\2))/', '$1 checked=$2checked$2', $checkbox_items);
 
 				}
 

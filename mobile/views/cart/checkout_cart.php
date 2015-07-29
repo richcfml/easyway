@@ -30,7 +30,7 @@ $index=-1;
      	?>
       <? } ?>
       <span class="normal">
-      <?   echo ($arr_index>0 ? ", ":"") . $attr->Title ." ".  ($attr->Price=='0' ?'' : ($attr->Price[0]=='-' ? 'Subtract': 'Add'   ). $currency . preg_replace("/[^0-9.]+/","",$attr->Price)) ;?>
+      <?   echo ($arr_index>0 ? ", ":"") . $attr->Title ." ".  ($attr->Price=='0' ?'' : ($attr->Price[0]=='-' ? 'Subtract': 'Add'   ). $currency . currencyToNumber($attr->Price)) ;?>
       </span>
       <? $arr_index +=1;
 		  }

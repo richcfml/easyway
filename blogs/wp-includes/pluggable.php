@@ -772,7 +772,7 @@ function auth_redirect() {
 	// If https is required and request is http, redirect
 	if ( $secure && !is_ssl() && false !== strpos($_SERVER['REQUEST_URI'], 'wp-admin') ) {
 		if ( 0 === strpos($_SERVER['REQUEST_URI'], 'http') ) {
-			wp_redirect(preg_replace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
+			wp_redirect(func_pregreplace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
 			exit();
 		} else {
 			wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -791,7 +791,7 @@ function auth_redirect() {
 		// If the user wants ssl but the session is not ssl, redirect.
 		if ( !$secure && get_user_option('use_ssl', $user_id) && false !== strpos($_SERVER['REQUEST_URI'], 'wp-admin') ) {
 			if ( 0 === strpos($_SERVER['REQUEST_URI'], 'http') ) {
-				wp_redirect(preg_replace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
+				wp_redirect(func_pregreplace('|^http://|', 'https://', $_SERVER['REQUEST_URI']));
 				exit();
 			} else {
 				wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -907,7 +907,7 @@ if ( !function_exists('wp_sanitize_redirect') ) :
  * @return string redirect-sanitized URL
  **/
 function wp_sanitize_redirect($location) {
-	$location = preg_replace('|[^a-z0-9-~+_.?#=&;,/:%!]|i', '', $location);
+	$location = func_pregreplace('|[^a-z0-9-~+_.?#=&;,/:%!]|i', '', $location);
 	$location = wp_kses_no_null($location);
 
 	// remove %0d and %0a from location
@@ -1069,7 +1069,7 @@ function wp_notify_postauthor( $comment_id, $comment_type = '' ) {
 		$notify_message .= sprintf( __('Delete it: %s'), admin_url("comment.php?action=delete&c=$comment_id") ) . "\r\n";
 	$notify_message .= sprintf( __('Spam it: %s'), admin_url("comment.php?action=spam&c=$comment_id") ) . "\r\n";
 
-	$wp_email = 'wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
+	$wp_email = 'wordpress@' . func_pregreplace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
 
 	if ( '' == $comment->comment_author ) {
 		$from = "From: \"$blogname\" <$wp_email>";
@@ -1740,8 +1740,8 @@ function wp_text_diff( $left_string, $right_string, $args = null ) {
 	$left_string  = normalize_whitespace($left_string);
 	$right_string = normalize_whitespace($right_string);
 
-	$left_lines  = split("\n", $left_string);
-	$right_lines = split("\n", $right_string);
+	$left_lines  = explode("\n", $left_string);
+	$right_lines = explode("\n", $right_string);
 
 	$text_diff = new Text_Diff($left_lines, $right_lines);
 	$renderer  = new WP_Text_Diff_Renderer_Table();

@@ -161,13 +161,13 @@ class WP {
 			// requested permalink.
 			$req_uri = str_replace($pathinfo, '', $req_uri);
 			$req_uri = trim($req_uri, '/');
-			$req_uri = preg_replace("|^$home_path|", '', $req_uri);
+			$req_uri = func_pregreplace("|^$home_path|", '', $req_uri);
 			$req_uri = trim($req_uri, '/');
 			$pathinfo = trim($pathinfo, '/');
-			$pathinfo = preg_replace("|^$home_path|", '', $pathinfo);
+			$pathinfo = func_pregreplace("|^$home_path|", '', $pathinfo);
 			$pathinfo = trim($pathinfo, '/');
 			$self = trim($self, '/');
-			$self = preg_replace("|^$home_path|", '', $self);
+			$self = func_pregreplace("|^$home_path|", '', $self);
 			$self = trim($self, '/');
 
 			// The requested permalink is in $pathinfo for path info requests and
@@ -201,7 +201,7 @@ class WP {
 					$this->matched_rule = $match;
 
 					// Trim the query of everything up to the '?'.
-					$query = preg_replace("!^.+\?!", '', $query);
+					$query = func_pregreplace("!^.+\?!", '', $query);
 
 					// Substitute the substring matches into the query.
 					$query = addslashes(WP_MatchesMapRegex::apply($query, $matches));

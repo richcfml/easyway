@@ -1870,7 +1870,7 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		/* warning: here we make the assumption that the blog's URL is on the same server */
 		$filename = get_option('home') . '/';
-		$filename = preg_replace('#https?://.+?/#', $_SERVER['DOCUMENT_ROOT'].'/', $filename);
+		$filename = func_pregreplace('#https?://.+?/#', $_SERVER['DOCUMENT_ROOT'].'/', $filename);
 
 		$f = fopen($filename, 'r');
 		$content = fread($f, filesize($filename));
@@ -1910,7 +1910,7 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		/* warning: here we make the assumption that the blog's URL is on the same server */
 		$filename = get_option('home') . '/';
-		$filename = preg_replace('#https?://.+?/#', $_SERVER['DOCUMENT_ROOT'].'/', $filename);
+		$filename = func_pregreplace('#https?://.+?/#', $_SERVER['DOCUMENT_ROOT'].'/', $filename);
 
 		if ($f = fopen($filename, 'w+')) {
 			fwrite($f, $content);
@@ -2735,7 +2735,7 @@ class wp_xmlrpc_server extends IXR_Server {
 			foreach ( (array) get_post_custom($post_ID) as $key => $val) {
 				if ($key == 'enclosure') {
 					foreach ( (array) $val as $enc ) {
-						$encdata = split("\n", $enc);
+						$encdata = explode("\n", $enc);
 						$enclosure['url'] = trim(htmlspecialchars($encdata[0]));
 						$enclosure['length'] = (int) trim($encdata[1]);
 						$enclosure['type'] = trim($encdata[2]);
@@ -2987,7 +2987,7 @@ class wp_xmlrpc_server extends IXR_Server {
 
 			// Make sure the new name is different by pre-pending the
 			// previous post id.
-			$filename = preg_replace("/^wpid\d+-/", "", $name);
+			$filename = func_pregreplace("/^wpid\d+-/", "", $name);
 			$name = "wpid{$old_file->ID}-{$filename}";
 		}
 
@@ -3362,11 +3362,11 @@ class wp_xmlrpc_server extends IXR_Server {
 				$way = 'from the fragment (numeric)';
 			} elseif ( preg_match('/post-[0-9]+/',$urltest['fragment']) ) {
 				// ...a post id in the form 'post-###'
-				$post_ID = preg_replace('/[^0-9]+/', '', $urltest['fragment']);
+				$post_ID = func_pregreplace('/[^0-9]+/', '', $urltest['fragment']);
 				$way = 'from the fragment (post-###)';
 			} elseif ( is_string($urltest['fragment']) ) {
 				// ...or a string #title, a little more complicated
-				$title = preg_replace('/[^a-z0-9]/i', '.', $urltest['fragment']);
+				$title = func_pregreplace('/[^a-z0-9]/i', '.', $urltest['fragment']);
 				$sql = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title RLIKE %s", like_escape( $title ) );
 				if (! ($post_ID = $wpdb->get_var($sql)) ) {
 					// returning unknown error '0' is better than die()ing
@@ -3411,8 +3411,8 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		// Work around bug in strip_tags():
 		$linea = str_replace('<!DOC', '<DOC', $linea);
-		$linea = preg_replace( '/[\s\r\n\t]+/', ' ', $linea ); // normalize spaces
-		$linea = preg_replace( "/ <(h1|h2|h3|h4|h5|h6|p|th|td|li|dt|dd|pre|caption|input|textarea|button|body)[^>]*>/", "\n\n", $linea );
+		$linea = func_pregreplace( '/[\s\r\n\t]+/', ' ', $linea ); // normalize spaces
+		$linea = func_pregreplace( "/ <(h1|h2|h3|h4|h5|h6|p|th|td|li|dt|dd|pre|caption|input|textarea|button|body)[^>]*>/", "\n\n", $linea );
 
 		preg_match('|<title>([^<]*?)</title>|is', $linea, $matchtitle);
 		$title = $matchtitle[1];
@@ -3435,7 +3435,7 @@ class wp_xmlrpc_server extends IXR_Server {
 
 				// We're going to use this fake tag to mark the context in a bit
 				// the marker is needed in case the link text appears more than once in the paragraph
-				$excerpt = preg_replace('|\</?wpcontext\>|', '', $para);
+				$excerpt = func_pregreplace('|\</?wpcontext\>|', '', $para);
 
 				// prevent really long link text
 				if ( strlen($context[1]) > 100 )
@@ -3446,7 +3446,7 @@ class wp_xmlrpc_server extends IXR_Server {
 				$excerpt = strip_tags($excerpt, '<wpcontext>');        // strip all tags but our context marker
 				$excerpt = trim($excerpt);
 				$preg_marker = preg_quote($marker, '|');
-				$excerpt = preg_replace("|.*?\s(.{0,100}$preg_marker.{0,100})\s.*|s", '$1', $excerpt);
+				$excerpt = func_pregreplace("|.*?\s(.{0,100}$preg_marker.{0,100})\s.*|s", '$1', $excerpt);
 				$excerpt = strip_tags($excerpt); // YES, again, to remove the marker wrapper
 				break;
 			}

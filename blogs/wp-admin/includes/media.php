@@ -145,7 +145,7 @@ function image_add_caption( $html, $id, $caption, $title, $align, $url, $size, $
 							$caption
 						  );
 
-	$html = preg_replace( '/(class=["\'][^\'"]*)align(none|left|right|center)\s?/', '$1', $html );
+	$html = func_pregreplace( '/(class=["\'][^\'"]*)align(none|left|right|center)\s?/', '$1', $html );
 	if ( empty($align) )
 		$align = 'none';
 
@@ -263,7 +263,7 @@ function media_handle_sideload($file_array, $post_id, $desc = null, $post_data =
 	$url = $file['url'];
 	$type = $file['type'];
 	$file = $file['file'];
-	$title = preg_replace('/\.[^.]+$/', '', basename($file));
+	$title = func_pregreplace('/\.[^.]+$/', '', basename($file));
 	$content = '';
 
 	// use image exif/iptc data for title and caption defaults if possible
@@ -1017,7 +1017,7 @@ function media_post_single_attachment_fields_to_edit( $form_fields, $post ) {
 function image_attachment_fields_to_save($post, $attachment) {
 	if ( substr($post['post_mime_type'], 0, 5) == 'image' ) {
 		if ( strlen(trim($post['post_title'])) == 0 ) {
-			$post['post_title'] = preg_replace('/\.\w+$/', '', basename($post['guid']));
+			$post['post_title'] = func_pregreplace('/\.\w+$/', '', basename($post['guid']));
 			$post['errors']['post_title']['errors'][] = __('Empty Title filled from filename.');
 		}
 	}
@@ -1556,7 +1556,7 @@ SWFUpload.onload = function() {
 	<div>
 	<?php _e( 'Choose files to upload' ); ?>
 	<div id="flash-browse-button"></div>
-	<span><input id="cancel-upload" disabled="disabled" onclick="cancelUpload()" type="button" value="<?php esc_attr_e('Cancel Upload'); ?>" class="button" /></span>
+	<span><input id="cancel-upload" disabled="disabled" onClick="cancelUpload()" type="button" value="<?php esc_attr_e('Cancel Upload'); ?>" class="button" /></span>
 	</div>
 	<p class="media-upload-size"><?php printf( __( 'Maximum upload file size: %d%s' ), $upload_size_unit, $sizes[$u] ); ?></p>
 <?php do_action('post-flash-upload-ui'); ?>
@@ -1570,7 +1570,7 @@ SWFUpload.onload = function() {
 		<label class="screen-reader-text" for="async-upload"><?php _e('Upload'); ?></label>
 		<input type="file" name="async-upload" id="async-upload" />
 		<?php submit_button( __( 'Upload' ), 'button', 'html-upload', false ); ?>
-		<a href="#" onclick="try{top.tb_remove();}catch(e){}; return false;"><?php _e('Cancel'); ?></a>
+		<a href="#" onClick="try{top.tb_remove();}catch(e){}; return false;"><?php _e('Cancel'); ?></a>
 	</p>
 	<div class="clear"></div>
 	<p class="media-upload-size"><?php printf( __( 'Maximum upload file size: %d%s' ), $upload_size_unit, $sizes[$u] ); ?></p>

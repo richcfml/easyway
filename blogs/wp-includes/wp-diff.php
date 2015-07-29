@@ -236,8 +236,8 @@ class WP_Text_Diff_Renderer_Table extends Text_Diff_Renderer {
 				}
 
 				// Un-inline the diffs by removing del or ins
-				$orig_diffs[$o]  = preg_replace( '|<ins>.*?</ins>|', '', $diff );
-				$final_diffs[$f] = preg_replace( '|<del>.*?</del>|', '', $diff );
+				$orig_diffs[$o]  = func_pregreplace( '|<ins>.*?</ins>|', '', $diff );
+				$final_diffs[$f] = func_pregreplace( '|<del>.*?</del>|', '', $diff );
 			}
 		}
 

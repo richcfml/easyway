@@ -728,7 +728,7 @@ class Snoopy
 							chr(0xDF), // ANSI &szlig;
 						);
 
-		$text = preg_replace($search,$replace,$document);
+		$text = func_pregreplace($search,$replace,$document);
 
 		return $text;
 	}
@@ -746,8 +746,8 @@ class Snoopy
 
 		preg_match("/^[^\?]+/",$URI,$match);
 
-		$match = preg_replace("|/[^\/\.]+\.[^\/\.]+$|","",$match[0]);
-		$match = preg_replace("|/$|","",$match);
+		$match = func_pregreplace("|/[^\/\.]+\.[^\/\.]+$|","",$match[0]);
+		$match = func_pregreplace("|/$|","",$match);
 		$match_part = parse_url($match);
 		$match_root =
 		$match_part["scheme"]."://".$match_part["host"];
@@ -766,7 +766,7 @@ class Snoopy
 							"/"
 						);
 
-		$expandedLinks = preg_replace($search,$replace,$links);
+		$expandedLinks = func_pregreplace($search,$replace,$links);
 
 		return $expandedLinks;
 	}

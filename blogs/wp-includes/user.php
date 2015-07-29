@@ -874,7 +874,7 @@ function count_users($strategy = 'time') {
 		$users_of_blog = $wpdb->get_col( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = '{$blog_prefix}capabilities'" );
 
 		foreach ( $users_of_blog as $caps_meta ) {
-			$b_roles = unserialize($caps_meta);
+			$b_roles = unserializeData($caps_meta);
 			if ( is_array($b_roles) ) {
 				foreach ( $b_roles as $b_role => $val ) {
 					if ( isset($avail_roles[$b_role]) ) {
@@ -1450,7 +1450,7 @@ function wp_insert_user($userdata) {
 
 	if ( empty($admin_color) )
 		$admin_color = 'fresh';
-	$admin_color = preg_replace('|[^a-z0-9 _.\-@]|i', '', $admin_color);
+	$admin_color = func_pregreplace('|[^a-z0-9 _.\-@]|i', '', $admin_color);
 
 	if ( empty($use_ssl) )
 		$use_ssl = 0;

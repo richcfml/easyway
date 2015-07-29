@@ -222,7 +222,7 @@ else if (isset($_GET['addtocart']))
 					$attribute->id = $ob->id;
 					$attribute->Title = $ob->Title;
 					$attribute->Price = $ob->Price;
-					$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+					$attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 					if($attribute->Price=='') 
 					{
 						$attribute->Price=0;
@@ -245,7 +245,7 @@ else if (isset($_GET['addtocart']))
 				$attribute->id = $ob->id;
 				$attribute->Title = $ob->Title;
 				$attribute->Price = $ob->Price;
-				$attribute->Price =  preg_replace("/[^0-9+-.]+/","",$attribute->Price);
+				$attribute->Price =  currencyToNumber_WPM($attribute->Price); //preg_replace("/[^0-9+-.]+/","",$attribute->Price);
 				$attribute->Option_name=$$attribute_parent_name;
 				if($attribute->Price=='') 
 				{

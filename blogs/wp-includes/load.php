@@ -87,7 +87,7 @@ function wp_fix_server_vars() {
 	// Fix empty PHP_SELF
 	$PHP_SELF = $_SERVER['PHP_SELF'];
 	if ( empty( $PHP_SELF ) )
-		$_SERVER['PHP_SELF'] = $PHP_SELF = preg_replace( '/(\?.*)?$/', '', $_SERVER["REQUEST_URI"] );
+		$_SERVER['PHP_SELF'] = $PHP_SELF = func_pregreplace( '/(\?.*)?$/', '', $_SERVER["REQUEST_URI"] );
 }
 
 /**

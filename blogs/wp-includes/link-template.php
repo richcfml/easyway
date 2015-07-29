@@ -441,7 +441,7 @@ function get_feed_link($feed = '') {
 			$feed = '';
 
 		$permalink = str_replace('%feed%', $feed, $permalink);
-		$permalink = preg_replace('#/+#', '/', "/$permalink");
+		$permalink = func_pregreplace('#/+#', '/', "/$permalink");
 		$output =  home_url( user_trailingslashit($permalink, 'feed') );
 	} else {
 		if ( empty($feed) )
@@ -1488,8 +1488,8 @@ function get_pagenum_link($pagenum = 1) {
 	$home_root = ( isset($home_root['path']) ) ? $home_root['path'] : '';
 	$home_root = preg_quote( trailingslashit( $home_root ), '|' );
 
-	$request = preg_replace('|^'. $home_root . '|', '', $request);
-	$request = preg_replace('|^/+|', '', $request);
+	$request = func_pregreplace('|^'. $home_root . '|', '', $request);
+	$request = func_pregreplace('|^/+|', '', $request);
 
 	if ( !$wp_rewrite->using_permalinks() || is_admin() ) {
 		$base = trailingslashit( get_bloginfo( 'url' ) );
@@ -1505,13 +1505,13 @@ function get_pagenum_link($pagenum = 1) {
 
 		if ( !empty( $qs_match[0] ) ) {
 			$query_string = $qs_match[0];
-			$request = preg_replace( $qs_regex, '', $request );
+			$request = func_pregreplace( $qs_regex, '', $request );
 		} else {
 			$query_string = '';
 		}
 
-		$request = preg_replace( "|$wp_rewrite->pagination_base/\d+/?$|", '', $request);
-		$request = preg_replace( '|^index\.php|', '', $request);
+		$request = func_pregreplace( "|$wp_rewrite->pagination_base/\d+/?$|", '', $request);
+		$request = func_pregreplace( '|^index\.php|', '', $request);
 		$request = ltrim($request, '/');
 
 		$base = trailingslashit( get_bloginfo( 'url' ) );
@@ -1592,7 +1592,7 @@ function get_next_posts_link( $label = 'Next Page &raquo;', $max_page = 0 ) {
 
 	if ( !is_single() && ( $nextpage <= $max_page ) ) {
 		$attr = apply_filters( 'next_posts_link_attributes', '' );
-		return '<a href="' . next_posts( $max_page, false ) . "\" $attr>" . preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) . '</a>';
+		return '<a href="' . next_posts( $max_page, false ) . "\" $attr>" . func_pregreplace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) . '</a>';
 	}
 }
 
@@ -1660,7 +1660,7 @@ function get_previous_posts_link( $label = '&laquo; Previous Page' ) {
 
 	if ( !is_single() && $paged > 1 ) {
 		$attr = apply_filters( 'previous_posts_link_attributes', '' );
-		return '<a href="' . previous_posts( false ) . "\" $attr>". preg_replace( '/&([^#])(?![a-z]{1,8};)/', '&#038;$1', $label ) .'</a>';
+		return '<a href="' . previous_posts( false ) . "\" $attr>". func_pregreplace( '/&([^#])(?![a-z]{1,8};)/', '&#038;$1', $label ) .'</a>';
 	}
 }
 
@@ -1707,7 +1707,7 @@ function get_posts_nav_link( $args = array() ) {
 
 		if ( $max_num_pages > 1 ) {
 			$return = get_previous_posts_link($args['prelabel']);
-			$return .= preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $args['sep']);
+			$return .= func_pregreplace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $args['sep']);
 			$return .= get_next_posts_link($args['nxtlabel']);
 		}
 	}
@@ -1796,7 +1796,7 @@ function get_next_comments_link( $label = '', $max_page = 0 ) {
 	if ( empty($label) )
 		$label = __('Newer Comments &raquo;');
 
-	return '<a href="' . esc_url( get_comments_pagenum_link( $nextpage, $max_page ) ) . '" ' . apply_filters( 'next_comments_link_attributes', '' ) . '>'. preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'</a>';
+	return '<a href="' . esc_url( get_comments_pagenum_link( $nextpage, $max_page ) ) . '" ' . apply_filters( 'next_comments_link_attributes', '' ) . '>'. func_pregreplace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'</a>';
 }
 
 /**
@@ -1833,7 +1833,7 @@ function get_previous_comments_link( $label = '' ) {
 	if ( empty($label) )
 		$label = __('&laquo; Older Comments');
 
-	return '<a href="' . esc_url( get_comments_pagenum_link( $prevpage ) ) . '" ' . apply_filters( 'previous_comments_link_attributes', '' ) . '>' . preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'</a>';
+	return '<a href="' . esc_url( get_comments_pagenum_link( $prevpage ) ) . '" ' . apply_filters( 'previous_comments_link_attributes', '' ) . '>' . func_pregreplace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'</a>';
 }
 
 /**
@@ -2122,7 +2122,7 @@ function plugins_url($path = '', $plugin = '') {
 	$mu_plugin_dir = WPMU_PLUGIN_DIR;
 	foreach ( array('path', 'plugin', 'mu_plugin_dir') as $var ) {
 		$$var = str_replace('\\' ,'/', $$var); // sanitize for Win32 installs
-		$$var = preg_replace('|/+|', '/', $$var);
+		$$var = func_pregreplace('|/+|', '/', $$var);
 	}
 
 	if ( !empty($plugin) && 0 === strpos($plugin, $mu_plugin_dir) )

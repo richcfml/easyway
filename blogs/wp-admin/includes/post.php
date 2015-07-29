@@ -308,7 +308,7 @@ function bulk_edit_posts( $post_data = null ) {
 			if ( is_taxonomy_hierarchical( $tax_name ) )
 				$tax_input[$tax_name] = array_map( 'absint', $terms );
 			else {
-				$tax_input[$tax_name] = preg_replace( '/\s*,\s*/', ',', rtrim( trim($terms), ' ,' ) );
+				$tax_input[$tax_name] = func_pregreplace( '/\s*,\s*/', ',', rtrim( trim($terms), ' ,' ) );
 				$tax_input[$tax_name] = explode(',', $tax_input[$tax_name]);
 			}
 		}
@@ -1499,12 +1499,12 @@ function wp_tiny_mce( $teeny = false, $settings = false ) {
 					if ( 'en' != $mce_locale && empty($strings) ) {
 						if ( @is_file($path . 'en.js') ) {
 							$str1 = @file_get_contents($path . 'en.js');
-							$strings .= preg_replace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str1, 1 ) . "\n";
+							$strings .= func_pregreplace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str1, 1 ) . "\n";
 						}
 
 						if ( @is_file($path . 'en_dlg.js') ) {
 							$str2 = @file_get_contents($path . 'en_dlg.js');
-							$strings .= preg_replace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str2, 1 ) . "\n";
+							$strings .= func_pregreplace( '/([\'"])en\./', '$1' . $mce_locale . '.', $str2, 1 ) . "\n";
 						}
 					}
 

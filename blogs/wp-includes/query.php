@@ -1417,7 +1417,7 @@ class WP_Query {
 		$qv['w'] = absint($qv['w']);
 		$qv['m'] = absint($qv['m']);
 		$qv['paged'] = absint($qv['paged']);
-		$qv['cat'] = preg_replace( '|[^0-9,-]|', '', $qv['cat'] ); // comma separated list of positive or negative integers
+		$qv['cat'] = func_pregreplace( '|[^0-9,-]|', '', $qv['cat'] ); // comma separated list of positive or negative integers
 		$qv['pagename'] = trim( $qv['pagename'] );
 		$qv['name'] = trim( $qv['name'] );
 		if ( '' !== $qv['hour'] ) $qv['hour'] = absint($qv['hour']);
@@ -1629,7 +1629,7 @@ class WP_Query {
 			if ( is_array( $qv['post_status'] ) )
 				$qv['post_status'] = array_map('sanitize_key', $qv['post_status']);
 			else
-				$qv['post_status'] = preg_replace('|[^a-z0-9_,-]|', '', $qv['post_status']);
+				$qv['post_status'] = func_pregreplace('|[^a-z0-9_,-]|', '', $qv['post_status']);
 		}
 
 		if ( $this->is_posts_page && ( ! isset($qv['withcomments']) || ! $qv['withcomments'] ) )
@@ -2011,7 +2011,7 @@ class WP_Query {
 
 		// If a month is specified in the querystring, load that month
 		if ( $q['m'] ) {
-			$q['m'] = '' . preg_replace('|[^0-9]|', '', $q['m']);
+			$q['m'] = '' . func_pregreplace('|[^0-9]|', '', $q['m']);
 			$where .= " AND YEAR($wpdb->posts.post_date)=" . substr($q['m'], 0, 4);
 			if ( strlen($q['m']) > 5 )
 				$where .= " AND MONTH($wpdb->posts.post_date)=" . substr($q['m'], 4, 2);

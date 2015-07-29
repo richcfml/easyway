@@ -287,7 +287,8 @@ class TCPDF2DBarcode {
 			case 'RAW':
 			case 'RAW2': { // RAW MODE
 				// remove spaces
-				$code = preg_replace('/[\s]*/si', '', $code);
+				$code = preg_replace_callback('/[\s]*/si', function ($matches) { return ''; }, $code);
+				//$code = preg_replace('/[\s]*/si', '', $code);
 				if (strlen($code) < 3) {
 					break;
 				}

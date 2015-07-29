@@ -445,7 +445,7 @@ class WP_Comments_List_Table extends WP_List_Table {
 		$author_url = get_comment_author_url();
 		if ( 'http://' == $author_url )
 			$author_url = '';
-		$author_url_display = preg_replace( '|http://(www\.)?|i', '', $author_url );
+		$author_url_display = func_pregreplace( '|http://(www\.)?|i', '', $author_url );
 		if ( strlen( $author_url_display ) > 50 )
 			$author_url_display = substr( $author_url_display, 0, 49 ) . '...';
 

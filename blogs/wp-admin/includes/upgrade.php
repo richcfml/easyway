@@ -1292,9 +1292,9 @@ function get_alloptions_110() {
 		foreach ($options as $option) {
 			// "When trying to design a foolproof system,
 			//  never underestimate the ingenuity of the fools :)" -- Dougal
-			if ('siteurl' == $option->option_name) $option->option_value = preg_replace('|/+$|', '', $option->option_value);
-			if ('home' == $option->option_name) $option->option_value = preg_replace('|/+$|', '', $option->option_value);
-			if ('category_base' == $option->option_name) $option->option_value = preg_replace('|/+$|', '', $option->option_value);
+			if ('siteurl' == $option->option_name) $option->option_value = func_pregreplace('|/+$|', '', $option->option_value);
+			if ('home' == $option->option_name) $option->option_value = func_pregreplace('|/+$|', '', $option->option_value);
+			if ('category_base' == $option->option_name) $option->option_value = func_pregreplace('|/+$|', '', $option->option_value);
 			$all_options->{$option->option_name} = stripslashes($option->option_value);
 		}
 	}
@@ -1314,11 +1314,11 @@ function __get_option($setting) {
 	global $wpdb;
 
 	if ( $setting == 'home' && defined( 'WP_HOME' ) ) {
-		return preg_replace( '|/+$|', '', WP_HOME );
+		return func_pregreplace( '|/+$|', '', WP_HOME );
 	}
 
 	if ( $setting == 'siteurl' && defined( 'WP_SITEURL' ) ) {
-		return preg_replace( '|/+$|', '', WP_SITEURL );
+		return func_pregreplace( '|/+$|', '', WP_SITEURL );
 	}
 
 	$option = $wpdb->get_var( $wpdb->prepare("SELECT option_value FROM $wpdb->options WHERE option_name = %s", $setting) );
@@ -1327,9 +1327,9 @@ function __get_option($setting) {
 		return __get_option('siteurl');
 
 	if ( 'siteurl' == $setting || 'home' == $setting || 'category_base' == $setting )
-		$option = preg_replace('|/+$|', '', $option);
+		$option = func_pregreplace('|/+$|', '', $option);
 
-	@ $kellogs = unserialize($option);
+	@ $kellogs = unserializeData($option);
 	if ($kellogs !== FALSE)
 		return $kellogs;
 	else
@@ -1351,14 +1351,14 @@ function deslash($content) {
 
 	// Replace one or more backslashes followed by a single quote with
 	// a single quote.
-	$content = preg_replace("/\\\+'/", "'", $content);
+	$content = func_pregreplace("/\\\+'/", "'", $content);
 
 	// Replace one or more backslashes followed by a double quote with
 	// a double quote.
-	$content = preg_replace('/\\\+"/', '"', $content);
+	$content = func_pregreplace('/\\\+"/', '"', $content);
 
 	// Replace one or more backslashes with one backslash.
-	$content = preg_replace("/\\\+/", "\\", $content);
+	$content = func_pregreplace("/\\\+/", "\\", $content);
 
 	return $content;
 }

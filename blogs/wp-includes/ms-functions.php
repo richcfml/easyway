@@ -519,7 +519,7 @@ function wpmu_validate_user_signup($user_name, $user_email) {
 	$errors = new WP_Error();
 
 	$orig_username = $user_name;
-	$user_name = preg_replace( '/\s+/', '', sanitize_user( $user_name, true ) );
+	$user_name = func_pregreplace( '/\s+/', '', sanitize_user( $user_name, true ) );
 	$maybe = array();
 	preg_match( '/[a-z0-9]+/', $user_name, $maybe );
 
@@ -681,7 +681,7 @@ function wpmu_validate_blog_signup($blogname, $blog_title, $user = '') {
 
 	// Check if the domain/path has been used already.
 	if ( is_subdomain_install() ) {
-		$mydomain = $blogname . '.' . preg_replace( '|^www\.|', '', $domain );
+		$mydomain = $blogname . '.' . func_pregreplace( '|^www\.|', '', $domain );
 		$path = $base;
 	} else {
 		$mydomain = "$domain";
@@ -763,7 +763,7 @@ function wpmu_signup_user($user, $user_email, $meta = '') {
 	global $wpdb;
 
 	// Format data
-	$user = preg_replace( '/\s+/', '', sanitize_user( $user, true ) );
+	$user = func_pregreplace( '/\s+/', '', sanitize_user( $user, true ) );
 	$user_email = sanitize_email( $user_email );
 	$key = substr( md5( time() . rand() . $user_email ), 0, 16 );
 	$meta = serialize($meta);
@@ -933,7 +933,7 @@ function wpmu_activate_signup($key) {
 			return new WP_Error( 'already_active', __( 'The site is already active.' ), $signup );
 	}
 
-	$meta = unserialize($signup->meta);
+	$meta = unserializeData($signup->meta);
 	$user_login = $wpdb->escape($signup->user_login);
 	$user_email = $wpdb->escape($signup->user_email);
 	$password = wp_generate_password( 12, false );
@@ -1000,7 +1000,7 @@ function wpmu_activate_signup($key) {
  * @return mixed Returns false on failure, or int $user_id on success
  */
 function wpmu_create_user( $user_name, $password, $email) {
-	$user_name = preg_replace( '/\s+/', '', sanitize_user( $user_name, true ) );
+	$user_name = func_pregreplace( '/\s+/', '', sanitize_user( $user_name, true ) );
 
 	$user_id = wp_create_user( $user_name, $password, $email );
 	if ( is_wp_error($user_id) )
@@ -1042,7 +1042,7 @@ function wpmu_create_user( $user_name, $password, $email) {
  * @return mixed Returns WP_Error object on failure, int $blog_id on success
  */
 function wpmu_create_blog($domain, $path, $title, $user_id, $meta = '', $site_id = 1) {
-	$domain = preg_replace( '/\s+/', '', sanitize_user( $domain, true ) );
+	$domain = func_pregreplace( '/\s+/', '', sanitize_user( $domain, true ) );
 
 	if ( is_subdomain_install() )
 		$domain = str_replace( '@', '', $domain );
@@ -1629,7 +1629,7 @@ function update_posts_count( $deprecated = '' ) {
 function wpmu_log_new_registrations( $blog_id, $user_id ) {
 	global $wpdb;
 	$user = new WP_User( (int) $user_id );
-	$wpdb->insert( $wpdb->registration_log, array('email' => $user->user_email, 'IP' => preg_replace( '/[^0-9., ]/', '',$_SERVER['REMOTE_ADDR'] ), 'blog_id' => $blog_id, 'date_registered' => current_time('mysql')) );
+	$wpdb->insert( $wpdb->registration_log, array('email' => $user->user_email, 'IP' => func_pregreplace( '/[^0-9., ]/', '',$_SERVER['REMOTE_ADDR'] ), 'blog_id' => $blog_id, 'date_registered' => current_time('mysql')) );
 }
 
 /**

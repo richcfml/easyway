@@ -69,7 +69,7 @@ function wp_crop_image( $src_file, $src_x, $src_y, $src_w, $src_h, $dst_w, $dst_
 	if ( ! $dst_file )
 		$dst_file = str_replace( basename( $src_file ), 'cropped-' . basename( $src_file ), $src_file );
 
-	$dst_file = preg_replace( '/\\.[^\\.]+$/', '.jpg', $dst_file );
+	$dst_file = func_pregreplace( '/\\.[^\\.]+$/', '.jpg', $dst_file );
 
 	if ( imagejpeg( $dst, $dst_file, apply_filters( 'jpeg_quality', 90, 'wp_crop_image' ) ) )
 		return $dst_file;

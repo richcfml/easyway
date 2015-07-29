@@ -125,7 +125,7 @@ if ( 'update' == $action ) {
 		// Map UTC+- timezones to gmt_offsets and set timezone_string to empty.
 		if ( !empty($_POST['timezone_string']) && preg_match('/^UTC[+-]/', $_POST['timezone_string']) ) {
 			$_POST['gmt_offset'] = $_POST['timezone_string'];
-			$_POST['gmt_offset'] = preg_replace('/UTC\+?/', '', $_POST['gmt_offset']);
+			$_POST['gmt_offset'] = func_pregreplace('/UTC\+?/', '', $_POST['gmt_offset']);
 			$_POST['timezone_string'] = '';
 		}
 	}

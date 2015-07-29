@@ -603,9 +603,9 @@ function wp_kses_split2($string, $allowed_html, $allowed_protocols) {
 		if ( $string == '' )
 			return '';
 		// prevent multiple dashes in comments
-		$string = preg_replace('/--+/', '-', $string);
+		$string = func_pregreplace('/--+/', '-', $string);
 		// prevent three dashes closing a comment
-		$string = preg_replace('/-$/', '', $string);
+		$string = func_pregreplace('/-$/', '', $string);
 		return "<!--{$string}-->";
 	}
 	# Allow HTML comments
@@ -708,7 +708,7 @@ function wp_kses_attr($element, $attr, $allowed_html, $allowed_protocols) {
 
 	# Remove any "<" or ">" characters
 
-	$attr2 = preg_replace('/[<>]/', '', $attr2);
+	$attr2 = func_pregreplace('/[<>]/', '', $attr2);
 
 	return "<$element$attr2$xhtml_slash>";
 }
@@ -747,7 +747,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 				if (preg_match('/^([-a-zA-Z]+)/', $attr, $match)) {
 					$attrname = $match[1];
 					$working = $mode = 1;
-					$attr = preg_replace('/^[-a-zA-Z]+/', '', $attr);
+					$attr = func_pregreplace('/^[-a-zA-Z]+/', '', $attr);
 				}
 
 				break;
@@ -758,7 +758,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 					{
 					$working = 1;
 					$mode = 2;
-					$attr = preg_replace('/^\s*=\s*/', '', $attr);
+					$attr = func_pregreplace('/^\s*=\s*/', '', $attr);
 					break;
 				}
 
@@ -769,7 +769,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 					if(FALSE === array_key_exists($attrname, $attrarr)) {
 						$attrarr[$attrname] = array ('name' => $attrname, 'value' => '', 'whole' => $attrname, 'vless' => 'y');
 					}
-					$attr = preg_replace('/^\s+/', '', $attr);
+					$attr = func_pregreplace('/^\s+/', '', $attr);
 				}
 
 				break;
@@ -788,7 +788,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 					}
 					$working = 1;
 					$mode = 0;
-					$attr = preg_replace('/^"[^"]*"(\s+|$)/', '', $attr);
+					$attr = func_pregreplace('/^"[^"]*"(\s+|$)/', '', $attr);
 					break;
 				}
 
@@ -804,7 +804,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 					}
 					$working = 1;
 					$mode = 0;
-					$attr = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);
+					$attr = func_pregreplace("/^'[^']*'(\s+|$)/", '', $attr);
 					break;
 				}
 
@@ -821,7 +821,7 @@ function wp_kses_hair($attr, $allowed_protocols) {
 					# We add quotes to conform to W3C's HTML spec.
 					$working = 1;
 					$mode = 0;
-					$attr = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attr);
+					$attr = func_pregreplace("%^[^\s\"']+(\s+|$)%", '', $attr);
 				}
 
 				break;
@@ -949,8 +949,8 @@ function wp_kses_bad_protocol($string, $allowed_protocols) {
  * @return string
  */
 function wp_kses_no_null($string) {
-	$string = preg_replace('/\0+/', '', $string);
-	$string = preg_replace('/(\\\\0)+/', '', $string);
+	$string = func_pregreplace('/\0+/', '', $string);
+	$string = func_pregreplace('/(\\\\0)+/', '', $string);
 
 	return $string;
 }
@@ -960,7 +960,7 @@ function wp_kses_no_null($string) {
  *
  * This function changes the character sequence  \"  to just  ". It leaves all
  * other slashes alone. It's really weird, but the quoting from
- * preg_replace(//e) seems to require this.
+ * func_pregreplace(//e) seems to require this.
  *
  * @since 1.0.0
  *
@@ -968,7 +968,7 @@ function wp_kses_no_null($string) {
  * @return string Fixed strings with quoted slashes
  */
 function wp_kses_stripslashes($string) {
-	return preg_replace('%\\\\"%', '"', $string);
+	return func_pregreplace('%\\\\"%', '"', $string);
 }
 
 /**
@@ -1004,7 +1004,7 @@ function wp_kses_array_lc($inarray) {
  * @return string
  */
 function wp_kses_js_entities($string) {
-	return preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
+	return func_pregreplace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
 }
 
 /**
@@ -1019,7 +1019,7 @@ function wp_kses_js_entities($string) {
  * @return string
  */
 function wp_kses_html_error($string) {
-	return preg_replace('/^("[^"]*("|$)|\'[^\']*(\'|$)|\S)*\s*/', '', $string);
+	return func_pregreplace('/^("[^"]*("|$)|\'[^\']*(\'|$)|\S)*\s*/', '', $string);
 }
 
 /**
@@ -1057,7 +1057,7 @@ function wp_kses_bad_protocol_once($string, $allowed_protocols) {
  */
 function wp_kses_bad_protocol_once2( $string, $allowed_protocols ) {
 	$string2 = wp_kses_decode_entities($string);
-	$string2 = preg_replace('/\s/', '', $string2);
+	$string2 = func_pregreplace('/\s/', '', $string2);
 	$string2 = wp_kses_no_null($string2);
 	$string2 = strtolower($string2);
 
@@ -1404,7 +1404,7 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 		if ( strpos( $css_item, ':' ) === false ) {
 			$found = true;
 		} else {
-			$parts = split( ':', $css_item );
+			$parts = explode( ':', $css_item );
 			if ( in_array( trim( $parts[0] ), $allowed_attr ) )
 				$found = true;
 		}

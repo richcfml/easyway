@@ -137,7 +137,7 @@ class ftp extends ftp_base {
 		}
 		while (!feof($this->_ftp_data_sock)) {
 			$block=fread($this->_ftp_data_sock, $this->_ftp_buff_size);
-			if($mode!=FTP_BINARY) $block=preg_replace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_local], $block);
+			if($mode!=FTP_BINARY) $block=func_pregreplace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_local], $block);
 			if(is_resource($fp)) $out+=fwrite($fp, $block, strlen($block));
 			else $out.=$block;
 		}
@@ -161,7 +161,7 @@ class ftp extends ftp_base {
 	}
 
 	function _data_write_block($mode, $block) {
-		if($mode!=FTP_BINARY) $block=preg_replace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_remote], $block);
+		if($mode!=FTP_BINARY) $block=func_pregreplace("/\r\n|\r|\n/", $this->_eol_code[$this->OS_remote], $block);
 		do {
 			if(($t=@fwrite($this->_ftp_data_sock, $block))===FALSE) {
 				$this->PushError("_data_write","Can't write to socket");

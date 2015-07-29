@@ -816,7 +816,7 @@ function wp_list_pages($args = '') {
 	$current_page = 0;
 
 	// sanitize, mostly to keep spaces out
-	$r['exclude'] = preg_replace('/[^0-9,]/', '', $r['exclude']);
+	$r['exclude'] = func_pregreplace('/[^0-9,]/', '', $r['exclude']);
 
 	// Allow plugins to filter an array of excluded pages (but don't put a nullstring into the array)
 	$exclude_array = ( $r['exclude'] ) ? explode(',', $r['exclude']) : array();

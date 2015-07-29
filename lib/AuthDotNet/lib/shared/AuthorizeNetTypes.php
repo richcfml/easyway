@@ -310,12 +310,14 @@ class AuthorizeNet_Subscription
         while ($element_removed) {
             $element_removed = 0;
             if (preg_match('/<[a-z]+>[\r?\n]+\s*<\/[a-z]+>/i', $xml_clean)) {
-                $xml_clean = preg_replace('/<[a-z]+>[\r?\n]+\s*<\/[a-z]+>/i', '', $xml_clean);
+                $xml_clean = preg_replace_callback('/<[a-z]+>[\r?\n]+\s*<\/[a-z]+>/i', function ($matches) { return ''; }, $xml_clean);
+				//$xml_clean = preg_replace('/<[a-z]+>[\r?\n]+\s*<\/[a-z]+>/i', '', $xml_clean);
                 $element_removed = 1;
             }
         }
         
         // Remove any blank lines
+		// $xml_clean = preg_replace_callback('/\r\n[\s]+\r\n/', function ($matches) { return ''; }, $xml_clean);
         // $xml_clean = preg_replace('/\r\n[\s]+\r\n/','',$xml_clean);
         return $xml_clean;
     }

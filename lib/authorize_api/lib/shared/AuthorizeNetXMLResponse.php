@@ -30,7 +30,8 @@ class AuthorizeNetXMLResponse
             $this->xml = @simplexml_load_string($response);
             
             // Remove namespaces for use with XPath.
-            $this->xpath_xml = @simplexml_load_string(preg_replace('/ xmlns:xsi[^>]+/','',$response));
+            $this->xpath_xml = @simplexml_load_string(preg_replace_callback('/ xmlns:xsi[^>]+/', function ($matches) { return ''; }, $response));
+			//$this->xpath_xml = @simplexml_load_string(preg_replace('/ xmlns:xsi[^>]+/','',$response));
         }
     }
     

@@ -146,7 +146,7 @@ class WP_Filesystem_Base {
 			return trailingslashit($folder);
 		}
 
-		$folder = preg_replace('|^([a-z]{1}):|i', '', $folder); //Strip out windows driveletter if its there.
+		$folder = func_pregreplace('|^([a-z]{1}):|i', '', $folder); //Strip out windows driveletter if its there.
 		$folder = str_replace('\\', '/', $folder); //Windows path sanitiation
 
 		if ( isset($this->cache[ $folder ] ) )

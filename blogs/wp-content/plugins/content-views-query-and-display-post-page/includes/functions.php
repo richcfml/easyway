@@ -166,7 +166,7 @@ if ( ! class_exists( 'PT_CV_Functions' ) ) {
 		 * @return string
 		 */
 		static function string_slug_to_text( $slug ) {
-			$slug = preg_replace( '/[^a-z]+/', ' ', $slug );
+			$slug = func_pregreplace( '/[^a-z]+/', ' ', $slug );
 
 			return ucwords( $slug );
 		}
@@ -201,7 +201,7 @@ if ( ! class_exists( 'PT_CV_Functions' ) ) {
 		 * @return string
 		 */
 		static function pt_strip_tags( $string ) {
-			$string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
+			$string = func_pregreplace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
 
 			# allow some tags
 			global $dargs;

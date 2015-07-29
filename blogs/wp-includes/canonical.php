@@ -55,7 +55,7 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 	// See: http://trac.wordpress.org/ticket/5017
 	// See: http://trac.wordpress.org/ticket/7173
 	// Disabled, for now:
-	// $original['path'] = preg_replace('|/index\.php$|', '/', $original['path']);
+	// $original['path'] = func_pregreplace('|/index\.php$|', '/', $original['path']);
 
 	$redirect = $original;
 	$redirect_url = false;
@@ -191,9 +191,9 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 		if ( get_query_var('paged') || is_feed() || get_query_var('cpage') ) {
 			while ( preg_match( "#/$wp_rewrite->pagination_base/?[0-9]+?(/+)?$#", $redirect['path'] ) || preg_match( '#/(comments/?)?(feed|rss|rdf|atom|rss2)(/+)?$#', $redirect['path'] ) || preg_match( '#/comment-page-[0-9]+(/+)?$#', $redirect['path'] ) ) {
 				// Strip off paging and feed
-				$redirect['path'] = preg_replace("#/$wp_rewrite->pagination_base/?[0-9]+?(/+)?$#", '/', $redirect['path']); // strip off any existing paging
-				$redirect['path'] = preg_replace('#/(comments/?)?(feed|rss2?|rdf|atom)(/+|$)#', '/', $redirect['path']); // strip off feed endings
-				$redirect['path'] = preg_replace('#/comment-page-[0-9]+?(/+)?$#', '/', $redirect['path']); // strip off any existing comment paging
+				$redirect['path'] = func_pregreplace("#/$wp_rewrite->pagination_base/?[0-9]+?(/+)?$#", '/', $redirect['path']); // strip off any existing paging
+				$redirect['path'] = func_pregreplace('#/(comments/?)?(feed|rss2?|rdf|atom)(/+|$)#', '/', $redirect['path']); // strip off feed endings
+				$redirect['path'] = func_pregreplace('#/comment-page-[0-9]+?(/+)?$#', '/', $redirect['path']); // strip off any existing comment paging
 			}
 
 			$addl_path = '';
@@ -224,7 +224,7 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 				$redirect['query'] = remove_query_arg( 'cpage', $redirect['query'] );
 			}
 
-			$redirect['path'] = user_trailingslashit( preg_replace('|/index.php/?$|', '/', $redirect['path']) ); // strip off trailing /index.php/
+			$redirect['path'] = user_trailingslashit( func_pregreplace('|/index.php/?$|', '/', $redirect['path']) ); // strip off trailing /index.php/
 			if ( !empty( $addl_path ) && $wp_rewrite->using_index_permalinks() && strpos($redirect['path'], '/index.php/') === false )
 				$redirect['path'] = trailingslashit($redirect['path']) . 'index.php/';
 			if ( !empty( $addl_path ) )
@@ -234,7 +234,7 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 	}
 
 	// tack on any additional query vars
-	$redirect['query'] = preg_replace( '#^\??&*?#', '', $redirect['query'] );
+	$redirect['query'] = func_pregreplace( '#^\??&*?#', '', $redirect['query'] );
 	if ( $redirect_url && !empty($redirect['query']) ) {
 		parse_str( $redirect['query'], $_parsed_query );
 		$redirect = @parse_url($redirect_url);
@@ -266,20 +266,20 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 		unset($redirect['port']);
 
 	// trailing /index.php
-	$redirect['path'] = preg_replace('|/index.php/*?$|', '/', $redirect['path']);
+	$redirect['path'] = func_pregreplace('|/index.php/*?$|', '/', $redirect['path']);
 
 	// Remove trailing spaces from the path
-	$redirect['path'] = preg_replace( '#(%20| )+$#', '', $redirect['path'] );
+	$redirect['path'] = func_pregreplace( '#(%20| )+$#', '', $redirect['path'] );
 
 	if ( !empty( $redirect['query'] ) ) {
 		// Remove trailing spaces from certain terminating query string args
-		$redirect['query'] = preg_replace( '#((p|page_id|cat|tag)=[^&]*?)(%20| )+$#', '$1', $redirect['query'] );
+		$redirect['query'] = func_pregreplace( '#((p|page_id|cat|tag)=[^&]*?)(%20| )+$#', '$1', $redirect['query'] );
 
 		// Clean up empty query strings
-		$redirect['query'] = trim(preg_replace( '#(^|&)(p|page_id|cat|tag)=?(&|$)#', '&', $redirect['query']), '&');
+		$redirect['query'] = trim(func_pregreplace( '#(^|&)(p|page_id|cat|tag)=?(&|$)#', '&', $redirect['query']), '&');
 
 		// Remove redundant leading ampersands
-		$redirect['query'] = preg_replace( '#^\??&*?#', '', $redirect['query'] );
+		$redirect['query'] = func_pregreplace( '#^\??&*?#', '', $redirect['query'] );
 	}
 
 	// strip /index.php/ when we're not using PATHINFO permalinks
@@ -307,7 +307,7 @@ function redirect_canonical( $requested_url = null, $do_redirect = true ) {
 
 	// Strip multiple slashes out of the URL
 	if ( strpos($redirect['path'], '//') > -1 )
-		$redirect['path'] = preg_replace('|/+|', '/', $redirect['path']);
+		$redirect['path'] = func_pregreplace('|/+|', '/', $redirect['path']);
 
 	// Always trailing slash the Front Page URL
 	if ( trailingslashit( $redirect['path'] ) == trailingslashit( $user_home['path'] ) )

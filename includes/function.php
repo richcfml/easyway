@@ -139,7 +139,7 @@ function SendHtmlMail($email, $subject_mail, $body, $from){
 			
 		if (isset($img_path)) {
 		
-		list($m, $d) = split('/',$img_path);
+		list($m, $d) = explode('/',$img_path);
 		$img_path=str_replace("$m","$a","$img_path");
 			echo  <<<EOD
 			<img src="thum_creater/phpThumb.php?src=http://localhost/carry4u/$img_path&w=$w&h=$h&zc=1" border="0" alt="$alt">
@@ -229,8 +229,8 @@ EOD;
 									   '\'' => '&apos;' 									  
 									    )
 						);
-					
-			return preg_replace( '/\r\n/', ' ', trim($data) );  
+			return preg_replace_callback('/\r\n/', function ($matches) { return ' '; }, trim($data));
+			//return preg_replace( '/\r\n/', ' ', trim($data) );  
 		}
 			function esc_special($string)
 		{
@@ -241,8 +241,8 @@ EOD;
 									 		' '  => ''    		  
 									    )
 						);
-					
-			return preg_replace( '/\r\n/', ' ', trim($data) );  
+			return preg_replace_callback('/\r\n/', function ($matches) { return ' '; }, trim($data));
+			//return preg_replace( '/\r\n/', ' ', trim($data) );  
 		}
 
 function GetFileExt($fileName){
@@ -484,7 +484,7 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 			$json_sent=0;	
 			//	echo "<pre>";print_r($e);echo "</pre>"; 
 	}
-	$qry= "UPDATE ordertbl SET pay_load_json='". mysql_escape_string(json_encode($order)) ."' , json_sent=". $json_sent .", faxid=".$faxid." WHERE OrderID=".$orderId;
+	$qry= "UPDATE ordertbl SET pay_load_json='". mysql_real_escape_string(json_encode($order)) ."' , json_sent=". $json_sent .", faxid=".$faxid." WHERE OrderID=".$orderId;
 	mysql_query ($qry);
 }
 	// Parameters added by Saad 22Sept2014
@@ -704,18 +704,18 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
     $result_info= json_decode($result,true);
     Log::write("Post to Order Server", "Curl Execution End. Result: ".$result_info['Result']."", 'orderserver', 1 , '');
     curl_close($cURL);
-    mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_escape_string($encoded)."' WHERE OrderID =".$orderId."");
+    mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_real_escape_string($encoded)."' WHERE OrderID =".$orderId."");
 }
 
 function replaceSpecial($data) {
-	
-	$data = trim(preg_replace('/\'/', ' ', $data));
+	$data = preg_replace_callback('/\'/', function ($matches) { return ' '; }, trim($data));
+	//$data = trim(preg_replace('/\'/', ' ', $data));
  
-	 	
-	$data = preg_replace('/\n/', ' ',  $data);
+	$data = preg_replace_callback('/\n/', function ($matches) { return ' '; }, trim($data));
+	//$data = preg_replace('/\n/', ' ',  $data);
 	//remove any double spaces
-	$data = trim(preg_replace('/\s{2,}/', ' ', $data));
-	
+	$data = preg_replace_callback('/\s{2,}/', function ($matches) { return ' '; }, trim($data));
+	//$data = trim(preg_replace('/\s{2,}/', ' ', $data));
 
 	
 	 return $data; 
@@ -1063,6 +1063,7 @@ class testmail  {
 								  }
 		
 	}
+
 function redirect($to){
 	echo"<script>window.location='$to';</script>";
 	
@@ -1100,4 +1101,37 @@ function prepareStringForMySQL($string)
     return $string;
 }
 
+function unserializeData($data){
+	$result = @unserialize($data);
+	if($result === false){
+		$result = unserialize($data);
+	}
+	return $result;
+}
+
+function url_title($mystr){
+	$result = '';
+	$result .= preg_replace_callback('/[^a-zA-Z0-9]+/', function ($matches) { return '_'; }, $mystr);
+	return strtolower(trim($result));
+}
+
+function currencyToNumber($price){
+	preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $attr->Price);
+}
+
+
+// currencyToNumber with plus minus sign
+function currencyToNumber_WPM($price){
+	preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $attr->Price);
+}
+
+function func_pregreplace($re, $replacement, $str){
+	$result='';
+	$result .= preg_replace_callback($re,
+										function ($matches) use($replacement) {
+											return $replacement;
+										}, $str);
+						
+	return $result;
+}
 ?>

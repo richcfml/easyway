@@ -40,7 +40,7 @@ function wp_version_check() {
 	set_site_transient( 'update_core', $current );
 
 	if ( method_exists( $wpdb, 'db_version' ) )
-		$mysql_version = preg_replace('/[^0-9.].*/', '', $wpdb->db_version());
+		$mysql_version = func_pregreplace('/[^0-9.].*/', '', $wpdb->db_version());
 	else
 		$mysql_version = 'N/A';
 
@@ -180,7 +180,7 @@ function wp_update_plugins() {
 	if ( 200 != $raw_response['response']['code'] )
 		return false;
 
-	$response = unserialize( $raw_response['body'] );
+	$response = unserializeData( $raw_response['body'] );
 
 	if ( false !== $response )
 		$new_option->response = $response;
@@ -280,7 +280,7 @@ function wp_update_themes( ) {
 
 	$new_update = new stdClass;
 	$new_update->last_checked = time( );
-	$response = unserialize( $raw_response['body'] );
+	$response = unserializeData( $raw_response['body'] );
 	if ( $response ) {
 		$new_update->checked = $checked;
 		$new_update->response = $response;

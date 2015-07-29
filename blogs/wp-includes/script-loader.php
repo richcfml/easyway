@@ -581,7 +581,7 @@ function wp_just_in_time_script_localization() {
  */
 function wp_style_loader_src( $src, $handle ) {
 	if ( defined('WP_INSTALLING') )
-		return preg_replace( '#^wp-admin/#', './', $src );
+		return func_pregreplace( '#^wp-admin/#', './', $src );
 
 	if ( 'colors' == $handle || 'colors-rtl' == $handle ) {
 		global $_wp_admin_css_colors;
@@ -595,7 +595,7 @@ function wp_style_loader_src( $src, $handle ) {
 		$url = $color->url;
 
 		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG )
-			$url = preg_replace('/.css$|.css(?=\?)/', '.dev.css', $url);
+			$url = func_pregreplace('/.css$|.css(?=\?)/', '.dev.css', $url);
 
 		if ( isset($parsed['query']) && $parsed['query'] ) {
 			wp_parse_str( $parsed['query'], $qv );

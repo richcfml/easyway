@@ -225,7 +225,7 @@ function do_shortcode_tag( $m ) {
 function shortcode_parse_atts($text) {
 	$atts = array();
 	$pattern = '/(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
-	$text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $text);
+	$text = func_pregreplace("/[\x{00a0}\x{200b}]+/u", " ", $text);
 	if ( preg_match_all($pattern, $text, $match, PREG_SET_ORDER) ) {
 		foreach ($match as $m) {
 			if (!empty($m[1]))
@@ -290,7 +290,7 @@ function strip_shortcodes( $content ) {
 
 	$pattern = get_shortcode_regex();
 
-	return preg_replace('/'.$pattern.'/s', '$1$6', $content);
+	return func_pregreplace('/'.$pattern.'/s', '$1$6', $content);
 }
 
 add_filter('the_content', 'do_shortcode', 11); // AFTER wpautop()

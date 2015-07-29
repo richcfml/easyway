@@ -112,7 +112,7 @@ class Moxiecode_Logger {
 
 	function setMaxSize($size) {
 		// Fix log max size
-		$logMaxSizeBytes = intval(preg_replace("/[^0-9]/", "", $size));
+		$logMaxSizeBytes = intval(func_pregreplace("/[^0-9]/", "", $size));
 
 		// Is KB
 		if (strpos((strtolower($size)), "k") > 0)

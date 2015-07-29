@@ -529,7 +529,7 @@ function iis7_add_rewrite_rule($filename, $rewrite_rule) {
  */
 function saveDomDocument($doc, $filename) {
 	$config = $doc->saveXML();
-	$config = preg_replace("/([^\r])\n/", "$1\r\n", $config);
+	$config = func_pregreplace("/([^\r])\n/", "$1\r\n", $config);
 	$fp = fopen($filename, 'w');
 	fwrite($fp, $config);
 	fclose($fp);

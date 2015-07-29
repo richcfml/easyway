@@ -416,7 +416,7 @@ class WP_Http {
 			// tolerate line terminator: CRLF = LF (RFC 2616 19.3)
 			$headers = str_replace("\r\n", "\n", $headers);
 			// unfold folded header fields. LWS = [CRLF] 1*( SP | HT ) <US-ASCII SP, space (32)>, <US-ASCII HT, horizontal-tab (9)> (RFC 2616 2.2)
-			$headers = preg_replace('/\n[ \t]/', ' ', $headers);
+			$headers = func_pregreplace('/\n[ \t]/', ' ', $headers);
 			// create the headers array
 			$headers = explode("\n", $headers);
 		}
@@ -1005,7 +1005,7 @@ class WP_Http_Streams {
 			return new WP_Error('http_request_failed', sprintf(__('Malformed URL: %s'), $url));
 
 		if ( 'http' != $arrURL['scheme'] && 'https' != $arrURL['scheme'] )
-			$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
+			$url = func_pregreplace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
 
 		// Convert Header array to string.
 		$strHeaders = '';
@@ -1190,7 +1190,7 @@ class WP_Http_ExtHttp {
 		$arrURL = parse_url($url);
 
 		if ( 'http' != $arrURL['scheme'] && 'https' != $arrURL['scheme'] )
-			$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
+			$url = func_pregreplace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
 
 		$is_local = isset($args['local']) && $args['local'];
 		$ssl_verify = isset($args['sslverify']) && $args['sslverify'];

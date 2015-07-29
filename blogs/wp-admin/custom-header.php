@@ -193,7 +193,7 @@ class Custom_Image_Header {
 			if ( 'blank' == $_POST['text-color'] ) {
 				set_theme_mod( 'header_textcolor', 'blank' );
 			} else {
-				$color = preg_replace('/[^0-9a-fA-F]/', '', $_POST['text-color']);
+				$color = func_pregreplace('/[^0-9a-fA-F]/', '', $_POST['text-color']);
 				if ( strlen($color) == 6 || strlen($color) == 3 )
 					set_theme_mod('header_textcolor', $color);
 			}

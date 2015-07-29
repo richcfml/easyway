@@ -338,8 +338,8 @@ function get_extended($post) {
 	}
 
 	// Strip leading and trailing whitespace
-	$main = preg_replace('/^[\s]*(.*)[\s]*$/', '\\1', $main);
-	$extended = preg_replace('/^[\s]*(.*)[\s]*$/', '\\1', $extended);
+	$main = func_pregreplace('/^[\s]*(.*)[\s]*$/', '\\1', $main);
+	$extended = func_pregreplace('/^[\s]*(.*)[\s]*$/', '\\1', $extended);
 
 	return array('main' => $main, 'extended' => $extended);
 }
@@ -1901,23 +1901,23 @@ function wp_post_mime_type_where($post_mime_types, $table_alias = '') {
 	if ( is_string($post_mime_types) )
 		$post_mime_types = array_map('trim', explode(',', $post_mime_types));
 	foreach ( (array) $post_mime_types as $mime_type ) {
-		$mime_type = preg_replace('/\s/', '', $mime_type);
+		$mime_type = func_pregreplace('/\s/', '', $mime_type);
 		$slashpos = strpos($mime_type, '/');
 		if ( false !== $slashpos ) {
-			$mime_group = preg_replace('/[^-*.a-zA-Z0-9]/', '', substr($mime_type, 0, $slashpos));
-			$mime_subgroup = preg_replace('/[^-*.+a-zA-Z0-9]/', '', substr($mime_type, $slashpos + 1));
+			$mime_group = func_pregreplace('/[^-*.a-zA-Z0-9]/', '', substr($mime_type, 0, $slashpos));
+			$mime_subgroup = func_pregreplace('/[^-*.+a-zA-Z0-9]/', '', substr($mime_type, $slashpos + 1));
 			if ( empty($mime_subgroup) )
 				$mime_subgroup = '*';
 			else
 				$mime_subgroup = str_replace('/', '', $mime_subgroup);
 			$mime_pattern = "$mime_group/$mime_subgroup";
 		} else {
-			$mime_pattern = preg_replace('/[^-*.a-zA-Z0-9]/', '', $mime_type);
+			$mime_pattern = func_pregreplace('/[^-*.a-zA-Z0-9]/', '', $mime_type);
 			if ( false === strpos($mime_pattern, '*') )
 				$mime_pattern .= '/*';
 		}
 
-		$mime_pattern = preg_replace('/\*+/', '%', $mime_pattern);
+		$mime_pattern = func_pregreplace('/\*+/', '%', $mime_pattern);
 
 		if ( in_array( $mime_type, $wildcards ) )
 			return '';
@@ -2518,7 +2518,7 @@ function wp_insert_post($postarr, $wp_error = false) {
 		$ping_status = get_option('default_ping_status');
 
 	if ( isset($to_ping) )
-		$to_ping = preg_replace('|\s+|', "\n", $to_ping);
+		$to_ping = func_pregreplace('|\s+|', "\n", $to_ping);
 	else
 		$to_ping = '';
 
@@ -3013,7 +3013,7 @@ function get_enclosed($post_id) {
 		if ( 'enclosure' != $key || !is_array( $val ) )
 			continue;
 		foreach( $val as $enc ) {
-			$enclosure = split( "\n", $enc );
+			$enclosure = explode( "\n", $enc );
 			$pung[] = trim( $enclosure[ 0 ] );
 		}
 	}
@@ -3649,7 +3649,7 @@ function wp_insert_attachment($object, $file = false, $parent = 0) {
 		$ping_status = get_option('default_ping_status');
 
 	if ( isset($to_ping) )
-		$to_ping = preg_replace('|\s+|', "\n", $to_ping);
+		$to_ping = func_pregreplace('|\s+|', "\n", $to_ping);
 	else
 		$to_ping = '';
 
@@ -3988,7 +3988,7 @@ function wp_mime_type_icon( $mime = 0 ) {
 			$mime = (int) $mime;
 			if ( $post =& get_post( $mime ) ) {
 				$post_id = (int) $post->ID;
-				$ext = preg_replace('/^.+?\.([^.]+)$/', '$1', $post->guid);
+				$ext = func_pregreplace('/^.+?\.([^.]+)$/', '$1', $post->guid);
 				if ( !empty($ext) ) {
 					$post_mimes[] = $ext;
 					if ( $ext_type = wp_ext2type( $ext ) )
@@ -4032,7 +4032,7 @@ function wp_mime_type_icon( $mime = 0 ) {
 
 		// Icon basename - extension = MIME wildcard
 		foreach ( $icon_files as $file => $uri )
-			$types[ preg_replace('/^([^.]*).*$/', '$1', basename($file)) ] =& $icon_files[$file];
+			$types[ func_pregreplace('/^([^.]*).*$/', '$1', basename($file)) ] =& $icon_files[$file];
 
 		if ( ! empty($mime) ) {
 			$post_mimes[] = substr($mime, 0, strpos($mime, '/'));

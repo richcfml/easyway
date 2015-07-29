@@ -226,7 +226,7 @@ foreach ( $avatar_defaults as $default_key => $default_name ) {
 	$avatar_list .= "\n\t<label><input type='radio' name='avatar_default' id='avatar_{$default_key}' value='" . esc_attr($default_key)  . "' {$selected}/> ";
 
 	$avatar = get_avatar( $user_email, $size, $default_key );
-	$avatar_list .= preg_replace("/src='(.+?)'/", "src='\$1&amp;forcedefault=1'", $avatar);
+	$avatar_list .= func_pregreplace("/src='(.+?)'/", "src='\$1&amp;forcedefault=1'", $avatar);
 
 	$avatar_list .= ' ' . $default_name . '</label>';
 	$avatar_list .= '<br />';

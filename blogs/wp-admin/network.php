@@ -51,7 +51,7 @@ function network_domain_check() {
  * @return bool Whether subdomain install is allowed
  */
 function allow_subdomain_install() {
-	$domain = preg_replace( '|https?://([^/]+)|', '$1', get_option( 'siteurl' ) );
+	$domain = func_pregreplace( '|https?://([^/]+)|', '$1', get_option( 'siteurl' ) );
 	if( false !== strpos( $domain, '/' ) || 'localhost' == $domain || preg_match( '|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|', $domain ) )
 		return false;
 
@@ -86,7 +86,7 @@ function allow_subdirectory_install() {
 function get_clean_basedomain() {
 	if ( $existing_domain = network_domain_check() )
 		return $existing_domain;
-	$domain = preg_replace( '|https?://|', '', get_option( 'siteurl' ) );
+	$domain = func_pregreplace( '|https?://|', '', get_option( 'siteurl' ) );
 	if ( $slash = strpos( $domain, '/' ) )
 		$domain = substr( $domain, 0, $slash );
 	return $domain;
@@ -355,7 +355,7 @@ function network_step2( $errors = false ) {
 					echo ' <strong>' . __('Warning:') . ' ' . __( 'Networks may not be fully compatible with custom wp-content directories.' ) . '</strong';
 			?></p></li>
 			<li><p><?php printf( __( 'Add the following to your <code>wp-config.php</code> file in <code>%s</code> <strong>above</strong> the line reading <code>/* That&#8217;s all, stop editing! Happy blogging. */</code>:' ), ABSPATH ); ?></p>
-				<textarea class="code" readonly="readonly" cols="100" rows="7">
+				<textarea class="code" readonly cols="100" rows="7">
 define( 'MULTISITE', true );
 define( 'SUBDOMAIN_INSTALL', <?php echo $subdomain_install ? 'true' : 'false'; ?> );
 $base = '<?php echo $base; ?>';
@@ -386,7 +386,7 @@ define( 'BLOG_ID_CURRENT_SITE', 1 );</textarea>
 ?>
 	<p><?php
 		echo _n( 'This unique authentication key is also missing from your <code>wp-config.php</code> file.', 'These unique authentication keys are also missing from your <code>wp-config.php</code> file.', $num_keys_salts ); ?> <?php _e( 'To make your installation more secure, you should also add:' ) ?></p>
-	<textarea class="code" readonly="readonly" cols="100" rows="<?php echo $num_keys_salts; ?>"><?php echo esc_textarea( $keys_salts_str ); ?></textarea>
+	<textarea class="code" readonly cols="100" rows="<?php echo $num_keys_salts; ?>"><?php echo esc_textarea( $keys_salts_str ); ?></textarea>
 <?php
 	}
 ?>
@@ -471,7 +471,7 @@ define( 'BLOG_ID_CURRENT_SITE', 1 );</textarea>
 			}
 	?>
 		<li><p><?php printf( __( 'Add the following to your <code>web.config</code> file in <code>%s</code>, replacing other WordPress rules:' ), ABSPATH ); ?></p>
-		<textarea class="code" readonly="readonly" cols="100" rows="20">
+		<textarea class="code" readonly cols="100" rows="20">
 		<?php echo esc_textarea( $web_config_file ); ?>
 		</textarea></li>
 		</ol>
@@ -500,7 +500,7 @@ RewriteRule ^ - [L]';
 
 		?>
 		<li><p><?php printf( __( 'Add the following to your <code>.htaccess</code> file in <code>%s</code>, replacing other WordPress rules:' ), ABSPATH ); ?></p>
-		<textarea class="code" readonly="readonly" cols="100" rows="<?php echo $subdomain_install ? 11 : 16; ?>">
+		<textarea class="code" readonly cols="100" rows="<?php echo $subdomain_install ? 11 : 16; ?>">
 <?php echo esc_textarea( $htaccess_file ); ?></textarea></li>
 		</ol>
 
