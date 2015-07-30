@@ -1,15 +1,13 @@
 <?php
-echo(replaceBhSpecialChars("Bianco D'Oro® Salame   French Gruyère Cheese"));
+require_once "includes/config.php";
+$mSQL = "SELECT * FROM bh_items";
+$mRes = dbAbstract::Execute($mSQL);
 
-function replaceBhSpecialChars($pDescription)
+echo("<pre>");
+while ($ar = dbAbstract::returnArray($mRes))
 {
-    $pDescription = str_replace("'", "&#39;", $pDescription);
-    $pDescription = str_replace("®", "&#174;", $pDescription);
-    $pDescription = str_replace("ä", "&#228;", $pDescription);
-    $pDescription = str_replace("è", "&#232;", $pDescription);
-    $pDescription = str_replace("ñ", "&#241;", $pDescription);
-    $pDescription = str_replace(" ", " ", $pDescription);
-    
-    return $pDescription;
+    print_r($ar);
 }
+echo("</pre>");
+
 ?>
