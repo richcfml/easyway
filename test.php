@@ -10,7 +10,7 @@ $mRes = mysqli_query($mysqli, $mSQL);
 
 
 echo("<pre>");
-while ($ar = dbAbstract::returnArray($mRes))
+while ($ar = mysqli_fetch_array($mRes))
 {
     print_r($ar);
 }
