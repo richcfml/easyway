@@ -6,7 +6,7 @@ $mysqli = new mysqli("localhost", "easywayordering", "Yh56**ew!d", "upgraded_eas
 echo("2");
 $mSQL = "SELECT * FROM bh_items";
 echo("3");
-$mRes = dbAbstract::Execute($mSQL);
+$mRes = mysqli_query($mysqli, $mSQL);
 echo("4");
 /*
 echo("<pre>");
