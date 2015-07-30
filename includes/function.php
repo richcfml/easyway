@@ -653,7 +653,11 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
                 $order_rs['coupon_discount']=0;
         }
 
-        $sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
+        //$sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
+        //Gulfam (14 May 2015)- Above line is commented and below is added because in field $order_rs['total'] 
+        //the discount is already deducted and taxes etc are added. Moreover above line's 
+        //logic is wrong as well
+        $sub_total = $order_rs['total'];
 
         $order["TOTAL"]=array(
                 "sub_total"=>number_format($sub_total,2),
