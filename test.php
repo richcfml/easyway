@@ -1,4 +1,5 @@
 <?php
+error_reporting(1);
 echo("1");
 require_once "includes/config.php";
 echo("2");
