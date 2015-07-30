@@ -215,10 +215,10 @@ EOD;
 							$data=strtr($string,array('&'  => '&amp;',
 									   '&#0084;'  => ' ',
 									   '&#0093;'  => ' ',                                                                       
-									   '“'  => '"',
-									   '”'  => '"',
+									   'ï¿½'  => '"',
+									   'ï¿½'  => '"',
 									   'â€œ'  => '"',
-									   'â€'  => '"',
+									   'ï¿½'  => '"',
 									   ' '  => ' ',
 									   '>'  => '&gt;',
 									   '<'  => '&lt;',
@@ -1101,11 +1101,11 @@ function prepareStringForMySQL($string)
 }
 
 function unserializeData($data){
-	$result = @unserialize($data);
+	/*$result = @unserialize($data);
 	if($result === false){
 		$result = unserialize($data);
 	}
-	return $result;
+	return $result;*/
 }
 
 function url_title($mystr){
