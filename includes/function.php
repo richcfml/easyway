@@ -1101,17 +1101,17 @@ function prepareStringForMySQL($string)
 }
 
 function unserializeData($data){
-	/*$result = @unserialize($data);
+	$result = @unserialize($data);
 	if($result === false){
 		$result = unserialize($data);
 	}
-	return $result;*/
+	return $result;
 }
 
 function url_title($mystr){
-	$result = '';
+	/*$result = '';
 	$result .= preg_replace_callback('/[^a-zA-Z0-9]+/', function ($matches) { return '_'; }, $mystr);
-	return strtolower(trim($result));
+	return strtolower(trim($result));*/
 }
 
 function currencyToNumber($price){
