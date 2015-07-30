@@ -10,6 +10,7 @@ class dbAbstract
 {
     public static function Execute($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
+        global $mysqli;
         if ($pC_Panel==0)
         {
             Log::write("Execute - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -19,7 +20,7 @@ class dbAbstract
             Log::write("Execute - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysql_query($pSQL);
+        $mResult =  mysqli_query($mysqli, $pSQL);
         
         if ($pLogResults == true)
         {
@@ -39,6 +40,7 @@ class dbAbstract
     
     public static function ExecuteArray($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
+        global $mysqli;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteArray - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -47,7 +49,7 @@ class dbAbstract
         {
             Log::write("ExecuteArray - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
-        $mResult =  mysql_query($pSQL);
+        $mResult =  mysqli_query($mysqli, $pSQL);
         
         if ($pLogResults == true)
         {
@@ -61,9 +63,9 @@ class dbAbstract
             }
         }
         
-        if (mysql_num_rows($mResult) > 0)
+        if (mysqli_num_rows($mResult) > 0)
         {
-            return mysql_fetch_array($mResult);
+            return mysqli_fetch_array($mResult);
         }
         else
         {
@@ -73,6 +75,7 @@ class dbAbstract
     
     public static function ExecuteObject($pSQL, $pC_Panel = 0, $pClassName = "", $pLogResults = false)
     {
+        global $mysqli;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteObject - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -82,7 +85,7 @@ class dbAbstract
             Log::write("ExecuteObject - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysql_query($pSQL);
+        $mResult =  mysqli_query($mysqli, $pSQL);
         
         if ($pLogResults == true)
         {
@@ -96,15 +99,15 @@ class dbAbstract
             }
         }
         
-        if (mysql_num_rows($mResult) > 0)
+        if (mysqli_num_rows($mResult) > 0)
         {
             if ($pClassName=="")
             {
-                return mysql_fetch_object($mResult);
+                return mysqli_fetch_object($mResult);
             }
             else
             {
-                return mysql_fetch_object($mResult, $pClassName);
+                return mysqli_fetch_object($mResult, $pClassName);
             }
         }
         else
@@ -115,6 +118,7 @@ class dbAbstract
     
     public static function ExecuteAssoc($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
+        global $mysqli;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteAssoc - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -124,7 +128,7 @@ class dbAbstract
             Log::write("ExecuteAssoc - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysql_query($pSQL);
+        $mResult =  mysqli_query($mysqli, $pSQL);
         
         if ($pLogResults == true)
         {
@@ -138,9 +142,9 @@ class dbAbstract
             }
         }
         
-        if (mysql_num_rows($mResult) > 0)
+        if (mysqli_num_rows($mResult) > 0)
         {
-            return mysql_fetch_assoc($mResult);
+            return mysqli_fetch_assoc($mResult);
         }
         else
         {
@@ -150,8 +154,9 @@ class dbAbstract
     
     public static function Update($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        $mResult =  mysql_query($pSQL);
-        $mAffectedRows = mysql_affected_rows();
+        global $mysqli;
+        $mResult =  mysqli_query($mysqli, $pSQL);
+        $mAffectedRows = mysqli_affected_rows($mysqli);
 
         if ($pC_Panel==0)
         {
@@ -192,14 +197,15 @@ class dbAbstract
         }
         else if ($pReturnType == 1) //Return number of rows affected
         {
-            return mysql_affected_rows();
+            return mysqli_affected_rows($mysqli);
         }
     }
     
     public static function Insert($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        $mResult =  mysql_query($pSQL);
-        $mAffectedRows = mysql_affected_rows();
+        global $mysqli;
+        $mResult =  mysqli_query($mysqli, $pSQL);
+        $mAffectedRows = mysqli_affected_rows($mysqli);
         
         if ($pC_Panel==0)
         {
@@ -244,14 +250,15 @@ class dbAbstract
         }
         else if ($pReturnType == 2) //Return last inserted id
         {
-            return mysql_insert_id();
+            return mysqli_insert_id($mysqli);
         }
     }
     
     public static function Delete($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        $mResult =  mysql_query($pSQL);
-        $mAffectedRows = mysql_affected_rows();
+        global $mysqli;
+        $mResult =  mysqli_query($mysqli, $pSQL);
+        $mAffectedRows = mysqli_affected_rows($mysqli);
         
         if ($pC_Panel==0)
         {
@@ -296,15 +303,15 @@ class dbAbstract
         }
     }
     
-    public static function returnObject($pResult, $pC_Panel = 0, $pClassName = "", $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnObject($pResult, $pC_Panel = 0, $pClassName = "", $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
         if ($pClassName=="")
         {
-            $mObject =  mysql_fetch_object($pResult);
+            $mObject =  mysqli_fetch_object($pResult);
         }
         else
         {
-            $mObject =  mysql_fetch_object($pResult, $pClassName);
+            $mObject =  mysqli_fetch_object($pResult, $pClassName);
         }
      
         if ($pLogResults)
@@ -321,9 +328,9 @@ class dbAbstract
         return $mObject;
     }
     
-    public static function returnRow($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnRow($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mRow = mysql_fetch_row($pResult);
+        $mRow = mysqli_fetch_row($pResult);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -338,9 +345,9 @@ class dbAbstract
         return $mRow;
     }
     
-    public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject =  mysql_fetch_array($pResult);
+        $mObject =  mysqli_fetch_array($pResult);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -355,9 +362,9 @@ class dbAbstract
         return $mObject;
     }
     
-    public static function returnAssoc($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnAssoc($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject = mysql_fetch_assoc($pResult);
+        $mObject = mysqli_fetch_assoc($pResult);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -372,9 +379,9 @@ class dbAbstract
         return $mObject;
     }
     
-    public static function returnRowsCount($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnRowsCount($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mRowsCount = mysql_num_rows($pResult);
+        $mRowsCount = mysqli_num_rows($pResult);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -389,9 +396,9 @@ class dbAbstract
         return $mRowsCount;
     }
     
-    public static function returnResult($pResult, $pRowNum, $pField, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysql_query
+    public static function returnResult($pResult, $pRowNum, $pField, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mReturn = mysql_result($pResult, $pRowNum, $pField);
+        $mReturn = mysqli_result($pResult, $pRowNum, $pField);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -408,7 +415,8 @@ class dbAbstract
     
     public static function returnRealEscapedString($pString, $pC_Panel = 0, $pLogResults = false)
     {
-        $mReturn =  mysql_real_escape_string($pString);
+        global $mysqli;
+        $mReturn =  mysqli_real_escape_string($mysqli, $pString);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
