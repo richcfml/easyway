@@ -1100,4 +1100,34 @@ function prepareStringForMySQL($string)
     return $string;
 }
 
+function unserializeData($data){
+	$result = @unserialize($data);
+	if($result === false){
+		$result = unserialize($data);
+	}
+	return $result;
+}
+
+function url_title($mystr){
+	$result = '';
+	$result .= preg_replace_callback('/[^a-zA-Z0-9]+/', function ($matches) { return '_'; }, $mystr);
+	return strtolower(trim($result));
+}
+
+function currencyToNumber($price){
+	return preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $price);
+}
+
+
+// currencyToNumber with plus minus sign
+function currencyToNumber_WPM($price){
+	return preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $price);
+}
+
+function func_pregreplace($re, $replacement, $str){
+	$result='';
+	$result .= preg_replace_callback($re,function ($matches) use($replacement) {
+                                                    return $replacement;}, $str);
+	return $result;
+}
 ?>
