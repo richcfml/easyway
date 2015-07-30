@@ -44,18 +44,18 @@
 if (isset($_GET['sub_cat'])) {
     $catid = $_GET['sub_cat'];
 
-    $cat_data = mysql_fetch_object(mysql_query("Select menu_id,cat_name from categories where cat_id = " . $catid . ""));
+    $cat_data = dbAbstract::ExecuteObject("Select menu_id,cat_name from categories where cat_id = " . $catid . "",1);
     $cat_id = $prd_data->sub_cat_id;
     $cat_name = stripcslashes($cat_data->cat_name);
 
-    $menu_data = mysql_fetch_object(mysql_query("Select id,menu_name from menus where id = " . $cat_data->menu_id . ""));
+    $menu_data = dbAbstract::ExecuteObject("Select id,menu_name from menus where id = " . $cat_data->menu_id . "",1);
     $menuid=$menu_data->id;
     $menu_name = $menu_data->menu_name;
 }
 if($_POST['cropimg'])
 {
     $targ_w = $targ_h = 150; $jpeg_quality = 90;
-    $src = '../c_panel/img/download.jpg';
+    $src = '../c_panel/tempimages/download.jpg';
     $img_r = imagecreatefromjpeg($src);
     $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
     imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
@@ -225,9 +225,9 @@ if($_POST['cropimg'])
                  <div style="clear:both"></div>
                  <div class="nestedMenu" style="display:none;margin-top: 20px;">
                     <?
-                    $menu_qry = mysql_query("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name");
+                    $menu_qry = dbAbstract::Execute("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name",1);
                     $menu_i = 0;
-                    while ($menuRs = mysql_fetch_array($menu_qry)) {
+                    while ($menuRs = dbAbstract::returnArray($menu_qry,1)) {
                     ?>
 
                         <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
@@ -613,7 +613,7 @@ if($_POST['cropimg'])
 																							
 																							$("#show_photo").show();
 																							$("#show_photo_before").hide();
-																							$("#item_img").attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+																							$("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 																							$.fancybox.close();
 																							$("#deleteimg").show();
 																							$("#cropimg").show();
@@ -681,7 +681,7 @@ if($_POST['cropimg'])
 																							}
 																							
 																							
-																							$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+																							$('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 																							$('#item_img').Jcrop
 																							({
 																									addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
@@ -896,7 +896,7 @@ if($_POST['cropimg'])
 																			
 																			$("#show_photo").show();
 																			$("#show_photo_before").hide();
-																			$("#item_img").attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+																			$("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 																			$.fancybox.close();
 																			$("#deleteimg").show();
 																			$("#cropimg").show();
@@ -962,7 +962,7 @@ if($_POST['cropimg'])
 																				$('#hdnScale').val('1');
 																			}	
 																			
-																			$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+																			$('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 																			$('#item_img').Jcrop
 																			({
 																					addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]

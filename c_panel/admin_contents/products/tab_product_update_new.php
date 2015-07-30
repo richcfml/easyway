@@ -70,12 +70,13 @@
 if (isset($_GET['prd_id'])) {
     $prd_id = $_GET['prd_id'];
 
-    $prd_data = mysql_fetch_object(mysql_query("Select * from product where prd_id = " . $prd_id . ""));
+    $prd_data = dbAbstract::ExecuteObject("Select * from product where prd_id = " . $prd_id . "",1);
     $item_name = stripcslashes($prd_data->item_title);
     $price = $prd_data->retail_price;
     $price = currencyToNumber($price);
     $description = $prd_data->item_des;
     $description1 = $prd_data->item_des;
+    $imgSource = $prd_data->item_image;
     if (strtolower(substr(php_uname('s'), 0, 3))=="win")
     {
         $description1 = str_replace("<br/>", "\r\n", $description1);
@@ -116,11 +117,11 @@ if (isset($_GET['prd_id'])) {
     if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
     {
         $mSQLBH = "SELECT * FROM `bh_items` ORDER BY LENGTH(ItemName) DESC";
-        $mResBH = mysql_query($mSQLBH);
+        $mResBH = dbAbstract::Execute($mSQLBH,1);
         
         $mPrevItem = "";
         
-        while ($mRowBH = mysql_fetch_object($mResBH))
+        while ($mRowBH = dbAbstract::returnObject($mResBH,1))
         {
             if (strpos($description, $mRowBH->ItemName)!==FALSE)
             {
@@ -199,11 +200,11 @@ if (isset($_GET['prd_id'])) {
     }*/
     $type = $prd_data->item_type;
 
-    $cat_data = mysql_fetch_object(mysql_query("Select menu_id,cat_name from categories where cat_id = " . $prd_data->sub_cat_id . ""));
+    $cat_data = dbAbstract::ExecuteObject("Select menu_id,cat_name from categories where cat_id = " . $prd_data->sub_cat_id . "",1);
     $cat_id = $prd_data->sub_cat_id;
     $cat_name = stripcslashes($cat_data->cat_name);
     
-    $menu_data = mysql_fetch_object(mysql_query("Select id,menu_name from menus where id = " . $cat_data->menu_id . ""));
+    $menu_data = dbAbstract::ExecuteObject("Select id,menu_name from menus where id = " . $cat_data->menu_id . "",1);
     $menuid=$menu_data->id;
     $menu_name = stripcslashes($menu_data->menu_name);
 }
@@ -355,9 +356,9 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
         	<div style="clear:both"></div>
         	<div class="nestedMenu" style="display:none;margin-top: 20px;">
 			  <?
-                $menu_qry = mysql_query("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name");
+                    $menu_qry = dbAbstract::Execute("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name",1);
                 $menu_i = 0;
-                while ($menuRs = mysql_fetch_array($menu_qry)) {
+                    while ($menuRs = dbAbstract::returnArray($menu_qry,1)) {
               ?>
                   <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
                       ?> class="selected"  <? } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" class="menu_links"  <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>>
@@ -792,7 +793,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 											
 											$("#show_photo").show();
 											$("#show_photo_before").hide();
-											$("#item_img").attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+											$("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 											$.fancybox.close();
 											$("#deleteimg").show();
 											$("#cropimg").show();
@@ -858,7 +859,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 												$('#hdnScale').val('1');
 											}
 
-											$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+											$('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 											$('#item_img').Jcrop
 											({
 												addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
@@ -1086,7 +1087,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 											
 											$("#show_photo").show();
 											$("#show_photo_before").hide();
-											$("#item_img").attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+											$("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 											$.fancybox.close();
 											$("#deleteimg").show();
 											$("#cropimg").show();
@@ -1152,7 +1153,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 												$('#hdnScale').val('1');
 											}
 											
-											$('.jcrop-holder img').attr("src","../c_panel/img/"+mImageSrc+"?rndm="+mRandom);
+											$('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc+"?rndm="+mRandom);
 											$('#item_img').Jcrop
 											({
 												addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
@@ -1265,11 +1266,11 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <ul id="attr-list_product">
                   <?php
                         
-                        $attrib_qry = mysql_query("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$_GET['prd_id']."' order by OderingNO");
+                        $attrib_qry = dbAbstract::Execute("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$_GET['prd_id']."' order by OderingNO",1);
                         $optionName="";
                         $attributeStr="";
                         $displayName="";
-                        while ($attr_array = mysql_fetch_object($attrib_qry)) {
+                        while ($attr_array = dbAbstract::returnObject($attrib_qry,1)) {
                             if($optionName==""){//run only first time
                                 $optionName=$attr_array->option_name;
                                 $displayName=$attr_array->display_Name;
@@ -1311,7 +1312,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                                                             }
                                                            });
                            </script>
-                <div class="noAttributesForProduct" <? if(mysql_num_rows($attrib_qry)>0){?> style="display:none;" <?}else{?> style="display:block;"<?}?>>
+                <div class="noAttributesForProduct" <? if(dbAbstract::returnRowsCount($attrib_qry,1)>0){?> style="display:none;" <?}else{?> style="display:block;"<?}?>>
                 <span style="display:block;margin-top: 125px;">No Attributes</span> <span>Add Some?</span> </div>
             </div>
             <input type="button" value="Save attribute order" name="btnSortAttribute" id="btnSortAttribute" style="width: 130px;margin-left: 30px;" class="cancel">
@@ -1322,11 +1323,11 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
             <div class="ulProductdiv">
               <ul id="related-list_product">
                 <?php
-                        $product_assoc_qry = mysql_query("SELECT association_id FROM product_association WHERE product_id ='".$prd_id."' order by sortOrder asc");
-                             while ($assocRs = mysql_fetch_array($product_assoc_qry)) {
-                                $product_query = mysql_query("SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'");
+                        $product_assoc_qry = dbAbstract::Execute("SELECT association_id FROM product_association WHERE product_id ='".$prd_id."' order by sortOrder asc",1);
+                             while ($assocRs = dbAbstract::returnArray($product_assoc_qry,1)) {
+                                $product_query = dbAbstract::Execute("SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'",1);
                     
-                                    while ($productRS = mysql_fetch_object($product_query)) {
+                                    while ($productRS = dbAbstract::returnObject($product_query,1)) {
                                           ?>
                 <li id="related_<?=$assocRs['association_id']?>" class="liRelated"><span style="width: 80%;float: left;margin-top:4px">
                   <?=$productRS->item_title;?>
@@ -1335,7 +1336,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 </li>
                 <?}}?>
               </ul>
-              <div class="noRelatedItems"   <? if(mysql_num_rows($product_query)>0){?>style="display:none;" <?}else{?> style="display:block;"<?}?>> <span style="display:block;margin-top: 125px;">No Complementary Items</span> <span>Add Some?</span> </div>
+              <div class="noRelatedItems"   <? if(dbAbstract::returnRowsCount($product_query,1)>0){?>style="display:none;" <?}else{?> style="display:block;"<?}?>> <span style="display:block;margin-top: 125px;">No Complementary Items</span> <span>Add Some?</span> </div>
             </div>
             <input type="button" value="Save order" name="btnSortComplimentry" id="btnSortComplimentry" style="width: 125px;margin-left: 33px;margin-top: 12px;margin-bottom: 5px;" class="cancel">
             <input type="hidden" value="" id="associations_ids" name="sortComplimentryItems"/>

@@ -6,8 +6,8 @@
 						
 	if($s_date == '' && $e_date == ""){
 
-			$firstcat_qry	=	mysql_query("select * from categories where parent_id = 0 order by cat_name");	
-			$firstcat_rs	=	mysql_fetch_object($firstcat_qry);
+			$firstcat_qry	=	dbAbstract::Execute("select * from categories where parent_id = 0 order by cat_name",1);	
+			$firstcat_rs	=	dbAbstract::returnObject($firstcat_qry,1);
 			$cat_id			=	$firstcat_rs->cat_id;
 						
 			$date_end = date("Y-m-d",time());
@@ -25,8 +25,8 @@
 		$cat_id = 0 ;
 	}	
 	
-		$report_qry	=	mysql_query("select * from ordertbl where cat_id = $cat_id and OrderDate between '$date_start' and '$date_end'");
-		$report_numrow	=	mysql_num_rows($report_qry);
+		$report_qry	=	dbAbstract::Execute("select * from ordertbl where cat_id = $cat_id and OrderDate between '$date_start' and '$date_end'",1);
+		$report_numrow	=	dbAbstract::returnRowsCount($report_qry,1);
 
 			
 ?>
@@ -83,11 +83,11 @@ function populate1(){
   <? 
   if($report_numrow >0){
 	  $weekly_total = 0;
-  while($report_qryRs = mysql_fetch_object($report_qry)){?>
+  while($report_qryRs = dbAbstract::returnObject($report_qry,1)){?>
   
    <? $Orderid = $report_qryRs->OrderID;
   
-  $item_detailQry	=	mysql_query("select od.*, 
+  $item_detailQry	=	dbAbstract::Execute("select od.*, 
 							p.prd_id, 
 							p.item_code,
 							c.cust_desire_name, 
@@ -109,8 +109,7 @@ function populate1(){
 							and p.prd_id=od.pid 
 							and item_code NOT IN(10000,10001,10002,10003,10004)
 							AND c.id=ot.UserID");
-  		//$item_nos	=	mysql_num_rows($item_detailQry);
-		while($order_detailRs = mysql_fetch_object($item_detailQry)){
+		while($order_detailRs = dbAbstract::returnObject($item_detailQry,1)){
   ?>
   <tr align="center" bgcolor="#bgcolor="#F8F8F8"">
     <td><?=$report_qryRs->OrderID?></td>
@@ -249,3 +248,4 @@ function populate1(){
 
 </body>
 </html>
+<?php mysqli_close($mysqli);?>

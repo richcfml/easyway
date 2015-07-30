@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 
@@ -7,8 +7,8 @@ $time_start = microtime(true);
 
 $rows_affected_count = 0;
 // fetch all active resturants
-$resturants = mysql_query("SELECT id FROM `resturants` WHERE status=1");
-while($resturant = mysql_fetch_assoc($resturants)) {
+$resturants = dbAbstract::Execute("SELECT id FROM `resturants` WHERE status=1",1);
+while($resturant = dbAbstract::returnAssoc($resturants,1)) {
 	// last 30 days repeat customers, new customers, deliver method, pickup method, 
 	// credit card payment, cash payment orders count and total $ amount
 	$resturant_id = $resturant["id"];
@@ -41,7 +41,7 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 			"new_customers_orders_count" => 0
 			,"new_customers_total_amount" => 0
 		);
-		$result = mysql_query(
+		$result = dbAbstract::Execute(
 			"SELECT 
 				COALESCE(sum( if( order_receiving_method='Delivery', 1, 0 ) ), 0) AS delivery_orders_count
 				,COALESCE(sum( if( order_receiving_method='Pickup', 1, 0 ) ), 0) AS pickup_orders_count
@@ -63,13 +63,13 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 			FROM `ordertbl`
 			WHERE OrderDate BETWEEN CURDATE( ) - INTERVAL 60 DAY AND CURDATE( )
 				AND cat_id=$resturant_id
-				AND payment_approv=1"
-		) or die(mysql_error());
-		if(mysql_num_rows($result) > 0) {
-			$data = mysql_fetch_assoc($result);
+				AND payment_approv=1",1
+		);
+		if(dbAbstract::returnRowsCount($result,1) > 0) {
+			$data = dbAbstract::returnAssoc($result,1);
 		}
 
-		$result = mysql_query(
+		$result = dbAbstract::Execute(
 			"SELECT sum(ot2.repeat_customers_orders_count) AS repeat_customers_orders_count
 					,sum(ot2.repeat_customers_total_amount) AS repeat_customers_total_amount
 			FROM (
@@ -83,14 +83,14 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 					AND cr.id=ot.UserID
 					AND ot.is_guest!=1
 				GROUP BY `UserID`
-			) ot2
+			) ot2,1
 			"
-		) or die(mysql_error());
-		if(mysql_num_rows($result) > 0) {
-			$data1 = mysql_fetch_assoc($result);
+		);
+		if(dbAbstract::returnRowsCount($result,1) > 0) {
+			$data1 = dbAbstract::Execute($result,1);
 		}
 
-		$result = mysql_query(
+		$result = dbAbstract::Execute(
 			"SELECT sum(ot2.new_customers_orders_count) AS new_customers_orders_count
 					,sum(ot2.new_customers_total_amount) AS new_customers_total_amount
 			FROM (
@@ -104,19 +104,19 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 					AND cr.id=ot.UserID
 					AND ot.is_guest!=1
 				GROUP BY `UserID`
-			) ot2
+			) ot2,1
 			"
-		) or die(mysql_error());
-		if(mysql_num_rows($result) > 0) {
-			$data2 = mysql_fetch_assoc($result);
+		);
+		if(dbAbstract::returnRowsCount($result,1) > 0) {
+			$data2 = dbAbstract::returnAssoc($result,1);
 		}
 		$data = array_merge($data, $data1, $data2);
 		//echo "<pre>"; print_r($data); echo "</pre>"; 
 		//die(0);
-		$analytics = mysql_query("SELECT id FROM analytics WHERE resturant_id=$resturant_id");
-		if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-			$analytics = mysql_fetch_assoc($analytics);
-			mysql_query(
+		$analytics = dbAbstract::Execute("SELECT id FROM analytics WHERE resturant_id=$resturant_id",1);
+		if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+			$analytics = dbAbstract::returnAssoc($analytics,1);
+			dbAbstract::Update(
 				"UPDATE `analytics` 
 				SET repeat_customers_orders_count='". $data["repeat_customers_orders_count"] ."', " .
 					"new_customers_orders_count='". $data["new_customers_orders_count"] ."', " .
@@ -139,10 +139,10 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 					"mobile_total_amount='". $data["mobile_total_amount"] ."', " .
 					"rapid_reorders_total_amount='". $data["rapid_reorders_total_amount"] ."', " .
 					"cash_orders_total_value='". $data["cash_total_amount"] . "'
-				WHERE id=".  $analytics["id"]
-			) or die(mysql_error() . "= " . $resturant_id);
+				WHERE id=".  $analytics["id"],1
+			);
 		} else {
-			mysql_query(
+			dbAbstract::Insert(
 				"INSERT INTO `analytics` 
 				(
 					`resturant_id`, 
@@ -190,15 +190,14 @@ while($resturant = mysql_fetch_assoc($resturants)) {
 					$data["mobile_total_amount"] ."', '" .
 					$data["rapid_reorders_total_amount"] ."', '" .
 					$data["cash_total_amount"] . "'
-				)"
-			) or die(mysql_error() . "= " . $resturant_id);
+				)",1
+			);
 			
 		}
 		$rows_affected_count++;
 	}
 }
 
-@mysql_close($mysql_conn);
 $time_end = microtime(true);
 
 //dividing with 60 will give the execution time in minutes other wise seconds
@@ -216,3 +215,4 @@ $message = 'EasyWay - Analytics extracted for: ' . $rows_affected_count . ' rest
 
 $testmail=new testmail();
 $testmail->sendTo($message, $subject, $to, true);
+mysqli_close($mysqli);?>

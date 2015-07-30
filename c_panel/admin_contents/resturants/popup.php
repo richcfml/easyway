@@ -1,9 +1,5 @@
-<? 
-  /*$mysql_conn = mysql_connect("localhost","root","");
-  mysql_select_db("onlineorderingsystem",$mysql_conn);
-*/
-	$mysql_conn = mysql_connect("easywayordering.db.7320018.hostedresource.com","easywayordering","Way2ordering");
-	mysql_select_db("easywayordering",$mysql_conn);
+<?php 
+	require_once("../../../includes/config.php");
 ?>
 <script language="javascript">	
 	$(document).ready(function() {
@@ -27,11 +23,11 @@
     	<td width="20%"></td>
         <td>
 		  <?
-          	$item_query = mysql_query("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND prd_id!='".$_GET['pid']."'");
-			 while($itemRs	=	mysql_fetch_object($item_query)){
+          	$item_query = dbAbstract::Execute("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND prd_id!='".$_GET['pid']."'",1);
+			 while($itemRs	=	dbAbstract::returnObject($item_query,1)){
 				//if product is already associated then chech box will be checed else check box will unchecked.
-				 $assoc_query = mysql_query("SELECT  id FROM product_association WHERE product_id='".$_GET['pid']."' AND association_id ='".$itemRs->prd_id."' ");
-				 $assoc_rows = mysql_fetch_array($assoc_query);
+				 $assoc_query = dbAbstract::Execute("SELECT  id FROM product_association WHERE product_id='".$_GET['pid']."' AND association_id ='".$itemRs->prd_id."' ",1);
+				 $assoc_rows = dbAbstract::returnArray($assoc_query,1);
 				 			 
           ?>
           <input  name="itemcheck[]" id="itemcheck" type="checkbox" <? if($assoc_rows['id']) { ?>  checked="checked" <? }?> value="<?=$itemRs->prd_id ?>"   /><?=stripslashes($itemRs->item_title) ?><br />
@@ -51,3 +47,4 @@
 </form>
 
 <div style="float:right"><input id="close" type="image" src="../../../images/closelabel.gif" /></div>
+<?php mysqli_close($mysqli);?>

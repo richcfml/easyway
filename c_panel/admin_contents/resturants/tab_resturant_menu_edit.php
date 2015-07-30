@@ -18,8 +18,8 @@
 					 if ($subcat_name == '') {
 								 $errMessage1="Please Enter Menu Name";
 					}else{
-                                                        Log::write("Update category - restaurant/tab_resturant_menus_edit.php", "QUERY --UPDATE categories SET  cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat", 'menu', 1 , 'cpanel');
-							mysql_query("UPDATE categories SET  cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat");
+                                                        
+							dbAbstract::Update("UPDATE categories SET  cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat",1);
 		?>
        			<script language="javascript">
 					window.location="?subitem=menu&catid=<?=$catid?>";
@@ -40,14 +40,14 @@
         <table width="500" border="0" align="center" cellpadding="4" cellspacing="0">
      
           <?
-			$subcat_qry	=	mysql_query("select * from categories where parent_id = $catid");
+			$subcat_qry	=	dbAbstract::Execute("select * from categories where parent_id = $catid",1);
 		?>
 			
           <tr>
   <td>Select Menu</td>
   <td><select name="sub_cat" id="sub_cat" >
 			<option value="-2" >Choose Menu</option>
-              	<? while($subcat_qryRs = mysql_fetch_object($subcat_qry)){?>
+              	<? while($subcat_qryRs = dbAbstract::returnObject($subcat_qry,1)){?>
 <option value="<?=$subcat_qryRs->cat_id?>" <? if($subcat_qryRs->cat_id==$sub_cat){?>selected="selected"<? }?>><?=$subcat_qryRs->cat_name?></option>
 
 	<? }?>
@@ -71,8 +71,8 @@
 <?=($errMessage1 != '')?"<div class=\"msg_error\">$errMessage1</div>":"";?>    
 
  <?
-		$subcat_qry	=	mysql_query("select * from categories where cat_id = $sub_cat");
-		$subcat_Rs	=	mysql_fetch_object($subcat_qry);
+		$subcat_qry	=	dbAbstract::Execute("select * from categories where cat_id = $sub_cat",1);
+		$subcat_Rs	=	dbAbstract::returnObject($subcat_qry,1);
 ?>
 <tr>
 <td><strong>Menu Name:</strong><br />

@@ -21,7 +21,7 @@
 						 $errMessage1="Please Enter Menu ordering no.";
 					}else{
                                                         Log::write("Add new category - resturant/tab_resturant_menu_add.php", "QUERY --INSERT INTO categories SET parent_id= $catid, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'", 'menu', 1 , 'cpanel');
-							mysql_query("INSERT INTO categories SET parent_id= $catid, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'");
+							dbAbstract::Insert("INSERT INTO categories SET parent_id= $catid, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'",1);
 							
 							?>
        			<script language="javascript">

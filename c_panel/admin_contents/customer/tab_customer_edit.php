@@ -1,4 +1,4 @@
-<?
+<?php
         $errMessage='';
 	$mZipPostal = "Zip Code";
 	$mStateProvince = "State";
@@ -9,8 +9,8 @@
             $mStateProvince = "Province";
 	}
 	$user_id	=	$_REQUEST['userid'];
-	$user_qry	=	mysql_query("select * from customer_registration where id = $user_id");
-	$user_qryRs	=	mysql_fetch_object($user_qry);
+	$user_qry	=       dbAbstract::Execute("select * from customer_registration where id = $user_id", 1);
+	$user_qryRs	=	dbAbstract::returnObject($user_qry, 1);
 				   
         if (isset($_REQUEST['submit']))
         {
@@ -77,10 +77,8 @@
                                 print_r("Update Data Process");
                             
 //<!----------------------------------End--------------------------------------->                            
-            
-            //mysql_query("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', cust_email= '".addslashes($email)."', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id");
             //Query changed by Saad in order to not to store email address again.
-            mysql_query("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id");
+            dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id", 1);
             ?>
 
             <script language="javascript">

@@ -1,4 +1,4 @@
-<? 
+<?php 
 		$prdid        = @$_REQUEST['pid'];
 		$catid		  = $_GET['catid'];
 		
@@ -14,13 +14,12 @@
 				} else { 
 						if(empty($required)){ $required=0; }
 						
-						$MaxOrder		= mysql_query("SELECT MAX(OderingNO) FROM attribute Where ProductID =$prdid");
-						$MaxRs			= mysql_fetch_row($MaxOrder);
+						$MaxOrder		= dbAbstract::Execute("SELECT MAX(OderingNO) FROM attribute Where ProductID =$prdid", 1);
+						$MaxRs			= dbAbstract::returnRow($MaxOrder, 1);
 						$Max_Order_No	= $MaxRs[0]+1;
 		
-						$prdandsubcatQry = mysql_query("select p.item_title,c.cat_name,c.cat_id,sub_cat_id from product p,categories c where p.sub_cat_id=c.cat_id and p.prd_id=$prdid");
-						$prdandsubcatRes	= mysql_fetch_array($prdandsubcatQry);
-						//$catid 				= $prdandsubcatRes['cat_id'];
+						$prdandsubcatQry = dbAbstract::Execute("select p.item_title,c.cat_name,c.cat_id,sub_cat_id from product p,categories c where p.sub_cat_id=c.cat_id and p.prd_id=$prdid", 1);
+						$prdandsubcatRes	= dbAbstract::returnArray($prdandsubcatQry, 1);
 						$sub_cat_id 		= $prdandsubcatRes['sub_cat_id'];
 						
 						$option = trim($_POST['option_title']);
@@ -37,36 +36,35 @@
 												
 							if ($applysubcat==1) 
 								{
-									$selectprdQry = mysql_query("select * from product where sub_cat_id=$sub_cat_id");
-									//echo ProductID;
-									while ($selectprdRes=mysql_fetch_array($selectprdQry)) 
+									$selectprdQry = dbAbstract::Execute("select * from product where sub_cat_id=$sub_cat_id", 1);
+									while ($selectprdRes=dbAbstract::returnArray($selectprdQry, 1)) 
 										{
 											$pid = $selectprdRes['prd_id'];
-                                                                        Log::write("Add new attribute - tab_add_attribute.php", "QUERY -- INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '$optionname', '$name', '$value', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'$rest_price')", 'menu', 1 , 'cpanel');
-                                                                            mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '".mysql_real_escape_string($optionname)."', '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($value)."', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'".mysql_real_escape_string($rest_price)."')"); 
+                                                                            Log::write("Add new attribute - tab_add_attribute.php", "QUERY -- INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '$optionname', '$name', '$value', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'$rest_price')", 'menu', 1 , 'cpanel');
+                                                                            dbAbstract::Insert("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '".dbAbstract::returnRealEscapedString($optionname)."', '".dbAbstract::returnRealEscapedString($name)."', '".dbAbstract::returnRealEscapedString($value)."', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'".dbAbstract::returnRealEscapedString($rest_price)."')", 1); 
                                                                             Log::write("Set product HasAttributes=1 - tab_add_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 'menu', 1 , 'cpanel');
-                                                                            mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "");
+                                                                            dbAbstract::Update("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 1);
 												
 										} // end inner while
 								} else {
                                                                         Log::write("Add new attribute - tab_add_attribute.php", "QUERY -- INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '$optionname', '$name', '$value', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'$rest_price')", 'menu', 1 , 'cpanel');
-									mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '".mysql_real_escape_string($optionname)."', '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($value)."', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'".mysql_real_escape_string($rest_price)."')"); 
+									dbAbstract::Insert("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '".dbAbstract::returnRealEscapedString($optionname)."', '".dbAbstract::returnRealEscapedString($name)."', '".dbAbstract::returnRealEscapedString($value)."', 0, '$applysubcat', '$optionlayout',$required,$Max_Order_No,'".dbAbstract::returnRealEscapedString($rest_price)."')", 1); 
                                                                         Log::write("Set product HasAttributes=1 - tab_add_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 'menu', 1 , 'cpanel');
-                                                                        mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "");
+                                                                        dbAbstract::Update("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 1);
 									
 										}	 
 							   $i++;
 					} // end upper while
 		
-				$query_GetAtr_id	= mysql_query("Select Distinct(option_name),id from attribute  Where ProductID=$prdid and option_name='$optionname'"); 
-				$Attribue_ID_RS		= mysql_fetch_row($query_GetAtr_id);
+				$query_GetAtr_id	= dbAbstract::Execute("Select Distinct(option_name),id from attribute  Where ProductID=$prdid and option_name='$optionname'", 1); 
+				$Attribue_ID_RS		= dbAbstract::returnRow($query_GetAtr_id, 1);
 				$AT_ID				= $Attribue_ID_RS[1];
 				if ($applysubcat==1) {
                                                 Log::write("Update category - tab_add_attribute.php", "QUERY --UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id", 'menu', 1 , 'cpanel');
-						 mysql_query("UPDATE categories SET Apply_Attribute= 1, AttributeId= $AT_ID WHERE cat_id=$sub_cat_id");
+						 dbAbstract::Update("UPDATE categories SET Apply_Attribute= 1, AttributeId= $AT_ID WHERE cat_id=$sub_cat_id", 1);
 				}else{
                                                 Log::write("Update category - tab_add_attribute.php", "QUERY --UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id", 'menu', 1 , 'cpanel');
-						 mysql_query("UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id");
+						 dbAbstract::Update("UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id", 1);
 					} 
 					?>
 						<script language="javascript">

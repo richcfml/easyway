@@ -9,7 +9,7 @@
 	if(trim($cc)=='' || trim($exd)=='' || $token=='')
 	{
 		echo json_encode(array("css"=>"alert-error","message"=>"Please enter credit card information"));
-		 @mysql_close($mysql_conn);	
+		 //@mysql_close($mysql_conn);	
 		exit;
 	}
 	
@@ -31,7 +31,7 @@
 		$loggedinuser->setDefaultCard($token);
 		echo json_encode(array("css"=>"success","message"=>"Credit card selected successfully","token"=>$_POST));
 		}
- @mysql_close($mysql_conn);	
+ //@mysql_close($mysql_conn);	
 exit;
 }?>
 <div id="box" style="border:#e4e4e4 1px solid; ">

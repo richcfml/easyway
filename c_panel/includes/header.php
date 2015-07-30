@@ -9,8 +9,8 @@
 			$admin_type = "Store Owner";
 		}
 		$admin_name_sql = "SELECT firstname, lastname FROM users WHERE id = '".$_SESSION['owner_id']."'";
-		$admin_name_qry = mysql_query ( $admin_name_sql );
-		$admin_name_rs	= mysql_fetch_array( $admin_name_qry );
+		$admin_name_qry = dbAbstract::Execute($admin_name_sql,1);
+		$admin_name_rs	= dbAbstract::returnArray($admin_name_qry,1);
 		 
   		$name_str = $admin_type.", ".$admin_name_rs['firstname']." ".$admin_name_rs['lastname'];
 		

@@ -1,4 +1,4 @@
-<?
+<?php
 	if($_SERVER['SERVER_NAME'] == 'localhost') {
 //		$mysql_conn = mysql_connect("easywayordering.com","sysremoteuser1","e@s72ay0rder3e4r");
 		$mysql_conn = mysql_connect("localhost","root","");

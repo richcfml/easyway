@@ -14,11 +14,11 @@ echo "<pre>";print_r($response);echo "</pre>";
 			$_POST['invoice_number']=$gw->order['orderid'];
 			$success=1;
 			echo "<pre>";print_r($gw);echo "</pre>";
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			die();
 			} else {
 			$_SESSION['GATEWAY_RESPONSE']=$gw->responses['responsetext'];
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			header("location: ". $SiteUrl .$objRestaurant->url ."/?item=failed&test=1&response_code=".$response->response_code."" );exit;
  }
 ?>

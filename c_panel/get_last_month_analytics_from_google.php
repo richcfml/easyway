@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 include("../includes/function.php");
@@ -54,10 +54,10 @@ if($client->getAccessToken()) {
 	$start_date = date('Y-m-d', strtotime('-30 days'));
 	$end_date = date('Y-m-d');
 	
-	$analytics = mysql_query("SELECT r.id, r.url_name FROM `resturants` r, `analytics` a WHERE r.id = a.resturant_id ORDER BY a.dated LIMIT 10");
+	$analytics = dbAbstract::Execute("SELECT r.id, r.url_name FROM `resturants` r, `analytics` a WHERE r.id = a.resturant_id ORDER BY a.dated LIMIT 10",1);
 	
-        if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-		while($row = mysql_fetch_assoc($analytics)) {
+        if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+		while($row = dbAbstract::returnAssoc($analytics,1)) {
 			//get total views of a resturant
 			$resturant_slug = str_replace(',', '', $row["url_name"]);
 			//$resturant_slug = "slice_pizza";
@@ -149,19 +149,19 @@ if($client->getAccessToken()) {
 				}
 				$qry .= "dated=NOW()";
 				
-				mysql_query(
+				dbAbstract::Update(
 					"UPDATE `analytics` 
 					SET $qry
-					WHERE resturant_id=".  $row["id"]
-				) or die(mysql_error());
+					WHERE resturant_id=".  $row["id"],1
+				);
 				
 				echo $resturant_slug . "<br>";
 				echo "<pre>";print_r($data);echo "</pre>";
 			} else {
-				mysql_query(
+				dbAbstract::Update(
 					"UPDATE `analytics` 
 					SET dated=NOW()
-					WHERE resturant_id=".  $row["id"]);
+					WHERE resturant_id=".  $row["id"],1);
 				echo "No data found for: " . $resturant_slug . "<br>";
 			}
 		}
@@ -173,7 +173,7 @@ if($client->getAccessToken()) {
 		$testmail->sendTo($message, $subject, $to, true);
 	}
 }
-@mysql_close($mysql_conn);
+mysqli_close($mysqli);
 exit(0);
 
 ?>

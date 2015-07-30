@@ -6,21 +6,21 @@
 	//Ironically cat_id in ordertbl is RestaurantID :( - Gulfam
 													  
 	$mQuery="SELECT OrderID, fax_tracking_number, cat_id, PhoneCallCount, submit_time FROM ordertbl WHERE Approve=0 AND TIMESTAMPDIFF(MINUTE, CreateDate, CURRENT_TIMESTAMP()) >= 10 AND PhoneCallCount<3";
-	$mysql_query=mysql_query($mQuery);
+	$mysql_query=dbAbstract::Execute($mQuery);
 	$fun=new clsFunctions();
 	$mFax=new EWOphaxio();
 	Log::write("posttovcs.php - Query1 - Line 12", $mQuery , 'crons');
-	while($callstosend=mysql_fetch_object($mysql_query))
+	while($callstosend=dbAbstract::returnObject($mysql_query))
 	{
 		$mPhoneCallCount = $callstosend->PhoneCallCount;
 		Log::write("posttovcs.php - Calltosend Array - Line 16", print_r($callstosend) , 'crons');
 		$mQuery = "SELECT IFNULL(order_destination, 'fax') AS order_destination, name FROM resturants WHERE id=".$callstosend->cat_id;
                 Log::write("posttovcs.php - Query2 - Line 18", $mQuery , 'crons');
-		$mResult = mysql_query($mQuery);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute($mQuery);
+		if (dbAbstract::returnRowsCount($mResult)>0)
 		{
                         Log::write("posttovcs.php - Result - Line 22", print_r($mResult) , 'crons');
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult);
 			$mDestination =  strtolower($mRow->order_destination);
 			$mName = $mRow->name;
 			
@@ -59,10 +59,11 @@
 				unset($mObjMail);*/
 			}
 			$mQuery = "UPDATE ordertbl SET PhoneCallCount=PhoneCallCount+1 WHERE OrderID=".$callstosend->OrderID;
-                        Log::write("posttovcs.php - Update Query - Line 62", $mQuery , 'crons');
-			mysql_query($mQuery);
+			Log::write("posttovcs.php - Update Query - Line 62", $mQuery , 'crons');
+			dbAbstract::Update($mQuery);
 		}
 	}
 	unset($mFax);
-	@mysql_close($mysql_conn);
+	//@mysql_close($mysql_conn);
 ?>
+<?php mysqli_close($mysqli);?>

@@ -7,8 +7,7 @@ $mPassword = $objRestaurant->transKey;
 
 $mCustomerKey = "";
 $mSQL = "SELECT IFNULL(CustomerKey, '') AS  CustomerKey FROM  customer_registration WHERE id=".$loggedinuser->id;
-$mRes = mysql_query($mSQL);
-$mRow = mysql_fetch_object($mRes);
+$mRow = dbAbstract::ExecuteObject($mSQL);
 $mCustomerKey = $mRow->CustomerKey;
 if (trim($mCustomerKey)=="")
 {
@@ -64,7 +63,7 @@ if (trim($mCustomerKey)=="")
 		{
 			$mCustomerKey = $mTransaction->CustomerKey;
 			$mSQL = "UPDATE customer_registration SET CustomerKey='".$mCustomerKey."' WHERE id=".$loggedinuser->id;
-			mysql_query($mSQL);
+			dbAbstract::Update($mSQL);
 		}
 	}
 }
@@ -73,8 +72,10 @@ if (trim($mCustomerKey)!="")
 {
 	$mURL = $SureGateURL."ws/cardsafe.asmx/StoreCard"; //$SureGateURL is defined in includes/config.php
 	$mTokenMode = "DEFAULT";
-	$mCardNum = $x_card_num;
-	$mExpDate = $x_exp_date;
+        
+        $mCardNum = str_replace("-", "", $x_card_num);
+        $mExpDate = str_replace("/", "", $x_exp_date);
+        
 	$mNameOnCard = "";
 	$mStreet = "";
 	$mZip = "";

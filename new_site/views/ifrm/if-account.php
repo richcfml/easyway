@@ -93,12 +93,12 @@ $mainOrdingAddress=$streets." ".$loggedinuser->cust_ord_city." ".$loggedinuser->
         
           </tr>
          <?
-		 $userOrderQry	=	mysql_query("select OrderID,DesiredDeliveryDate from ordertbl where UserID=".$loggedinuser->id);
+		 $userOrderQry	=	dbAbstract::Execute("select OrderID,DesiredDeliveryDate from ordertbl where UserID=".$loggedinuser->id);
 		 
 	$i=0;
 		  if($userOrderQry) {  
 	  	$i=1;
-      	while($userOrderRs	=	mysql_fetch_object($userOrderQry)){
+      	while($userOrderRs	=	dbAbstract::returnObject($userOrderQry)){
 				$orderid	=	$userOrderRs->OrderID;
 				$colour		=	($i%2==0) ? "#FFF": "#E4E4E4"; 
 				$i++;

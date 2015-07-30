@@ -1,8 +1,8 @@
-<?
+<?php
 require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 
-mysql_query("
+dbAbstract::Update("
 	update resturants 
 		set orders_last_month_count=(
 				SELECT count( * )
@@ -15,7 +15,7 @@ mysql_query("
 					FROM ordertbl
 					WHERE OrderDate BETWEEN CURDATE( ) - INTERVAL 60 DAY AND CURDATE( ) - INTERVAL 30 DAY
 					AND cat_id =resturants.id
-					AND payment_approv =1)");
+					AND payment_approv =1)",1);
 
 $to      = 'aliraza@qualityclix.com';
 $subject = 'EasyWay - Compare Last Two Months Cron Job';
@@ -25,3 +25,4 @@ $testmail=new testmail();
 $testmail->sendTo($message, $subject, $to, true);
 
 ?>
+<?php mysqli_close($mysqli);?>

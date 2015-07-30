@@ -30,7 +30,7 @@ if(isset($_REQUEST['update'])) {
         $open_time   = $open_hr_arr[$insert_i].$open_min_arr[$insert_i];
         $close_time  = $close_hr_arr[$insert_i].$close_min_arr[$insert_i];
         Log::write("Update restaurant business hours - tab_resturant_add.php", "QUERY --UPDATE business_hours SET open='$open_time', close='$close_time' WHERE id=".$update_id, 'menu', 1 , 'cpanel');
-        mysql_query("UPDATE business_hours SET open='$open_time', close='$close_time' WHERE id=".$update_id);
+        dbAbstract::Update("UPDATE business_hours SET open='$open_time', close='$close_time' WHERE id=".$update_id,1);
     }
     $updateMessage = "Business hours updated successfully";
 }
@@ -40,7 +40,7 @@ if(isset($_GET['action'])){
         
         if(isset($_GET['deleteid'])){
             $deleteid = $_GET['deleteid'];
-            mysql_query("DELETE  FROM  business_hours WHERE id = $deleteid");
+            dbAbstract::Delete("DELETE  FROM  business_hours WHERE id = $deleteid",1);
             $updateMessage = "Business hours deleted successfully";
         }
         
@@ -48,10 +48,10 @@ if(isset($_GET['action'])){
         
         if(isset($_GET['dayid'])) {
             $dayId = $_GET['dayid'];
-            $buninessHrQry = mysql_query("SELECT * FROM  business_hours WHERE id = $dayId");
-            $buninessHrRs = mysql_fetch_array($buninessHrQry);
+            $buninessHrQry = dbAbstract::Execute("SELECT * FROM  business_hours WHERE id = $dayId",1);
+            $buninessHrRs = dbAbstract::returnArray($buninessHrQry,1);
             Log::write("Add restaurant business hours - tab_add_businesshours.php", "QUERY --INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open=".$buninessHrRs['open'].", close=".$buninessHrRs['close'], 'menu', 1 , 'cpanel');
-            mysql_query("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'");
+            dbAbstract::Insert("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'",1);
             $updateMessage = "Business hours inserted successfully";
         }
     }
@@ -69,15 +69,13 @@ if(isset($_GET['action'])){
   $ids_arr_i = 0;
   for ($weekday=0;$weekday<7;$weekday++) {
  	 $cm_i = 0;
-	 $businesshrsQry	=	mysql_query("select * from business_hours where day=".$weekday." AND rest_id='".$_REQUEST['catid']."' order by day asc");
-	//die("select * from business_hours where rest_id='".$_REQUEST[catid]."'");
-	//echo "select * from business_hours where rest_id='".$_REQUEST[catid]."' order by rest_id asc";
-	$businesshrsRows	=	mysql_num_rows($businesshrsQry);
+	 $businesshrsQry	=	dbAbstract::Execute("select * from business_hours where day=".$weekday." AND rest_id='".$_REQUEST['catid']."' order by day asc",1);
+	$businesshrsRows	=	dbAbstract::returnRowsCount($businesshrsQry,1);
 	if($businesshrsRows > 0) {
 ?>
  <div style="position:relative; border:#333 1px solid; padding:5px; margin:10px;">
 <?
-	 while($businesshrsRs	=	mysql_fetch_object($businesshrsQry)){
+	 while($businesshrsRs	=	dbAbstract::returnObject($businesshrsQry,1)){
 	  if ($cm_i%2==0) {
 	  	$alt_color = "#F7F7F7";
 	  } else {
@@ -162,17 +160,18 @@ if(isset($_GET['action'])){
     <td><a href="javascript: void(0)" onclick="fillBusinessHours('InsertBusinessHours', <?=$_REQUEST['catid']?>, <?=$businesshrsRs->id?>, 0);return false;" style="text-decoration:underline;"><img height="22px" border="0" src="../images/addtime.png" /></a></td>
   </tr>
   <input name="business_time_arr[]" type="hidden" value="<?=$businesshrsRs->id?>" />
-  <? $ids_arr_i++;$cm_i++;}//while ($businesshrsRs	=	mysql_fetch_object($businesshrsQry)){
+  <? $ids_arr_i++;$cm_i++;}
 ?>
 </table>
 </div>
 <div>&nbsp;</div>
 <?	  
-  }//for ($weekday=0;$weekday<7;$weekday++)
+  }
 }
  ?>
 <input type="hidden" name="catid" id="update" value="<?=$_REQUEST['catid']?>">
 <input type="hidden" name="update" id="update" value="Update">
  <div>&nbsp;&nbsp;<input type="submit" name="submitBH" id="submitBH" value="Update"></div>
 </form>
+<?php mysqli_close($mysqli);?>
 

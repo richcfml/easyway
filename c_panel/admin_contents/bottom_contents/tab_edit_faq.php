@@ -1,4 +1,4 @@
-<?
+<?php
 include("admin_contents/FCKeditor_new/fckeditor/fckeditor.php");
 	$type	=	$_REQUEST['t'];
 	if($type == ''){	$type = 1;	}
@@ -13,11 +13,11 @@ include("admin_contents/FCKeditor_new/fckeditor/fckeditor.php");
 	if(isset($_REQUEST['submit2']))
 			{
 					$contents	=	addslashes($_REQUEST['edit']);
-					mysql_query("UPDATE bottom_contents SET content_text = '$contents' where content_text_type = $type");
+					dbAbstract::Update("UPDATE bottom_contents SET content_text = '$contents' where content_text_type = $type", 1);
 			}
 		
-	$contents_qry		=	mysql_query("select * from bottom_contents where content_text_type = $type");
-	$contents_infoRs	=	mysql_fetch_object($contents_qry);	
+	$contents_qry		=	dbAbstract::Execute("select * from bottom_contents where content_text_type = $type", 1);
+	$contents_infoRs	=	dbAbstract::returnObject($contents_qry, 1);	
 	
 ?>
 <h1><?=$title?></h1>

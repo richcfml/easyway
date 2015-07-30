@@ -4,10 +4,9 @@ $resturantId=$_POST['rest_id'];
 $Status=$_POST['status'];
 $admin_type=$_POST['admin_type'];
 
-mysql_query("UPDATE resturants SET  status=".$Status .",status_changed_by='".$admin_type."' WHERE id=$resturantId");
-mysql_query("UPDATE analytics SET  status=".$Status ." WHERE resturant_id = $resturantId");
-$err=mysql_error();
-@mysql_close($mysql_conn);
+dbAbstract::Update("UPDATE resturants SET  status=".$Status .",status_changed_by='".$admin_type."' WHERE id=$resturantId",1);
+dbAbstract::Update("UPDATE analytics SET  status=".$Status ." WHERE resturant_id = $resturantId",1);
+
 if($Status==0) {
 	$newStatus=1;
 	$newStatusMsg="Activate";
@@ -25,3 +24,4 @@ if($Status==0) {
 	 	 
 	  echo $newStatus."-".$newStatusMsg."-".$err;
 ?>
+<?php mysqli_close($mysqli);?>

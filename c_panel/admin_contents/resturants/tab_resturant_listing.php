@@ -114,12 +114,12 @@ if (isset($_POST['sch_button'])) {
 
 if (isset($_REQUEST['rest_activ_id'])) {
     $id = $_REQUEST['rest_activ_id'];
-    mysql_query("UPDATE resturants SET  status='1',status_changed_by='" . $admin_type . "' WHERE id=$id");
-    mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id=$id");
+    dbAbstract::Update("UPDATE resturants SET  status='1',status_changed_by='" . $admin_type . "' WHERE id=$id",1);
+    dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id=$id",1);
 } else if (isset($_REQUEST['rest_deactive_id'])) {
     $id = $_REQUEST['rest_deactive_id'];
-    mysql_query("UPDATE resturants SET  status='0', status_changed_by='" . $admin_type . "' WHERE id=$id");
-    mysql_query("UPDATE analytics SET  status='0' WHERE resturant_id=$id");
+    dbAbstract::Update("UPDATE resturants SET  status='0', status_changed_by='" . $admin_type . "' WHERE id=$id",1);
+    dbAbstract::Update("UPDATE analytics SET  status='0' WHERE resturant_id=$id",1);
 }
 
 if ($Clentid == 0) {
@@ -132,7 +132,7 @@ $first_and = "where";
 $first_letter = "first_letter in (1,2,3,4,5,6,7,8,9)";
 
 if (isset($_REQUEST['first']) && !empty($_REQUEST['first'])) {
-    $letter = mysql_real_escape_string($_REQUEST['first']);
+    $letter = dbAbstract::returnRealEscapedString($_REQUEST['first']);
     if ($letter == "num") {
         $first_letter = "first_letter in (1,2,3,4,5,6,7,8,9)";
     } else if ($letter == "all") {
@@ -167,6 +167,7 @@ if ($_SESSION['admin_type'] == 'admin') {
         } else {
             //$qry = "where r.status = 1";
 	     $qry = "where 1=1";
+             
         }
     }
 } else if ($_SESSION['admin_type'] == 'reseller') {
@@ -213,30 +214,23 @@ if ($qry || $and_sch) {
 }
 
 if ($search_by == 1) {
-    //  echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else if ($search_by == 2) {
-    //  echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else if ($search_by == 3) {
-    // echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else if ($search_by == 4) {
-    // echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else if ($search_by == 5) {
-    //echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else if ($search_by == 6) {
-    //echo "$analytics_query $restaurant_query  order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query  order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query  order by name",1);
 } else {
-    // echo "$analytics_query $restaurant_query $first_and $first_letter order by name";
-    $analytics_result = mysql_query("$analytics_query $restaurant_query $first_and $first_letter order by name") or die(mysql_error());
+    $analytics_result = dbAbstract::Execute("$analytics_query $restaurant_query $first_and $first_letter order by name",1);
 }
    //echo "$analytics_query $restaurant_query  order by name";exit;
 //  
-$numrows1 = @mysql_num_rows($analytics_result);
+$numrows1 = dbAbstract::returnRowsCount($analytics_result,1);
 ?>
 <script language="javascript" type="text/javascript">
 
@@ -404,7 +398,7 @@ if ($Clentid) {
 <?php
 if ($numrows1 > 0) {
 
-    while ($cat_qryRs = @mysql_fetch_object($analytics_result)) {
+    while ($cat_qryRs = dbAbstract::returnObject($analytics_result,1)) {
 
         $cat_id = $cat_qryRs->resturant_id;
         $cat_name = $cat_qryRs->name;
@@ -455,9 +449,7 @@ if ($numrows1 > 0) {
 		  ?>
 			
 			<img src="images/<? echo $img; ?>" /><? //var_dump($cat_status); ?>
-		  <?php
-                  } 
-                  ?>
+		  <? } ?>
 		  <a href="./?mod=resturant&item=restedit&cid=<?=$cat_id?>">
 		  <?=stripslashes(stripcslashes($cat_name))?>
 		  </a> </div>

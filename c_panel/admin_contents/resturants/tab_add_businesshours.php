@@ -4,19 +4,17 @@ require_once("../../../includes/config.php");
 	if( $_REQUEST['deleteid'] != '') {
 		$catid = $_REQUEST['catid'];
 		$deleteid = $_REQUEST['deleteid'];
-		mysql_query("DELETE  FROM  business_hours WHERE id = $deleteid");
+		dbAbstract::Delete("DELETE  FROM  business_hours WHERE id = $deleteid",1);
 	} else {
 	$dayId = $_REQUEST['dayid'];
 	$catid = $_REQUEST['catid'];
-	$buninessHrQry = mysql_query("SELECT * FROM  business_hours WHERE id = $dayId");
-	$buninessHrRs = mysql_fetch_array($buninessHrQry);
-        //echo "INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'";
+	$buninessHrQry = dbAbstract::Execute("SELECT * FROM  business_hours WHERE id = $dayId",1);
+	$buninessHrRs = dbAbstract::returnArray($buninessHrQry,1);
+	
 	Log::write("Add restaurant business hours - tab_add_businesshours.php", "QUERY --INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'", 'menu', 1 , 'cpanel');
-	mysql_query("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'");
+	dbAbstract::Insert("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'",1);
 	}
-?>
-<?
-@mysql_close($mysql_conn);
+        <?php mysqli_close($mysqli);?>
 ?>
 
 <script language="javascript">

@@ -35,7 +35,7 @@ $options = array(
 );
 
 foreach($options as $key => $option) {
-	$options[$key] = isset($_POST[$key]) ? mysql_real_escape_string($_POST[$key]) : "";
+	$options[$key] = isset($_POST[$key]) ? dbAbstract::returnRealEscapedString($_POST[$key]) : "";
 }
 
 //mysql_query("DELETE FROM `wp_restaurent_design_settings`");
@@ -45,7 +45,7 @@ extract($_POST);
  
 if(!empty($_POST["easyway_settings_id"]) && is_numeric($_POST["easyway_settings_id"]) && intval($_POST["easyway_settings_id"]) > 0) {
 	$q = "DELETE FROM `wp_restaurent_design_settings` WHERE setting_id=" . $_POST["easyway_settings_id"];
-	mysql_query($q);
+	dbAbstract::Delete($q);
 }
 
 $q = "INSERT INTO `wp_restaurent_design_settings`(
@@ -121,7 +121,7 @@ $q = "INSERT INTO `wp_restaurent_design_settings`(
 		 $objRestaurant->id
 		)";
 		
-$result = mysql_query($q) or die("Unable to save WP design settings." . mysql_error());
-echo mysql_insert_id();
+$result = dbAbstract::Insert($q,0,2);
+echo $result;
  
 ?>

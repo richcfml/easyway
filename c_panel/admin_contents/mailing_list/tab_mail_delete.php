@@ -1,6 +1,6 @@
-<? $mailid = $_REQUEST['mailid'];
+<?php $mailid = $_REQUEST['mailid'];
 
-mysql_query("DELETE from mailing_list where id=".$mailid);
+dbAbstract::Delete("DELETE from mailing_list where id=".$mailid, 1);
 
 
 

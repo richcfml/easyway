@@ -1,14 +1,14 @@
-<? 
+<?php 
 		if (isset($_REQUEST['menuActivateId'])){
 			$id = $_REQUEST['menuActivateId'];
                         Log::write("Update menu status", "QUERY -- "."UPDATE menus SET  status='1' WHERE id=$id", 'menu', 1 , 'cpanel');
-			mysql_query("UPDATE menus SET  status='1' WHERE id=$id");
+			dbAbstract::Update("UPDATE menus SET  status='1' WHERE id=$id", 1);
 			echo "<script language=\"JavaScript\">window.location.href=\"?mod=menus\";</script>";
 			
 		} else if (isset($_REQUEST['menuDeactivateId'])){
 			$id = $_REQUEST['menuDeactivateId'];
                         Log::write("Update menu status", "QUERY -- UPDATE menus SET  status='0' WHERE id=$id", 'menu', 1 , 'cpanel');
-			mysql_query("UPDATE menus SET  status='0' WHERE id=$id");
+			dbAbstract::Update("UPDATE menus SET  status='0' WHERE id=$id", 1);
 			echo "<script language=\"JavaScript\">window.location.href=\"?mod=menus\";</script>";
 		} 
 
@@ -35,7 +35,7 @@
 								 $errMessage1="Please Enter Menu Ordering Number";
 					}else{
                                                         Log::write("Update menu status", "QUERY -- UPDATE menus SET  menu_name= '".addslashes($menu_name)."',  menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."' WHERE id= $menuid", 'menu', 1 , 'cpanel');
-							mysql_query("UPDATE menus SET  menu_name= '".addslashes($menu_name)."',  menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."' WHERE id= $menuid");
+							dbAbstract::Update("UPDATE menus SET  menu_name= '".addslashes($menu_name)."',  menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."' WHERE id= $menuid", 1);
 		?>
        			<script language="javascript">
 					window.location="?mod=menus&item=menu&cid=<?=$mRestaurantIDCP?>";
@@ -51,9 +51,9 @@
   <table width="500" border="0"  cellpadding="4" cellspacing="0">
   <?=($errMessage1 != '')?"<div class=\"msg_error\">$errMessage1</div>":"";?>    
   
-   <?
-          $menuQry	=	mysql_query("select * from menus where id = $menuid");
-          $menuRs	=	mysql_fetch_object($menuQry); 
+   <?php
+          $menuQry	=	dbAbstract::Execute("select * from menus where id = $menuid", 1);
+          $menuRs	=	dbAbstract::returnObject($menuQry, 1); 
   ?>
   <tr>
   <td><strong>Menu Name:</strong><br />

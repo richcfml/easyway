@@ -5,8 +5,7 @@ if (isset($_GET['savedata']) && isset($_GET['cid'])) {
     $qry .="  ,zone2='$zone2',zone2_delivery_charges='$zone2_delivery_charges',zone2_min_total='$zone2_min_total',zone2_coordinates='$zone2_coordinates'";
     $qry .="  ,zone3='$zone3',zone3_delivery_charges='$zone3_delivery_charges',zone3_min_total='$zone3_min_total',zone3_coordinates='$zone3_coordinates'";
     $qry .= ",delivery_option='delivery_zones' where id=".$_GET['cid'];
-    mysql_query($qry);
-    mysql_close($mysql_conn);
+    dbAbstract::Update($qry,1);
 
     $Objrestaurant->zone1 = $zone1;
     $Objrestaurant->zone1_delivery_charges = $zone1_delivery_charges;

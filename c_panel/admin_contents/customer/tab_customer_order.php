@@ -1,11 +1,11 @@
-<?
+<?php
 
 $Orderid=$_REQUEST['Orderid'];
 $userid=$_REQUEST['userid'];
 $delverFlag=@$_REQUEST['delverFlag'];
 //*************************************************************
 
-$prdQuery = mysql_query("select od.*, 
+$prdQuery = dbAbstract::Execute("select od.*, 
 							p.prd_id, 
 							p.item_title, 
 							p.retail_price, 
@@ -20,9 +20,8 @@ $prdQuery = mysql_query("select od.*,
 							where ot.OrderID = $Orderid 
 							and od.orderid =ot.OrderID 
 							and p.prd_id=od.pid 
-							AND c.id=ot.UserID");
-//echo "select c.CartID as cartid,p.* from product p,cart c where c.Pid = p.prd_id and c.SessionId='$sid'";
- $num = mysql_num_rows($prdQuery);
+							AND c.id=ot.UserID", 1);
+ $num = dbAbstract::returnRowsCount($prdQuery, 1);
 ?>
 <script language="JavaScript">
 function backto(){
@@ -40,12 +39,12 @@ function backto(){
         <td width="93" align="left" valign="middle"><strong>Each</strong></td>
         <td width="60" align="left" valign="middle"><strong>Total </strong></td>
         </tr>
-        <?
+        <?php
 	$i = 0;
 	$itemArray="";
 		$cartIdstr="";
 		$subTotel=0;
-	while( $saerchQry = mysql_fetch_array($prdQuery,MYSQL_BOTH) ){ 
+	while( $saerchQry = dbAbstract::returnArray($prdQuery,1) ){ 
 		if($i==0){$itemArray=$itemArray.$saerchQry[2];}else{$itemArray=$itemArray."~".$saerchQry[2];}
 		$ProductID= $saerchQry["prd_id"];
 	    if ( $i%2==0 ) {
@@ -65,23 +64,16 @@ function backto(){
 				$TemOptNme="";
 				$OptType=0;
 				?>
-                <? for( $t=0;$t <count($attribueArray);$t++){
-										//  echo $attribueArray[$t]."<br>";
-										
+                <?php for( $t=0;$t <count($attribueArray);$t++){							
 										$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
 										 $ATrOptions= explode("~", $attribueArrayString);
-									
-									//	  echo $ATrOptions[0]."<br>";
-									//	    echo $ATrOptions[1]."<br>";
 										    
 											if(!empty($ATrOptions[0])){
 											$Atribut_Opt=trim($ATrOptions[0]);
 											$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 											$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-											//$OptionNameQry=mysql_query("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'");
-											$OptionNameQry=mysql_query("select option_name,Type from attribute where ProductID=$ProductID");
-										//	echo "select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'"."<br>";
-											$OptonNameRs=mysql_fetch_row($OptionNameQry);
+											$OptionNameQry=dbAbstract::Execute("select option_name,Type from attribute where ProductID=$ProductID", 1);
+											$OptonNameRs=dbAbstract::returnRow($OptionNameQry, 1);
 												
 											if($OptonNameRs[1]==2){  
 												
@@ -133,9 +125,9 @@ function backto(){
 													$Atribut_Opt=trim($ATrOptions[0]);
 													$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 													$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-													$OptionNameQry2=mysql_query("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'");
+													$OptionNameQry2=dbAbstract::Execute("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'", 1);
 											
-													$OptonNameRs2=mysql_fetch_row($OptionNameQry2);
+													$OptonNameRs2=dbAbstract::returnRow($OptionNameQry2, 1);
 													
 													if($OptonNameRs2[1]==2){
 														if($OptonNameRs2[0]==$OptonNameRs[0]){ 
@@ -214,8 +206,8 @@ function backto(){
         <td align="left" valign="top"><strong>Subtotal:</strong></td>
         <td align="left" valign="top">$<? echo number_format($subTotel, 2) ;?> </td>
         </tr>
-         <? $qry	=	mysql_query("select * from ordertbl where OrderID=$Orderid and UserID=$userid");
-			$qryRs	=	mysql_fetch_object($qry);
+         <?php $qry	=	dbAbstract::Execute("select * from ordertbl where OrderID=$Orderid and UserID=$userid", 1);
+			$qryRs	=	dbAbstract::returnObject($qry, 1);
 			
 		?>
       <tr>

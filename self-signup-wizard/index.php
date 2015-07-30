@@ -1,4 +1,4 @@
-<?
+<?php
 	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
 	require_once('chargify-api/Chargify.php');
@@ -15,8 +15,8 @@
 		if(!empty($_GET["customer_id"]) && !empty($_GET["product_id"]) && !empty($_GET["subscription_id"])) {
 			$chargify_customer_id = $_GET["customer_id"];
 			$chargify_product_id = $_GET["product_id"];
-			$premium_account_qry = mysql_query("SELECT * from chargify_products where product_id = $chargify_product_id");
-                        $premium_account = mysql_fetch_array($premium_account_qry);
+			$premium_account_qry = dbAbstract::Execute("SELECT * from chargify_products where product_id = $chargify_product_id");
+                        $premium_account = dbAbstract::returnArray($premium_account_qry);
                         if (isset($premium_account['premium_account']) && $premium_account['premium_account'] == "1") {
                             $premium_account_true = true;
                         } else {
@@ -28,8 +28,8 @@
 			// $chargify_subscription_id=3591928;
 			
 			// check if chargify subscription id available
-			$restaurant_count = mysql_query("SELECT COUNT(*) AS count FROM resturants WHERE chargify_subscription_id=$chargify_subscription_id");
-			$restaurant_count = mysql_fetch_assoc($restaurant_count);
+			$restaurant_count = dbAbstract::Execute("SELECT COUNT(*) AS count FROM resturants WHERE chargify_subscription_id=$chargify_subscription_id");
+			$restaurant_count = dbAbstract::returnAssoc($restaurant_count);
 			$restaurant_count = $restaurant_count["count"];
 			if($restaurant_count < 1) {
 				$reseller_id = 0;
@@ -37,15 +37,15 @@
 				$reseller_company_logo = "";
 				$active_api_key = "";
 				
-				$reseller = mysql_query("
+				$reseller = dbAbstract::Execute("
 					SELECT cp.user_id, cp.hosted_page_url, u.company_logo, api_access_key 
 					FROM chargify_products cp 
 					LEFT JOIN users u
 						ON u.id=cp.user_id
 					WHERE product_id=$chargify_product_id"
 				);
-				if(mysql_num_rows($reseller) > 0) {
-					$reseller = mysql_fetch_assoc($reseller);
+				if(dbAbstract::returnRowsCount($reseller) > 0) {
+					$reseller = dbAbstract::returnAssoc($reseller);
 					$reseller_id = $reseller["user_id"];
 					$active_domain = $reseller["hosted_page_url"];
 					$reseller_company_logo = $reseller["company_logo"];
@@ -838,3 +838,4 @@ option><option value="TH">Thailand</option><option value="TL">Timor-Leste</optio
 </div>    
 </body>
 </html>
+<?php mysqli_close($mysqli);?>

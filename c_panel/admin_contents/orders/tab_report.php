@@ -23,33 +23,31 @@ window.onload = function () {
 				else if($search_by == 2){	$and = " AND OrderID like '%$search_field%'";	}
 				else if($search_by == 3){	$and = " AND c.cust_email like '%$search_field%'";	}
 								
-				$orderquery=mysql_query("select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id   AND payment_approv=1 AND o.cat_id = ".$Objrestaurant->id .$and." ORDER BY o.OrderID DESC");
-@$numrows=mysql_num_rows($orderquery);
+				$orderquery=dbAbstract::Execute("select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id   AND payment_approv=1 AND o.cat_id = ".$Objrestaurant->id .$and." ORDER BY o.OrderID DESC",1);
+@$numrows=dbAbstract::returnRowsCount($orderquery,1);
 @$search_numrows = $numrows;
 			
 			} else {
-				$orderquery=mysql_query("select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id   AND payment_approv=1 AND o.cat_id = ".$Objrestaurant->id." ORDER BY o.OrderID DESC");
-@$numrows=mysql_num_rows($orderquery);
+				$orderquery=dbAbstract::Execute("select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id   AND payment_approv=1 AND o.cat_id = ".$Objrestaurant->id." ORDER BY o.OrderID DESC",1);
+@$numrows=dbAbstract::returnRowsCount($orderquery,1);
 
 			}
 $getOrders = array();
 $orderDetailsArray = array();
-while($orderRs=mysql_fetch_array($orderquery))
+while($orderRs=dbAbstract::returnArray($orderquery,1))
 {
     $getOrders[]=$orderRs;
     $OrderID.=$orderRs['OrderID'].",";
 }
 $OrderID = substr($OrderID,0,-1);
-$prdQuery2 = mysql_query("select * from orderdetails where orderid in($OrderID)");
+$prdQuery2 = dbAbstract::Execute("select * from orderdetails where orderid in($OrderID)",1);
 
-while($getOrderDetails = mysql_fetch_assoc($prdQuery2))
+while($getOrderDetails = dbAbstract::returnAssoc($prdQuery2,1))
 {
    $orderDetailsArray[]=$getOrderDetails;
 }
 $orderCount = count($getOrders);
 $orderDetailsCount = count($orderDetailsArray);
-
-//echo "<pre>";print_r($orderDetailsArray);
 
 for($i=0; $i<=$orderCount-1;$i++)
 {

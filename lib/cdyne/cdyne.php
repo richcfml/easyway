@@ -80,11 +80,11 @@ class cydne
   
 	public function saveLog($ToPhoneNumber, $FromPhoneNumber, $MessageID, $MatchedMessageId, $ReferenceId, $Message, $type) 
 	{	
-		$Message=mysql_real_escape_string($Message);
+		$Message=dbAbstract::returnRealEscapedString($Message);
 		$qry="insert into cydne_log(ToPhoneNumber,FromPhoneNumber,MessageID,MatchedMessageId,ReferenceId,Message,SMSType,LogTime)";
 		$qry .=" values ( '$ToPhoneNumber' ,'$FromPhoneNumber','$MessageID','$MatchedMessageId','$ReferenceId','$Message',$type,'". time() ."')";
 	 
-		mysql_query($qry);	
+		dbAbstract::Insert($qry);	
 	}
 }
 	
@@ -140,16 +140,16 @@ class SMSTrace
 		
 		if (!($mRestFlag))
 		{
-			$mResult = mysql_query("SELECT id FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($this->phone_number)."' AND resturant_id=". $this->resaurant_id  ." AND password!=''");
-			if (mysql_num_rows($mResult)>0)
+			$mResult = dbAbstract::Execute("SELECT id FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($this->phone_number)."' AND resturant_id=". $this->resaurant_id  ." AND password!=''");
+			if (dbAbstract::returnRowsCount($mResult)>0)
 			{
-				$mRow = mysql_fetch_object($mResult);
+				$mRow = dbAbstract::returnObject($mResult);
 				$mUserID = $mRow->id;
 				if (is_numeric($mUserID))
 				{
 					$mSMSTmp = strtolower(trim($this->sms));
-					$qry=mysql_query("SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID);
-					$result=mysql_fetch_object($qry);
+					$qry=dbAbstract::Execute("SELECT * FROM repid_reordering_trace WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID);
+					$result=dbAbstract::returnObject($qry);
 						
 					if(!isset($result->id)) 
 					{
@@ -157,7 +157,7 @@ class SMSTrace
 					}
 					else if (($mSMSTmp!="yes") && ($mSMSTmp!="no") && ($mSMSTmp!="pickup") && ($mSMSTmp!="deliver") && ($mSMSTmp!=strtolower(trim($result->order_title))))
 					{
-						mysql_query("UPDATE repid_reordering_trace SET trace_status=".SMSTrace::TRACECLOSE." WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))!='".strtolower(trim($mSMSTmp))."'");
+						dbAbstract::Update("UPDATE repid_reordering_trace SET trace_status=".SMSTrace::TRACECLOSE." WHERE phone_number=".$this->phone_number." AND trace_status=".SMSTrace::TRACEOPEN." AND user_id=".$mUserID." AND LOWER(TRIM(order_title))!='".strtolower(trim($mSMSTmp))."'");
 						$this->Open();
 					}
 					else
@@ -199,8 +199,8 @@ class SMSTrace
 							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
 							$loggedinuser->delivery_address_choice = 1;
 							
-							$mRes = mysql_query("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
-							$mRow = mysql_fetch_object($mRes);
+							$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
+							$mRow = dbAbstract::returnObject($mRes);
 						
 							$loggedinuser->street1 =trim($mRow->cust_odr_address);
 							$loggedinuser->street2 ='';
@@ -266,7 +266,7 @@ class SMSTrace
 											
 											include "new_site/views/cart/submit_order.php";
                                                                                         $mSQL = "UPDATE ordertbl SET PNRef='".$cdynePNRef."' WHERE OrderID=".$cart->order_id;
-                                                                                        @mysql_query($mSQL);
+                                                                                        dbAbstract::Update($mSQL);
 											$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successfully ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
 										}
 										else
@@ -310,7 +310,7 @@ class SMSTrace
 										}
 										include "new_site/views/cart/submit_order.php";
                                                                                 $mSQL = "UPDATE ordertbl SET PNRef='".$cdynePNRef."' WHERE OrderID=".$cart->order_id;
-                                                                                @mysql_query($mSQL);
+                                                                                dbAbstract::Update($mSQL);
 										$this->cydne->sendSMS($this->reply_phone_number,$this->order_title .' was successfully ordered, enjoy! ' ,$this->order_title,'',cydne::SYSTEM_RESPONSE);					 $this->updatestatus(SMSTrace::APPROVED);					 
 									}
 									else
@@ -328,8 +328,8 @@ class SMSTrace
 							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
 							$loggedinuser->delivery_address_choice = 1;
 							
-							$mRes = mysql_query("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
-							$mRow = mysql_fetch_object($mRes);
+							$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
+							$mRow = dbAbstract::returnObject($mRes);
 						
 							$loggedinuser->street1 =trim($mRow->cust_odr_address);
 							$loggedinuser->street2 ='';
@@ -362,8 +362,8 @@ class SMSTrace
 								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
 								$loggedinuser->delivery_address_choice = 1;
 								
-								$mRes = mysql_query("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
-								$mRow = mysql_fetch_object($mRes);
+								$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
+								$mRow = dbAbstract::returnObject($mRes);
 							
 								$loggedinuser->street1 =trim($mRow->cust_odr_address);
 								$loggedinuser->street2 ='';
@@ -397,8 +397,8 @@ class SMSTrace
 								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
 								$loggedinuser->delivery_address_choice = 1;
 								
-								$mRes = mysql_query("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
-								$mRow = mysql_fetch_object($mRes);
+								$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
+								$mRow = dbAbstract::returnObject($mRes);
 							
 								$loggedinuser->street1 =trim($mRow->cust_odr_address);
 								$loggedinuser->street2 ='';
@@ -441,13 +441,13 @@ class SMSTrace
 				}
 				else
 				{
-					mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_User_ID_Non_Numeric', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id.", User ID: ".$mUserID."')");
+					dbAbstract::Insert("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_User_ID_Non_Numeric', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id.", User ID: ".$mUserID."')");
 					exit;
 				}
 			}
 			else
 			{
-				mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_No_User_ID', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id."')");
+				dbAbstract::Insert("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Cdyne_No_User_ID', 'Phone #: .".trim($this->phone_number).", Restaurant ID: ".$this->resaurant_id."')");
 				exit;
 			}
 		}
@@ -471,9 +471,7 @@ class SMSTrace
 				$token=$this->user->getDefaultToken();
 				if(isset($token->data_2))
 				{
-					mysql_query("Insert into repid_reordering_trace(phone_number,user_id,trace_date,trace_status,step,order_title,easyway_id,ntries ,token_id) values(
-								". $this->phone_number .",". $this->user->id .",". time() .",". SMSTrace::TRACEOPEN .",1,'". addslashes($this->sms) ."',".$this->easyway_id .",0,'". $token->data_2 ."')");
-					$mTraceID = mysql_insert_id();					 
+					$mTraceID = dbAbstract::Insert("INSERT INTO repid_reordering_trace(phone_number,user_id,trace_date,trace_status,step,order_title,easyway_id,ntries ,token_id) VALUES(". $this->phone_number .",". $this->user->id .",". time() .",". SMSTrace::TRACEOPEN .",1,'". addslashes($this->sms) ."',".$this->easyway_id .",0,'". $token->data_2 ."')", 0, 2);
 					if($token->data_type==AMEX)
 					{
 						$card_type="American Express";
@@ -508,7 +506,7 @@ class SMSTrace
 							if ($cart->grand_total(0)<$objRestaurant->order_minimum)
 							{
 								$sms="We are having a minimum limit of $".$objRestaurant->order_minimum." for Delivery orders. Please choose any other favorite order.";
-								mysql_query("update repid_reordering_trace set trace_status=".SMSTrace::TRACECLOSE ." where id=".$mTraceID);
+								dbAbstract::Update("UPDATE repid_reordering_trace SET trace_status=".SMSTrace::TRACECLOSE ." WHERE id=".$mTraceID);
 							}
 							else
 							{
@@ -543,22 +541,22 @@ class SMSTrace
 	
 	public function Close() 
 	{
-		mysql_query("update repid_reordering_trace set trace_status=". SMSTrace::TRACECLOSE  ." where id=". $this->id ."");
+		dbAbstract::Update("UPDATE repid_reordering_trace SET trace_status=". SMSTrace::TRACECLOSE  ." WHERE id=". $this->id ."");
 	}
 	
 	public function updateTries() 
 	{
-		mysql_query("update repid_reordering_trace set ntries=". $this->ntries  ." where id=". $this->id ."");
+		dbAbstract::Update("UPDATE repid_reordering_trace SET ntries=". $this->ntries  ." WHERE id=". $this->id ."");
 	}
 	
 	public function moveToCCProcessing() 
 	{
-		mysql_query("update repid_reordering_trace set step=2 where id=". $this->id ."");
+		dbAbstract::Update("UPDATE repid_reordering_trace SET step=2 WHERE id=". $this->id ."");
 	}
 	
 	public function updatestatus($status) 
 	{
-		mysql_query("update repid_reordering_trace set log_status=$status where id=". $this->id ."");
+		dbAbstract::Update("UPDATE repid_reordering_trace SET log_status=$status WHERE id=". $this->id ."");
 	}		 
 	
 	public function addtrace($status) 
@@ -569,7 +567,7 @@ class SMSTrace
 			$userid=$this->user->id;
 		}
 				  
-		mysql_query("Insert into repid_reordering_trace(phone_number,user_id,trace_date,trace_status,step,order_title,easyway_id,ntries ,token_id,log_status) values(
+		dbAbstract::Insert("INSERT INTO repid_reordering_trace(phone_number,user_id,trace_date,trace_status,step,order_title,easyway_id,ntries ,token_id,log_status) VALUES(
 					". $this->phone_number .",". $userid .",". time() .",". SMSTrace::TRACECLOSE .",1,'". addslashes($this->sms) ."',0,0,'',$status)");							 
 	}
 

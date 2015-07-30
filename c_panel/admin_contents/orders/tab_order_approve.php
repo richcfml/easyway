@@ -1,30 +1,28 @@
 <?          
 if ($Objrestaurant->id==141)
 {
-	$orderquery=mysql_query("select o.*, OrderDate  OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=0  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC LIMIT 20");
+	$orderquery=dbAbstract::Execute("select o.*, OrderDate  OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=0  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC LIMIT 20",1);
 }
 else
 {
-	$orderquery=mysql_query("select o.*, OrderDate  OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=0  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC");
+	$orderquery=dbAbstract::Execute("select o.*, OrderDate  OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=0  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC",1);
 }
 $getOrders = array();
 $orderDetailsArray = array();
-while($orderRs=mysql_fetch_array($orderquery))
+while($orderRs=dbAbstract::returnArray($orderquery,1))
 {
     $getOrders[]=$orderRs;
     $OrderID.=$orderRs['OrderID'].",";
 }
 $OrderID = substr($OrderID,0,-1);
-$prdQuery2 = mysql_query("select * from orderdetails where orderid in($OrderID)");
+$prdQuery2 = dbAbstract::Execute("select * from orderdetails where orderid in($OrderID)",1);
 
-while($getOrderDetails = mysql_fetch_assoc($prdQuery2))
+while($getOrderDetails = dbAbstract::returnAssoc($prdQuery2,1))
 {
    $orderDetailsArray[]=$getOrderDetails;
 }
 $orderCount = count($getOrders);
 $orderDetailsCount = count($orderDetailsArray);
-
-//echo "<pre>";print_r($orderDetailsArray);
 
 for($i=0; $i<=$orderCount-1;$i++)
 {
@@ -37,10 +35,8 @@ for($i=0; $i<=$orderCount-1;$i++)
         }
     }
 }
-//echo "<pre>";print_r($getOrders);exit;
-@$numrows=mysql_num_rows($orderquery);
 
- 	
+@$numrows=dbAbstract::returnRowsCount($orderquery,1); 	
 	$restaurant_name= $Objrestaurant->name;
 	
 $checked="";
@@ -51,7 +47,7 @@ $checked="";
 				for ($i=0;$i<count($OID);$i++)
 					{
                                                 Log::write("Update Order status in ordertbl - tab_order_approve.php", "QUERY -- UPDATE ordertbl SET Approve= 1 WHERE OrderID=$OID[$i]", 'order', 1 , 'cpanel');
-						mysql_query("UPDATE ordertbl SET Approve= 1 WHERE OrderID=$OID[$i]");
+						dbAbstract::Update("UPDATE ordertbl SET Approve= 1 WHERE OrderID=$OID[$i]",1);
 					}
 				?>
 <script language="javascript">

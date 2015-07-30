@@ -3,13 +3,13 @@
 	{
 		if(!isset($_POST['serving_date'])) 
 		{ 
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
 			exit;
 		}
 		if($cart->isempty()) 
 		{ 
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
 			exit;
 		}	
@@ -221,7 +221,7 @@
             if ($cart->coupon_code!="")
             {
                 $mSQLCoupon = "UPDATE ordertbl SET CouponCode='".prepareStringForMySQL($cart->coupon_code)."' WHERE OrderID=".$cart->order_id;
-                mysql_query($mSQLCoupon);
+                dbAbstract::Update($mSQLCoupon);
             }
             $fun=new clsFunctions();
             //$fun->posttoORDRSRVR($cart->order_id);
@@ -468,7 +468,7 @@
 	include "views/notify_customers.php";
 	if(!isset($repid_payment))
 	{
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou" );
 		exit;
 	}

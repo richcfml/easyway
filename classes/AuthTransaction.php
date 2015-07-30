@@ -3,67 +3,90 @@
 define('JSON_SERVER_RESPONSE_BREAKER', '|_|_|_|_|_|_|_|_|');
 require_once ($r = $r ? $r : '').'lib/authorize_api/AuthNetCIM.php';
 
-Class AuthorizeNetTransactionModel{
-
-    public static function saveTransaction($txn_id, $orderid, $rest_id, $amount, $cc_no){
-       
+Class AuthorizeNetTransactionModel
+{
+    public static function saveTransaction($txn_id, $orderid, $rest_id, $amount, $cc_no)
+    {
         $time = time();
-        mysql_query('INSERT INTO auth_transactions (rest_id, order_id, txn_id, time, amount, status) VALUES ('.mysql_real_escape_string($rest_id).', '.mysql_real_escape_string($orderid).', "'.mysql_real_escape_string($txn_id).'", '.mysql_real_escape_string($time).', "'.mysql_real_escape_string($amount).'", 1)') or die(mysql_error());
-        return mysql_insert_id();
+        $mSQL = 'INSERT INTO auth_transactions (rest_id, order_id, txn_id, time, amount, status) VALUES ('.dbAbstract::returnRealEscapedString($rest_id).', '.dbAbstract::returnRealEscapedString($orderid).', "'.dbAbstract::returnRealEscapedString($txn_id).'", '.dbAbstract::returnRealEscapedString($time).', "'.dbAbstract::returnRealEscapedString($amount).'", 1)';
+        return dbAbstract::Insert($mSQL, 0, 2);
     }
 
-    public static function getTransaction($txn_id){
-        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE txn_id = "'.mysql_real_escape_string($txn_id).'"'));
+    public static function getTransaction($txn_id)
+    {
+        $mSQL = 'SELECT * FROM auth_transactions WHERE txn_id = "'.dbAbstract::returnRealEscapedString($txn_id).'"';
+        return dbAbstract::ExecuteObject($mSQL);
     }
     
-    public static function getTransactionByOrder($order_id){
-        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE order_id = "'.mysql_real_escape_string($order_id).'"'));
+    public static function getTransactionByOrder($order_id)
+    {
+        $mSQL = 'SELECT * FROM auth_transactions WHERE order_id = "'.dbAbstract::returnRealEscapedString($order_id).'"';
+        return dbAbstract::ExecuteObject($mSQL);
     }
 
-    public static function refundTransaction($txn_id, $auth){
+    public static function refundTransaction($txn_id, $auth)
+    {
         $transaction = AuthorizeNetTransactionModel::getTransaction($txn_id);
-        if($transaction){
-            if(!AuthorizeNetTransactionModel::isConfirmed($transaction->order_id)){
+        if($transaction)
+        {
+            if(!AuthorizeNetTransactionModel::isConfirmed($transaction->order_id))
+            {
                 echo $transaction->cc_no;
                 $response = $auth->credit($txn_id, ''.$transaction->amount, ''.$transaction->cc_no);
-                if($response->approved){
+                if($response->approved)
+                {
                     AuthorizeNetTransactionModel::setRefund($transaction->order_id);
-                }else{
+                }
+                else
+                {
                     return $response->error_message;
                 }
 
-            }else{
+            }
+            else
+            {
                 return 'order already confirmed!';
             }
-        }else{
+        }
+        else
+        {
             return false;
         }
     }
-    public static function isConfirmed($order_id){
-        $order = mysql_fetch_object(mysql_query('SELECT * FROM ordertbl WHERE id = "'.mysql_real_escape_string($order_id).'"'));
+    public static function isConfirmed($order_id)
+    {
+        $mSQL = 'SELECT * FROM ordertbl WHERE id = "'.dbAbstract::returnRealEscapedString($order_id).'"';
+        $order = dbAbstract::ExecuteObject($mSQL);
         return $order->order_confirm == 1;
     }
-    public static function setRefund($order_id){
-        mysql_query('UPDATE auth_transactions set status = 2 WHERE id = "'.mysql_real_escape_string($order_id).'"');
-        
+
+    public static function setRefund($order_id)
+    {
+        $mSQL = 'UPDATE auth_transactions set status = 2 WHERE id = "'.dbAbstract::returnRealEscapedString($order_id).'"';
+        dbAbstract::Update($mSQL);
     }
 
 }
-Class AuthorizeNetTokenizationModel{
+Class AuthorizeNetTokenizationModel
+{
     private $cim = null;
     private $profileId = null;
     private $email = null;
 
 
-    public function __construct($login, $password){
+    public function __construct($login, $password)
+    {
         $this->cim = new AuthnetCIM($login, $password);
-
     }
     
-    public function loadProfile($email, $rest_id){
-        $profile = mysql_fetch_object(mysql_query('SELECT * FROM auth_user_profile WHERE email = "'.mysql_real_escape_string($email).'" AND rest_id = "'.mysql_real_escape_string($rest_id).'"'));
-
-        if(!$profile)return false;
+    public function loadProfile($email, $rest_id)
+    {
+        $mSQL = 'SELECT * FROM auth_user_profile WHERE email = "'.dbAbstract::returnRealEscapedString($email).'" AND rest_id = "'.dbAbstract::returnRealEscapedString($rest_id).'"';
+        $profile = dbAbstract::ExecuteObject($mSQL);
+        if(!$profile)
+        {
+            return false;
+        }
 
         $this->email = $email;
         $this->profileId = $profile->profile_id;
@@ -73,13 +96,15 @@ Class AuthorizeNetTokenizationModel{
     }
 
 
-    public function returnAuthNet($login, $password, $sandbox = true){
+    public function returnAuthNet($login, $password, $sandbox = true)
+    {
         $this->cim = new AuthnetCIM($login, $password, $sandbox);
     }
     
-    public function createProfile($email, $rest_id){
-
-        $customer = mysql_fetch_object(mysql_query('SELECT * FROM customer_registration WHERE cust_email = "'.mysql_real_escape_string($email).'" AND resturant_id = "'.mysql_real_escape_string($rest_id).'"'));
+    public function createProfile($email, $rest_id)
+    {
+        $mSQL = 'SELECT * FROM customer_registration WHERE cust_email = "'.dbAbstract::returnRealEscapedString($email).'" AND resturant_id = "'.dbAbstract::returnRealEscapedString($rest_id).'"';
+        $customer = dbAbstract::ExecuteObject($mSQL);
 
         $this->cim->setParameter('email', $email);
         $this->cim->setParameter('description', 'Profile for rest#'.$rest_id.' : '.$email); // Optional
@@ -90,11 +115,12 @@ Class AuthorizeNetTokenizationModel{
         $this->customerId = $customer->id;
         $this->email = $email;
 
-        mysql_query('INSERT INTO auth_user_profile (customer_id, rest_id, profile_id, email, time) VALUES ("'.$customer->id.'", "'.$rest_id.'", "'.$this->profileId.'", "'.$email.'", "'.time().'")');
+        $mSQL = 'INSERT INTO auth_user_profile (customer_id, rest_id, profile_id, email, time) VALUES ("'.$customer->id.'", "'.$rest_id.'", "'.$this->profileId.'", "'.$email.'", "'.time().'")';
+        dbAbstract::Insert($mSQL);
     }
     
-    public function saveCCToken($name, $ccno, $cvv, $exp_year, $exp_month, $fname, $lname, $addr, $city, $state, $zip, $country, $phno, $fax){
-
+    public function saveCCToken($name, $ccno, $cvv, $exp_year, $exp_month, $fname, $lname, $addr, $city, $state, $zip, $country, $phno, $fax)
+    {
         $this->cim->setParameter('customerProfileId', $profile_id);
         $this->cim->setParameter('billToFirstName', $fname);
         $this->cim->setParameter('billToLastName', $lname);
@@ -112,11 +138,13 @@ Class AuthorizeNetTokenizationModel{
         $payment_profile_id = $this->cim->getPaymentProfileId();
 
 
-        mysql_query('INSERT INTO auth_cc_tokens (name, customer_id, ccno, token, status, time) VALUES ("'.$name.'", "'.$this->customerId.'", "'.$ccno.'", "'.$payment_profile_id.'", 1, "'.time().'")');
+        $mSQL = 'INSERT INTO auth_cc_tokens (name, customer_id, ccno, token, status, time) VALUES ("'.$name.'", "'.$this->customerId.'", "'.$ccno.'", "'.$payment_profile_id.'", 1, "'.time().'")';
+        dbAbstract::Insert($mSQL);
         return $payment_profile_id;
     }
     
-    public function useToken($amount){
+    public function useToken($amount)
+    {
         $this->cim->setParameter('amount', $purchase_amount);
         $this->cim->setParameter('customerProfileId', $profile_id);
         $this->cim->setParameter('customerPaymentProfileId', $payment_profile_id);

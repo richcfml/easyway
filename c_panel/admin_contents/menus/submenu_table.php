@@ -14,15 +14,15 @@
             <?php
 			$mColumn1Count = -1;
 			$mSQLCl = "SELECT IFNULL(Column1Count, -1) AS Column1Count FROM menus WHERE id=".$menu_id;
-			$mResC1 = mysql_query($mSQLCl);
-			if (mysql_num_rows($mResC1)>0)
+			$mResC1 = dbAbstract::Execute($mSQLCl, 1);
+			if (dbAbstract::returnRowsCount($mResC1, 1)>0)
 			{
-				$mRowC1 = mysql_fetch_object($mResC1);
+				$mRowC1 = dbAbstract::returnObject($mResC1, 1);
 				$mColumn1Count = $mRowC1->Column1Count;
 			}
             $mLoopCount = 0;
             $mCat_ID;
-            $mRowCount = mysql_num_rows($mRes);
+            $mRowCount = dbAbstract::returnRowsCount($mRes, 1);
             $mHalfCount = ceil($mRowCount / 2);
             $mDivider = $mHalfCount;
             if ($mColumn1Count>=0)
@@ -31,7 +31,7 @@
             }
 			else
 			{
-				mysql_query("UPDATE menus SET Column1Count=".$mDivider." WHERE id=".$menu_id);
+				dbAbstract::Update("UPDATE menus SET Column1Count=".$mDivider." WHERE id=".$menu_id, 1);
 			}
 
             $mColumn1Flag = false;
@@ -39,17 +39,16 @@
             
             $subcatIDs="";
             $getcategories = array();
-            while ($mRow1 = mysql_fetch_assoc($mRes)) {
+            while ($mRow1 = dbAbstract::returnAssoc($mRes, 1)) {
                 $subcatIDs.=$mRow1["cat_id"].",";
                 $getcategories[]=$mRow1;
             }
-            //echo "<pre>";print_r($getRecord);
             $subcatIDs=substr($subcatIDs,0,-1);
             $mSQLPr = "SELECT * FROM product WHERE sub_cat_id in( " . $subcatIDs . ") order by SortOrder";
-            $mResPr = mysql_query($mSQLPr);
+            $mResPr = dbAbstract::Execute($mSQLPr, 1);
             $getItem = array();
             $catCount = count($getcategories);
-            while($getRecord = mysql_fetch_assoc($mResPr))
+            while($getRecord = dbAbstract::returnAssoc($mResPr, 1))
             {
                 $getItem[]=$getRecord;
             }
@@ -64,7 +63,6 @@
                     }
                 }
             }
-
 
           foreach($getcategories as $mRow)
           {
@@ -136,7 +134,7 @@
 						</table>
                     </span>
 
-                   <i class="fa fa-minus collapseImage"  data-tooltip="collapse Menu" <?if(mysql_num_rows($mResPr) == 0){ ?>style="display:none"<?}?>></i>
+                                                                    <i class="fa fa-minus collapseImage"  data-tooltip="collapse Menu" <?php if(dbAbstract::returnRowsCount($mResPr, 1) == 0){ ?>style="display:none"<?}?>></i>
 
                    </div>
                     <span id="lblCatID" style="display: none;"><?= $mRow["cat_id"] ?></span>

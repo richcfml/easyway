@@ -41,8 +41,9 @@ else //All other cases including Tokenization OFF and Tokenization ON and transa
     $mUserName = $objRestaurant->authoriseLoginID;
     $mPassword = $objRestaurant->transKey;
     $mTransType = "Sale";
-    $mCardNum = $x_card_num;
-    $mExpDate = $x_exp_date;
+    $mCardNum = str_replace("-", "", $x_card_num);
+    $mExpDate = str_replace("/", "", $x_exp_date);
+    
     $mAmount = 0;
     if ($SureGateTestFlag) // $SureGateTestFlag is defined in Config
     {
@@ -129,8 +130,7 @@ if ($mRapidReOrderFlag==0) //Not for Rapid Re-Ordering (Order was not requested/
                         {
                             $mCustomerKey = "";
                             $mSQL = "SELECT IFNULL(CustomerKey, '') AS  CustomerKey FROM  customer_registration WHERE id=".$loggedinuser->id;
-                            $mRes = mysql_query($mSQL);
-                            $mRow = mysql_fetch_object($mRes);
+                            $mRow = dbAbstract::ExecuteObject($mSQL);
                             $mCustomerKey = $mRow->CustomerKey;
                             if (trim($mCustomerKey)=="")
                             {
@@ -184,7 +184,7 @@ if ($mRapidReOrderFlag==0) //Not for Rapid Re-Ordering (Order was not requested/
                                     {
                                         $mCustomerKey = $mTransaction->CustomerKey;
                                         $mSQL = "UPDATE customer_registration SET CustomerKey='".$mCustomerKey."' WHERE id=".$loggedinuser->id;
-                                        mysql_query($mSQL);
+                                        dbAbstract::Update($mSQL);
                                     }
                                 }
                             }
@@ -192,9 +192,10 @@ if ($mRapidReOrderFlag==0) //Not for Rapid Re-Ordering (Order was not requested/
                             if (trim($mCustomerKey)!="")
                             {	
                                 $mURL = $SureGateURL."ws/cardsafe.asmx/StoreCard"; //$SureGateURL is defined in includes/config.php
-                                $mTokenMode = "DEFAULT";
-                                $mCardNum = $x_card_num;
-                                $mExpDate = $x_exp_date;
+                                $mTokenMode = "DEFAULT";                                
+                                $mCardNum = str_replace("-", "", $x_card_num);
+                                $mExpDate = str_replace("/", "", $x_exp_date);
+                                
                                 $mNameOnCard = "";
                                 $mStreet = "";
                                 $mZip = "";

@@ -10,15 +10,15 @@
             if ((is_numeric($_POST["txtSource"])) && (is_numeric($_POST["txtDestination"])))
             {
                 $mSQL = "SELECT M.menu_name AS MenuName, R.id AS RestaurantID, R.name AS RestaurantName FROM menus M INNER JOIN resturants R ON R.id = M.rest_id WHERE M.id=".$_POST["txtSource"];
-                $mRes = mysql_query($mSQL);
+                $mRes = dbAbstract::Execute($mSQL);
                 
                 $mSQL = "SELECT M.menu_name AS MenuName, R.id AS RestaurantID, R.name AS RestaurantName FROM menus M INNER JOIN resturants R ON R.id = M.rest_id WHERE M.id=".$_POST["txtDestination"];
-                $mRes1 = mysql_query($mSQL);
+                $mRes1 = dbAbstract::Execute($mSQL);
                 
-                if ((mysql_num_rows($mRes)>0) && (mysql_num_rows($mRes1)>0))
+                if ((dbAbstract::returnRowsCount($mRes)>0) && (dbAbstract::returnRowsCount($mRes1)>0))
                 {
-                    $mRow = mysql_fetch_object($mRes);
-                    $mRow1 = mysql_fetch_object($mRes1);
+                    $mRow = dbAbstract::returnObject($mRes);
+                    $mRow1 = dbAbstract::returnObject($mRes1);
                     
                     /*if ($mRow->RestaurantID==$mRow1->RestaurantID)
                     {*/
@@ -58,39 +58,37 @@
         require_once "includes/config.php";
         
         $mSQL = "SELECT Column1Count FROM menus WHERE id=".$_POST["txtSource"];
-        $mRes = mysql_query($mSQL);
-        $mRow = mysql_fetch_object($mRes);
+        $mRes = dbAbstract::Execute($mSQL);
+        $mRow = dbAbstract::returnObject($mRes);
         $mSQL = "UPDATE menus SET Column1Count='".$mRow->Column1Count."' WHERE id=".$_POST["txtDestination"];
-        mysql_query($mSQL);
+        dbAbstract::Update($mSQL);
         
         $mSQL = "SELECT cat_id, parent_id, menu_id, cat_name, cat_des, cat_ordering, `status` FROM categories WHERE menu_id = ".$_POST["txtSource"];
-        $mRes = mysql_query($mSQL);
-        if (mysql_num_rows($mRes)>0)
+        $mRes = dbAbstract::Execute($mSQL);
+        if (dbAbstract::returnRowsCount($mRes)>0)
         {
-            while ($mRow = mysql_fetch_object($mRes))
+            while ($mRow = dbAbstract::returnObject($mRes))
             {
                 $mSQL = "INSERT INTO categories (parent_id, menu_id, cat_name, cat_des, cat_ordering, `status`)";
-                $mSQL .= " VALUES (".$mRow->parent_id.", ".$_POST["txtDestination"].", '".mysql_real_escape_string($mRow->cat_name)."', '".mysql_real_escape_string($mRow->cat_des)."', ".$mRow->cat_ordering.", ".$mRow->status.")";
-                if (mysql_query($mSQL))
+                $mSQL .= " VALUES (".$mRow->parent_id.", ".$_POST["txtDestination"].", '".dbAbstract::returnRealEscapedString($mRow->cat_name)."', '".dbAbstract::returnRealEscapedString($mRow->cat_des)."', ".$mRow->cat_ordering.", ".$mRow->status.")";
+                $mNewCatId=dbAbstract::Insert($mSQL, 0, 2);
+                if ($mNewCatId)
                 {
-                    $mNewCatId=mysql_insert_id();
-
                     $mSQL = "SELECT prd_id, cat_id, sub_cat_id, item_num, item_title, item_code, item_des, retail_price, sale_price, item_image, feature_sub_cat, Alt_tag, Ptitle, Meta_des, Meta_tag, imagethumb, status, pos_id, item_type, SortOrder, HasAttributes, HasAssociates, UpdatedOn FROM product WHERE sub_cat_id =".$mRow->cat_id;
-                    $mRes1 = mysql_query($mSQL);
+                    $mRes1 = dbAbstract::Execute($mSQL);
 
-                    while ($mRow1 = mysql_fetch_object($mRes1))
+                    while ($mRow1 = dbAbstract::returnObject($mRes1))
                     {
                         $mSQL = "INSERT INTO product(cat_id, sub_cat_id, item_num, item_title, item_code, item_des, retail_price, sale_price, item_image, feature_sub_cat, Alt_tag, Ptitle, Meta_des, Meta_tag, imagethumb, `status`, item_type, SortOrder, HasAttributes, HasAssociates, UpdatedOn, pos_id)";
-                        $mSQL .= " VALUES (".$mRow1->cat_id.", ".$mNewCatId.", '".$mRow1->item_num ."', '".mysql_real_escape_string($mRow1->item_title)."', '".mysql_real_escape_string($mRow1->item_code)."', '".mysql_real_escape_string($mRow1->item_des)."', '".mysql_real_escape_string($mRow1->retail_price)."', '".mysql_real_escape_string($mRow1->sale_price)."', '".mysql_real_escape_string($mRow1->item_image)."', ".$mRow1->feature_sub_cat.", '".mysql_real_escape_string($mRow1->Alt_tag)."', '".mysql_real_escape_string($mRow1->Ptitle)."', '".mysql_real_escape_string($mRow1->Meta_des)."', '".mysql_real_escape_string($mRow1->Meta_tag)."', '".mysql_real_escape_string($mRow1->imagethumb)."', ".$mRow1->status .", '".mysql_real_escape_string($mRow1->item_type)."', '".$mRow1->SortOrder."', '".$mRow1->HasAttributes."', '".$mRow1->HasAssociates."', '".$mRow1->UpdatedOn."', '".$mRow1->pos_id."')";
-                        if (mysql_query($mSQL))
+                        $mSQL .= " VALUES (".$mRow1->cat_id.", ".$mNewCatId.", '".$mRow1->item_num ."', '".dbAbstract::returnRealEscapedString($mRow1->item_title)."', '".dbAbstract::returnRealEscapedString($mRow1->item_code)."', '".dbAbstract::returnRealEscapedString($mRow1->item_des)."', '".dbAbstract::returnRealEscapedString($mRow1->retail_price)."', '".dbAbstract::returnRealEscapedString($mRow1->sale_price)."', '".dbAbstract::returnRealEscapedString($mRow1->item_image)."', ".$mRow1->feature_sub_cat.", '".dbAbstract::returnRealEscapedString($mRow1->Alt_tag)."', '".dbAbstract::returnRealEscapedString($mRow1->Ptitle)."', '".dbAbstract::returnRealEscapedString($mRow1->Meta_des)."', '".dbAbstract::returnRealEscapedString($mRow1->Meta_tag)."', '".dbAbstract::returnRealEscapedString($mRow1->imagethumb)."', ".$mRow1->status .", '".dbAbstract::returnRealEscapedString($mRow1->item_type)."', '".$mRow1->SortOrder."', '".$mRow1->HasAttributes."', '".$mRow1->HasAssociates."', '".$mRow1->UpdatedOn."', '".$mRow1->pos_id."')";
+                        $mNewProductID=dbAbstract::Insert($mSQL, 0, 2);
+                        if ($mNewProductID)
                         {
-                            $mNewProductID=mysql_insert_id();
-
                             $mSQL = "INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price) SELECT ".$mNewProductID.", option_name, Title, Price, option_display_preference, apply_sub_cat, `Type`, `Required`, OderingNO, rest_price, display_Name, `Default`, attr_name, extra_charge, add_to_price FROM attribute WHERE ProductID=".$mRow1->prd_id." ORDER BY id";
-                            if (mysql_query($mSQL))
+                            if (dbAbstract::Insert($mSQL))
                             {
                                 $mSQL = "INSERT INTO product_association (product_id, association_id, SortOrder)  SELECT ".$mNewProductID.", association_id, SortOrder FROM product_association WHERE product_id =".$mRow1->prd_id;
-                                if (mysql_query($mSQL))
+                                if (dbAbstract::insert($mSQL))
                                 {
                                     $mMessage = "Menu copied successfully.";
                                 }
@@ -235,6 +233,4 @@
         </table>
     </form>
 </body>
-<?php
-    @mysql_close($mysql_conn);
-?>
+<?php mysqli_close($mysqli);?>

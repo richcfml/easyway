@@ -76,7 +76,7 @@ if ($mod == 'overview') {
 			
 			if (trim($mSRID)!="")
 			{
-				mysql_query("UPDATE resturants SET srid='".$mSRID."' where id=".$Objrestaurant->id);
+                            dbAbstract::Update("UPDATE resturants SET srid='".$mSRID."' where id=".$Objrestaurant->id,1);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
- <?
+ <?php
  
  $OrderID = @$_GET['OrderID'];
  
@@ -6,9 +6,9 @@
 	$prdQuery="select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName,c.cust_phone1,cust_ord_city,cust_ord_state,cust_room,c.cust_odr_address DeliveryAddress from customer_registration c,ordertbl o where o.UserID=c.id  and
 	 o.OrderID = ". $OrderID ." ORDER BY o.OrderID DESC";
  
- 	 $prdQuery= mysql_query($prdQuery);
+ 	 $prdQuery= dbAbstract::Execute($prdQuery, 1);
  
-	 $Ord_RS=mysql_fetch_array($prdQuery,MYSQL_BOTH);
+	 $Ord_RS=dbAbstract::returnArray($prdQuery,1);
 ?>
 <div id="main_heading">VIEW EXISTING ORDERS </div>
 <script language="JavaScript">
@@ -123,12 +123,11 @@ function updateOrder(id){
                   <td colspan="3" class="style3"><strong>Order Detail:</strong></td>
                   <td>&nbsp;</td>
                 </tr>
-                 <?  $prdQuery2 ="select * from orderdetails where orderid = $OrderID";
-			// echo $prdQuery2."<br>";
+                 <?php  $prdQuery2 ="select * from orderdetails where orderid = $OrderID";
 			     $GrandTotal=0;
-				 $prdQuery2= mysql_query($prdQuery2);
+				 $prdQuery2= dbAbstract::Execute($prdQuery2, 1);
 
-				 while($Ord_RS2=mysql_fetch_array($prdQuery2,MYSQL_BOTH)){
+				 while($Ord_RS2=dbAbstract::returnArray($prdQuery2,1)){
 				 $ProductID = $Ord_RS2["pid"];
 				 $mOrderDetailsID = $Ord_RS2["OrdDetailID"];
 				 ?>
@@ -157,9 +156,8 @@ function updateOrder(id){
                 </tr>
                	<?php
 				$mAttributeSQL = "SELECT ProductCount, OptionName AS option_name, Type, AttributeTitle AS Title, AttributePrice AS Price, IFNULL(`Limit`, 0) AS AttributeLimit, IFNULL(LimitPrice, 0) AS LimitPrice FROM orderdetails_attribute_options WHERE OrderID=".$OrderID." AND OrderDetailsID=".$mOrderDetailsID;
-//				echo($mAttributeSQL); exit;
-				$mAttributeRes = mysql_query($mAttributeSQL);
-				if (mysql_num_rows($mAttributeRes)>0)
+				$mAttributeRes = dbAbstract::Execute($mAttributeSQL, 1);
+				if (dbAbstract::returnRowsCount($mAttributeRes)>0)
 				{
 					echo('<tr>');
                		echo('<td colspan="3">'); 
@@ -171,7 +169,7 @@ function updateOrder(id){
 					$mLimit = 0;
 					$mLimitPrice = 0;
 						
-					while ($mAttributeRow = mysql_fetch_object($mAttributeRes))
+					while ($mAttributeRow = dbAbstract::returnObject($mAttributeRes, 1))
 					{	
 						$mLimit = trim($mAttributeRow->AttributeLimit);
 						$mLimitPrice = trim($mAttributeRow->LimitPrice);
@@ -276,17 +274,11 @@ function updateOrder(id){
 								$Atribut_Opt=trim($ATrOptions[0]);
 								$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 								$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-								$OptionNameQry=mysql_query("select option_name,Type from attribute where ProductID=$ProductID AND TRIM(LOWER(Title))='".trim(strtolower($Atribut_Opt))."'");
-								$OptonNameRs=mysql_fetch_row($OptionNameQry);
-								
-								
-								
-								
-								
+								$OptionNameQry=dbAbstract::Execute("select option_name,Type from attribute where ProductID=$ProductID AND TRIM(LOWER(Title))='".trim(strtolower($Atribut_Opt))."'", 1);
+								$OptonNameRs=dbAbstract::returnRow($OptionNameQry, 1);								
 								
 								if($OptonNameRs[1]==2)
 								{  
-
 									if($OptonNameRs[0]!=$TemOptNme)
 									{ 
 										if($OptType==2)

@@ -15,7 +15,7 @@ if($_POST) {
 	extract($_POST);
 	
 	// to avoid duplicate insertion...
-	$sqlResult = @mysql_query("SELECT username FROM users WHERE username ='" .$user_name. "'");
+	$sqlResult = dbAbstract::Execute("SELECT username FROM users WHERE username ='" .$user_name. "'",1);
 	
 	$errMessage="";
 	if($first_name == '') {
@@ -30,7 +30,7 @@ if($_POST) {
 		 $errMessage = "Please enter phone number";
 	} else if($user_name == '') {
 		 $errMessage = "Please enter user name";
-	} else if(mysql_num_rows($sqlResult) > 0) {
+	} else if(dbAbstract::returnRowsCount($sqlResult,1) > 0) {
 		 $errMessage = "User name already exists. Please select another.";
 	} else if($password == '') {
 		 $errMessage = "Please enter password";
@@ -56,7 +56,7 @@ if($_POST) {
 		 $errMessage = "Please select number of licenses";
 	} else {
             $payment_profile_id ='';
-            $product_id = "3393209";
+            $product_id = $ChargifyResellerProduct;
             
 
             $chargify_customer_id = $chargify->createCustomer($first_name,$last_name,$email,$company_name,$city,$state,$zip,$country,$address,$phone);
@@ -66,7 +66,7 @@ if($_POST) {
             //echo "<pre>";print_r($chargify_subscription_id);exit;
             $credit_card_info = $chargify_subscription_id->subscription;
             
-            $check_card_data_Qry = mysql_fetch_object(mysql_query("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'"));
+            $check_card_data_Qry = dbAbstract::ExecuteObject("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
             
 
             
@@ -75,48 +75,48 @@ if($_POST) {
                 if(!empty($chargify_subscription_id->subscription))
                 {
                     $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address)
-                        values ('".mysql_real_escape_string(stripslashes($first_name))."','".mysql_real_escape_string(stripslashes($last_name))."',
-                        '".mysql_real_escape_string(stripslashes($email))."','$phone','".mysql_real_escape_string(stripslashes($user_name))."',
-                        '$password','".mysql_real_escape_string(stripslashes($country))."','".mysql_real_escape_string(stripslashes($state))."',
-                        '".mysql_real_escape_string(stripslashes($city))."','$zip','1','reseller','".mysql_real_escape_string(stripslashes($company_name))."',
-                        '".mysql_real_escape_string(stripslashes($company_logo_link))."','$number_of_licences','".$chargify_customer_id."','".$chargify_subscription_id->subscription->id."','".mysql_real_escape_string(stripslashes($address))."'
+                        values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."',
+                        '".dbAbstract::returnRealEscapedString(stripslashes($email))."','$phone','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',
+                        '$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."',
+                        '".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','reseller','".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
+                        '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."','$number_of_licences','".$chargify_customer_id."','".$chargify_subscription_id->subscription->id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."'
                         )";
 
-                        if($result = mysql_query($sql))  {
-                            $reseller_id = mysql_insert_id();
+                        $reseller_id = dbAbstract::Insert($sql, 1, 2);
+                        if($reseller_id > 0)  {
 
-                            mysql_query(
+                            dbAbstract::Insert(
                                         "INSERT INTO chargify_products
                                         SET user_id= '".addslashes($reseller_id)."'
-                                                ,product_id	= '3324722'
+                                                ,product_id	= '".$ChargifyStandardProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url='http://easyway-ordering.com/self-signup-wizard/index.php'
+                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
                                                 ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
-                                                ,hosted_page_url='https://easyway-ordering.chargify.com/h/3324722/subscriptions/new '
+                                                ,hosted_page_url='".$ChargifyURL."h/".$ChargifyStandardProduct."/subscriptions/new '
                                                 ,premium_account=0
                                                 ,status=1
-                                ");
-                            mysql_query(
+                                ",1);
+                            dbAbstract::Insert(
                                         "INSERT INTO chargify_products
                                         SET user_id= '".addslashes($reseller_id)."'
-                                                ,product_id	= '3353278'
+                                                ,product_id	= '".$ChargifyPremiumProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url='http://easyway-ordering.com/self-signup-wizard/index.php'
+                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
                                                 ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
-                                                ,hosted_page_url='https://easyway-ordering.chargify.com/h/3353278/subscriptions/new '
+                                                ,hosted_page_url='".$ChargifyURL."h/".$ChargifyPremiumProduct."/subscriptions/new '
                                                 ,premium_account=1
                                                 ,status=1
-                                ");
+                                ",1);
                             if(empty($check_card_data_Qry))
                             {
-                                mysql_query(
+                                dbAbstract::Insert(
                                         "INSERT INTO chargify_payment_method
                                         SET user_id= '".addslashes($reseller_id)."'
                                                 ,chargify_customer_id= '".addslashes($chargify_customer_id)."'
                                                 ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
-                                                ,card_number='".$credit_card_info->credit_card->masked_card_number."'"
+                                                ,card_number='".$credit_card_info->credit_card->masked_card_number."'",1
                                 );
                             }
 			if(!empty($_FILES['company_logo']['name']))
@@ -138,18 +138,16 @@ if($_POST) {
 					$image->resizeToWidth(100);
 					$image->save($uploadfile);
 					}*/
-		mysql_query("UPDATE users SET company_logo='$image_name' where id =".$reseller_id);						
+		dbAbstract::Update("UPDATE users SET company_logo='$image_name' where id =".$reseller_id,1);						
 			}
 			
 			for( $i= 1; $i<= $number_of_licences ; $i++ ) {
 				$license_key = rand(0,99999999);
 				$license_qry = "INSERT INTO licenses (  reseller_id, status,dated ) VALUES ( '$reseller_id', 'unused',".time()." )";
-				mysql_query( $license_qry );
-				$license_id = mysql_insert_id();				
+				$license_id  = dbAbstract::Insert($license_qry, 1, 2);
 				$license_key = $license_id.$license_key;
 				$license_update_qry_srt = "UPDATE licenses SET license_key ='".$license_key."' WHERE id = '".$license_id."'";
-				mysql_query( $license_update_qry_srt );
-				
+				dbAbstract::Update($license_update_qry_srt,1);
 			}
                         $errMessage="Reseller Added Successfully";
 		}	
@@ -170,9 +168,7 @@ setTimeout("leave()", 2000);
                     $errorMsg = $chargify_subscription_id['errors'];
                     $errMessage =  $errorMsg[0];
                 }
-        } else {
-			die("ERROR: ".mysql_error()."<br/><br/><br/><br/><br/><br/>"); 
-		}
+        } 
 	}
             
 }

@@ -1,7 +1,9 @@
-<? 
+<?php 
 	if(isset($_POST['action'])){
 		if($_POST['action']=='updatetip'){
-			$tip=currencyToNumber($_POST['tip']);	//preg_replace("/[^0-9.]+/","",$_POST['tip']); 
+                        //echo $_POST['tip'];
+			$tip=currencyToNumber($_POST['tip']);	//preg_replace("/[^0-9.]+/","",$_POST['tip']);
+                        
 			$cart->setdriver_tip($tip);
 		}elseif($_POST['action']=='redeemcoupon'){
 			$msg=	$cart->redeemcoupon($_POST['coupon_code']);
@@ -38,23 +40,21 @@
 <div id="bttn">
   <input type="button" value="Edit Order" onclick="javascript:window.location='?item=detail'">
 </div>
-<?
+<?php
 if($_POST['action']=='redeemcoupon'){
 	if($cart->coupon_discount>0){
 	?><script type="text/javascript">    
 		jQuery.facebox('<div class="alert-error"> Coupon discount of <b><?=$java_currency?><?=number_format($cart->coupon_discount,2)?></b> is applied</div>');
 	</script>
-    <?
+    <?php
 	}else {	
 	$_SESSION["abandoned_cart_error"]["redeemcoupon"] = array("msg" => $msg, "coupon_code" => $_POST['coupon_code']);
 	?>
 	<script type="text/javascript">
     	 jQuery.facebox('<div class="alert-error"><?= $msg ?></div>');
 	</script>
-	<? 
+	<?php 
 	}
-	
-//if($this->coupon_discount
 }
 ?> 
  

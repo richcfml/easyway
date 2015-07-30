@@ -1,11 +1,11 @@
 <?php 
-$InputCardNumber=mysql_real_escape_string($_POST['InputCardNumber']);
+$InputCardNumber=dbAbstract::returnRealEscapedString($_POST['InputCardNumber']);
 $InputExpDate="";
 $InputCvv="";
 if($objRestaurant->useValutec ==  2) //GO3
 {
-	$InputExpDate=mysql_real_escape_string($_POST['InputExpDate']);
-	$InputCvv=mysql_real_escape_string($_POST['InputCvv']);
+	$InputExpDate=dbAbstract::returnRealEscapedString($_POST['InputExpDate']);
+	$InputCvv=dbAbstract::returnRealEscapedString($_POST['InputCvv']);
 	if ($InputExpDate=='')
 	{
 		$InputExpDate= 122015;

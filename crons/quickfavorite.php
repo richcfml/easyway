@@ -4,6 +4,7 @@
 //Its a requirment from Client.
 require_once("../includes/config.php"); 
 $mUpdateQuery = "UPDATE repid_reordering_trace SET trace_status=2 WHERE trace_status=1 AND (UNIX_TIMESTAMP()-trace_date)>1800";
-mysql_query($mUpdateQuery);
-@mysql_close($mysql_conn);
+dbAbstract::Update($mUpdateQuery);
+//@mysql_close($mysql_conn);
 ?>
+<?php mysqli_close($mysqli);?>

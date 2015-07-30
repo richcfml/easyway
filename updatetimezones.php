@@ -2,12 +2,10 @@
 $mStr = "";
 if (isset($_POST["btnSubmit"]))
 {
-	set_time_limit(0);
-	$mysql_conn = mysql_connect("localhost","root","") or die( mysql_error()."  cannot connect...");
-	mysql_select_db("easywayordering",$mysql_conn);
+	require_once "includes/config.php";
 	
-	$mResult = mysql_query("SELECT id, name, rest_address, rest_city, rest_state FROM resturants");
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT id, name, rest_address, rest_city, rest_state FROM resturants");
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
 		$mCount = 0;
 		$mTimeZoneName = "US/Eastern";
@@ -19,7 +17,7 @@ if (isset($_POST["btnSubmit"]))
 		$mStr .= "<td style='width: 10%;'><strong>State</strong></td>";
 		$mStr .= "<td style='width: 15%;'><strong>Time Zone</strong></td>";
 		$mStr .= "</tr>";
-	 	while ($mRest=mysql_fetch_object($mResult)) 
+	 	while ($mRest=  dbAbstract::returnObject($mResult)) 
 		{
 			if ((trim(strtolower($mRest->rest_address))!="") && (trim(strtolower($mRest->rest_city))!="") && (trim(strtolower($mRest->rest_state))!=""))
 			{
@@ -68,42 +66,42 @@ if (isset($_POST["btnSubmit"]))
 					}
 					
 					$mSuccessFlag = 0;
-					$mTimeZoneIDRes = mysql_query("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='".trim(strtolower($mTimeZoneName))."'");
-					if (mysql_num_rows($mTimeZoneIDRes)>0)
+					$mTimeZoneIDRes = dbAbstract::Execute("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='".trim(strtolower($mTimeZoneName))."'");
+					if (dbAbstract::returnRowsCount($mTimeZoneIDRes)>0)
 					{
-						$mTimeZoneIDRow = mysql_fetch_object($mTimeZoneIDRes);
+						$mTimeZoneIDRow = dbAbstract::returnObject($mTimeZoneIDRes);
 						
 						if (is_numeric($mTimeZoneIDRow->id))
 						{
-							mysql_query("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
+							dbAbstract::Update("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
 							$mSuccessFlag = 1;
 						}
 					}
 					
 					if ($mSuccessFlag==0)
 					{
-						$mTimeZoneIDRes = mysql_query("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
-						if (mysql_num_rows($mTimeZoneIDRes)>0)
+						$mTimeZoneIDRes = dbAbstract::Execute("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
+						if (dbAbstract::returnRowsCount($mTimeZoneIDRes)>0)
 						{
-							$mTimeZoneIDRow = mysql_fetch_object($mTimeZoneIDRes);
+							$mTimeZoneIDRow = dbAbstract::returnObject($mTimeZoneIDRes);
 							
 							if (is_numeric($mTimeZoneIDRow->id))
 							{
-								mysql_query("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
+								dbAbstract::Update("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
 							}
 						}
 					}
 				}	
 				else
 				{
-					$mTimeZoneIDRes = mysql_query("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
-					if (mysql_num_rows($mTimeZoneIDRes)>0)
+					$mTimeZoneIDRes = dbAbstract::Execute("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
+					if (dbAbstract::returnRowsCount($mTimeZoneIDRes)>0)
 					{
-						$mTimeZoneIDRow = mysql_fetch_object($mTimeZoneIDRes);
+						$mTimeZoneIDRow = dbAbstract::returnObject($mTimeZoneIDRes);
 						
 						if (is_numeric($mTimeZoneIDRow->id))
 						{
-							mysql_query("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
+							dbAbstract::Update("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
 							$mSuccessFlag = 1;
 						}
 					}					
@@ -111,14 +109,14 @@ if (isset($_POST["btnSubmit"]))
 			}
 			else
 			{
-				$mTimeZoneIDRes = mysql_query("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
-				if (mysql_num_rows($mTimeZoneIDRes)>0)
+				$mTimeZoneIDRes = dbAbstract::Execute("SELECT id FROM times_zones WHERE TRIM(LOWER(time_zone))='US/eastern'");
+				if (dbAbstract::returnRowsCount($mTimeZoneIDRes)>0)
 				{
-					$mTimeZoneIDRow = mysql_fetch_object($mTimeZoneIDRes);
+					$mTimeZoneIDRow = dbAbstract::returnObject($mTimeZoneIDRes);
 					
 					if (is_numeric($mTimeZoneIDRow->id))
 					{
-						mysql_query("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
+						dbAbstract::Update("UPDATE resturants SET time_zone_id=".$mTimeZoneIDRow->id." WHERE id=".$mRest->id);
 						$mSuccessFlag = 1;
 					}
 				}
@@ -151,3 +149,4 @@ if (isset($_POST["btnSubmit"]))
 		<input type="submit" value="Update Time Zones" style="width: 150px;" id="btnSubmit" name="btnSubmit" />
 	</form>
 </body>
+<?php mysqli_close($mysqli);?>

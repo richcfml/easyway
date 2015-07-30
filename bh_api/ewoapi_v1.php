@@ -18,9 +18,8 @@ ini_set('max_execution_time', 500);
 $mRecordCount = 0;
 $mMaxResults = 10000;
 $mReturn = array();
-
-$mVerifyRequest = 1; //verifyRequest();
-
+$_GET = array_change_key_case($_GET, CASE_LOWER);
+$mVerifyRequest = verifyRequest();
 if ($mVerifyRequest==1) //Valid Session
 {
     if (isset($_GET["max_results"]))
@@ -31,1292 +30,493 @@ if ($mVerifyRequest==1) //Valid Session
         }
     }
     
-    if (isset($_GET["getrestaurants"]))
+    $mUserID = 0;
+    $mInvalidUser = 0;
+    if (isset($_GET["uid"]))
     {
-        $mLat = "";
-        $mLong = "";
-
-        if (isset($_GET['deliversto']))
+        $mUserID = $_GET["uid"];
+        $mSQL = "SELECT id FROM bh_sso_user WHERE id=".$mUserID;
+        $mResult = dbAbstract::ExecuteObject($mSQL);
+        if ($mResult)
         {
-            if (!isset($_GET['latlong']))
-            {
-                $getaddress = $_GET['deliversto'];
-                $addresslink = str_replace(' ', '+', $getaddress);
-                $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
-                $array = (json_decode($result, true));
-                if (!empty($array['results'][0]['geometry']['location']['lat']))
-                {
-                    $mLat = $array['results'][0]['geometry']['location']['lat'];
-                    $mLong = $array['results'][0]['geometry']['location']['lng'];
-                }
-            }
-            else
-            {
-                $mTmp = explode(",", $_REQUEST["deliversto"]);
-                $mLat = trim($mTmp[0]);
-                $mLong = trim($mTmp[1]);
-            }
-        }
-        else if (isset($_GET['user_address']))
-        {
-            if (!isset($_GET['latlong']))
-            {
-                $getaddress = $_GET['user_address'];
-                $addresslink = str_replace(' ', '+', $getaddress);
-                $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
-                $array = (json_decode($result, true));
-                if (!empty($array['results'][0]['geometry']['location']['lat']))
-                {
-                    $mLat = $array['results'][0]['geometry']['location']['lat'];
-                    $mLong = $array['results'][0]['geometry']['location']['lng'];
-                }
-            }
-            else
-            {
-                $mTmp = explode(",", $_REQUEST["user_address"]);
-                $mLat = trim($mTmp[0]);
-                $mLong = trim($mTmp[1]);
-            }
-        }
-
-        $mRes = mysql_query("SELECT * FROM resturants WHERE rest_open_close = 1 AND status = 1 AND bh_restaurant = 1 ORDER BY name");
-        while ($rest_url = mysql_fetch_object($mRes))
-        {
-            doProcessing($rest_url, $mLat, $mLong);
-        }
-    }
-    else if (isset($_GET["getrestaurantdetails"]))
-    {
-        if (isset($_GET["slugs"])) //Comma Separate Slugs
-        {
-            $mSlugs = explode(",", $_GET["slugs"]);
-            for ($loopCount=0; $loopCount<count($mSlugs); $loopCount++)
-            {
-                $mUserID = 0;
-                $mLiked = 2;
-                $mFavorite = 2;
-                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($mSlugs[$loopCount]))."' AND status = 1 AND bh_restaurant = 1";
-                $rest_url = mysql_fetch_object(mysql_query($mSQL));
-                if ($rest_url)
-                {
-                    if (isset($_GET["uid"]))
-                    {
-                        $mUserID = $_GET["uid"];
-                    }
-
-                    if (isset($_GET["email"]))
-                    {
-                        $mSQL = "SELECT id FROM bh_sso_user WHERE email='".$_GET["email"]."'";
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            $mUserID = $mResult->id;
-                        }
-                    }
-
-                    if ($mUserID != 0)
-                    {
-                        $mSQL = "SELECT IFNULL(Rating, 2) AS Rating, IFNULL(favorite, 2) AS favorite FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND user_id=".$mUserID;
-
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            $mLiked = $mResult->Rating;
-                            $mFavorite = $mResult->favorite;
-                        }
-                    }
-
-                    if ($mLiked == 0)
-                    {
-                        $mLiked = "false";
-                    }
-                    else if ($mLiked == 1)
-                    {
-                        $mLiked = "true";
-                    }
-                    else
-                    {
-                        $mLiked = "no input";
-                    }
-
-                    if ($mFavorite == 0)
-                    {
-                        $mFavorite = "no";
-                    }
-                    else if ($mFavorite == 1)
-                    {
-                        $mFavorite = "yes";
-                    }
-                    else
-                    {
-                        $mFavorite = "no input";
-                    }
-                    
-                    $day_name=date('l');
-                    if($day_name == 'Monday')
-                    {
-                        $day_of_week = 0;
-                    }
-                    else if($day_name == 'Tuesday')
-                    {
-                        $day_of_week = 1;
-                    }
-                    else if($day_name == 'Wednesday')
-                    {
-                        $day_of_week = 2;
-                    }
-                    else if($day_name == 'Thursday')
-                    {
-                        $day_of_week = 3;
-                    }
-                    else if($day_name == 'Friday')
-                    {
-                        $day_of_week = 4;
-                    }
-                    else if($day_name == 'Saturday')
-                    {
-                        $day_of_week = 5;
-                    }
-                    else if($day_name == 'Sunday')
-                    {
-                        $day_of_week = 6;
-                    }
-
-                    $business_hours =  mysql_fetch_object(mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_url->id));
-                    $timezoneRs = mysql_fetch_array(mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_url->time_zone_id));
-                    date_default_timezone_set($timezoneRs['time_zone']);
-                    $current_time=date("Hi",time());
-                    $mOpen = "n";
-                    if ($current_time >= $business_hours->open && $current_time <= $business_hours->close)
-                    {
-                        $mOpen = "y";
-                    }
-
-                    $mLikeCount = 0;
-                    $mDislikeCount = 0;
-                    $mLikePercentage = 0;
-                    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS LikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 1";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mLikeCount = $mResult->LikeCount;
-                    }
-
-                    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS DislikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 0";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mDislikeCount = $mResult->DislikeCount;
-                    }
-
-                    if (($mLikeCount==0) && ($mDislikeCount==0))
-                    {
-                        $mLikePercentage = 0;
-                    }
-                    else
-                    {
-                        $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
-                    }
-
-                    $mLikeRating = array();
-                    $mLikeRating[] = array(
-                        "like_count" => $mLikeCount,
-                        "dislike_count" => $mDislikeCount,
-                        "like_percentage" => $mLikePercentage
-                            );
-                    
-                    $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$rest_url->id." AND LOWER(item_title)='signature sandwich'";
-                    $mResSigSan = mysql_fetch_object(mysql_query($mSQLSigSan));
-                    $mSignatureSandwich = "no";
-                    if ($mResSigSan)
-                    {
-                        if ($mResSigSan->SignatureSandwiches>0)
-                        {
-                            $mSignatureSandwich = "yes";
-                        }
-                    }
-                    
-                    if ($mUserID==0)
-                    {
-                        if (isset($_GET["open"]))
-                        {
-                            if ($mOpen=="y")
-                            {
-                                $mReturn[] = array(
-                                        "name" => $rest_url->name,
-                                        "slug" => $rest_url->url_name,
-                                        "email" => $rest_url->email,
-                                        "address" => $rest_url->rest_address,
-                                        "Phone" => $rest_url->phone,
-                                        "Fax" => $rest_url->fax,
-                                        "deliver_charges" => $rest_url->delivery_charges,
-                                        "min_total" => $rest_url->order_minimum,
-                                        "facebookURL" => $rest_url->facebookLink,
-                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                        "domain" => $rest_url->URL,
-                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                        "announcement" => $rest_url->announcement,
-                                        "open_now" => $mOpen,
-                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                        "hours" => allBusinessHours($rest_url->id),
-                                        "signature_sandwich" => $mSignatureSandwich,
-                                        "like_rating" => $mLikeRating,
-                                        "satisfactionPercentage" => $mLikePercentage,
-                                        "menu" => getMenus($rest_url->id)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            $mReturn[] = array(
-                                        "name" => $rest_url->name,
-                                        "slug" => $rest_url->url_name,
-                                        "email" => $rest_url->email,
-                                        "address" => $rest_url->rest_address,
-                                        "Phone" => $rest_url->phone,
-                                        "Fax" => $rest_url->fax,
-                                        "deliver_charges" => $rest_url->delivery_charges,
-                                        "min_total" => $rest_url->order_minimum,
-                                        "facebookURL" => $rest_url->facebookLink,
-                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                        "domain" => $rest_url->URL,
-                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                        "announcement" => $rest_url->announcement,
-                                        "open_now" => $mOpen,
-                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                        "hours" => allBusinessHours($rest_url->id),
-                                        "signature_sandwich" => $mSignatureSandwich,
-                                        "like_rating" => $mLikeRating,
-                                        "satisfactionPercentage" => $mLikePercentage,
-                                        "menu" => getMenus($rest_url->id)
-                                    );
-                        }
-                    }
-                    else
-                    {
-                        if (isset($_GET["open"]))
-                        {
-                            if ($mOpen=="y")
-                            {
-                                $mReturn[] = array(
-                                    "name" => $rest_url->name,
-                                    "slug" => $rest_url->url_name,
-                                    "email" => $rest_url->email,
-                                    "address" => $rest_url->rest_address,
-                                    "Phone" => $rest_url->phone,
-                                    "Fax" => $rest_url->fax,
-                                    "deliver_charges" => $rest_url->delivery_charges,
-                                    "min_total" => $rest_url->order_minimum,
-                                    "facebookURL" => $rest_url->facebookLink,
-                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                    "domain" => $rest_url->URL,
-                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                    "announcement" => $rest_url->announcement,
-                                    "open_now" => $mOpen,
-                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                    "hours" => allBusinessHours($rest_url->id),
-                                    "signature_sandwich" => $mSignatureSandwich,
-                                    "like_rating" => $mLikeRating,
-                                    "satisfaction" => $mLiked,
-                                    "satisfactionPercentage" => $mLikePercentage,
-                                    "favorite" => $mFavorite,
-                                    "menu" => getMenus($rest_url->id)
-                                );
-                            }
-                        }
-                        else
-                        {
-                            $mReturn[] = array(
-                                    "name" => $rest_url->name,
-                                    "slug" => $rest_url->url_name,
-                                    "email" => $rest_url->email,
-                                    "address" => $rest_url->rest_address,
-                                    "Phone" => $rest_url->phone,
-                                    "Fax" => $rest_url->fax,
-                                    "deliver_charges" => $rest_url->delivery_charges,
-                                    "min_total" => $rest_url->order_minimum,
-                                    "facebookURL" => $rest_url->facebookLink,
-                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                    "domain" => $rest_url->URL,
-                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                    "announcement" => $rest_url->announcement,
-                                    "open_now" => $mOpen,
-                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                    "hours" => allBusinessHours($rest_url->id),
-                                    "signature_sandwich" => $mSignatureSandwich,
-                                    "like_rating" => $mLikeRating,
-                                    "satisfaction" => $mLiked,
-                                    "satisfactionPercentage" => $mLikePercentage,
-                                    "favorite" => $mFavorite,
-                                    "menu" => getMenus($rest_url->id)
-                                );
-                        }
-                    }
-                }
-
-            }
+            $mUserID = $mResult->id;
         }
         else
         {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slugs not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
+            $mInvalidUser = 1;
         }
     }
-    else if (isset($_GET["getfullhours"]))
+    else if (isset($_GET["email"]))
     {
-        if (isset($_GET["slugs"])) //Comma Separate Slugs
+        $mSQL = "SELECT id FROM bh_sso_user WHERE email='".$_GET["email"]."'";
+        $mResult = dbAbstract::ExecuteObject($mSQL);
+        if ($mResult)
         {
-            $mSlugs = explode(",", $_GET["slugs"]);
-            for ($loopCount=0; $loopCount<count($mSlugs); $loopCount++)
-            {
-                $mUserID = 0;
-                $mLiked = 2;
-                $mFavorite = 2;
-
-                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($mSlugs[$loopCount]))."'";
-                $rest_url = mysql_fetch_object(mysql_query($mSQL));
-                if ($rest_url)
-                {
-                    if (isset($_GET["uid"]))
-                    {
-                        $mUserID = $_GET["uid"];
-                    }
-
-                    if (isset($_GET["email"]))
-                    {
-                        $mSQL = "SELECT id FROM bh_sso_user WHERE email='".$_GET["email"]."'";
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            $mUserID = $mResult->id;
-                        }
-                    }
-
-                    if ($mUserID != 0)
-                    {
-                        $mSQL = "SELECT IFNULL(Rating, 2) AS Rating, IFNULL(favorite, 2) AS favorite FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND user_id=".$mUserID;
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            $mLiked = $mResult->Rating;
-                            $mFavorite = $mResult->favorite;
-                        }
-                    }
-
-                    if ($mLiked == 0)
-                    {
-                        $mLiked = "false";
-                    }
-                    else if ($mLiked == 1)
-                    {
-                        $mLiked = "true";
-                    }
-                    else
-                    {
-                        $mLiked = "no input";
-                    }
-
-                    if ($mFavorite == 0)
-                    {
-                        $mFavorite = "no";
-                    }
-                    else if ($mFavorite == 1)
-                    {
-                        $mFavorite = "yes";
-                    }
-                    else
-                    {
-                        $mFavorite = "no input";
-                    }
-
-                    if ($mUserID==0)
-                    {
-                        $mReturn[] = array(
-                                "name" => $rest_url->name,
-                                "hours" => allBusinessHours($rest_url->id)
-                            );
-                    }
-                    else
-                    {
-                        $mReturn[] = array(
-                                "name" => $rest_url->name,
-                                "hours" => allBusinessHours($rest_url->id),
-                                "satisfaction" => $mLiked,
-                                "favorite" => $mFavorite
-                            );
-                    }
-                }
-
-            }
+            $mUserID = $mResult->id;
         }
         else
         {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slugs not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
+            $mInvalidUser = 1;
         }
     }
-    else if (isset($_GET["featured"]))
+    
+    if ($mInvalidUser==1)
     {
-        $mSQL = "SELECT * FROM resturants WHERE status = 1 AND bh_restaurant = 1 AND bh_featured = 1 ORDER BY name";
-        $mResFeatured = mysql_query($mSQL);
-        
-        while ($rest_url = mysql_fetch_object($mResFeatured))
-        {
-            $day_name=date('l');
-            if($day_name == 'Monday')
-            {
-                $day_of_week = 0;
-            }
-            else if($day_name == 'Tuesday')
-            {
-                $day_of_week = 1;
-            }
-            else if($day_name == 'Wednesday')
-            {
-                $day_of_week = 2;
-            }
-            else if($day_name == 'Thursday')
-            {
-                $day_of_week = 3;
-            }
-            else if($day_name == 'Friday')
-            {
-                $day_of_week = 4;
-            }
-            else if($day_name == 'Saturday')
-            {
-                $day_of_week = 5;
-            }
-            else if($day_name == 'Sunday')
-            {
-                $day_of_week = 6;
-            }
-
-            $business_hours =  mysql_fetch_object(mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_url->id));
-            $timezoneRs = mysql_fetch_array(mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_url->time_zone_id));
-            date_default_timezone_set($timezoneRs['time_zone']);
-            $current_time=date("Hi",time());
-            $mOpen = "n";
-            if ($current_time >= $business_hours->open && $current_time <= $business_hours->close)
-            {
-                $mOpen = "y";
-            }
-
-            $mLikeCount = 0;
-            $mDislikeCount = 0;
-            $mLikePercentage = 0;
-            $mSQL = "SELECT IFNULL(COUNT(*), 0) AS LikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 1";
-            $mResult = mysql_fetch_object(mysql_query($mSQL));
-            if ($mResult)
-            {
-                $mLikeCount = $mResult->LikeCount;
-            }
-
-            $mSQL = "SELECT IFNULL(COUNT(*), 0) AS DislikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 0";
-            $mResult = mysql_fetch_object(mysql_query($mSQL));
-            if ($mResult)
-            {
-                $mDislikeCount = $mResult->DislikeCount;
-            }
-
-            if (($mLikeCount==0) && ($mDislikeCount==0))
-            {
-                $mLikePercentage = 0;
-            }
-            else
-            {
-                $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
-            }
-
-            $mLikeRating = array();
-            $mLikeRating[] = array(
-                "like_count" => $mLikeCount,
-                "dislike_count" => $mDislikeCount,
-                "like_percentage" => $mLikePercentage
-                    );
-
-            $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$rest_url->id." AND LOWER(item_title)='signature sandwich'";
-            $mResSigSan = mysql_fetch_object(mysql_query($mSQLSigSan));
-            $mSignatureSandwich = "no";
-            if ($mResSigSan)
-            {
-                if ($mResSigSan->SignatureSandwiches>0)
-                {
-                    $mSignatureSandwich = "yes";
-                }
-            }
-
-            if (isset($_GET["open"]))
-            {
-                if ($mOpen=="y")
-                {
-                    if (isset($_REQUEST["detail"]))
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                "name" => $rest_url->name,
-                                "slug" => $rest_url->url_name,
-                                "email" => $rest_url->email,
-                                "address" => $rest_url->rest_address,
-                                "Phone" => $rest_url->phone,
-                                "Fax" => $rest_url->fax,
-                                "deliver_charges" => $rest_url->delivery_charges,
-                                "min_total" => $rest_url->order_minimum,
-                                "facebookURL" => $rest_url->facebookLink,
-                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                "domain" => $rest_url->URL,
-                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                "announcement" => $rest_url->announcement,
-                                "open_now" => $mOpen,
-                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                "hours" => allBusinessHours($rest_url->id),
-                                "signature_sandwich" => $mSignatureSandwich,
-                                "like_rating" => $mLikeRating,
-                                "satisfactionPercentage" => $mLikePercentage,
-                                "menu" => getMenus($rest_url->id)
-                            );
-                        }
-                    }
-                    else
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                        "slug" => $rest_url->url_name
-                                    );
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (isset($_REQUEST["detail"]))
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                            "name" => $rest_url->name,
-                            "slug" => $rest_url->url_name,
-                            "email" => $rest_url->email,
-                            "address" => $rest_url->rest_address,
-                            "Phone" => $rest_url->phone,
-                            "Fax" => $rest_url->fax,
-                            "deliver_charges" => $rest_url->delivery_charges,
-                            "min_total" => $rest_url->order_minimum,
-                            "facebookURL" => $rest_url->facebookLink,
-                            "url" => $SiteUrl.$rest_url->url_name."/",
-                            "domain" => $rest_url->URL,
-                            "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                            "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                            "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                            "announcement" => $rest_url->announcement,
-                            "open_now" => $mOpen,
-                            "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                            "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                            "hours" => allBusinessHours($rest_url->id),
-                            "signature_sandwich" => $mSignatureSandwich,
-                            "like_rating" => $mLikeRating,
-                            "satisfactionPercentage" => $mLikePercentage,
-                            "menu" => getMenus($rest_url->id)
-                        );
-                    }
-                }
-                else
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                                    "slug" => $rest_url->url_name
-                                );
-                    }
-                }
-            }
-        }
-    }
-    else if (isset($_GET["like"]))
-    {
-        if (isset($_GET["slug"]) && (isset($_GET["email"]) || isset($_GET["uid"])))
-        {
-            $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-            $rest_url = mysql_fetch_object(mysql_query($mSQL));
-            if ($rest_url)
-            {
-                if (isset($_GET["uid"]))
-                {
-                    $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id;
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        if ($mResult->RecordCount>0)
-                        {
-                            mysql_query("UPDATE bh_rest_rating SET Rating=1 WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id);
-                        }
-                        else
-                        {
-                            mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$_GET["uid"].", 2, 1)");
-                        }
-
-                         $mReturn = array(
-                                "successDescription" => "Restaurant liked successfully"
-                            );
-                    }
-                }
-                else if (isset($_GET["email"]))
-                {
-                    $mSQL = "SELECT id FROM bh_sso_user WHERE email='".$_GET["email"]."'";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mUID = $mResult->id;
-                        $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id;
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            if ($mResult->RecordCount>0)
-                            {
-                                mysql_query("UPDATE bh_rest_rating SET Rating=1 WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id);
-                            }
-                            else
-                            {
-                                mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$mUID.", 2, 1)");
-                            }
-                            $mReturn = array(
-                                "successDescription" => "Restaurant liked successfully"
-                            );
-                        }
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slug or user not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
-        }
-    }
-    else if (isset($_GET["unlike"]))
-    {
-        if (isset($_GET["slug"]) && (isset($_GET["email"]) || isset($_GET["uid"])))
-        {
-            $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-            $rest_url = mysql_fetch_object(mysql_query($mSQL));
-            if ($rest_url)
-            {
-                if (isset($_GET["uid"]))
-                {
-                    $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id;
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        if ($mResult->RecordCount>0)
-                        {
-                            mysql_query("UPDATE bh_rest_rating SET Rating=2 WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id);
-                        }
-                        else
-                        {
-                            mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$_GET["uid"].", 2, 2)");
-                        }
-                        $mReturn = array(
-                                "successDescription" => "Restaurant un-liked successfully"
-                            );
-                    }
-                }
-                else if (isset($_GET["email"]))
-                {
-                    $mSQL = "SELECT id FROM bh_sso_user WHERE email = '".$_GET["email"]."'";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mUID = $mResult->id;
-                        $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id;
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            if ($mResult->RecordCount>0)
-                            {
-                                mysql_query("UPDATE bh_rest_rating SET Rating=2 WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id);
-                            }
-                            else
-                            {
-                                mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$mUID.", 2, 2)");
-                            }
-                            $mReturn = array(
-                                "successDescription" => "Restaurant un-liked successfully"
-                            );
-                        }
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slug or user not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
-        }
-    }
-    else if (isset($_GET["dislike"]))
-    {
-        if (isset($_GET["slug"]) && (isset($_GET["email"]) || isset($_GET["uid"])))
-        {
-            $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-            $rest_url = mysql_fetch_object(mysql_query($mSQL));
-            if ($rest_url)
-            {
-                if (isset($_GET["uid"]))
-                {
-                    $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id;
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        if ($mResult->RecordCount>0)
-                        {
-                            mysql_query("UPDATE bh_rest_rating SET Rating=0 WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id);
-                        }
-                        else
-                        {
-                            mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$_GET["uid"].", 2, 0)");
-                        }
-                        $mReturn = array(
-                                "successDescription" => "Restaurant disliked successfully"
-                            );
-                    }
-                }
-                else if (isset($_GET["email"]))
-                {
-                    $mSQL = "SELECT id FROM bh_sso_user WHERE email = '".$_GET["email"]."'";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mUID = $mResult->id;
-                        $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id;
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            if ($mResult->RecordCount>0)
-                            {
-                                mysql_query("UPDATE bh_rest_rating SET Rating=0 WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id);
-                            }
-                            else
-                            {
-                                mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$mUID.", 2, 0)");
-                            }
-                            $mReturn = array(
-                                "successDescription" => "Restaurant disliked successfully"
-                            );
-                        }
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slug or user not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
-        }
-    }
-    else if (isset($_GET["undislike"]))
-    {
-        if (isset($_GET["slug"]) && (isset($_GET["email"]) || isset($_GET["uid"])))
-        {
-            $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-            $rest_url = mysql_fetch_object(mysql_query($mSQL));
-            if ($rest_url)
-            {
-                if (isset($_GET["uid"]))
-                {
-                    $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id;
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        if ($mResult->RecordCount>0)
-                        {
-                            mysql_query("UPDATE bh_rest_rating SET Rating=2 WHERE user_id = ".$_GET["uid"]." AND rest_id=".$rest_url->id);
-                        }
-                        else
-                        {
-                            mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$_GET["uid"].", 2, 2)");
-                        }
-                        $mReturn = array(
-                                "successDescription" => "Restaurant un-disliked successfully"
-                            );
-                    }
-                }
-                else if (isset($_GET["email"]))
-                {
-                    $mSQL = "SELECT id FROM bh_sso_user WHERE email = '".$_GET["email"]."'";
-                    $mResult = mysql_fetch_object(mysql_query($mSQL));
-                    if ($mResult)
-                    {
-                        $mUID = $mResult->id;
-                        $mSQL = "SELECT COUNT(*) AS RecordCount FROM bh_rest_rating WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id;
-                        $mResult = mysql_fetch_object(mysql_query($mSQL));
-                        if ($mResult)
-                        {
-                            if ($mResult->RecordCount>0)
-                            {
-                                mysql_query("UPDATE bh_rest_rating SET Rating=2 WHERE user_id = ".$mUID." AND rest_id=".$rest_url->id);
-                            }
-                            else
-                            {
-                                mysql_query("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", ".$mUID.", 2, 2)");
-                            }
-                            $mReturn = array(
-                                "successDescription" => "Restaurant un-disliked successfully"
-                            );
-                        }
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slug or user not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
-        }
-    }
-    else if (isset($_GET["favorites"]))
-    {
-        if (isset($_GET["email"]) || isset($_GET["uid"]))
-        {   
-            if(isset($_GET["email"]))
-            {
-                $qry = "select * from bh_sso_user WHERE email = '". $_GET['email'] ."'";
-            }
-            else if($_GET["uid"])
-            {
-                $qry = "select * from bh_sso_user WHERE id = '". $_GET['uid'] ."'";
-            }
-            $mResult = mysql_query($qry);
-            $userFavoriteid = mysql_fetch_object(mysql_query($qry));
-            $userResult = mysql_num_rows($mResult);
-            if($userResult > 0)
-            {
-                if (!empty($userFavoriteid->id))
-                {
-                    $mUserID = $userFavoriteid->id;
-                    $mysqlqry = mysql_query("select rest_id from bh_rest_rating WHERE user_id = '". $userFavoriteid->id ."' and favorite = 1");
-                    $countFavorite = mysql_num_rows($mysqlqry);
-                    if($countFavorite > 0)
-                    {
-                        while($restIDS = mysql_fetch_object($mysqlqry))
-                        {
-                            $restID.=$restIDS->rest_id .",";
-                        }
-
-                        $restID = substr($restID,0,-1);
-
-                        $mysqlqry = mysql_query("select * from resturants WHERE id in(". $restID .") ORDER BY name");
-                        while($rest_url = mysql_fetch_object($mysqlqry))
-                        {
-                            $day_name=date('l');
-                            if($day_name == 'Monday')
-                            {
-                                $day_of_week = 0;
-                            }
-                            else if($day_name == 'Tuesday')
-                            {
-                                $day_of_week = 1;
-                            }
-                            else if($day_name == 'Wednesday')
-                            {
-                                $day_of_week = 2;
-                            }
-                            else if($day_name == 'Thursday')
-                            {
-                                $day_of_week = 3;
-                            }
-                            else if($day_name == 'Friday')
-                            {
-                                $day_of_week = 4;
-                            }
-                            else if($day_name == 'Saturday')
-                            {
-                                $day_of_week = 5;
-                            }
-                            else if($day_name == 'Sunday')
-                            {
-                                $day_of_week = 6;
-                            }
-
-                            $business_hours =  mysql_fetch_object(mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_url->id));
-                            $timezoneRs = mysql_fetch_array(mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_url->time_zone_id));
-                            date_default_timezone_set($timezoneRs['time_zone']);
-                            $current_time=date("Hi",time());
-                            $mOpen = "n";
-                            if ($current_time >= $business_hours->open && $current_time <= $business_hours->close)
-                            {
-                                $mOpen = "y";
-                            }
-
-                            $mLikeCount = 0;
-                            $mDislikeCount = 0;
-                            $mLikePercentage = 0;
-                            $mSQL = "SELECT IFNULL(COUNT(*), 0) AS LikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 1";
-                            $mResult = mysql_fetch_object(mysql_query($mSQL));
-                            if ($mResult)
-                            {
-                                $mLikeCount = $mResult->LikeCount;
-                            }
-
-                            $mSQL = "SELECT IFNULL(COUNT(*), 0) AS DislikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 0";
-                            $mResult = mysql_fetch_object(mysql_query($mSQL));
-                            if ($mResult)
-                            {
-                                $mDislikeCount = $mResult->DislikeCount;
-                            }
-
-                            if (($mLikeCount==0) && ($mDislikeCount==0))
-                            {
-                                $mLikePercentage = 0;
-                            }
-                            else
-                            {
-                                $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
-                            }
-
-                            $mLikeRating = array();
-                            $mLikeRating[] = array(
-                                "like_count" => $mLikeCount,
-                                "dislike_count" => $mDislikeCount,
-                                "like_percentage" => $mLikePercentage
-                                    );
-
-                            $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$rest_url->id." AND LOWER(item_title)='signature sandwich'";
-                            $mResSigSan = mysql_fetch_object(mysql_query($mSQLSigSan));
-                            $mSignatureSandwich = "no";
-                            if ($mResSigSan)
-                            {
-                                if ($mResSigSan->SignatureSandwiches>0)
-                                {
-                                    $mSignatureSandwich = "yes";
-                                }
-                            }
-
-                            $mLiked = 2;
-                            $mFavorite = 2;
-
-                            $mSQL = "SELECT IFNULL(Rating, 2) AS Rating, IFNULL(favorite, 2) AS favorite FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND user_id=".$mUserID;
-                            $mResult = mysql_fetch_object(mysql_query($mSQL));
-                            if ($mResult)
-                            {
-                                $mLiked = $mResult->Rating;
-                                $mFavorite = $mResult->favorite;
-                            }
-
-                            if ($mLiked == 0)
-                            {
-                                $mLiked = "false";
-                            }
-                            else if ($mLiked == 1)
-                            {
-                                $mLiked = "true";
-                            }
-                            else
-                            {
-                                $mLiked = "no input";
-                            }
-
-                            if ($mFavorite == 0)
-                            {
-                                $mFavorite = "no";
-                            }
-                            else if ($mFavorite == 1)
-                            {
-                                $mFavorite = "yes";
-                            }
-                            else
-                            {
-                                $mFavorite = "no input";
-                            }
-
-                            $orderDetailsArray[] = array("name" => $rest_url->name,
-                                                        "slug" => $rest_url->url_name,
-                                                        "email" => $rest_url->email,
-                                                        "address" => $rest_url->rest_address,
-                                                        "Phone" => $rest_url->phone,
-                                                        "Fax" => $rest_url->fax,
-                                                        "deliver_charges" => $rest_url->delivery_charges,
-                                                        "min_total" => $rest_url->order_minimum,
-                                                        "facebookURL" => $rest_url->facebookLink,
-                                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                                        "domain" => $rest_url->URL,
-                                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                        "announcement" => $rest_url->announcement,
-                                                        "open_now" => $mOpen,
-                                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                        "hours" => allBusinessHours($rest_url->id),
-                                                        "signature_sandwich" => $mSignatureSandwich,
-                                                        "like_rating" => $mLikeRating,
-                                                        "satisfaction" => $mLiked,
-                                                        "satisfactionPercentage" => $mLikePercentage,
-                                                        "favorite" => $mFavorite,
-                                                        "menu" => getMenus($rest_url->id));
-                          
-                        }
-                        $arrayCount = count($orderDetailsArray);
-                        for($j=0; $j<=$arrayCount-1;$j++)
-                        {
-                            $mReturn[$userFavoriteid->id][$j] = $orderDetailsArray[$j];
-                        }
-                    }
-                    else
-                    {
-                        $mReturn = errorFunction("","No Restaurant in your favorite list.","No Restaurant in your favorite list.","ERROR!");
-                    }
-                }
-            }
-            else
-            {
-                $mReturn = errorFunction("","User id not exist.","User id not exist.","ERROR!");
-            }
-        }
-        else
-        {
-            $mReturn = errorFunction("","Inavlid call, user id not specified.","Inavlid call.","ERROR!");
-        }
-    }
-    else if (isset($_GET["addfavorite"]))
-    {
-        $sso_email = $_GET['email'];
-        $res_url = $_GET['slug'];
-
-
-        if (isset($_GET["email"]) || isset($_GET["uid"]))
-        {
-            $mVerifyRequest = verifyRequest();
-            if(isset($_GET["email"]))
-            {
-                $qry = "select id from bh_sso_user WHERE email = '". $sso_email."'";
-            }
-            else if(isset($_GET["uid"]))
-            {
-                $qry = "select id from bh_sso_user WHERE user_id = '". $_GET["uid"]."'";
-            }
-            $count_user = mysql_query($qry);
-            $userResult = mysql_fetch_object(mysql_query($qry));
-
-
-            $res = "select id from resturants WHERE url_name = '".$res_url."'";
-            $count_rest  = mysql_query($res);
-            $resResult = mysql_fetch_object(mysql_query($res));
-
-            if(mysql_num_rows($count_user)==0 )
-            {
-                 $mReturn = errorFunction("","User id not exist.","User id not exist","ERROR!");
-            }
-
-            else if(mysql_num_rows($count_rest)==0 )
-            {
-                 $mReturn = errorFunction("","No restaurant exist with this slug name.","No restaurant exist with this slug name.","ERROR!");
-            }
-            else
-            {
-                $mSQL = "SELECT * FROM bh_rest_rating WHERE rest_id= $resResult->id AND user_id = $userResult->id";
-                $user_qry  = mysql_query($mSQL);
-                $favoriteRes = mysql_fetch_object(mysql_query($mSQL));
-
-                if(mysql_num_rows($user_qry)>0 )
-                {
-                    if($favoriteRes->favorite == 1)
-                    {
-                        $mReturn[] = array("errorMessage" => "You Have already marked this restaurant as your favourite!");
-                    }
-                    else
-                    {
-                        $record="Update bh_rest_rating SET favorite='1' where user_id=".$userResult->id." and rest_id=".$resResult->id."";
-                        $sso_id = mysql_query($record);
-                        $mReturn[] = array("successDescription" => "Restaurant has been added in your favorite list!");
-                    }
-                }
-                else
-                {
-                    $record="INSERT INTO bh_rest_rating SET
-                              user_id=".$userResult->id."
-                            , rest_id=".$resResult->id."
-                            , favorite='1'
-                            , Rating='0'";
-
-                    $sso_id = mysql_query($record);
-                    $mReturn[] = array("successDescription" => "Restaurant has been added in your favorite list!");
-                }
-            }
-        }
-        else
-        {
-            $mReturn = errorFunction("","Inavlid call, user id not specified.","Inavlid call.","ERROR!");
-        }
-    }
-    else if (isset($_GET["removefavorite"]))
-    {
-        $sso_email = $_GET['email'];
-        $res_url = $_GET['slug'];
-
-
-        if (isset($_GET["email"]) || isset($_GET["uid"]))
-        {
-            $mVerifyRequest = verifyRequest();
-            if(isset($_GET["email"]))
-            {
-                $qry = "select id from bh_sso_user WHERE email = '". $sso_email."'";
-            }
-            else if(isset($_GET["uid"]))
-            {
-                $qry = "select id from bh_sso_user WHERE user_id = '". $_GET["uid"]."'";
-            }
-            
-            $count_user = mysql_query($qry);
-            $userResult = mysql_fetch_object(mysql_query($qry));
-
-
-            $res = "select id from resturants WHERE url_name = '".$res_url."'";
-            $count_rest  = mysql_query($res);
-            $resResult = mysql_fetch_object(mysql_query($res));
-
-            if(mysql_num_rows($count_user)==0 )
-            {
-                 $mReturn = errorFunction("","User id not exist.","User id not exist","ERROR!");
-            }
-
-            else if(mysql_num_rows($count_rest)==0 )
-            {
-                 $mReturn = errorFunction("","No restaurant exist with this slug name.","No restaurant exist with this slug name.","ERROR!");
-            }
-            else
-            {
-                $mSQL = "SELECT * FROM bh_rest_rating WHERE rest_id= $resResult->id AND user_id = $userResult->id and favorite = 1";
-                $user_qry  = mysql_query($mSQL);
-
-                if(mysql_num_rows($user_qry)==0 )
-                {
-                    $mReturn[] = array("errorMessage" => "This restaurant is not in your favorite list!");
-                }
-                else
-                {
-                    $record="Update bh_rest_rating SET favorite='0' where user_id=".$userResult->id." and rest_id=".$resResult->id."";
-
-                    $sso_id = mysql_query($record);
-                    $mReturn[] = array("successDescription" => "Restaurant has been removed from your favorite list!");
-                }
-            }
-        }
-        else
-        {
-            $mReturn = errorFunction("","Inavlid call, user id not specified.","Inavlid call.","ERROR!");
-        }
-    }
-    else if (isset($_GET["menus"]))
-    {
-        if (isset($_GET["slug"]))
-        {
-            $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-            $rest_url = mysql_fetch_object(mysql_query($mSQL));
-            if ($rest_url)
-            {
-                if (isset($_GET["menu"]))
-                {
-                    $mReturn = getMenus($rest_url->id, $_GET["menu"]);
-                }
-                else
-                {
-                    $mReturn = getMenus($rest_url->id, "");
-                }
-            }
-        }
-        else
-        {
-            $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, Slug not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
-        }
+        $mReturn = errorFunction("1","Invalid user id/email.","Invalid user id/email.","Attribute Error");
     }
     else
     {
-        $mReturn = errorFunction("","Inavlid call, operation not specified or invalid operation.","Inavlid call.","ERROR!");
+        if (isset($_GET["getrestaurants"]) && isset($_GET["getrestaurantdetails"]))
+        {
+            if (isset($_GET["slugs"])) //Comma Separate Slugs
+            {
+                $mSlugs = explode(",", $_GET["slugs"]);
+                for ($loopCount=0; $loopCount<count($mSlugs); $loopCount++)
+                {
+                    $mFavorite = 2;
+                    $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($mSlugs[$loopCount]))."' AND status = 1 AND bh_restaurant = 1";
+                    $rest_url = dbAbstract::ExecuteObject($mSQL);
+                    if ($rest_url)
+                    {   
+                        $tmp = returnArray($rest_url, $mUserID, 0);
+                        if ($tmp)
+                        {
+                            $mReturn[] = $tmp;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slugs not specified.", "Slugs not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["getrestaurants"]) && isset($_GET["getfullhours"]))
+        {
+            if (isset($_GET["slugs"])) //Comma Separate Slugs
+            {
+                $mSlugs = explode(",", $_GET["slugs"]);
+                for ($loopCount=0; $loopCount<count($mSlugs); $loopCount++)
+                {
+                    $mFavorite = 2;
+
+                    $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($mSlugs[$loopCount]))."'";
+                    $rest_url = dbAbstract::ExecuteObject($mSQL);
+                    if ($rest_url)
+                    {
+                        $mFavorite = checkFavorite($mUserID, $rest_url->id);
+
+                        if ($mUserID==0)
+                        {
+                            $mReturn[] = array(
+                                    "name" => replaceSpecialChar($rest_url->name),
+                                    "hours" => allBusinessHours($rest_url->id)
+                                );
+                        }
+                        else
+                        {
+                            $mReturn[] = array(
+                                    "name" => replaceSpecialChar($rest_url->name),
+                                    "hours" => allBusinessHours($rest_url->id),
+                                    "favorite" => $mFavorite
+                                );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slugs not specified.", "Slugs not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["getrestaurants"]) && isset($_GET["featured"]) && !isset($_GET["locations"]))
+        {   
+            $mSQL = "SELECT * FROM resturants WHERE status = 1 AND bh_restaurant = 1 AND bh_featured = 1 ORDER BY name";
+            $mResFeatured = dbAbstract::Execute($mSQL);
+
+            while ($rest_url = dbAbstract::returnObject($mResFeatured))
+            {   
+                if ($mRecordCount<$mMaxResults)
+                {
+                    $mRecordCount = $mRecordCount + 1;
+                    
+                    $tmp = returnArray($rest_url, $mUserID, 0);
+                    if ($tmp)
+                    {
+                        $mReturn[] = $tmp;
+                    }
+                }
+            }
+        }
+        else if (isset($_GET["getrestaurants"]))
+        {
+            $mLat = "";
+            $mLong = "";
+
+            if (isset($_GET['deliversto']))
+            {
+                if (!isset($_GET['latlong']))
+                {
+                    $getaddress = $_GET['deliversto'];
+                    $addresslink = str_replace(' ', '+', $getaddress);
+                    $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
+                    $array = (json_decode($result, true));
+                    if (!empty($array['results'][0]['geometry']['location']['lat']))
+                    {
+                        $mLat = $array['results'][0]['geometry']['location']['lat'];
+                        $mLong = $array['results'][0]['geometry']['location']['lng'];
+                    }
+                }
+                else
+                {
+                    $mTmp = explode(",", $_GET["deliversto"]);
+                    $mLat = trim($mTmp[0]);
+                    $mLong = trim($mTmp[1]);
+                }
+            }
+            else if (isset($_GET['user_address']))
+            {
+                if (!isset($_GET['latlong']))
+                {
+                    $getaddress = $_GET['user_address'];
+                    $addresslink = str_replace(' ', '+', $getaddress);
+                    $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
+                    $array = (json_decode($result, true));
+                    if (!empty($array['results'][0]['geometry']['location']['lat']))
+                    {
+                        $mLat = $array['results'][0]['geometry']['location']['lat'];
+                        $mLong = $array['results'][0]['geometry']['location']['lng'];
+                    }
+                }
+                else
+                {
+                    $mTmp = explode(",", $_GET["user_address"]);
+                    $mLat = trim($mTmp[0]);
+                    $mLong = trim($mTmp[1]);
+                }
+            }
+
+            $mRes = dbAbstract::Execute("SELECT * FROM resturants WHERE rest_open_close = 1 AND status = 1 AND bh_restaurant = 1 ORDER BY name");
+            while ($rest_url = dbAbstract::returnObject($mRes))
+            {
+                doProcessing($rest_url, $mLat, $mLong, $mUserID);
+            }
+        }
+        else if (isset($_GET["like"]))
+        {
+            if (isset($_GET["slug"]))
+            {
+                    $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                    $rest_url = dbAbstract::ExecuteObject($mSQL);
+                    if ($rest_url)
+                    {
+                        dbAbstract::Insert("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", 0, 2, 1)");
+                        $mReturn = array(
+                                "successDescription" => "Restaurant liked successfully"
+                            );
+                    }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["dislike"]))
+        {
+            if (isset($_GET["slug"]))
+            {
+                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                $rest_url = dbAbstract::ExecuteObject($mSQL);
+                if ($rest_url)
+                {
+                    dbAbstract::Insert("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", 0, 2, 0)");
+                    $mReturn = array("successDescription" => "Restaurant disliked successfully");
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["favorites"]))
+        {
+            if (isset($_GET["email"]) || isset($_GET["uid"]))
+            {   
+                $mysqlqry = dbAbstract::Execute("SELECT DISTINCT R.* FROM resturants R INNER JOIN bh_rest_rating BHR ON BHR.rest_id=R.id WHERE R.status=1 AND R.bh_restaurant=1 AND BHR.user_id=".$mUserID." AND BHR.favorite = 1 ORDER BY R.name");
+                if (dbAbstract::returnRowsCount($mysqlqry)>0)
+                {
+                    while($rest_url = dbAbstract::returnObject($mysqlqry))
+                    {
+                        $tmp = returnArray($rest_url, $mUserID, 0);
+                        if ($tmp)
+                        {
+                            $mReturn[] = $tmp;
+                        }
+                    }
+                }
+                else
+                {
+                    $mReturn = errorFunction("5", "No Restaurant in your favorite list.", "No Restaurant in your favorite list.","Data Error");
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("3", "User id/email not specified.", "Invalid call.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["addfavorite"]))
+        {
+            $res_url = $_GET['slug'];
+
+            if (isset($_GET["slug"]))
+            {
+                if (isset($_GET["email"]) || isset($_GET["uid"]))
+                {
+                    $res = "SELECT id FROM resturants WHERE url_name = '".$res_url."'";
+                    $count_rest  = dbAbstract::Execute($res);
+                    $resResult = dbAbstract::returnObject($count_rest);
+
+                    if(dbAbstract::returnRowsCount($count_rest)==0 )
+                    {
+                         $mReturn = errorFunction("6","No restaurant exists with this slug name.","No restaurant exists with this slug name.","Data Error");
+                    }
+                    else
+                    {
+                        $mSQL = "SELECT * FROM bh_rest_rating WHERE rest_id =".$resResult->id." AND user_id =".$mUserID;
+                        $user_qry  = dbAbstract::Execute($mSQL);
+                        $favoriteRes = dbAbstract::returnObject($user_qry);
+
+                        if(dbAbstract::returnRowsCount($user_qry)>0 )
+                        {
+                            if($favoriteRes->favorite == 1)
+                            {
+                                $mReturn[] = errorFunction("7","You have already marked this restaurant as your favorite!","You have already marked this restaurant as your favorite!","Data Error");
+                            }
+                            else
+                            {
+                                $record="Update bh_rest_rating SET favorite='1' where user_id=".$mUserID." and rest_id=".$resResult->id;
+                                dbAbstract::Update($record);
+                                $mReturn[] = array("successDescription" => "Restaurant has been added in your favorite list!");
+                            }
+                        }
+                        else
+                        {
+                            $record="INSERT INTO bh_rest_rating SET user_id=".$mUserID.", rest_id=".$resResult->id.", favorite=1, Rating=0";
+                            dbAbstract::Insert($record);
+                            $mReturn[] = array("successDescription" => "Restaurant has been added in your favorite list!");
+                        }
+                    }
+                }
+                else
+                {
+                    $mReturn = errorFunction("3", "User id/email not specified.", "Invalid call.", "Attribute Error");
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["removefavorite"]))
+        {
+            $res_url = $_GET['slug'];
+
+            if (isset($_GET["slug"]))
+            {
+                if (isset($_GET["email"]) || isset($_GET["uid"]))
+                {
+                    $res = "SELECT id FROM resturants WHERE url_name = '".$res_url."'";
+                    $count_rest  = dbAbstract::Execute($res);
+                    $resResult = dbAbstract::returnObject($count_rest);
+
+                    if(dbAbstract::returnRowsCount($count_rest)==0 )
+                    {
+                         $mReturn = errorFunction("6","No restaurant exists with this slug name.","No restaurant exists with this slug name.","Data Error");
+                    }
+                    else
+                    {
+                        $mSQL = "SELECT * FROM bh_rest_rating WHERE rest_id= $resResult->id AND user_id =".$mUserID." AND favorite = 1";
+                        $user_qry  = dbAbstract::Execute($mSQL);
+
+                        if(dbAbstract::returnRowsCount($user_qry)==0 )
+                        {
+                            $mReturn = errorFunction("8","This restaurant is not in your favorite list!","This restaurant is not in your favorite list!","Data Error");
+                        }
+                        else
+                        {
+                            $record="Update bh_rest_rating SET favorite='0' where user_id=".$mUserID." and rest_id=".$resResult->id;
+
+                            dbAbstract::Update($record);
+                            $mReturn[] = array("successDescription" => "Restaurant has been removed from your favorite list!");
+                        }
+                    }
+                }
+                else
+                {
+                    $mReturn = errorFunction("3", "User id/email not specified.", "Invalid call.", "Attribute Error");
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["menus"]))
+        {
+            if (isset($_GET["slug"]))
+            {
+                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                $rest_url = dbAbstract::ExecuteObject($mSQL);
+                if ($rest_url)
+                {
+                    if (isset($_GET["menu"]))
+                    {
+                        $mReturn = getMenus($rest_url->id, $_GET["menu"]);
+                    }
+                    else
+                    {
+                        $mReturn = getMenus($rest_url->id, "");
+                    }
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("2", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+        }
+        else if (isset($_GET["landingbanner"]))
+        {
+           
+            $mSQL = "SELECT id,header_image FROM resturants WHERE status = 1 AND bh_restaurant = 1";
+            $rest_images = dbAbstract::Execute($mSQL);
+            if ($rest_images)
+            {
+                while($images = dbAbstract::returnObject($rest_images))
+                {   
+                    $mArray[$images->id]['image'] = $SiteUrl."images/resturant_headers/".$images->header_image;
+                }
+                $mReturn = $mArray;
+            }
+            
+        }
+        else if (isset($_GET["favorite"]) && isset($_GET["locations"]))
+        {
+            if (isset($_GET["email"]) || isset($_GET["uid"]))
+            {                                
+                $rest_loc = dbAbstract::Execute("SELECT R.*, RLL.rest_latitude, RLL.rest_longitude FROM resturants R INNER JOIN bh_rest_rating BRR ON R.id = BRR.rest_id LEFT JOIN rest_langitude_latitude RLL ON RLL.rest_id = R.id WHERE BRR.favorite = 1 AND BRR.user_id=".$mUserID." AND R.status = 1 AND R.bh_restaurant = 1");
+                while($rest_url = dbAbstract::returnObject($rest_loc))
+                {
+                    $getLatLong = findLatLong($rest_url);
+                    if (isset($_GET["detail"]))
+                    {
+                        $tmp = returnArray($rest_url, $mUserID, 0);
+                        if ($tmp)
+                        {
+                            $mArray[] = $tmp;
+                        }
+                    }
+                    else
+                    {
+                        $tmp = returnLocationArray($rest_url);
+                        if ($tmp)
+                        {
+                            $mArray[] = $tmp;
+                        }
+                    }
+                }
+                $mReturn = $mArray;
+            }
+            else
+            {
+                $mReturn = errorFunction("3", "User id/email not specified.", "Invalid call.", "Attribute Error");
+            } 
+        }
+        else if (isset($_GET["highestrated"]) && isset($_GET["locations"]))
+        {  
+            $rest_loc = dbAbstract::Execute("SELECT R.*, COUNT(Rating) AS RatingCount FROM resturants R INNER JOIN bh_rest_rating BRR ON BRR.rest_id = R.id WHERE BRR.Rating = 1 AND R.status = 1 AND R.bh_restaurant = 1 GROUP BY R.id ORDER BY RatingCount DESC");
+            while($rest_url = dbAbstract::returnObject($rest_loc))
+            {
+                if (isset($_GET["detail"]))
+                {
+                    $tmp = returnArray($rest_url, $mUserID, 0);
+                    if ($tmp)
+                    {
+                        $mArray[] = $tmp;
+                    }
+                }
+                else
+                {
+                    $tmp = returnLocationArray($rest_url, 1);
+                    if ($tmp)
+                    {
+                        $mArray[] = $tmp;
+                    }
+                }
+            }
+            $sort = array();
+            foreach($mArray as $k=>$v) {
+                $sort['satisfactionPercentage'][$k] = $v['satisfactionPercentage'];
+            }
+            array_multisort($sort['satisfactionPercentage'], SORT_DESC, $mArray);
+            
+            $mReturn = $mArray;
+            
+            if (isset($_GET["max_results"]))
+            {
+                if (count($mReturn)>$_GET["max_results"])
+                {
+                    $mReturn = array_slice($mReturn, 0, $_GET["max_results"]);
+                }
+            }
+        }
+        else if (isset($_GET["featured"]) && isset($_GET["locations"]))
+        {
+            $rest_loc = dbAbstract::Execute("SELECT * FROM resturants WHERE bh_restaurant = 1 AND bh_featured=1 AND status = 1");
+            while($rest_url = dbAbstract::returnObject($rest_loc))
+            {
+                $getLatLong = findLatLong($rest_url);
+                if (isset($_GET["detail"]))
+                {
+                    $tmp = returnArray($rest_url, $mUserID, 0);
+                    if ($tmp)
+                    {
+                        $mArray[] = $tmp;
+                    }
+                }
+                else
+                {
+                    $tmp = returnLocationArray($rest_url);
+                    if ($tmp)
+                    {
+                        $mArray[] = $tmp;
+                    }
+                }
+            }
+            $mReturn = $mArray;
+        }
+        else
+        {   
+            $mReturn = errorFunction("9", "Operation not specified or invalid operation.", "Invalid call.", "Operation Error");
+        }
     }
 }
 else if ($mVerifyRequest==0) //This will never happen
 {
-    $mReturn = array(
-                        "errorCode" => "",
-                        "errorDescription" => "Inavlid call, SSO not specified.",
-                        "errorMessage" => "Inavlid call.",
-                        "errorTitle" => "ERROR!"
-                    );
+    $mReturn = errorFunction("10", "Apikey not specified.", "Invalid call.", "Attribute Error");
 }
 else if ($mVerifyRequest==2) //Session ID not present
 {
-    $mReturn = errorFunction("","Inavlid call, SSO not specified.","Inavlid call.","ERROR!");
+    $mReturn = errorFunction("10", "Apikey not specified.", "Invalid call.","Attribute Error");
 }
-else if ($mVerifyRequest==3) //Session ID expred
+else if ($mVerifyRequest==3) //Session ID expired
 {
-    $mReturn = errorFunction("","Your session has expired. Please Sign in again.","Session Expired.","ERROR!");
+    $mReturn = errorFunction("11", "Api key is not valid", "Api key is not valid", "Data Error");
 }
-
-/*if (isset($_GET["max_results"]))
-{
-    if (count($mReturn)>$_GET["max_results"])
-    {
-        $mReturn = array_slice($mReturn, 0, $_GET["max_results"]);
-    }
-}*/
 
 if (count($mReturn)==0)
 {
-    $mReturn = errorFunction("","No restaurants found according to provided search criteria.","Empty result set.","NOTIFICATION!");
+    $mReturn = errorFunction("12","No restaurants found according to provided search criteria.","Empty result set.","Data Error");
 }
 
 /*echo("<pre>");
@@ -1328,905 +528,136 @@ $json = json_encode($mReturn, true);
 echo($json);
 /* Search Functions Ends Here */
 
-
-
 /* General (Helping) Functions Starts Here */
-function doProcessing($rest_url, $pLat="", $pLong="")
+function doProcessing($rest_url, $pLat="", $pLong="", $pUserID=0)
 {
     global $mReturn, $SiteUrl, $mRecordCount, $mMaxResults;
+    $mUserID = $pUserID;
 
-    $day_name=date('l');
-    if($day_name == 'Monday')
-    {
-        $day_of_week = 0;
-    }
-    else if($day_name == 'Tuesday')
-    {
-        $day_of_week = 1;
-    }
-    else if($day_name == 'Wednesday')
-    {
-        $day_of_week = 2;
-    }
-    else if($day_name == 'Thursday')
-    {
-        $day_of_week = 3;
-    }
-    else if($day_name == 'Friday')
-    {
-        $day_of_week = 4;
-    }
-    else if($day_name == 'Saturday')
-    {
-        $day_of_week = 5;
-    }
-    else if($day_name == 'Sunday')
-    {
-        $day_of_week = 6;
-    }
-
-    $business_hours =  mysql_fetch_object(mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_url->id));
-    $timezoneRs = mysql_fetch_array(mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_url->time_zone_id));
-    date_default_timezone_set($timezoneRs['time_zone']);
-    $current_time=date("Hi",time());
-    $mOpen = "n";
-    if ($current_time >= $business_hours->open && $current_time <= $business_hours->close)
-    {
-        $mOpen = "y";
-    }
-
-    $mLikeCount = 0;
-    $mDislikeCount = 0;
-    $mLikePercentage = 0;
-    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS LikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 1";
-    $mResult = mysql_fetch_object(mysql_query($mSQL));
-    if ($mResult)
-    {
-        $mLikeCount = $mResult->LikeCount;
-    }
-
-    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS DislikeCount FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND Rating = 0";
-    $mResult = mysql_fetch_object(mysql_query($mSQL));
-    if ($mResult)
-    {
-        $mDislikeCount = $mResult->DislikeCount;
-    }
-
-    if (($mLikeCount==0) && ($mDislikeCount==0))
-    {
-        $mLikePercentage = 0;
-    }
-    else
-    {
-        $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
-    }
-
-    $mUserID = 0;
-    if (isset($_GET["uid"]))
-    {
-        $mUserID = $_GET["uid"];
-    }
-
-    if (isset($_GET["email"]))
-    {
-        $mSQL = "SELECT id FROM bh_sso_user WHERE email='".$_GET["email"]."'";
-        $mResult = mysql_fetch_object(mysql_query($mSQL));
-        if ($mResult)
+    if (isset($_GET["deliversto"]))
+    {    
+        if($rest_url->delivery_offer == 1)
         {
-            $mUserID = $mResult->id;
-        }
-    }
+            $mLat = $pLat;
+            $mLong = $pLong;
 
-    $mLiked = 2;
-    $mFavorite = 2;
-
-    if ($mUserID != 0)
-    {
-        $mSQL = "SELECT IFNULL(Rating, 2) AS Rating, IFNULL(favorite, 2) AS favorite FROM bh_rest_rating WHERE rest_id=".$rest_url->id." AND user_id=".$mUserID;
-        $mResult = mysql_fetch_object(mysql_query($mSQL));
-        if ($mResult)
-        {
-            $mLiked = $mResult->Rating;
-            $mFavorite = $mResult->favorite;
-        }
-    }
-
-    if ($mLiked == 0)
-    {
-        $mLiked = "false";
-    }
-    else if ($mLiked == 1)
-    {
-        $mLiked = "true";
-    }
-    else
-    {
-        $mLiked = "no input";
-    }
-
-    if ($mFavorite == 0)
-    {
-        $mFavorite = "no";
-    }
-    else if ($mFavorite == 1)
-    {
-        $mFavorite = "yes";
-    }
-    else
-    {
-        $mFavorite = "no input";
-    }
-
-    $mLikeRating[] = array(
-                        "like_count" => $mLikeCount,
-                        "dislike_count" => $mDislikeCount,
-                        "like_percentage" => $mLikePercentage
-                            );
-    
-    $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$rest_url->id." AND LOWER(item_title)='signature sandwich'";
-    $mResSigSan = mysql_fetch_object(mysql_query($mSQLSigSan));
-    $mSignatureSandwich = "no";
-    if ($mResSigSan)
-    {
-        if ($mResSigSan->SignatureSandwiches>0)
-        {
-            $mSignatureSandwich = "yes";
-        }
-    }
-            
-    if (isset($_REQUEST["deliversto"]))
-    {       
-        $mLat = $pLat;
-        $mLong = $pLong;
-        
-        if ((trim($mLat)!="") && (trim($mLong)!=""))
-        {
-            if ($rest_url->delivery_option == 'delivery_zones')
+            if ((trim($mLat)!="") && (trim($mLong)!=""))
             {
-                if (!empty($rest_url->zone1_coordinates))
+                if ($rest_url->delivery_option == 'delivery_zones')
                 {
-                    $zone1_coordinates = explode('~', $rest_url->zone1_coordinates);
-                }
-                else
-                {
-                    $zone1_coordinates = getCoordinates('0.02', $rest_url->id);
-                }
-
-                if (!empty($rest_url->zone2_coordinates)) {
-                    $zone2_coordinates = explode('~', $rest_url->zone2_coordinates);
-                }
-                else
-                {
-                    $zone2_coordinates = getCoordinates('0.025', $rest_url->id);
-                }
-
-                if (!empty($rest_url->zone3_coordinates))
-                {
-                    $zone3_coordinates = explode('~', $rest_url->zone3_coordinates);
-                }
-                else
-                {
-                    $zone3_coordinates = getCoordinates('0.03', $rest_url->id);
-                }
-
-                $x = $mLat;
-                $y = $mLong;
-
-                if (!empty($zone1_coordinates))
-                {
-                    if ($rest_url->zone1 && pointInPolygon($x, $y, $zone1_coordinates))
+                    if (!empty($rest_url->zone1_coordinates))
                     {
-                        if (isset($_REQUEST["open"]))
-                        {
-                            if ($mOpen == "y")
-                            {
-                                if (isset($_REQUEST["detail"]))
-                                {
-                                    if ($mUserID==0)
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                        "name" => $rest_url->name,
-                                                        "slug" => $rest_url->url_name,
-                                                        "email" => $rest_url->email,
-                                                        "address" => $rest_url->rest_address,
-                                                        "Phone" => $rest_url->phone,
-                                                        "Fax" => $rest_url->fax,
-                                                        "deliver_charges" => $rest_url->delivery_charges,
-                                                        "min_total" => $rest_url->order_minimum,
-                                                        "facebookURL" => $rest_url->facebookLink,
-                                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                                        "domain" => $rest_url->URL,
-                                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                        "announcement" => $rest_url->announcement,
-                                                        "open_now" => $mOpen,
-                                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                        "hours" => allBusinessHours($rest_url->id),
-                                                        "signature_sandwich" => $mSignatureSandwich,
-                                                        "like_rating" => $mLikeRating,
-                                                        "satisfactionPercentage" => $mLikePercentage,
-                                                        "menu" => getMenus($rest_url->id)
-                                                    );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfaction" => $mLiked,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "favorite" => $mFavorite,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                    "slug" => $rest_url->url_name
-                                                );
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (isset($_REQUEST["detail"]))
-                            {
-                                if ($mUserID==0)
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfaction" => $mLiked,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "favorite" => $mFavorite,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ($mRecordCount<$mMaxResults)
-                                {
-                                    $mRecordCount = $mRecordCount + 1;
-                                    $mReturn[] = array(
-                                                "slug" => $rest_url->url_name
-                                            );
-                                }
-                            }
-                        }
+                        $zone1_coordinates = explode('~', $rest_url->zone1_coordinates);
                     }
-                    else if ($rest_url->zone2 && pointInPolygon($x, $y, $zone2_coordinates))
+                    else
                     {
-                        if (isset($_REQUEST["open"]))
-                        {
-                            if ($mOpen == "y")
-                            {
-                                if (isset($_REQUEST["detail"]))
-                                {
-                                    if ($mUserID==0)
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfaction" => $mLiked,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "favorite" => $mFavorite,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                    "slug" => $rest_url->url_name
-                                                );
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (isset($_REQUEST["detail"]))
-                            {
-                                if ($mUserID==0)
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL, 
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfaction" => $mLiked,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "favorite" => $mFavorite,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ($mRecordCount<$mMaxResults)
-                                {
-                                    $mRecordCount = $mRecordCount + 1;
-                                    $mReturn[] = array(
-                                                "slug" => $rest_url->url_name
-                                            );
-                                }
-                            }
-                        }
+                        $zone1_coordinates = getCoordinates('0.02', $rest_url->id);
                     }
-                    else if ($rest_url->zone3 && pointInPolygon($x, $y, $zone3_coordinates))
+
+                    if (!empty($rest_url->zone2_coordinates)) {
+                        $zone2_coordinates = explode('~', $rest_url->zone2_coordinates);
+                    }
+                    else
                     {
-                        if (isset($_REQUEST["open"]))
+                        $zone2_coordinates = getCoordinates('0.025', $rest_url->id);
+                    }
+
+                    if (!empty($rest_url->zone3_coordinates))
+                    {
+                        $zone3_coordinates = explode('~', $rest_url->zone3_coordinates);
+                    }
+                    else
+                    {
+                        $zone3_coordinates = getCoordinates('0.03', $rest_url->id);
+                    }
+
+                    $x = $mLat;
+                    $y = $mLong;
+
+                    if (!empty($zone1_coordinates))
+                    {
+                        if ($rest_url->zone1 && pointInPolygon($x, $y, $zone1_coordinates))
                         {
-                            if ($mOpen == "y")
+                            if ($mRecordCount<$mMaxResults)
                             {
-                                if (isset($_REQUEST["detail"]))
+                                $mRecordCount = $mRecordCount + 1;
+                                $tmp = returnArray($rest_url, $mUserID, 1);
+                                if ($tmp)
                                 {
-                                    if ($mUserID==0)
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfaction" => $mLiked,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "favorite" => $mFavorite,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                    "slug" => $rest_url->url_name
-                                                );
-                                    }
+                                    $mReturn[] = $tmp;
                                 }
                             }
                         }
-                        else
+                        else if ($rest_url->zone2 && pointInPolygon($x, $y, $zone2_coordinates))
                         {
-                            if (isset($_REQUEST["detail"]))
+                            if ($mRecordCount<$mMaxResults)
                             {
-                                if ($mUserID==0)
+                                $mRecordCount = $mRecordCount + 1;
+                                $tmp = returnArray($rest_url, $mUserID, 2);
+                                if ($tmp)
                                 {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                            "name" => $rest_url->name,
-                                            "slug" => $rest_url->url_name,
-                                            "email" => $rest_url->email,
-                                            "address" => $rest_url->rest_address,
-                                            "Phone" => $rest_url->phone,
-                                            "Fax" => $rest_url->fax,
-                                            "deliver_charges" => $rest_url->delivery_charges,
-                                            "min_total" => $rest_url->order_minimum,
-                                            "facebookURL" => $rest_url->facebookLink,
-                                            "url" => $SiteUrl.$rest_url->url_name."/",
-                                            "domain" => $rest_url->URL,
-                                            "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                            "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                            "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                            "announcement" => $rest_url->announcement,
-                                            "open_now" => $mOpen,
-                                            "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                            "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                            "hours" => allBusinessHours($rest_url->id),
-                                            "signature_sandwich" => $mSignatureSandwich,
-                                            "like_rating" => $mLikeRating,
-                                            "satisfactionPercentage" => $mLikePercentage,
-                                            "menu" => getMenus($rest_url->id)
-                                        );
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfaction" => $mLiked,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "favorite" => $mFavorite,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
+                                    $mReturn[] = $tmp;
                                 }
                             }
-                            else
+                        }
+                        else if ($rest_url->zone3 && pointInPolygon($x, $y, $zone3_coordinates))
+                        {
+                            if ($mRecordCount<$mMaxResults)
                             {
-                                if ($mRecordCount<$mMaxResults)
+                                $mRecordCount = $mRecordCount + 1;
+                                $tmp = returnArray($rest_url, $mUserID, 3);
+                                if ($tmp)
                                 {
-                                    $mRecordCount = $mRecordCount + 1;
-                                    $mReturn[] = array(
-                                                "slug" => $rest_url->url_name
-                                            );
+                                    $mReturn[] = $tmp;
                                 }
                             }
                         }
                     }
                 }
-            }
-            else
-            {
-                $lon2 = "";
-                $lat2 = "";
-                $qry = "SELECT * FROM rest_langitude_latitude WHERE rest_id = ".$rest_url->id;
-                $lat_lon = mysql_fetch_array(mysql_query($qry));
-                if (empty($lat_lon))
-                {
-                    $mRestaurantAddress = $rest_url->rest_address." ".$rest_url->rest_city.", ".$rest_url->rest_state." ".$rest_url->rest_zip;
-                    $mRestaurantLatLong = getLatLong($mRestaurantAddress);
-
-                    $result = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='.$mRestaurantLatLong.'&sensor=false');
-
-                    $array = (json_decode($result, true));
-                    if (!empty($array['results'][0]['geometry']['location']['lat']))
-                    {
-                        $lat2 = $array['results'][0]['geometry']['location']['lat'];
-                        $lon2 = $array['results'][0]['geometry']['location']['lng'];
-                        mysql_query("UPDATE rest_langitude_latitude SET rest_latitude='".$lat2."', rest_longitude='".$lon2."' WHERE rest_id = ".$rest_url->id);
-                    }
-                }
                 else
                 {
-                    $lon2 = $lat_lon['rest_longitude'];
-                    $lat2 = $lat_lon['rest_latitude'];
-                }
-
-                if (($lon2!="") && ($lat2!=""))
-                {
-                    $theta = $mLong - $lon2;
-                    $dist = sin(deg2rad(floatval($mLat))) * sin(deg2rad(floatval($lat2))) + cos(deg2rad(floatval($mLat))) * cos(deg2rad(floatval($lat2))) * cos(deg2rad(floatval($theta)));
-                    $dist = acos($dist);
-                    $dist = rad2deg($dist);
-                    $miles = $dist * 60 * 1.1515;
-                    $radius = $rest_url->delivery_radius;
-                    if ($miles < $radius)
+                    $lon2 = "";
+                    $lat2 = "";
+                    $qry = "SELECT * FROM rest_langitude_latitude WHERE rest_id = ".$rest_url->id;
+                    $lat_lon = dbAbstract::ExecuteObject($qry);
+                    if (empty($lat_lon))
                     {
-                        if (isset($_REQUEST["open"]))
+                        $mRestaurantAddress = $rest_url->rest_address." ".$rest_url->rest_city.", ".$rest_url->rest_state." ".$rest_url->rest_zip;
+                        $mRestaurantLatLong = getLatLong($mRestaurantAddress);
+
+                        $result = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='.$mRestaurantLatLong.'&sensor=false');
+
+                        $array = (json_decode($result, true));
+                        if (!empty($array['results'][0]['geometry']['location']['lat']))
                         {
-                            if ($mOpen == "y")
-                            {
-                                if (isset($_REQUEST["detail"]))
-                                {
-                                    if ($mUserID==0)
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ($mRecordCount<$mMaxResults)
-                                        {
-                                            $mRecordCount = $mRecordCount + 1;
-                                            $mReturn[] = array(
-                                                    "name" => $rest_url->name,
-                                                    "slug" => $rest_url->url_name,
-                                                    "email" => $rest_url->email,
-                                                    "address" => $rest_url->rest_address,
-                                                    "Phone" => $rest_url->phone,
-                                                    "Fax" => $rest_url->fax,
-                                                    "deliver_charges" => $rest_url->delivery_charges,
-                                                    "min_total" => $rest_url->order_minimum,
-                                                    "facebookURL" => $rest_url->facebookLink,
-                                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "domain" => $rest_url->URL,
-                                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                    "announcement" => $rest_url->announcement,
-                                                    "open_now" => $mOpen,
-                                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                    "hours" => allBusinessHours($rest_url->id),
-                                                    "signature_sandwich" => $mSignatureSandwich,
-                                                    "like_rating" => $mLikeRating,
-                                                    "satisfaction" => $mLiked,
-                                                    "satisfactionPercentage" => $mLikePercentage,
-                                                    "favorite" => $mFavorite,
-                                                    "menu" => getMenus($rest_url->id)
-                                                );
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                    "slug" => $rest_url->url_name
-                                                );
-                                    }
-                                }
-                            }
+                            $lat2 = $array['results'][0]['geometry']['location']['lat'];
+                            $lon2 = $array['results'][0]['geometry']['location']['lng'];
+                            dbAbstract::Update("UPDATE rest_langitude_latitude SET rest_latitude='".$lat2."', rest_longitude='".$lon2."' WHERE rest_id = ".$rest_url->id);
                         }
-                        else
+                    }
+                    else
+                    {
+                        $lon2 = $lat_lon['rest_longitude'];
+                        $lat2 = $lat_lon['rest_latitude'];
+                    }
+
+                    if (($lon2!="") && ($lat2!=""))
+                    {
+                        $theta = $mLong - $lon2;
+                        $dist = sin(deg2rad(floatval($mLat))) * sin(deg2rad(floatval($lat2))) + cos(deg2rad(floatval($mLat))) * cos(deg2rad(floatval($lat2))) * cos(deg2rad(floatval($theta)));
+                        $dist = acos($dist);
+                        $dist = rad2deg($dist);
+                        $miles = $dist * 60 * 1.1515;
+                        $radius = $rest_url->delivery_radius;
+                        if ($miles < $radius)
                         {
-                            if (isset($_REQUEST["detail"]))
+                            if ($mRecordCount<$mMaxResults)
                             {
-                                if ($mUserID==0)
+                                $mRecordCount = $mRecordCount + 1;
+                                $tmp = returnArray($rest_url, $mUserID, 0);
+                                if ($tmp)
                                 {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    if ($mRecordCount<$mMaxResults)
-                                    {
-                                        $mRecordCount = $mRecordCount + 1;
-                                        $mReturn[] = array(
-                                                "name" => $rest_url->name,
-                                                "slug" => $rest_url->url_name,
-                                                "email" => $rest_url->email,
-                                                "address" => $rest_url->rest_address,
-                                                "Phone" => $rest_url->phone,
-                                                "Fax" => $rest_url->fax,
-                                                "deliver_charges" => $rest_url->delivery_charges,
-                                                "min_total" => $rest_url->order_minimum,
-                                                "facebookURL" => $rest_url->facebookLink,
-                                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                                "domain" => $rest_url->URL,
-                                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                                "announcement" => $rest_url->announcement,
-                                                "open_now" => $mOpen,
-                                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                                "hours" => allBusinessHours($rest_url->id),
-                                                "signature_sandwich" => $mSignatureSandwich,
-                                                "like_rating" => $mLikeRating,
-                                                "satisfactionPercentage" => $mLikePercentage,
-                                                "satisfaction" => $mLiked,
-                                                "favorite" => $mFavorite,
-                                                "menu" => getMenus($rest_url->id)
-                                            );
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ($mRecordCount<$mMaxResults)
-                                {
-                                    $mRecordCount = $mRecordCount + 1;
-                                    $mReturn[] = array(
-                                                "slug" => $rest_url->url_name
-                                            );
+                                    $mReturn[] = $tmp;
                                 }
                             }
                         }
@@ -2235,21 +666,21 @@ function doProcessing($rest_url, $pLat="", $pLong="")
             }
         }
     }
-    else if (isset($_REQUEST["distance"]))
+    else if (isset($_GET["distance"]))
     {
         $mLat = $pLat;
         $mLong = $pLong;
-        
+
         $mSourceLatLong = array();
         $mDestinationLatLong = array();
 
         $mSourceLatLong = array($pLat, $pLong);
 
         $mSQLLatLong = "SELECT rest_latitude, rest_longitude FROM rest_langitude_latitude WHERE rest_id=".$rest_url->id;
-        $mResLatLong  = mysql_query($mSQLLatLong);
-        if (mysql_num_rows($mResLatLong)>0)
+        $mResLatLong  = dbAbstract::Execute($mSQLLatLong);
+        if (dbAbstract::returnRowsCount($mResLatLong)>0)
         {
-            $mRowLatLong = mysql_fetch_object($mResLatLong);
+            $mRowLatLong = dbAbstract::returnObject($mResLatLong);
             $mDestinationLatLong = array($mRowLatLong->rest_latitude, $mRowLatLong->rest_longitude);
         }
 
@@ -2257,337 +688,22 @@ function doProcessing($rest_url, $pLat="", $pLong="")
         {
             $mRestaurantAddress = $rest_url->rest_address." ".$rest_url->rest_city.", ".$rest_url->rest_state." ".$rest_url->rest_zip;
             $mDestinationLatLong = getLatLong($mRestaurantAddress);
-            mysql_query("UPDATE rest_langitude_latitude SET rest_latitude='".$mDestinationLatLong[0]."', rest_longitude='".$mDestinationLatLong[1]."' WHERE rest_id = ".$rest_url->id);
+            dbAbstract::Update("UPDATE rest_langitude_latitude SET rest_latitude='".$mDestinationLatLong[0]."', rest_longitude='".$mDestinationLatLong[1]."' WHERE rest_id = ".$rest_url->id);
         }
 
         $mDistance = getDistance($mSourceLatLong, $mDestinationLatLong);
-
+        
         if ($mDistance<=$_GET["distance"])
         {
-            if (isset($_REQUEST["open"]))
+            if(isset($_GET['locations']))
             {
-                if ($mOpen == "y")
+                if ($mRecordCount<$mMaxResults)
                 {
-                    if (isset($_REQUEST["detail"]))
+                    $mRecordCount = $mRecordCount + 1;
+                    $tmp = returnLocationArray($rest_url);
+                    if ($tmp)
                     {
-                        if ($mUserID==0)
-                        {
-                            if ($mRecordCount<$mMaxResults)
-                            {
-                                $mRecordCount = $mRecordCount + 1;
-                                $mReturn[] = array(
-                                        "name" => $rest_url->name,
-                                        "slug" => $rest_url->url_name,
-                                        "email" => $rest_url->email,
-                                        "address" => $rest_url->rest_address,
-                                        "Phone" => $rest_url->phone,
-                                        "Fax" => $rest_url->fax,
-                                        "deliver_charges" => $rest_url->delivery_charges,
-                                        "min_total" => $rest_url->order_minimum,
-                                        "facebookURL" => $rest_url->facebookLink,
-                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                        "domain" => $rest_url->URL,
-                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                        "announcement" => $rest_url->announcement,
-                                        "open_now" => $mOpen,
-                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                        "hours" => allBusinessHours($rest_url->id),
-                                        "signature_sandwich" => $mSignatureSandwich,
-                                        "like_rating" => $mLikeRating,
-                                        "satisfactionPercentage" => $mLikePercentage,
-                                        "menu" => getMenus($rest_url->id)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            if ($mRecordCount<$mMaxResults)
-                            {
-                                $mRecordCount = $mRecordCount + 1;
-                                $mReturn[] = array(
-                                        "name" => $rest_url->name,
-                                        "slug" => $rest_url->url_name,
-                                        "email" => $rest_url->email,
-                                        "address" => $rest_url->rest_address,
-                                        "Phone" => $rest_url->phone,
-                                        "Fax" => $rest_url->fax,
-                                        "deliver_charges" => $rest_url->delivery_charges,
-                                        "min_total" => $rest_url->order_minimum,
-                                        "facebookURL" => $rest_url->facebookLink,
-                                        "url" => $SiteUrl.$rest_url->url_name."/",
-                                        "domain" => $rest_url->URL,
-                                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                        "announcement" => $rest_url->announcement,
-                                        "open_now" => $mOpen,
-                                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                        "hours" => allBusinessHours($rest_url->id),
-                                        "signature_sandwich" => $mSignatureSandwich,
-                                        "like_rating" => $mLikeRating,
-                                        "satisfaction" => $mLiked,
-                                        "satisfactionPercentage" => $mLikePercentage,
-                                        "favorite" => $mFavorite,
-                                        "menu" => getMenus($rest_url->id)
-                                    );
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                        "slug" => $rest_url->url_name
-                                    );
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (isset($_REQUEST["detail"]))
-                {
-                    if ($mUserID==0)
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                    "name" => $rest_url->name,
-                                    "slug" => $rest_url->url_name,
-                                    "email" => $rest_url->email,
-                                    "address" => $rest_url->rest_address,
-                                    "Phone" => $rest_url->phone,
-                                    "Fax" => $rest_url->fax,
-                                    "deliver_charges" => $rest_url->delivery_charges,
-                                    "min_total" => $rest_url->order_minimum,
-                                    "facebookURL" => $rest_url->facebookLink,
-                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                    "domain" => $rest_url->URL,
-                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                    "announcement" => $rest_url->announcement,
-                                    "open_now" => $mOpen,
-                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                    "hours" => allBusinessHours($rest_url->id),
-                                    "signature_sandwich" => $mSignatureSandwich,
-                                    "like_rating" => $mLikeRating,
-                                    "satisfactionPercentage" => $mLikePercentage,
-                                    "menu" => getMenus($rest_url->id)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                    "name" => $rest_url->name,
-                                    "slug" => $rest_url->url_name,
-                                    "email" => $rest_url->email,
-                                    "address" => $rest_url->rest_address,
-                                    "Phone" => $rest_url->phone,
-                                    "Fax" => $rest_url->fax,
-                                    "deliver_charges" => $rest_url->delivery_charges,
-                                    "min_total" => $rest_url->order_minimum,
-                                    "facebookURL" => $rest_url->facebookLink,
-                                    "url" => $SiteUrl.$rest_url->url_name."/",
-                                    "domain" => $rest_url->URL,
-                                    "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                    "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                    "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                    "announcement" => $rest_url->announcement,
-                                    "open_now" => $mOpen,
-                                    "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                    "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                    "hours" => allBusinessHours($rest_url->id),
-                                    "signature_sandwich" => $mSignatureSandwich,
-                                    "like_rating" => $mLikeRating,
-                                    "satisfaction" => $mLiked,
-                                    "satisfactionPercentage" => $mLikePercentage,
-                                    "favorite" => $mFavorite,
-                                    "menu" => getMenus($rest_url->id)
-                                );
-                        }
-                    }
-                }
-                else
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                                    "slug" => $rest_url->url_name
-                                );
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        if (isset($_REQUEST["open"]))
-        {
-            if ($mOpen == "y")
-            {
-                if (isset($_REQUEST["detail"]))
-                {
-                    if ($mUserID==0)
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                "name" => $rest_url->name,
-                                "slug" => $rest_url->url_name,
-                                "email" => $rest_url->email,
-                                "address" => $rest_url->rest_address,
-                                "Phone" => $rest_url->phone,
-                                "Fax" => $rest_url->fax,
-                                "deliver_charges" => $rest_url->delivery_charges,
-                                "min_total" => $rest_url->order_minimum,
-                                "facebookURL" => $rest_url->facebookLink,
-                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                "domain" => $rest_url->URL,
-                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                "announcement" => $rest_url->announcement,
-                                "open_now" => $mOpen,
-                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                "hours" => allBusinessHours($rest_url->id),
-                                "signature_sandwich" => $mSignatureSandwich,
-                                "like_rating" => $mLikeRating,
-                                "satisfactionPercentage" => $mLikePercentage,
-                                "menu" => getMenus($rest_url->id)
-                            );
-                        }
-                    }
-                    else
-                    {
-                        if ($mRecordCount<$mMaxResults)
-                        {
-                            $mRecordCount = $mRecordCount + 1;
-                            $mReturn[] = array(
-                                "name" => $rest_url->name,
-                                "slug" => $rest_url->url_name,
-                                "email" => $rest_url->email,
-                                "address" => $rest_url->rest_address,
-                                "Phone" => $rest_url->phone,
-                                "Fax" => $rest_url->fax,
-                                "deliver_charges" => $rest_url->delivery_charges,
-                                "min_total" => $rest_url->order_minimum,
-                                "facebookURL" => $rest_url->facebookLink,
-                                "url" => $SiteUrl.$rest_url->url_name."/",
-                                "domain" => $rest_url->URL,
-                                "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                                "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                                "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                                "announcement" => $rest_url->announcement,
-                                "open_now" => $mOpen,
-                                "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                                "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                                "hours" => allBusinessHours($rest_url->id),
-                                "signature_sandwich" => $mSignatureSandwich,
-                                "like_rating" => $mLikeRating,
-                                "satisfaction" => $mLiked,
-                                "satisfactionPercentage" => $mLikePercentage,
-                                "favorite" => $mFavorite,
-                                "menu" => getMenus($rest_url->id)
-                            );
-                        }
-                    }
-                }
-                else
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                                    "slug" => $rest_url->url_name
-                                );
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (isset($_REQUEST["detail"]))
-            {
-                if ($mUserID==0)
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                            "name" => $rest_url->name,
-                            "slug" => $rest_url->url_name,
-                            "email" => $rest_url->email,
-                            "address" => $rest_url->rest_address,
-                            "Phone" => $rest_url->phone,
-                            "Fax" => $rest_url->fax,
-                            "deliver_charges" => $rest_url->delivery_charges,
-                            "min_total" => $rest_url->order_minimum,
-                            "facebookURL" => $rest_url->facebookLink,
-                            "url" => $SiteUrl.$rest_url->url_name."/",
-                            "domain" => $rest_url->URL,
-                            "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                            "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                            "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                            "announcement" => $rest_url->announcement,
-                            "open_now" => $mOpen,
-                            "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                            "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                            "hours" => allBusinessHours($rest_url->id),
-                            "signature_sandwich" => $mSignatureSandwich,
-                            "like_rating" => $mLikeRating,
-                            "satisfactionPercentage" => $mLikePercentage,
-                            "menu" => getMenus($rest_url->id)
-                        );
-                    }
-                }
-                else
-                {
-                    if ($mRecordCount<$mMaxResults)
-                    {
-                        $mRecordCount = $mRecordCount + 1;
-                        $mReturn[] = array(
-                            "name" => $rest_url->name,
-                            "slug" => $rest_url->url_name,
-                            "email" => $rest_url->email,
-                            "address" => $rest_url->rest_address,
-                            "Phone" => $rest_url->phone,
-                            "Fax" => $rest_url->fax,
-                            "deliver_charges" => $rest_url->delivery_charges,
-                            "min_total" => $rest_url->order_minimum,
-                            "facebookURL" => $rest_url->facebookLink,
-                            "url" => $SiteUrl.$rest_url->url_name."/",
-                            "domain" => $rest_url->URL,
-                            "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
-                            "menu_url" => $SiteUrl.$rest_url->url_name."/",
-                            "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
-                            "announcement" => $rest_url->announcement,
-                            "open_now" => $mOpen,
-                            "featured" => ($rest_url->bh_featured>0?"y":"n"),
-                            "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
-                            "hours" => allBusinessHours($rest_url->id),
-                            "signature_sandwich" => $mSignatureSandwich,
-                            "like_rating" => $mLikeRating,
-                            "satisfaction" => $mLiked,
-                            "satisfactionPercentage" => $mLikePercentage,
-                            "favorite" => $mFavorite,
-                            "menu" => getMenus($rest_url->id)
-                        );
+                        $mReturn[] = $tmp;
                     }
                 }
             }
@@ -2596,21 +712,37 @@ function doProcessing($rest_url, $pLat="", $pLong="")
                 if ($mRecordCount<$mMaxResults)
                 {
                     $mRecordCount = $mRecordCount + 1;
-                    $mReturn[] = array(
-                                "slug" => $rest_url->url_name
-                            );
+                    $tmp = returnArray($rest_url, $mUserID, 0);
+                    if ($tmp)
+                    {
+                        $mReturn[] = $tmp;
+                    }
                 }
             }
         }
     }
+    else
+    {
+        if ($mRecordCount<$mMaxResults)
+        {
+            $mRecordCount = $mRecordCount + 1;
+            $tmp = returnArray($rest_url, $mUserID, 0);
+            if ($tmp)
+            {
+                $mReturn[] = $tmp;
+            }
+        }
+    }    
 }
 
 
 function verifyRequest()
 {
-    if (isset($_REQUEST["sso"]))
+    if (isset($_GET["apikey"]))
     {
-        if ($_REQUEST["sso"]!=session_id())
+        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$_GET["apikey"]."'");
+        $qryCount = dbAbstract::returnRowsCount($Qry);
+        if ($qryCount <= 0)
         {
             return 3; //sso (session id) is different than current session id (Session expired)
         }
@@ -2628,8 +760,8 @@ function verifyRequest()
 function allBusinessHours($pRestaurantID)
 {
     $mSQL = "SELECT *, '' AS hours FROM business_hours WHERE rest_id='".$pRestaurantID."' ORDER BY day ASC";
-    $qry= mysql_query($mSQL);
-    while($day=mysql_fetch_object($qry))
+    $qry= dbAbstract::Execute($mSQL);
+    while($day=dbAbstract::returnObject($qry))
     {
         if($day->day == 0)
         {
@@ -2659,26 +791,7 @@ function allBusinessHours($pRestaurantID)
         {
             $day->hours = 'Sunday';
         }
-
-        /*if ((strrpos($day->open,"-") === FALSE) && (strrpos($day->close,"-") === FALSE))
-        {
-            $day->hours .= " ".date("g:i A",strtotime($day->open))." - ".date("g:i A",strtotime($day->close));
-        }
-        else if ((strrpos($day->open,"-") !== FALSE) && (strrpos($day->close,"-") !== FALSE))
-        {
-            $day->hours .= " Closed";
-        }
-        else if (strrpos($day->open,"-") !== FALSE)
-        {
-            $day->open = "0000";
-            $day->hours .= " ".date("g:i A",strtotime($day->open))." - ".date("g:i A",strtotime($day->close));
-        }
-        else if (strrpos($day->close,"-") !== FALSE)
-        {
-            $day->close = "2359";
-            $day->hours .= " ".date("g:i A",strtotime($day->open))." - ".date("g:i A",strtotime($day->close));
-        }*/
-        
+       
         $mOpen = "";
         $mClose = "";
         
@@ -2716,23 +829,16 @@ function allBusinessHours($pRestaurantID)
         {
             $arr_days[$day->hours] = array("open" => $mOpen, "close" => $mClose);
         }
-
     }
-
     return $arr_days;
  }
 
 function getLatLong($pAddress)
 {
     $pAddress = str_replace(' ', '+', $pAddress);
-    $mUrl = 'http://maps.googleapis.com/maps/api/geocode/json?address='.$pAddress.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo';
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $mUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $mGeoLoc = curl_exec($ch);
-
-    $json = json_decode($mGeoLoc);
+    $result = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='.$pAddress.'&sensor=false');
+    $json = (json_decode($result, true));
+    
     return array($json['results'][0]['geometry']['location']['lat'], $json['results'][0]['geometry']['location']['lng']);
 }
 
@@ -2774,7 +880,7 @@ function getCoordinates($radius, $rest_id)
 {
     $coordinates = array();
     $qry = "Select * from rest_langitude_latitude where rest_id = " . $rest_id . "";
-    $lat_lon = mysql_fetch_array(mysql_query($qry));
+    $lat_lon = dbAbstract::ExecuteObject($qry);
 
     if (!empty($lat_lon))
     {
@@ -2801,8 +907,8 @@ function getMenus($pRestaurantID, $pMenu = "")
     {
         $mSQLMenu = "SELECT * FROM menus WHERE rest_id=".$pRestaurantID." AND status = 1 ORDER BY menu_ordering LIMIT 1";
     }
-    $mResMenu = mysql_query($mSQLMenu);
-    while ($mRowMenu = mysql_fetch_object($mResMenu))
+    $mResMenu = dbAbstract::Execute($mSQLMenu);
+    while ($mRowMenu = dbAbstract::returnObject($mResMenu))
     {
         $mMenus[] = array(
                         $mRowMenu->menu_name => getCategories($mRowMenu->id)
@@ -2814,12 +920,12 @@ function getMenus($pRestaurantID, $pMenu = "")
 function getCategories($pMenuID)
 {
     $arr_categories=array();
-    $mResCat = mysql_query("SELECT * FROM categories WHERE menu_id=".$pMenuID." AND status=1 ORDER BY cat_ordering");
-    while ($mRowCat = mysql_fetch_object($mResCat))
+    $mResCat = dbAbstract::Execute("SELECT * FROM categories WHERE menu_id=".$pMenuID." AND status=1 ORDER BY cat_ordering");
+    while ($mRowCat = dbAbstract::returnObject($mResCat))
     {
         $arr_categories[] = array(
-                        "category" => $mRowCat->cat_name,
-                        "category_subdescriptions" => $mRowCat->cat_des,
+                        "category" => replaceSpecialChar($mRowCat->cat_name),
+                        "category_subdescriptions" => replaceSpecialChar($mRowCat->cat_des),
                         "active" => "true",
                         "items" => getProducts($mRowCat->cat_id)
                     );
@@ -2831,12 +937,12 @@ function getProducts($pCategoryID)
 {
     global $SiteUrl;
     $arr_products=array();
-    $mResProduct = mysql_query("SELECT * FROM product WHERE sub_cat_id = ".$pCategoryID." AND status = 1 ORDER BY SortOrder");
-    while ($mRowProduct = mysql_fetch_object($mResProduct))
+    $mResProduct = dbAbstract::Execute("SELECT * FROM product WHERE sub_cat_id = ".$pCategoryID." AND status = 1 ORDER BY SortOrder");
+    while ($mRowProduct = dbAbstract::returnObject($mResProduct))
     {
         $arr_products[] = array(
-                        "name" => $mRowProduct->item_title,
-                        "details" => $mRowProduct->item_des,
+                        "name" => replaceSpecialChar($mRowProduct->item_title),
+                        "details" => replaceSpecialChar($mRowProduct->item_des),
                         "price" => $mRowProduct->retail_price,
                         "image_url" => (!empty($mRowProduct->item_image)?$SiteUrl."images/item_images/".$mRowProduct->item_image:""),
                         "posID" => $mRowProduct->pos_id,
@@ -2847,7 +953,7 @@ function getProducts($pCategoryID)
     return $arr_products;
 }
 
-function errorFunction($errorCode,$errorDescription,$errorMessage,$errorTitile)
+function errorFunction($errorCode, $errorDescription, $errorMessage, $errorTitile)
 {
     $result = array(
             "errorCode" => $errorCode,
@@ -2858,4 +964,389 @@ function errorFunction($errorCode,$errorDescription,$errorMessage,$errorTitile)
     return $result;
 }
 /* General (Helping) Functions Ends Here */
+
+
+function findLatLong($rest_url)
+{   
+    $mDestinationLatLong = array();
+    $mSQLLatLong = "SELECT rest_latitude, rest_longitude FROM rest_langitude_latitude WHERE rest_id=".$rest_url->id;
+    $mResLatLong  = dbAbstract::Execute($mSQLLatLong);
+    if (dbAbstract::returnRowsCount($mResLatLong)>0)
+    {
+        $mRowLatLong = dbAbstract::returnObject($mResLatLong);
+        $mDestinationLatLong = array($mRowLatLong->rest_latitude, $mRowLatLong->rest_longitude);
+    }
+
+    if (count($mDestinationLatLong)==0)
+    {   
+        $mRestaurantAddress = $rest_url->rest_address." ".$rest_url->rest_city.", ".$rest_url->rest_state." ".$rest_url->rest_zip;
+
+        $mDestinationLatLong = getLatLong($mRestaurantAddress);
+        dbAbstract::Insert("insert into rest_langitude_latitude set rest_id = ".$rest_id.", rest_latitude='".$mDestinationLatLong[0]."', rest_longitude='".$mDestinationLatLong[1]."'");
+    }
+    return $mDestinationLatLong;
+}
+
+function replaceSpecialChar($string)
+{
+    $string = str_replace('<BR/>', '\n', str_replace('<BR />', '\n', str_replace('<BR>', '\n', str_replace('\t', '',str_replace('<br />', '\n',str_replace('<br/>', '\n',str_replace('<br>', '\n',str_replace('\'', '&#39;', $string))))))));
+    return $string;  
+}
+
+function checkOpen($pRestaurantID, $pTimeZoneID)
+{
+    $day_name=date('l');
+    if($day_name == 'Monday')
+    {
+        $day_of_week = 0;
+    }
+    else if($day_name == 'Tuesday')
+    {
+        $day_of_week = 1;
+    }
+    else if($day_name == 'Wednesday')
+    {
+        $day_of_week = 2;
+    }
+    else if($day_name == 'Thursday')
+    {
+        $day_of_week = 3;
+    }
+    else if($day_name == 'Friday')
+    {
+        $day_of_week = 4;
+    }
+    else if($day_name == 'Saturday')
+    {
+        $day_of_week = 5;
+    }
+    else if($day_name == 'Sunday')
+    {
+        $day_of_week = 6;
+    }
+
+    $business_hours =  dbAbstract::ExecuteObject("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$pRestaurantID);
+    $timezoneRs = dbAbstract::ExecuteArray("SELECT time_zone FROM times_zones WHERE id = ".$pTimeZoneID);
+    date_default_timezone_set($timezoneRs['time_zone']);
+    $current_time=date("Hi",time());
+    $mOpen = "n";
+    if ($current_time >= $business_hours->open && $current_time <= $business_hours->close)
+    {
+        $mOpen = "y";
+    }
+    return $mOpen;
+}
+
+function checkFavorite($pUserID, $pRestaurantID)
+{
+    $mFavorite = 2;
+    
+    if ($pUserID != 0)
+    {
+        $mSQL = "SELECT IFNULL(favorite, 2) AS favorite FROM bh_rest_rating WHERE rest_id=".$pRestaurantID." AND user_id=".$pUserID;
+
+        $mResult = dbAbstract::ExecuteObject($mSQL);
+        if ($mResult)
+        {
+            $mFavorite = $mResult->favorite;
+        }
+    }
+
+    if ($mFavorite == 0)
+    {
+        $mFavorite = "no";
+    }
+    else if ($mFavorite == 1)
+    {
+        $mFavorite = "yes";
+    }
+    else
+    {
+        $mFavorite = "no input";
+    }
+    return $mFavorite;
+}
+
+function returnLikeCount($pRestaurantID)
+{
+    $mLikeCount = 0;
+    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS LikeCount FROM bh_rest_rating WHERE rest_id=".$pRestaurantID." AND Rating = 1";
+    $mResult = dbAbstract::ExecuteObject($mSQL);
+    if ($mResult)
+    {
+        $mLikeCount = $mResult->LikeCount;
+    }
+    return $mLikeCount;
+}
+
+function returnDislikeCount($pRestaurantID)
+{
+    $mDislikeCount = 0;
+    $mSQL = "SELECT IFNULL(COUNT(*), 0) AS DislikeCount FROM bh_rest_rating WHERE rest_id=".$pRestaurantID." AND Rating = 0";
+    $mResult = dbAbstract::ExecuteObject($mSQL);
+    if ($mResult)
+    {
+        $mDislikeCount = $mResult->DislikeCount;
+    }
+    return $mDislikeCount;
+}
+
+function checkSignatureSandwich($pRestaurantID)
+{
+    $mSignatureSandwich = "no";
+    $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$pRestaurantID." AND LOWER(item_title)='signature sandwich'";
+    $mResSigSan = dbAbstract::ExecuteObject($mSQLSigSan);
+    if ($mResSigSan)
+    {
+        if ($mResSigSan->SignatureSandwiches>0)
+        {
+            $mSignatureSandwich = "yes";
+        }
+    }
+    return $mSignatureSandwich;
+}
+
+function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
+{
+    $mOpen = checkOpen($rest_url->id, $rest_url->time_zone_id);
+    if (isset($_GET["detail"]) || (isset($_GET["getrestaurantdetails"])))
+    {
+        global $SiteUrl;
+        $mDeliveryCharges = $rest_url->delivery_charges;
+        $mOrderMinimum = $rest_url->order_minimum;
+
+        if ($pDeliveryZone==1)
+        {
+            $mDeliveryCharges = $rest_url->zone1_delivery_charges;
+            $mOrderMinimum = $rest_url->zone1_min_total;
+        }
+        else if ($pDeliveryZone==2)
+        {
+            $mDeliveryCharges = $rest_url->zone2_delivery_charges;
+            $mOrderMinimum = $rest_url->zone2_min_total;
+        }
+        else if ($pDeliveryZone==3)
+        {
+            $mDeliveryCharges = $rest_url->zone3_delivery_charges;
+            $mOrderMinimum = $rest_url->zone3_min_total;
+        }
+
+
+        $getLatLong = findLatLong($rest_url);
+        $mLikeCount = returnLikeCount($rest_url->id);
+        $mDislikeCount = returnDislikeCount($rest_url->id);
+        $mLikePercentage = 0;
+
+        if (($mLikeCount==0) && ($mDislikeCount==0))
+        {
+            $mLikePercentage = 0;
+        }
+        else
+        {
+            $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+        }
+
+        $mLikeRating[] = array("like_count" => $mLikeCount, "dislike_count" => $mDislikeCount, "like_percentage" => $mLikePercentage);
+        $mSignatureSandwich = checkSignatureSandwich($rest_url->id);
+    
+        if ($pUserID==0)
+        {
+            if (isset($_GET["open"]))
+            {
+                if ($mOpen=="y")
+                {
+                    return array(
+                        "name" => replaceSpecialChar($rest_url->name),
+                        "slug" => $rest_url->url_name,
+                        "email" => $rest_url->email,
+                        "address" => replaceSpecialChar($rest_url->rest_address),
+                        "latitude" => $getLatLong[0],
+                        "longitude" => $getLatLong[1],
+                        "Phone" => $rest_url->phone,
+                        "Fax" => $rest_url->fax,
+                        "deliver_charges" => $mDeliveryCharges,
+                        "min_total" => $mOrderMinimum,
+                        "facebookURL" => $rest_url->facebookLink,
+                        "url" => $SiteUrl.$rest_url->url_name."/",
+                        "domain" => $rest_url->URL,
+                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
+                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
+                        "announcement" => $rest_url->announcement,
+                        "open_now" => $mOpen,
+                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
+                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
+                        "hours" => allBusinessHours($rest_url->id),
+                        "signature_sandwich" => $mSignatureSandwich,
+                        "like_rating" => $mLikeRating,
+                        "satisfactionPercentage" => $mLikePercentage
+                    );
+                }
+            }
+            else
+            {
+                return array(
+                        "name" => replaceSpecialChar($rest_url->name),
+                        "slug" => $rest_url->url_name,
+                        "email" => $rest_url->email,
+                        "address" => replaceSpecialChar($rest_url->rest_address),
+                        "latitude" => $getLatLong[0],
+                        "longitude" => $getLatLong[1],
+                        "Phone" => $rest_url->phone,
+                        "Fax" => $rest_url->fax,
+                        "deliver_charges" => $mDeliveryCharges,
+                        "min_total" => $mOrderMinimum,
+                        "facebookURL" => $rest_url->facebookLink,
+                        "url" => $SiteUrl.$rest_url->url_name."/",
+                        "domain" => $rest_url->URL,
+                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
+                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
+                        "announcement" => $rest_url->announcement,
+                        "open_now" => $mOpen,
+                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
+                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
+                        "hours" => allBusinessHours($rest_url->id),
+                        "signature_sandwich" => $mSignatureSandwich,
+                        "like_rating" => $mLikeRating,
+                        "satisfactionPercentage" => $mLikePercentage
+                    );
+            }
+        }
+        else
+        {
+            $mFavorite = checkFavorite($pUserID, $rest_url->id);
+            if (isset($_GET["open"]))
+            {
+                if ($mOpen=="y")
+                {
+                    return array(
+                        "name" => replaceSpecialChar($rest_url->name),
+                        "slug" => $rest_url->url_name,
+                        "email" => $rest_url->email,
+                        "address" => replaceSpecialChar($rest_url->rest_address),
+                        "latitude" => $getLatLong[0],
+                        "longitude" => $getLatLong[1],
+                        "Phone" => $rest_url->phone,
+                        "Fax" => $rest_url->fax,
+                        "deliver_charges" => $mDeliveryCharges,
+                        "min_total" => $mOrderMinimum,
+                        "facebookURL" => $rest_url->facebookLink,
+                        "url" => $SiteUrl.$rest_url->url_name."/",
+                        "domain" => $rest_url->URL,
+                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
+                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
+                        "announcement" => $rest_url->announcement,
+                        "open_now" => $mOpen,
+                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
+                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
+                        "hours" => allBusinessHours($rest_url->id),
+                        "signature_sandwich" => $mSignatureSandwich,
+                        "like_rating" => $mLikeRating,
+                        "satisfactionPercentage" => $mLikePercentage,
+                        "favorite" => $mFavorite
+                    );
+                }
+            }
+            else
+            {
+                return array(
+                        "name" => replaceSpecialChar($rest_url->name),
+                        "slug" => $rest_url->url_name,
+                        "email" => $rest_url->email,
+                        "address" => replaceSpecialChar($rest_url->rest_address),
+                        "latitude" => $getLatLong[0],
+                        "longitude" => $getLatLong[1],
+                        "Phone" => $rest_url->phone,
+                        "Fax" => $rest_url->fax,
+                        "deliver_charges" => $mDeliveryCharges,
+                        "min_total" => $mOrderMinimum,
+                        "facebookURL" => $rest_url->facebookLink,
+                        "url" => $SiteUrl.$rest_url->url_name."/",
+                        "domain" => $rest_url->URL,
+                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "menu_url" => $SiteUrl.$rest_url->url_name."/",
+                        "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
+                        "announcement" => $rest_url->announcement,
+                        "open_now" => $mOpen,
+                        "featured" => ($rest_url->bh_featured>0?"y":"n"),
+                        "payment_options" => ($rest_url->payment_method=="both"?"cash, credit":$rest_url->payment_method),
+                        "hours" => allBusinessHours($rest_url->id),
+                        "signature_sandwich" => $mSignatureSandwich,
+                        "like_rating" => $mLikeRating,
+                        "satisfactionPercentage" => $mLikePercentage,
+                        "favorite" => $mFavorite
+                    );
+            }
+        }
+    }
+    else
+    {
+        if (isset($_GET["open"]))
+        {
+            if ($mOpen=="y")
+            {
+                return array(
+                    "slug" => $rest_url->url_name
+                );
+            }
+        }
+        else
+        {
+            return array(
+                "slug" => $rest_url->url_name
+            );
+        }
+    }
+}
+
+function returnLocationArray($rest_url, $mLikePercentage = 0)
+{
+    $getLatLong = findLatLong($rest_url);
+    
+    if ($mLikePercentage == 0)
+    {
+        return array(
+            "id" => replaceSpecialChar($rest_url->id),
+            "name" => replaceSpecialChar($rest_url->name),
+            "slug" => $rest_url->url_name,
+            "address" => replaceSpecialChar($rest_url->rest_address),
+            "city" => $rest_url->rest_city,
+            "state" => $rest_url->rest_state,
+            "zip" => $rest_url->rest_zip,
+            "latitude" => $getLatLong[0],
+            "longitude" => $getLatLong[1],
+        );  
+    }
+    else
+    {
+        $mLikeCount = returnLikeCount($rest_url->id);
+        $mDislikeCount = returnDislikeCount($rest_url->id);
+        $mLikePercentage = 0;
+
+        if (($mLikeCount==0) && ($mDislikeCount==0))
+        {
+            $mLikePercentage = 0;
+        }
+        else
+        {
+            $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+        }
+        
+        return array(
+            "id" => replaceSpecialChar($rest_url->id),
+            "name" => replaceSpecialChar($rest_url->name),
+            "slug" => $rest_url->url_name,
+            "address" => replaceSpecialChar($rest_url->rest_address),
+            "city" => $rest_url->rest_city,
+            "state" => $rest_url->rest_state,
+            "zip" => $rest_url->rest_zip,
+            "latitude" => $getLatLong[0],
+            "longitude" => $getLatLong[1],
+            "satisfactionPercentage" => $mLikePercentage
+        );
+    }
+    mysqli_close($mysqli);
+}
 ?>

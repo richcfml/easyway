@@ -1,4 +1,4 @@
-<? 
+<?php 
 	$delverFlag =	$_REQUEST["delverFlag"];
 	$userid		=	$_REQUEST["userid"];
 		
@@ -6,10 +6,10 @@
 		$userid=@$_SESSION['sessionUserID'];
 	}
 
-	$userQry	=	mysql_query("select * from customer_registration where id=$userid");
-	$userRs		=	mysql_fetch_object($userQry);
+	$userQry	=	dbAbstract::Execute("select * from customer_registration where id=$userid", 1);
+	$userRs		=	dbAbstract::returnObject($userQry, 1);
 	
-	$userOrderQry	=	mysql_query("select OrderID,DesiredDeliveryDate from ordertbl where UserID=$userid");
+	$userOrderQry	=	dbAbstract::Execute("select OrderID,DesiredDeliveryDate from ordertbl where UserID=$userid", 1);
  
 ?>
 <div id="main_heading">VIEW REGISTER CUSTOMER INFO</div>
@@ -64,11 +64,11 @@ $mainOrdingAddress=$streets." ".$userRs->cust_ord_city." ".$userRs->cust_ord_sta
           <th  align="left" valign="middle"><strong>Order No</strong></th>
           <th align="left" valign="middle"> <strong>Date Placed</strong></th>
         </tr>
-        <?
-		$userOrderRows	=	mysql_num_rows($userOrderQry);
+        <?php
+		$userOrderRows	=	dbAbstract::returnRowsCount($userOrderQry, 1);
 		if ($userOrderRows > 0){
 	  	$i=0;
-      	while($userOrderRs	=	mysql_fetch_object($userOrderQry)){
+      	while($userOrderRs	=	dbAbstract::returnObject($userOrderQry, 1)){
 				$orderid	=	$userOrderRs->OrderID;
 				$colour		=	($i%2!=0) ? "#F8F8F8": "";
 		?>

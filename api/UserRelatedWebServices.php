@@ -36,8 +36,8 @@ session_start();
 if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) && ($_GET['field']) == 'restaurant')) {
 
     $myRestId = $_POST['restaurantId'];
-    $qry = mysql_query("select * from resturants where id = '" . $myRestId . "'");
-    $rest_qry = mysql_fetch_object($qry);
+    $qry = dbAbstract::Execute("select * from resturants where id = '" . $myRestId . "'");
+    $rest_qry = dbAbstract::returnObject($qry);
     $objRestaurant = $objRestaurant->getDetailbyUrl($rest_qry->url_name);
 
     $objMenu->restaurant_id = $myRestId;
@@ -588,32 +588,32 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) &
         echo json_encode(array('success' => '0', 'msg' => "Order id not entered!"));
         exit;
     }
-    $order_qry = mysql_query("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used
+    $order_qry = dbAbstract::Execute("SELECT OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used
                                               FROM ordertbl
                                               WHERE OrderID =" . $orderId);
 
-    $order_rs = @mysql_fetch_assoc($order_qry);
+    $order_rs = dbAbstract::returnAssoc($order_qry);
     if (!$order_rs) {
         echo json_encode(array('success' => '0', 'msg' => "Order not found!"));
         exit;
     }
-    $order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price,quantity as item_qty,retail_price as item_price,RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
+    $order_detail_qry = dbAbstract::Execute("SELECT item_title , 0 as item_total_price,quantity as item_qty,retail_price as item_price,RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
                                                      FROM orderdetails  ord Inner join product prd
                                                      on ord.pid=prd.prd_id
                                                      WHERE orderid = " . $order_rs['OrderID'] . "");
-    $cust_qry = mysql_query("SELECT cust_your_name, LastName ,cust_phone1
+    $cust_qry = dbAbstract::Execute("SELECT cust_your_name, LastName ,cust_phone1
                                              FROM customer_registration
                                              WHERE  id = " . $order_rs['UserID'] . "	");
-    $cust_rs = mysql_fetch_assoc($cust_qry);
-    $rest_qry = mysql_query("SELECT id as restid, name as restname, phone
+    $cust_rs = dbAbstract::returnAssoc($cust_qry);
+    $rest_qry = dbAbstract::Execute("SELECT id as restid, name as restname, phone
                                              FROM resturants
                                              WHERE  id = " . $order_rs['cat_id'] . "	");
-    $rest_rs = mysql_fetch_assoc($rest_qry);
+    $rest_rs = dbAbstract::returnAssoc($rest_qry);
     $associated_items_price = 0;
     $extra_items_price = 0;
     $index = 1;
 
-    while ($order_detail_rs = mysql_fetch_object($order_detail_qry)) {
+    while ($order_detail_rs = dbAbstract::returnObject($order_detail_qry)) {
         $assoc_split_arr1 = explode('~', $order_detail_rs->associated_items);
 
         $order_detail_rs->item_title = $fun->replaceSpecial($order_detail_rs->item_title);
@@ -894,6 +894,6 @@ if (isset($_GET['op']) && ($_GET['op'] == 'getToken') && isset($_REQUEST['email'
     echo json_encode(array('success' => '0', 'msg' => 'User Not logged in!'));
     exit;
 }
-
+mysqli_close($mysqli);
 exit;
 ?>

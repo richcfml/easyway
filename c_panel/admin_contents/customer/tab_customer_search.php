@@ -1,6 +1,6 @@
 <script src="../js/mask.js" type="text/javascript"></script>
 
-<? 
+<?php
 
 	$qry="select id, cust_your_name as firstname,LastName from customer_registration where password != '' and resturant_id=". $Objrestaurant->id ." ";
 	$search=0;
@@ -39,8 +39,8 @@ $qry .= " Order by LastName";
  if($search==1)
  {
 	 $result =array();
- 	 $mysql_query=mysql_query($qry);
-	 while ($result_object=mysql_fetch_object($mysql_query)) {
+ 	 $query=dbAbstract::Execute($qry, 1);
+	 while ($result_object=dbAbstract::returnObject($query, 1)) {
 			 $result[]=$result_object;
 		  }
 		 

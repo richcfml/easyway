@@ -2,7 +2,7 @@
           // Add your MD5 Setting.
 if($cart->isempty()) 
 {
-	@mysql_close($mysql_conn);
+	//@mysql_close($mysql_conn);
 	redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
 	exit;
 	//header("location: ". $SiteUrl .$objRestaurant->url ."/" );exit;	

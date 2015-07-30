@@ -9,10 +9,9 @@ class EWOphaxio
 		try
 		{
 			//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-			$query="INSERT INTO fax_log(orderid, status, fax_date, TrackingNumber, fax_message) values (".$pOrderID.",0,'". date("Y-m-d H:i:s")  ."', 0, 'Fax sending started' )";
-			mysql_query($query);
-			Log::write('PHAXIO Post Array - Send Fax', $query.mysql_error(), 'phaxio');
-			$mLogID = mysql_insert_id();
+			$query = "INSERT INTO fax_log(orderid, status, fax_date, TrackingNumber, fax_message) VALUES (".$pOrderID.",0,'". date("Y-m-d H:i:s")  ."', 0, 'Fax sending started' )";
+			Log::write('PHAXIO Post Array - Send Fax', $query, 'phaxio');
+			$mLogID = dbAbstract::Insert($query, 0, 2);
 			
 			$mFileName = $pOrderID .".pdf";
 			$mFilePath = realpath("pdffiles/pdf".$mFileName);	
@@ -44,50 +43,49 @@ class EWOphaxio
 				
 				if (($mSuccess==1) || ($mSuccess=="1") || ($mSuccess==true) || (strtolower($mSuccess)=="true"))
 				{
-					mysql_query("UPDATE ordertbl SET fax_tracking_number='".$mFaxID."', fax_sent=1, resend_fax=0, fax_tries=fax_tries+1, json_sent=0, fax_date='".date("Y-m-d H:i:s") ."' WHERE OrderID=".$pOrderID);
+					dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number='".$mFaxID."', fax_sent=1, resend_fax=0, fax_tries=fax_tries+1, json_sent=0, fax_date='".date("Y-m-d H:i:s") ."' WHERE OrderID=".$pOrderID);
 					//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-					mysql_query("UPDATE fax_log SET fax_message='Success', status=1, TrackingNumber='".$mFaxID."' WHERE id=".$mLogID);
+					dbAbstract::Update("UPDATE fax_log SET fax_message='Success', status=1, TrackingNumber='".$mFaxID."' WHERE id=".$mLogID);
                                         
                                         Log::write("PHAXIO Response - Send Fax \nResult: Fax Sent", print_r($mDecodeResponse,true), 'phaxio');
                                         
 				}
 				else
 				{
-					mysql_query("UPDATE fax_log SET fax_message='".$mMessage."' WHERE id=". $mLogID);
+					dbAbstract::Update("UPDATE fax_log SET fax_message='".$mMessage."' WHERE id=". $mLogID);
 					//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-					mysql_query("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
+					dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
                                         
                                         Log::write("PHAXIO Response - Send Fax \nResult: ".$mMessage, print_r($mDecodeResponse,true), 'phaxio');
 				}
 			}
 			else
 			{
-				mysql_query("UPDATE fax_log SET fax_message='Error occurred while sending fax.' WHERE id=".$mLogID);
+				dbAbstract::Update("UPDATE fax_log SET fax_message='Error occurred while sending fax.' WHERE id=".$mLogID);
 				//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-				mysql_query("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
+				dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
                                 
                                 Log::write("PHAXIO Response - Send Fax \nResult: Error occurred while sending fax.", '' , 'phaxio');
 			}
 		}
 		catch (Exception $e)
 		{
-			mysql_query("UPDATE fax_log SET fax_message='Exception raised while sending fax.' WHERE id=".$mLogID);
+			dbAbstract::Update("UPDATE fax_log SET fax_message='Exception raised while sending fax.' WHERE id=".$mLogID);
 			//TrackingNumber below is FaxID of Phaxio, TrackingNumber was used in previous Fax API (Metrofax)
-			mysql_query("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
+			dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=1234, fax_tries=fax_tries+1, resend_fax=0 WHERE OrderID=".$pOrderID);
                         
                         Log::write("PHAXIO Response - Send Fax \nResult: Exception raised while sending fax.", '' , 'phaxio');
 		}
-		mysql_close($mysql_conn);
 	}
 	
 	public function ResendFax()
 	{
    		$mQuery = "SELECT O.OrderID AS OrderID, R.fax AS FaxNumber FROM ordertbl O INNER JOIN resturants R ON O.cat_id = R.id WHERE O.resend_fax=1 ORDER BY OrderID DESC";
 					 
-		$mResult = mysql_query($mQuery);
+		$mResult = dbAbstract::Execute($mQuery);
 		$mCount = 0;	
 	
-		while($faxtoresend = mysql_fetch_object($mResult))
+		while($faxtoresend = dbAbstract::returnObject($mResult))
 		{
 			$this->SendFax($faxtoresend->OrderID, $faxtoresend->FaxNumber);
 		    $mCount = $mCount+1;
@@ -103,7 +101,7 @@ class EWOphaxio
 			global $PhaxioApiKey, $PhaxioApiSecret;
 			$mPostData = array('id' => $pFaxID, 'api_key' => $PhaxioApiKey, 'api_secret' => $PhaxioApiSecret);
 			
-            Log::write('PHAXIO Post Array - Check Fax Status', print_r($mPostData,true), 'phaxio');
+                        Log::write('PHAXIO Post Array - Check Fax Status', print_r($mPostData,true), 'phaxio');
                         
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://api.phaxio.com/v1/faxStatus");

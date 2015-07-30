@@ -234,7 +234,7 @@ tipobj.style.width=''
 }
 document.onmousemove=positiontip
 </script>
-<? 		   
+<?php 		   
 		if (isset($_REQUEST['submit'])){				
 				$coupon_title			=	$_REQUEST['coupon_title'];
 				$coupon_code			=	$_REQUEST['coupon_code'];
@@ -253,8 +253,8 @@ document.onmousemove=positiontip
 				$type					=	$_REQUEST['type'];
 				$sys_date				=	time();
 				$errMessage				=	"";
-				$couponCodeQuery = mysql_query("SELECT * FROM coupontbl WHERE coupon_code ='".$coupon_code."' AND resturant_id=".$Objrestaurant->id);
-				@$CouponCodeNumRows = mysql_num_rows($couponCodeQuery);
+				$couponCodeQuery = dbAbstract::Execute("SELECT * FROM coupontbl WHERE coupon_code ='".$coupon_code."' AND resturant_id=".$Objrestaurant->id, 1);
+				@$CouponCodeNumRows = dbAbstract::returnRowsCount($couponCodeQuery, 1);
 				   
 			if($coupon_title == ''){
 					$errMessage="Please Enter Coupon Title";
@@ -282,27 +282,23 @@ document.onmousemove=positiontip
 					$errMessage="Please Enter Coupon Discount";	
 			}else{	
 					if( $discount_applied == "whole order" ) {
-						mysql_query("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."' ,coupon_type = '1', coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP);
-                                                if(mysql_affected_rows()>0)
+						
+                                                if(dbAbstract::Insert("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."' ,coupon_type = '1', coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP, 1, 1)>0)
                                                 {
                                                     $errMessage="Coupon Added Successfully";
                                                 }
                                         } else if ( $discount_applied == "selected items" && $type == "2" ) {
-						mysql_query("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type2',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."' ,coupon_type = '2', coupon_items1= '".addslashes($coupon_items1)."',coupon_items2= '".addslashes($coupon_items2)."', coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP);
-                                                if(mysql_affected_rows()>0)
+						
+                                                if(dbAbstract::Insert("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type2',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."' ,coupon_type = '2', coupon_items1= '".addslashes($coupon_items1)."',coupon_items2= '".addslashes($coupon_items2)."', coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP, 1, 1)>0)
                                                 {
                                                     $errMessage="Coupon Added Successfully";
                                                 }   
-                                        }  else if ( $discount_applied == "selected items" && $type == "3" ) {
-					mysql_query("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type3',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."', coupon_type = '3', coupon_items1= '".addslashes($coupon_items3)."',coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP);	
-                                                if(mysql_affected_rows()>0)
+                                        }  else if ( $discount_applied == "selected items" && $type == "3" ) {	
+                                                if(dbAbstract::Insert("INSERT INTO coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type3',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."', coupon_type = '3', coupon_items1= '".addslashes($coupon_items3)."',coupon_des = '".addslashes($coupon_des)."', resturant_id=".$mRestaurantIDCP, 1, 1)>0)
                                                 {
                                                     $errMessage="Coupon Added Successfully";
                                                 }
                                         }
-/*unset($_SESSION['couponitem1']);
-unset($_SESSION['couponitem2']);
-unset($_SESSION['couponitem3']);*/
 					 
 ?>
 
@@ -416,38 +412,24 @@ setTimeout("leave()", 2000);
                 &nbsp;Option 1:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: 50% off french fries when you order a chicken sandwich.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
               <td style="padding-bottom:10px"><input name="coupon_discount_type2" type="text" size="5" id="coupon_discount_type2" value="<?=@$coupon_discount_type2?>" onfocus="radioselect('type2');">
                 &nbsp; OFF &nbsp;
-                <? if($_SESSION['couponitem1'] != "")  
+                <?php if($_SESSION['couponitem1'] != "")  
 				$str = explode(",",$_SESSION['couponitem1']);
 				 for($i = 0; $i < count($str); $i++) {
-					$items_query = mysql_query("SELECT  item_title FROM product WHERE prd_id='".$str[$i]."' ");
-					$items_rows = mysql_fetch_array($items_query);
-					//echo stripslashes( ($items_rows['item_title']) ); 
-					/*if($i == 0  ) {
-						$items_str =   $items_rows['item_title'];
-					} else {
-						$items_str .= ", ".  $items_rows['item_title'];	
-					}*/
+					$items_query = dbAbstract::Execute("SELECT  item_title FROM product WHERE prd_id='".$str[$i]."' ", 1);
+					$items_rows = dbAbstract::returnArray($items_query, 1);
 					
 					$items_str .= $items_rows['item_title'].",";	
 				 }
-				 //echo "<span style='color:#933'>".stripslashes($items_str)."</span>";
 			?>
                 <span id="selitems1" style="color:#933;"></span> <a  href="admin_contents/coupon/popup.php?coupon_item=1&catid=<?=$mRestaurantIDCP?>"  rel="facebox" > <img style="border:none" src="../images/Select-icon.png" title="Add Items"  /></a> &nbsp;when Order a &nbsp;
-                <? if($_SESSION['couponitem2'] != "")  
+                <?php if($_SESSION['couponitem2'] != "")  
 				$str1 = explode(",",$_SESSION['couponitem2']);
 				 for($i = 0; $i < count($str1); $i++) {
-					$items_query1 = mysql_query("SELECT  item_title FROM product WHERE prd_id='".$str1[$i]."' ");
-					$items_rows1 = mysql_fetch_array($items_query1);
-					//echo stripslashes( ($items_rows['item_title']) ); 
-					/*if($i == 0  ) {
-						$items_str1 =   $items_rows1['item_title'];
-					} else {
-						$items_str1 .= ", ".  $items_rows1['item_title'];	
-					}*/
+					$items_query1 = dbAbstract::Execute("SELECT  item_title FROM product WHERE prd_id='".$str1[$i]."' ", 1);
+					$items_rows1 = dbAbstract::returnArray($items_query1, 1);
 					
 					$items_str1 .= $items_rows1['item_title'].",";
 				 }
-				//echo "<span style='color:#933'>".stripslashes($items_str1)."</span>";
 			?>
                 <span id="selitems2" style="color:#933;"></span> <a  href="admin_contents/coupon/popup.php?coupon_item=2&catid=<?=$mRestaurantIDCP?>"  rel="facebox" ><img style="border:none" src="../images/Select-icon.png" title="Add Items"  /></a>&nbsp; </td>
             </tr>
@@ -459,21 +441,14 @@ setTimeout("leave()", 2000);
                 &nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: <?=$currency?>1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
               <td><input name="coupon_discount_type3" type="text" size="5" id="coupon_discount_type3" value="<?=@$coupon_discount_type3?>" onfocus="radioselect('type3');">
                 &nbsp; OFF any
-                <? if($_SESSION['couponitem3'] != "")  
+                <?php if($_SESSION['couponitem3'] != "")  
 				$str2 = explode(",",$_SESSION['couponitem3']);
 				 for($i = 0; $i < count($str2); $i++) {
-					$items_query2 = mysql_query("SELECT cat_name FROM categories WHERE cat_id='".$str2[$i]."' ");
-					$items_rows2 = mysql_fetch_array($items_query2);
-					//echo stripslashes( ($items_rows['item_title']) ); 
-					/*if($i == 0  ) {
-						$items_str2 =   $items_rows2['cat_name'];
-					} else {
-						$items_str2 .= ", ".  $items_rows2['cat_name'];	
-					}*/
+					$items_query2 = dbAbstract::Execute("SELECT cat_name FROM categories WHERE cat_id='".$str2[$i]."' ", 1);
+					$items_rows2 = dbAbstract::returnArray($items_query2, 1);
 					
 					$items_str2 .= $items_rows2['cat_name'].",";	
 				 }
-					//echo "<span style='color:#933'>".stripslashes($items_str2)."</span>";
 			?>
                 <span id="selitems3" style="color:#933;"></span> &nbsp;<a  href="admin_contents/coupon/popup.php?coupon_item=3&catid=<?=$mRestaurantIDCP?>"  rel="facebox" ><img style="border:none" src="../images/Select-icon.png" title="Add Categories"  /></a></td>
             </tr>

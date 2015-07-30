@@ -25,10 +25,10 @@ if(isset($_POST['submit']))
 	if ((trim($did_number!='')) && (trim($did_number)!='0') && (trim($did_number)!=trim($_POST["did_number_p"])))
 	{
 		$mDupQuery = "SELECT COUNT(*) AS DidCount FROM resturants WHERE TRIM(did_number)='".trim($did_number)."'";
-		$mDupRes = mysql_query($mDupQuery);
-		if (mysql_num_rows($mDupRes)>0)
+		$mDupRes = dbAbstract::Execute($mDupQuery, 1);
+		if (dbAbstract::returnRowsCount($mDupRes, 1)>0)
 		{
-			$mDupRow = mysql_fetch_object($mDupRes);
+			$mDupRow = dbAbstract::returnObject($mDupRes, 1);
 			if ($mDupRow->DidCount>0)
 			{
 				$mMessage = "Did number already exists in system.";
@@ -39,13 +39,13 @@ if(isset($_POST['submit']))
 	
 	if (!$mDupFlag)
 	{
-		mysql_query("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id );
+		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id, 1);
 		$Objrestaurant->did_number=$did_number;
 		$mMessage = "Restaurant updated successfully.";
 	}
 	else
 	{
-		mysql_query("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id );
+		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id, 1);
 	}
 
 	$Objrestaurant->order_destination=$order_destination;

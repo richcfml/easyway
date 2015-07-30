@@ -9,7 +9,7 @@
 		$total=$cart->grand_total();
 		if($cart->isempty()) 
 		{ 
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
 			exit;
 		}

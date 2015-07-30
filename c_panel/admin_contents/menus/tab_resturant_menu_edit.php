@@ -1,4 +1,4 @@
-<?
+<?php
 	$catid	=	$_REQUEST['catid'];
 		if (! empty ( $_POST )) {
 						extract ( $_POST ) ;
@@ -23,7 +23,7 @@
 								 $errMessage1="Please Enter Sub Menu Ordering Number";
 					}else{
                                                         Log::write("Update category - tab_resturant_menu_edit.php", "QUERY --UPDATE categories SET menu_id='$menu', cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat", 'menu', 1 , 'cpanel');
-							mysql_query("UPDATE categories SET menu_id='$menu', cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat");
+							dbAbstract::Update("UPDATE categories SET menu_id='$menu', cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."' WHERE cat_id= $sub_cat", 1);
 		?>
        			<script language="javascript">
 					window.location="?mod=menus&item=menu&catid=<?=$catid?>";
@@ -39,21 +39,20 @@
   <table width="500" border="0"  cellpadding="4" cellspacing="0">
   <?=($errMessage1 != '')?"<div class=\"msg_error\">$errMessage1</div>":"";?>    
   
-   <?
-          $subcat_qry	=	mysql_query("select * from categories where cat_id = $sub_cat");
-          $subcat_Rs	=	mysql_fetch_object($subcat_qry);
-		  /////
-		  $menu_qry	=	mysql_query("select id,menu_name from menus where id = $subcat_Rs->menu_id");
-          $menu_Rs	=	mysql_fetch_object($menu_qry);	 
+   <?php
+          $subcat_qry	=	dbAbstract::Execute("select * from categories where cat_id = $sub_cat", 1);
+          $subcat_Rs	=	dbAbstract::returnObject($subcat_qry, 1);
+          $menu_qry	=	dbAbstract::Execute("select id,menu_name from menus where id = $subcat_Rs->menu_id", 1);
+          $menu_Rs	=	dbAbstract::returnObject($menu_qry, 1);
   ?>
    <tr>
   <td><strong>Menu Name:</strong><br />
-  	<?
-  $menuQry = mysql_query("SELECT id, menu_name FROM menus WHERE rest_id = $catid ");   
+  	<?php
+  $menuQry = dbAbstract::Execute("SELECT id, menu_name FROM menus WHERE rest_id = $catid ", 1);
   ?>
     <select name="menu" id="menu" style="width:330px;">
     	<option value="-1">======Select Menu======</option>
-        <? while($menuRs = mysql_fetch_array( $menuQry ) ) { ?>
+        <?php while($menuRs = dbAbstract::returnArray($menuQry, 1) ) { ?>
         	<option value="<?=$menuRs['id']?>" <? if( $menuRs['id'] == $menu_Rs->id) echo "selected"; ?> ><?=$menuRs['menu_name']?></option>
         <? }?>
     </select>

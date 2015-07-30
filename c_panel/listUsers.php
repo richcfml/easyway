@@ -11,8 +11,8 @@ require_once("../includes/config.php");
     <th style="width: 154px;text-align: center;">Last Name</th>
 <?
 $ids = '';
-$sql = mysql_query("Select id,firstname,lastname from users where type ='store owner' and chargify_customer_id is null");
-while($getids = mysql_fetch_assoc($sql))
+$sql = dbAbstract::Execute("Select id,firstname,lastname from users where type ='store owner' and chargify_customer_id is null",1);
+while($getids = dbAbstract::returnAssoc($sql,1))
 {
     $ids .= $getids['id'].',';?>
     <tr><td style="width: 154px;text-align: center;"><?=$getids['id']?></td>
@@ -34,8 +34,8 @@ while($getids = mysql_fetch_assoc($sql))
      <th style="width: 154px;text-align: center;">Last Name</th>
 <?
 $resellerids = '';
-$sql = mysql_query("Select id,firstname,lastname from users where type ='reseller' and chargify_customer_id is null");
-while($reselleridsarray = mysql_fetch_assoc($sql))
+$sql = dbAbstract::Execute("Select id,firstname,lastname from users where type ='reseller' and chargify_customer_id is null",1);
+while($reselleridsarray = dbAbstract::returnAssoc($sql,1))
 {
     $resellerids .= $reselleridsarray['id'].',';
     ?>
@@ -52,3 +52,4 @@ while($reselleridsarray = mysql_fetch_assoc($sql))
 <strong>Reseller Ids:</strong><?echo $resellerids?>
 
 </div>
+<?php mysqli_close($mysqli);?>

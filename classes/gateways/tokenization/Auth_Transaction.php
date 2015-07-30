@@ -8,16 +8,15 @@ Class AuthorizeNetTransactionModel{
     public static function saveTransaction($txn_id, $orderid, $rest_id, $amount, $cc_no){
        
         $time = time();
-        mysql_query('INSERT INTO auth_transactions (rest_id, order_id, txn_id, time, amount, status) VALUES ('.mysql_real_escape_string($rest_id).', '.mysql_real_escape_string($orderid).', "'.mysql_real_escape_string($txn_id).'", '.mysql_real_escape_string($time).', "'.mysql_real_escape_string($amount).'", 1)') or die(mysql_error());
-        return mysql_insert_id();
+        return dbAbstract::Insert('INSERT INTO auth_transactions (rest_id, order_id, txn_id, time, amount, status) VALUES ('.dbAbstract::returnRealEscapedString($rest_id).', '.dbAbstract::returnRealEscapedString($orderid).', "'.dbAbstract::returnRealEscapedString($txn_id).'", '.dbAbstract::returnRealEscapedString($time).', "'.dbAbstract::returnRealEscapedString($amount).'", 1)', 0, 2);
     }
 
     public static function getTransaction($txn_id){
-        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE txn_id = "'.mysql_real_escape_string($txn_id).'"'));
+        return dbAbstract::ExecuteObject('SELECT * FROM auth_transactions WHERE txn_id = "'.dbAbstract::returnRealEscapedString($txn_id).'"');
     }
     
     public static function getTransactionByOrder($order_id){
-        return mysql_fetch_object(mysql_query('SELECT * FROM auth_transactions WHERE order_id = "'.mysql_real_escape_string($order_id).'"'));
+        return dbAbstract::ExecuteObject('SELECT * FROM auth_transactions WHERE order_id = "'.dbAbstract::returnRealEscapedString($order_id).'"');
     }
 
     public static function refundTransaction($txn_id, $auth){
@@ -40,11 +39,11 @@ Class AuthorizeNetTransactionModel{
         }
     }
     public static function isConfirmed($order_id){
-        $order = mysql_fetch_object(mysql_query('SELECT * FROM ordertbl WHERE id = "'.mysql_real_escape_string($order_id).'"'));
+        $order = dbAbstract::ExecuteObject('SELECT * FROM ordertbl WHERE id = "'.dbAbstract::returnRealEscapedString($order_id).'"');
         return $order->order_confirm == 1;
     }
     public static function setRefund($order_id){
-        mysql_query('UPDATE auth_transactions set status = 2 WHERE id = "'.mysql_real_escape_string($order_id).'"');
+        dbAbstract::Update('UPDATE auth_transactions set status = 2 WHERE id = "'.dbAbstract::returnRealEscapedString($order_id).'"');
         
     }
 }
@@ -63,7 +62,7 @@ Class AuthNetTokenizationModel{
 
     public function loadProfile($email, $rest_id){
 
-        $profile = mysql_fetch_object(mysql_query('SELECT * FROM auth_user_profile WHERE customer_id = "'.mysql_real_escape_string($email).'" AND rest_id = "'.mysql_real_escape_string($rest_id).'"'));
+        $profile = dbAbstract::ExecuteObject('SELECT * FROM auth_user_profile WHERE customer_id = "'.dbAbstract::returnRealEscapedString($email).'" AND rest_id = "'.dbAbstract::returnRealEscapedString($rest_id).'"');
 
         if(!$profile)return false;
 
@@ -84,7 +83,7 @@ Class AuthNetTokenizationModel{
     public function createProfile($email, $rest_id){
 
 
-        $customer = mysql_fetch_object(mysql_query('SELECT * FROM customer_registration WHERE cust_email = "'.mysql_real_escape_string($email).'" AND resturant_id = "'.mysql_real_escape_string($rest_id).'"'));
+        $customer = dbAbstract::ExecuteObject('SELECT * FROM customer_registration WHERE cust_email = "'.dbAbstract::returnRealEscapedString($email).'" AND resturant_id = "'.dbAbstract::returnRealEscapedString($rest_id).'"');
 
         $this->cim->setParameter('email', $email);
         $this->cim->setParameter('description', 'Profile for rest#'.$rest_id.' : '.$email);
@@ -95,7 +94,7 @@ Class AuthNetTokenizationModel{
         $this->customerId = $customer->id;
         $this->email = $email;
         if($this->profileId>0){
-            mysql_query('INSERT INTO auth_user_profile (customer_id, rest_id, profile_id, email, time) VALUES ("'.$customer->id.'", "'.$rest_id.'", "'.$this->profileId.'", "'.$email.'", "'.time().'")');
+            dbAbstract::Insert('INSERT INTO auth_user_profile (customer_id, rest_id, profile_id, email, time) VALUES ("'.$customer->id.'", "'.$rest_id.'", "'.$this->profileId.'", "'.$email.'", "'.time().'")');
             $profile_id =  $this->profileId;
             return $profile_id;
         }
@@ -107,7 +106,7 @@ Class AuthNetTokenizationModel{
 
     public function saveCCToken($name, $ccno, $exp_year, $exp_month, $fname, $lname, $addr, $city, $state, $zip, $country, $phno, $fax,$custId,$rest_id){
 
-      $userprofile = mysql_fetch_object(mysql_query('SELECT * FROM auth_user_profile WHERE customer_id = "'.mysql_real_escape_string($custId).'" AND rest_id = "'.mysql_real_escape_string($rest_id).'"'));
+      $userprofile = dbAbstract::ExecuteObject('SELECT * FROM auth_user_profile WHERE customer_id = "'.dbAbstract::returnRealEscapedString($custId).'" AND rest_id = "'.dbAbstract::returnRealEscapedString($rest_id).'"');
         $profile_id=$userprofile->profile_id;
 
         $this->cim->setParameter('customerProfileId', $profile_id);
@@ -130,7 +129,7 @@ Class AuthNetTokenizationModel{
 
         if($payment_profile_id>0){
 
-            mysql_query('INSERT INTO auth_cc_tokens (name, customer_id, ccno, token, status, time) VALUES ("'.$name.'", "'.$custId.'", "'.$ccno.'", "'.$payment_profile_id.'", 1, "'.time().'")');
+            dbAbstract::Insert('INSERT INTO auth_cc_tokens (name, customer_id, ccno, token, status, time) VALUES ("'.$name.'", "'.$custId.'", "'.$ccno.'", "'.$payment_profile_id.'", 1, "'.time().'")');
             return $payment_profile_id;
 
         }
@@ -145,8 +144,8 @@ Class AuthNetTokenizationModel{
     public function useToken($amount,$payment_profile_id,$shipping_id,$profile_id){
 
 
-       $qry = 'INSERT INTO cydne_log (ToPhoneNumber, MessageID, MatchedMessageID, ReferenceId,FromPhoneNumber,Message,LogTime,SMSType) VALUES ("'.$amount.'", "'.mysql_real_escape_string($payment_profile_id).'", "'.mysql_real_escape_string($profile_id).'", "'.mysql_real_escape_string($shipping_id).'","'.mysql_real_escape_string(111).'","'.mysql_real_escape_string(222).'","'.mysql_real_escape_string(1111).'","'.mysql_real_escape_string(3).'")';
-		mysql_query($qry);
+       $qry = 'INSERT INTO cydne_log (ToPhoneNumber, MessageID, MatchedMessageID, ReferenceId,FromPhoneNumber,Message,LogTime,SMSType) VALUES ("'.$amount.'", "'.dbAbstract::returnRealEscapedString($payment_profile_id).'", "'.dbAbstract::returnRealEscapedString($profile_id).'", "'.dbAbstract::returnRealEscapedString($shipping_id).'","'.dbAbstract::returnRealEscapedString(111).'","'.dbAbstract::returnRealEscapedString(222).'","'.dbAbstract::returnRealEscapedString(1111).'","'.dbAbstract::returnRealEscapedString(3).'")';
+		dbAbstract::Insert($qry);
         $this->cim->setParameter('amount', $amount);
         $this->cim->setParameter('customerProfileId', $profile_id);
         $this->cim->setParameter('customerPaymentProfileId', $payment_profile_id);
@@ -187,7 +186,7 @@ Class AuthNetTokenizationModel{
 
         if($shipping_id>0)
         {
-            mysql_query('INSERT INTO auth_shipping_details (customer_id, rest_id, payment_profile_id, FirstName,LastName,Address,City,state,zip_code,Email,phone_number,cust_shipping_id) VALUES ("'.$custId.'", "'.$rest_id.'", "'.$payment_profile_id.'", "'.mysql_real_escape_string($x_first_name).'","'.mysql_real_escape_string($x_last_name).'","'.mysql_real_escape_string($x_address).'","'.mysql_real_escape_string($x_city).'","'.mysql_real_escape_string($x_state).'","'.mysql_real_escape_string($x_zip).'","'.mysql_real_escape_string($x_phone).'","'.mysql_real_escape_string($email).'","'.$shipping_id.'")');
+            dbAbstract::Insert('INSERT INTO auth_shipping_details (customer_id, rest_id, payment_profile_id, FirstName,LastName,Address,City,state,zip_code,Email,phone_number,cust_shipping_id) VALUES ("'.$custId.'", "'.$rest_id.'", "'.$payment_profile_id.'", "'.dbAbstract::returnRealEscapedString($x_first_name).'","'.dbAbstract::returnRealEscapedString($x_last_name).'","'.dbAbstract::returnRealEscapedString($x_address).'","'.dbAbstract::returnRealEscapedString($x_city).'","'.dbAbstract::returnRealEscapedString($x_state).'","'.dbAbstract::returnRealEscapedString($x_zip).'","'.dbAbstract::returnRealEscapedString($x_phone).'","'.dbAbstract::returnRealEscapedString($email).'","'.$shipping_id.'")');
             return $shipping_id;
         }
         else

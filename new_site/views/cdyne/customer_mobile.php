@@ -6,7 +6,7 @@
 	$loggedinuser->savePhone();
  
 	 echo "success";
-	@mysql_close($mysql_conn);	
+	//@mysql_close($mysql_conn);	
  }
 exit;
 }?>

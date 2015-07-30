@@ -10,8 +10,6 @@
 			} else {
 				$coupon_items_str .= ", ".  $item_id[$i];	
 			}
-		 // $query = "INSERT INTO coupontbl SET coupon_items1 = '".$_GET['product_id']."', item_id = '".$item_id[$i]."'";
-		 // mysql_query($query);
 	 	 }
 		 
 		 if( $_GET['coupon_item'] == 1 ) {
@@ -30,12 +28,13 @@
 <script type="text/javascript" language="javascript">
 window.location.href = "../../?mod=coupon&item=edit&cid=<?=$couponid?>";
 </script>
-<?
+<?php
 	}else {
 ?>
 <script type="text/javascript" language="javascript">
 window.location.href = "../../?mod=coupon&item=add&catid=<?=$_GET['category_id']?>&sh=1";
 </script>
-<?
+<?php
 	}
+       mysqli_close($mysqli);
 ?>

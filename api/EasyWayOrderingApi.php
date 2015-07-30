@@ -3,11 +3,6 @@
 class Authentication {
 
     public static function getToken($UserName, $Password) {
-
-        /*$query = "SELECT * from user_info where user_name = '" . $UserName . "' and password = '" . $Password . "'";
-        $row = mysql_query($query);
-        */
-		//$EasywayOrderingApiURL is defined in includes/config.php
         $result = (array)json_decode(Authentication::sendData($EasywayOrderingApiURL."services.php?op=authenticate", array('user'=>$UserName, 'pass'=>md5($Password))));
 
         if ($result['message'] == 'authenticated') {
@@ -15,7 +10,7 @@ class Authentication {
             $loop = false;
             do {
                 $token = md5(uniqid(rand(), true));
-                $token_info = mysql_fetch_array(mysql_query("SELECT token from authentication where token = '" . $token . "'"));
+                $token_info = dbAbstract::ExecuteArray("SELECT token from authentication where token = '" . $token . "'");
 
                 if ($token_info) {
                     $loop = true;
@@ -27,7 +22,7 @@ class Authentication {
 
             $user_id = $result['user'];
             $rest_id = $result['rest'];
-            mysql_query("INSERT into authentication set token = '" . $token . "'
+            dbAbstract::Insert("INSERT into authentication set token = '" . $token . "'
                         ,user_id = '" . $user_id . "'
                         ,rest_id = '" . $rest_id . "'
                         ,status= 1");
@@ -40,10 +35,9 @@ class Authentication {
 
     public static function getRestIdFromToken($token){
         $query = "SELECT * from authentication where token  = '" . $token . "'";
-        $result = mysql_fetch_array(mysql_query($query));
+        $result = dbAbstract::ExecuteArray($query);
         if($result){
-            //$restaurant = mysql_fetch_array(mysql_query('SELECT * FROM user_info WHERE user_id = '.$result['user_id']));
-            return unserializeData($result['rest_id']);
+            return unserialize($result['rest_id']);
         }else{
             return false;
         }
@@ -79,9 +73,9 @@ class OrderInfo {
 
         $orders = array();
         if($rest_id){
-            $result = mysql_query("SELECT * from orders where rest_id = '" . $rest_id_[$rest_id] . "' AND status = 0");
-            while($rec = mysql_fetch_object($result)){
-                $orders[$rec->order_id] = unserializeData($rec->payload);
+            $result = dbAbstract::Execute("SELECT * from orders where rest_id = '" . $rest_id_[$rest_id] . "' AND status = 0");
+            while($rec = dbAbstract::returnObject($result)){
+                $orders[$rec->order_id] = unserialize($rec->payload);
             }
         }
 
@@ -91,7 +85,7 @@ class OrderInfo {
     }
 
     public static function fetchOrder($order) {
-        return mysql_fetch_array(mysql_query('SELECT * FROM orders WHERE order_id = '.$order));
+        return dbAbstract::ExecuteArray('SELECT * FROM orders WHERE order_id = '.$order);
     }
 
 
@@ -116,7 +110,7 @@ class OrderInfo {
 class Confirmation {
 
     public static function setConfirmation($OrderId) {
-        return mysql_query("UPDATE orders set status = 1 where order_id = '" . $OrderId . "'");
+        return dbAbstract::Update("UPDATE orders set status = 1 where order_id = '" . $OrderId . "'");
     }
 
     public static function setConfirmationOnEWO($OrderId, $RestId) {

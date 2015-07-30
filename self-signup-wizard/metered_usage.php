@@ -47,3 +47,4 @@
 		var_dump($result);
 	echo "</pre>";
 ?>
+<?php mysqli_close($mysqli);?>

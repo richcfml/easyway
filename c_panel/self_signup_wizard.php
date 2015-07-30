@@ -61,3 +61,4 @@
 </form>
 </body>
 </html>
+<?php mysqli_close($mysqli);?>

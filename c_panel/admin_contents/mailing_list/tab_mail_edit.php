@@ -1,7 +1,7 @@
-<?
+<?php
 	$mailid		=	$_REQUEST['mailid'];
-	$mailQry	=	mysql_query("select * from mailing_list where id = $mailid");
-	$mailRs		=	mysql_fetch_object($mailQry);
+	$mailQry	=	dbAbstract::Execute("select * from mailing_list where id = $mailid", 1);
+	$mailRs		=	dbAbstract::returnObject($mailQry, 1);
 				   
 		if (isset($_REQUEST['submit']))
 			{
@@ -19,7 +19,7 @@
 				   
 				$desiredname='';
 				
-				mysql_query("UPDATE mailing_list SET email= '$email' WHERE id=$mailid");
+				dbAbstract::Update("UPDATE mailing_list SET email= '$email' WHERE id=$mailid", 1);
 				?>
                  <script language="javascript">
 						window.location="./?mod=mailing_list&cid=<?=$mRestaurantIDCP?>";

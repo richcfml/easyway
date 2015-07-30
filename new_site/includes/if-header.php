@@ -81,15 +81,15 @@ if (strtolower(trim($_GET["item"]))!="login")
     	$mIPAddress = $_SERVER['REMOTE_ADDR'];
 	}
 	
-	$mResult = mysql_query("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$mRestaurantID." AND IPAddress='".$mIPAddress."' AND SessionID='".$mSessionID."'");
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$mRestaurantID." AND IPAddress='".$mIPAddress."' AND SessionID='".$mSessionID."'");
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = mysql_fetch_object($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		if (is_numeric($mRow->VisitCount))
 		{
 			if ($mRow->VisitCount<1) //No Entry for this visit, Record this visit
 			{
-				$mResult = mysql_query("INSERT INTO facebookvisits (RestaurantID, IPAddress, SessionID) VALUES (".$mRestaurantID.", '".$mIPAddress."', '".$mSessionID."')");
+				$mResult = dbAbstract::Insert("INSERT INTO facebookvisits (RestaurantID, IPAddress, SessionID) VALUES (".$mRestaurantID.", '".$mIPAddress."', '".$mSessionID."')");
 			}
 		}
 	}

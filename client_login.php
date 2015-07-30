@@ -10,9 +10,9 @@ if (isset($_POST['submit'])) {
     $pass = $_REQUEST['pass'];
 
     $qry_str = "SELECT id, type, status FROM users WHERE username='" . prepareStringForMySQL($username) . "' AND password='" . prepareStringForMySQL($pass) . "'";
-    $user = mysql_query($qry_str);
-    if (mysql_num_rows($user) > 0) {
-        $user = mysql_fetch_assoc($user);
+    $user = dbAbstract::Execute($qry_str);
+    if (dbAbstract::returnRowsCount($user) > 0) {
+        $user = dbAbstract::returnAssoc($user);
         if ($user["status"] == 1) {
             $qry_str = "SELECT c.site_shared_key,r.chargify_subscription_id,c.hosted_page_url
                 FROM chargify_products c
@@ -20,10 +20,10 @@ if (isset($_POST['submit'])) {
                 ON r.chargify_subscription_canceled=1 AND r.owner_id='" . $user["id"] . "'
                 WHERE r.chargify_product_id=c.settings_id AND c.site_shared_key!=''";
 
-            $resturants = mysql_query($qry_str);
-            if (mysql_num_rows($resturants) > 0) {
+            $resturants = dbAbstract::Execute($qry_str);
+            if (dbAbstract::returnRowsCount($resturants) > 0) {
                 // ask user to update payment of the suspended restaurant licenses
-                $resturant = mysql_fetch_assoc($resturants);
+                $resturant = dbAbstract::returnAssoc($resturants);
                 $return_url = $resturant["hosted_page_url"];
                 $subdomain = substr($return_url, 7, strpos($return_url, '.') - strlen($return_url));
                 $message = "update_payment--" . $resturant["chargify_subscription_id"] . "--" . $resturant["site_shared_key"];
@@ -224,3 +224,4 @@ if (isset($_POST['submit'])) {
     <?php include('footer.php'); ?>
 </body>
 </html>
+<?php mysqli_close($mysqli);?>

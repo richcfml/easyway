@@ -1,21 +1,16 @@
 <div style="float:left; width:20%;">
 
     <div id="all_rest" class="itemclosed" onClick="togglehandler(this.id, '');"><a href="?mod=resturant">All Restaurants</a></div>
-    <?
-    /* $client_id = $_REQUEST['client_id'];
-      $client_reseller_sql = "select reseller_id from reseller_client WHERE client_id = '".$client_id."'";
-
-      $client_reseller_qry = mysql_query( $client_reseller_sql );
-      $client_reseller_rs	= mysql_fetch_array( $client_reseller_qry );
-      $reseller_id = $client_reseller_rs[reseller_id]; */
+    <?php
+    
 
     //GET ALL RESELLERS 
     $reseller_sql = "select id, firstname, lastname,company_name FROM users where type ='reseller' ORDER BY company_name ASC ";
 
     $class = "";
-    $reseller_qry = mysql_query($reseller_sql);
+    $reseller_qry = dbAbstract::Execute($reseller_sql,1);
     $reseller_id = 0;
-    while ($reseller_rs = mysql_fetch_assoc($reseller_qry)) {
+    while ($reseller_rs = dbAbstract::returnAssoc($reseller_qry,1)) {
         $reseller_name = $reseller_rs['company_name'] . " [" . $reseller_rs['firstname'] . " " . $reseller_rs['lastname'] . " ]";
         if ($reseller_id == $reseller_rs['id'])
             $display = "block";
@@ -33,11 +28,11 @@
                     <?
                     //GET ALL CLIENTS
                     $reseller_client_sql1 = "SELECT client_id,restaurant_count,firstname,lastname FROM reseller_client WHERE reseller_id  = '" . $reseller_rs['id'] . "' ";
-                    $reseller_client_qry1 = mysql_query($reseller_client_sql1);
+                    $reseller_client_qry1 = dbAbstract::Execute($reseller_client_sql1,1);
                     $client_ids1 = "";
 
                     $j = 0;
-                    while ($reseller_client_rs1 = mysql_fetch_array($reseller_client_qry1)) {
+                    while ($reseller_client_rs1 = dbAbstract::returnArray($reseller_client_qry1,1)) {
 
                         if ($j == 0) {
                             $client_ids1 = $reseller_client_rs1['client_id'];

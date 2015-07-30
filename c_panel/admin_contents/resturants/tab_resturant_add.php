@@ -133,7 +133,7 @@ function getXMLHTTP() { //fuction to return the xml http object
      // $("#eyescript").mask("~9.99 ~9.99 999");
    });
 // ]]&gt;/*]]>*/</script>
-<?	
+<?php	
 	//////////////rest_exist variable identify that resturant name already exist or not in the db//////////// 
 	$rest_exist = 0;
 	$errMessage=''; 
@@ -168,8 +168,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 	}
 
 	if (isset($_REQUEST['submit'])){
-		$restQry=mysql_query("select name from resturants where name='$catname'");
-		@$restRs	=	mysql_num_rows($restQry);
+		$restQry=dbAbstract::Execute("SELECT name from resturants where name='$catname'",1);
+		@$restRs	=	dbAbstract::returnRowsCount($restQry,1);
 		if($restRs > 0) 
 			$rest_exist = 1;	
 
@@ -178,8 +178,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 		// check if chargify_subscription_id already taken
 		$restRs1 = 0;
 		if(!empty($chargify_subscription_id)) {
-			$restQry1 = mysql_query("SELECT COUNT(*) AS total FROM resturants WHERE chargify_subscription_id='$chargify_subscription_id' AND id!='$catid'");
-			$restRs1	= mysql_fetch_object($restQry1);
+			$restQry1 = dbAbstract::Execute("SELECT COUNT(*) AS total FROM resturants WHERE chargify_subscription_id='$chargify_subscription_id' AND id!='$catid'",1);
+			$restRs1	= dbAbstract::returnObject($restQry1,1);
 			$restRs1 = $restRs1->total;
 		}
 		
@@ -237,10 +237,10 @@ function getXMLHTTP() { //fuction to return the xml http object
 			// Get Chargify Product ID Starts Here // -- Gulfam
 			$mChargify_Settings_ID = 0;
                         $mProduct_ID = 0;
-			$mResult = mysql_query("SELECT settings_id,product_id FROM chargify_products WHERE user_id=".addslashes($reselelr));
-			if (mysql_num_rows($mResult)>0)
+			$mResult = dbAbstract::Execute("SELECT settings_id,product_id FROM chargify_products WHERE user_id=".addslashes($reselelr),1);
+			if (dbAbstract::returnRowsCount($mResult,1)>0)
 			{
-				$mRow = mysql_fetch_object($mResult);
+				$mRow = dbAbstract::returnObject($mResult,1);
 				if (is_numeric($mRow->settings_id))
 				{
 					$mChargify_Settings_ID = $mRow->settings_id;
@@ -248,14 +248,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 				}
 			}
                         
-                        $chargify_customer_id = mysql_fetch_object(mysql_query("SELECT chargify_customer_id,chargify_subcription_id,email FROM users WHERE id=".addslashes($owner_name)));
-                        
-//                        if(empty($chargify_customer_id->chargify_subcription_id))
-//                        {
-//                            $customer_subscription_id = $chargify->createSubcription($product_details ,$chargify_customer_id->chargify_customer_id,$subcription_method,$credit_card_number,$card_no,$exp_date,$exp_year );
-//                            mysql_query("update users SET chargify_subcription_id= '".$customer_subscription_id->subscription->id."' where chargify_customer_id = ".$chargify_customer_id->chargify_customer_id."");
-//
-//                        }
+                        $chargify_customer_id = dbAbstract::ExecuteObject("SELECT chargify_customer_id,chargify_subcription_id,email FROM users WHERE id=".addslashes($owner_name),1);
                         
                         $chargify_subscription_id = $chargify->createSubcription($product_details ,$chargify_customer_id->chargify_customer_id,$subcription_method,$credit_card_number,$card_no,$exp_date,$exp_year );
 			// Get Chargify Product ID Ends Here // -- Gulfam
@@ -264,7 +257,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                             $demoAccountFlag = 'true';
                             $parameters='';
                             $mURL2 ='';
-                            $check_premium = mysql_fetch_object(mysql_query("select premium_account from chargify_products where product_id = $product_details and user_id=".$reselelr.""));
+                            $check_premium = dbAbstract::ExecuteObject("SELECT premium_account from chargify_products where product_id = $product_details and user_id=".$reselelr."",1);
                             $premium = $check_premium->premium_account;
 
                             $parameters = "address=".$rest_address."&city=".$rest_city."&companyName=".$catname."&country=".$cntry."&state=".$rest_state."&zip=".$rest_zip."&email=".$chargify_customer_id->email;
@@ -284,15 +277,11 @@ function getXMLHTTP() { //fuction to return the xml http object
                                 curl_close($ch2);
                                 unset($ch2);
                                 $mResult2= json_decode($mResult2);
-                                //print_r($mResult2);
                                 $mResult2 = (object) $mResult2;
                                 
                                 $mResult2->data = (object) $mResult2->data;
                                 $data = $mResult2->data;
                                 $getSrid = $data->srid;
-                                //mysql_query("UPDATE resturants SET srid='".$getSrid."' where id = $catid");
-
-
                             }
 
                             else if($premium == 1)
@@ -312,14 +301,11 @@ function getXMLHTTP() { //fuction to return the xml http object
                                 curl_close($ch2);
                                 unset($ch2);
                                 $mResult2= json_decode($mResult2);
-                                //print_r($mResult2);
                                 $mResult2 = (object) $mResult2;
 
                                 $mResult2->data = (object) $mResult2->data;
                                 $data = $mResult2->data;
                                 $getSrid = $data->srid;
-                                
-                               // mysql_query("UPDATE resturants SET srid='".$getSrid."' where id = $catid");
                             }
 			
 
@@ -333,29 +319,28 @@ function getXMLHTTP() { //fuction to return the xml http object
                             	$credit_card_info = $chargify_subscription_id->subscription;
                                 if(!empty($credit_card_info->credit_card->id))
                                 {
-                                    $check_card_data_Qry = mysql_fetch_object(mysql_query("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id->chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'"));
+                                    $check_card_data_Qry = dbAbstract::ExecuteObject("SELECT * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id->chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
                                     if(empty($check_card_data_Qry))
                                     {
-                                        mysql_query(
+                                        dbAbstract::Insert(
                                                 "INSERT INTO chargify_payment_method
                                                 SET user_id= '".addslashes($owner_name)."'
                                                         ,chargify_customer_id= '".addslashes($chargify_customer_id->chargify_customer_id)."'
                                                         ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
-                                                        ,card_number='".$credit_card_info->credit_card->masked_card_number."'"
+                                                        ,card_number='".$credit_card_info->credit_card->masked_card_number."'",1
                                         );
                                     }
                                 }				
-			    $check_product_premium = mysql_fetch_object(mysql_query("Select premium_account from chargify_products where product_id = ".$product_details." and user_id = ".$reselelr.""));
+			    $check_product_premium = dbAbstract::ExecuteObject("SELECT premium_account from chargify_products where product_id = ".$product_details." and user_id = ".$reselelr."",1);
                             
 	
-			    $reseller_chargify_id = mysql_fetch_object(mysql_query("SELECT chargify_subcription_id FROM users WHERE id=".addslashes($reselelr)));
+			    $reseller_chargify_id = dbAbstract::ExecuteObject("SELECT chargify_subcription_id FROM users WHERE id=".addslashes($reselelr),1);
                               $quantity = 0;  
 				$quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$check_product_premium->premium_account);
-                                //if(!empty($quantity))
-                                //{   	
+
                                     $quantity = $quantity+1;
                                     $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$check_product_premium->premium_account,'activate');
-                                //}
+
 	
 			     $queryInsertRestaurant = "INSERT INTO resturants
                                     SET name= '".prepareStringForMySQL($catname)."'
@@ -379,10 +364,9 @@ function getXMLHTTP() { //fuction to return the xml http object
                                             ,chargify_subscription_id='".$chargify_subscription_id->subscription->id."'
                                             ,region='" . prepareStringForMySQL(trim($region)) . "'
 					    ,srid = '".$getSrid."'";
-			    mysql_query($queryInsertRestaurant);
-				Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurant , 'menu', 1 , 'cpanel');
+			    $catid = dbAbstract::Insert($queryInsertRestaurant, 1, 2);
+			
 
-                            $catid = mysql_insert_id();
 				if($catid>0)
 				{
 					if (isset($optionallogo))
@@ -409,7 +393,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 									@$image->save($mPath);
 								}
 								
-								mysql_query("UPDATE resturants SET optionl_logo='".$mImageName."' WHERE id=".$catid);
+								dbAbstract::Update("UPDATE resturants SET optionl_logo='".$mImageName."' WHERE id=".$catid,1);
 							}
 						}
 					}
@@ -428,13 +412,12 @@ function getXMLHTTP() { //fuction to return the xml http object
                                 	status='1',
                                 	orders_last_month_count='0', ".$mImageStr."
                                 	orders_last_but_second_month_count='0'";												 
-	                            mysql_query($queryInsertRestaurantAnalytics);
+                                        dbAbstract::Insert($queryInsertRestaurantAnalytics,1);
 					Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurantAnalytics , 'menu', 1 , 'cpanel');
                                     
 /*-------------------- Insert Query For Main Menu And Sub Menu  ----------------------------------------*/
-                                    mysql_query("INSERT INTO menus SET rest_id= ".$catid.", menu_name= '" . "Main Menu" . "', menu_ordering= '" . "0" . "', menu_desc= '" . "Menu Description" . "', status= 1");
-                                    $menuid = mysql_insert_id();
-                                    mysql_query("INSERT INTO categories SET parent_id= ".$catid.", menu_id= ". $menuid .", cat_name= '" . "Sub Menu Category" . "', cat_ordering= 1, cat_des= '" . "Sub Menu Description" . "'");
+                                    $menuid = dbAbstract::Insert("INSERT INTO menus SET rest_id= ".$catid.", menu_name= '" . "Main Menu" . "', menu_ordering= '" . "0" . "', menu_desc= '" . "Menu Description" . "', status= 1", 1, 2);
+                                    dbAbstract::Insert("INSERT INTO categories SET parent_id= ".$catid.", menu_id= ". $menuid .", cat_name= '" . "Sub Menu Category" . "', cat_ordering= 1, cat_des= '" . "Sub Menu Description" . "'",1);
 /*------------------------------------------------------------------------------------------------------*/
                                         
                                    
@@ -447,32 +430,32 @@ function getXMLHTTP() { //fuction to return the xml http object
 								,day= '".$j."'
 								,open='$open_time'
 								,close='$close_time'", 'menu', 1 , 'cpanel');
-						mysql_query(
+						dbAbstract::Insert(
 							"INSERT INTO business_hours 
 							SET rest_id = '".$catid."'
 								,day= '".$j."'
 								,open='$open_time'
-								,close='$close_time'"
+								,close='$close_time'",1
 						);
 					}
 				}
 			//When resturant has been created then the granted license status will become activated.
-			mysql_query("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key);
-			mysql_query("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name);
+			dbAbstract::Update("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key,1);
+			dbAbstract::Update("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name,1);
 
 			if($rest_exist) {
 				$rest_url_name = $rest_url_name.$catid;
-				mysql_query("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid);
-				mysql_query("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid);
+				dbAbstract::Update("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid,1);
+				dbAbstract::Update("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid,1);
 			}
 
 			/////////////////////////Get site owner's email address to send email with resturant URL//////////////////////////////////
-			$rest_owner_query = mysql_query("SELECT email FROM users WHERE id ='".$owner_name."'");
-			$rest_owner_row = mysql_fetch_row($rest_owner_query);
+			$rest_owner_query = dbAbstract::Execute("SELECT email FROM users WHERE id ='".$owner_name."'",1);
+			$rest_owner_row = dbAbstract::returnRow($rest_owner_query,1);
 			$rest_owner_email = $rest_owner_row[0];  
 
-			$rest_urlname_query = mysql_query("SELECT url_name FROM resturants WHERE id ='".$catid."'");
-			$rest_urlname_row = mysql_fetch_row($rest_urlname_query);
+			$rest_urlname_query = dbAbstract::Execute("SELECT url_name FROM resturants WHERE id ='".$catid."'",1);
+			$rest_urlname_row = dbAbstract::returnRow($rest_urlname_query,1);
 			$rest_url = $rest_urlname_row[0]; 
 
 			//$from = "From:onlineorder_admin@onlineorder.com";
@@ -490,7 +473,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 			<script language="javascript">
 				window.location="./?mod=resturant&item=main";
 			</script>
-<?
+<?php
                         }
                         else
                             {
@@ -974,11 +957,10 @@ function getXMLHTTP() { //fuction to return the xml http object
                 </td>
             </tr>
            <? 
-			$aDotNet_access_qry = mysql_query("SELECT aDotNet_access FROM users WHERE id ='".$_SESSION['owner_id']."'");
-			$aDotNet_access_rs = mysql_fetch_array($aDotNet_access_qry);
+			$aDotNet_access_qry = dbAbstract::Execute("SELECT aDotNet_access FROM users WHERE id ='".$_SESSION['owner_id']."'",1);
+			$aDotNet_access_rs = dbAbstract::returnArray($aDotNet_access_qry,1);
 			$aDotNet_access = $aDotNet_access_rs['aDotNet_access'];
-		   //admin can access AUTHORISE.NET, reseller can only access if aDotNet_access_status = 1
-		   //if( ( $_SESSION['admin_type'] == 'admin' ) || ( $_SESSION['admin_type'] == 'reseller' && $aDotNet_access == 1  ) ){ ?>
+             ?>
           
           <tr align="left" valign="top">
                 <td><strong>Choose Product:</strong></td>

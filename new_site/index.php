@@ -60,7 +60,7 @@
 	if($mod=="cdyne") 
 	{
 		require($site_root_path . "views/cdyne/index.php");
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		die();
 	}
 	
@@ -71,7 +71,7 @@
 	{	
 		require($include);	
 		exit;
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 	}
 	else
 	{
@@ -182,7 +182,7 @@
 		}
 		echo $visit_tracker_html 
 		?>
-		<?php  @mysql_close($mysql_conn);?>
+		<?php // @mysql_close($mysql_conn);?>
 	<div id="footer-links">
 		<ul style="list-style:none;margin: 0 30%;">
 			<li style="float:left;margin:0px 10px;padding: 0px 10px;border-right:1px solid #d3d4d5;">

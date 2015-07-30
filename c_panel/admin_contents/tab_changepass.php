@@ -61,8 +61,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 
 </script>
 <? 
-	$old_username_pass_qry = mysql_query("select * from users WHERE username = '".$_SESSION['admin_session_user_name']."'");
-	$old_username_pass_qry_rs = mysql_fetch_array($old_username_pass_qry, MYSQL_BOTH);
+	$old_username_pass_qry = dbAbstract::Execute("select * from users WHERE username = '".$_SESSION['admin_session_user_name']."'",1);
+	$old_username_pass_qry_rs = dbAbstract::returnArray($old_username_pass_qry,1);
 	$oldpass_db = $old_username_pass_qry_rs['password'];
 	$name 		= $old_username_pass_qry_rs['username'];
 	$errMessage="";
@@ -82,7 +82,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 	 $errMessage="New and Confirm Password should match ecah other.";
 	}
 		if($errMessage==""){	 
-	mysql_query("update users set password = '".$pass."' where username ='".$name."'");
+	dbAbstract::Update("UPDATE users set password = '".$pass."' where username ='".$name."'",1);
 	?>
     <script language="javascript">
 		window.location="./?mod=resturant";
@@ -99,26 +99,26 @@ function getXMLHTTP() { //fuction to return the xml http object
             $payment_data = $chargify->updatePaymentProfile($first_name,$last_name,$billingAddress1,$billingAddress2,$city,$state ,$zip ,$country,$payment_profile_id,$exp_month,$exp_year );
             Log::write('updatePaymentProfile - tab_changepass.php', 'Response Array:'.print_r($payment_data,true), 'MyAccount', 1);
 
-            $sql=mysql_query("update chargify_payment_method set billing_address = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_address))."',billing_address_2 = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_address_2))."'
-                ,billing_city = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_city))."',billing_country = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_country))."',billing_state ='".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_state))."'
-                ,billing_zip = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->billing_zip))."',first_name = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->first_name))."',last_name = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->last_name))."'
-                ,expiration_month = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->expiration_month))."',expiration_year = '".mysql_real_escape_string(stripslashes($payment_data->payment_profile->expiration_year))."'
-                 where Payment_profile_id = ".$payment_profile_id."");
+            $sql=dbAbstract::Update("UPDATE chargify_payment_method set billing_address = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_address))."',billing_address_2 = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_address_2))."'
+                ,billing_city = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_city))."',billing_country = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_country))."',billing_state ='".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_state))."'
+                ,billing_zip = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->billing_zip))."',first_name = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->first_name))."',last_name = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->last_name))."'
+                ,expiration_month = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->expiration_month))."',expiration_year = '".dbAbstract::returnRealEscapedString(stripslashes($payment_data->payment_profile->expiration_year))."'
+                 where Payment_profile_id = ".$payment_profile_id."",1);
             Log::write('update chargify_payment table - tab_changepass.php', 'Query:'.$sql, 'MyAccount', 1);
             
         }
         }
         if(isset($_POST['change']))
         {   extract($_POST);
-            $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$licenseid' limit 0,1)"));
+            $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$licenseid' limit 0,1)",1);
             $Objsubcription = $chargify->getSubcription($chargify_subscription_id->chargify_subscription_id);
             $oldProduct = $Objsubcription->product;
             Log::write('My Account - tab_changepass.php', 'Calling Create Migration:subscriptionID:'.$chargify_subscription_id->chargify_subscription_id.' Product ID:'.$product_details, 'MyAccount', 1);
             $chargify->createMigration($chargify_subscription_id->chargify_subscription_id,$product_details);
             
-            $oldProductSQl = mysql_fetch_object(mysql_query("select * from chargify_products where product_id='".$oldProduct->id."' and user_id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)"));
-            $newProductSQl = mysql_fetch_object(mysql_query("select * from chargify_products where product_id='".$product_details."' and user_id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)"));
-            $reseller_chargify_id = mysql_fetch_object(mysql_query("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)"));
+            $oldProductSQl = dbAbstract::ExecuteObject("select * from chargify_products where product_id='".$oldProduct->id."' and user_id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)",1);
+            $newProductSQl = dbAbstract::ExecuteObject("select * from chargify_products where product_id='".$product_details."' and user_id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)",1);
+            $reseller_chargify_id = dbAbstract::ExecuteObject("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$licenseid' limit 0,1)",1);
             
             if($oldProductSQl->premium_account!=$newProductSQl->premium_account)
             {
@@ -147,12 +147,12 @@ function getXMLHTTP() { //fuction to return the xml http object
            
             
 
-            $license_quantity = mysql_fetch_object(mysql_query("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1) and status != 'suspended'"));
-            $reseller_chargify_id = mysql_fetch_object(mysql_query("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1)"));
+            $license_quantity = dbAbstract::ExecuteObject("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1) and status != 'suspended'",1);
+            $reseller_chargify_id = dbAbstract::ExecuteObject("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1)",1);
 
-            $resData = mysql_fetch_object(mysql_query("Select id,name,region,rest_address,rest_city,rest_state,phone,rest_zip,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1"));
+            $resData = dbAbstract::ExecuteObject("Select id,name,region,rest_address,rest_city,rest_state,phone,rest_zip,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1",1);
 
-            $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id,premium_account,name from resturants where id = (select resturant_id from licenses where license_key ='$license_id' limit 0,1)"));
+            $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id,premium_account,name from resturants where id = (select resturant_id from licenses where license_key ='$license_id' limit 0,1)",1);
             
             if(!empty($chargify_subscription_id->chargify_subscription_id))
             {
@@ -162,11 +162,11 @@ function getXMLHTTP() { //fuction to return the xml http object
                     if(!empty($chargify_subscription->subscription))
                     {
                     $uptLicenses = "UPDATE licenses SET  status='activated' WHERE license_key ='$license_id'";
-                    mysql_query($uptLicenses);
+                    dbAbstract::Update($uptLicenses,1);
                     Log::write('Edit Restaurant - tab_changepass.php', 'Updated Licenses Clients:'.$uptLicenses, 'MyAccount', 1);
 
-                    mysql_query("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where license_key ='$license_id'  limit 0,1)");
-		    mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)");
+                    dbAbstract::Update("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where license_key ='$license_id'  limit 0,1)",1);
+		    dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)",1);
                     if($subcription_method =='invoice')
                     {
                     $objMail = new testmail();
@@ -224,7 +224,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                 $chargify_customer = $chargify_subscription->subscription->customer;
 
                 $credit_card_info = $chargify_subscription->subscription;
-                $check_card_data_Qry = mysql_fetch_object(mysql_query("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer->id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'"));
+                $check_card_data_Qry = dbAbstract::ExecuteObject("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer->id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
                 
                 if(empty($check_card_data_Qry))
                 {
@@ -233,17 +233,17 @@ function getXMLHTTP() { //fuction to return the xml http object
                                     ,chargify_customer_id= '".addslashes($chargify_customer->id)."'
                                     ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
                                     ,card_number='".$credit_card_info->credit_card->masked_card_number."'";
-                    mysql_query($uptchargify_payment_method);
+                    dbAbstract::Insert($uptchargify_payment_method,1);
                     Log::write('My Account - tab_changepass.php', 'Update Chargify Payment menthod:'.$uptchargify_payment_method , 'MyAccount', 1);
                 }
 
                     if(!empty($resData))
                     {   
-                        $getOwnerEmail = mysql_fetch_object(mysql_query("Select email from users where id = '".$_SESSION['owner_id']."'"));
+                        $getOwnerEmail = dbAbstract::ExecuteObject("Select email from users where id = '".$_SESSION['owner_id']."'",1);
                         $cntry = $resData->region;
                         if($cntry=='0'){$cntry="GB";}else if($cntry=='1'){$cntry="US";} else if($cntry=='2'){$cntry="CA";}else{$cntry="US";}
                         $getSrid= $chargify->createVendestaPremium($resData->name,$cntry,$resData->rest_address,$resData->rest_city,$resData->rest_state,$resData->rest_zip,"false",$resData->phone,$getOwnerEmail->email);
-                        mysql_query("UPDATE resturants SET srid='".$getSrid."' where id = $resData->id");
+                        dbAbstract::Update("UPDATE resturants SET srid='".$getSrid."' where id = $resData->id",1);
 
                     }
 
@@ -265,20 +265,20 @@ function getXMLHTTP() { //fuction to return the xml http object
 			$license_id = $_REQUEST['license_id'];
                         }
 		if ($_REQUEST['action'] == 'del') {
-			mysql_query("DELETE FROM licenses WHERE license_key ='$license_id' and reseller_id=$reseller_id");
+			dbAbstract::Delete("DELETE FROM licenses WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 
 		} else if ($_REQUEST['action'] == 'suspend'){
                         
-			mysql_query("UPDATE licenses SET  status='suspended' WHERE license_key ='$license_id'");
-			mysql_query("UPDATE resturants SET  status='2' WHERE id = (select  resturant_id from licenses where license_key ='$license_id'  limit 0,1)");
-			mysql_query("UPDATE analytics SET  status='2' WHERE resturant_id = (select resturant_id from licenses where license_key ='$license_id' limit 0,1)");
+			dbAbstract::Update("UPDATE licenses SET  status='suspended' WHERE license_key ='$license_id'",1);
+			dbAbstract::Update("UPDATE resturants SET  status='2' WHERE id = (select  resturant_id from licenses where license_key ='$license_id'  limit 0,1)",1);
+			dbAbstract::Update("UPDATE analytics SET  status='2' WHERE resturant_id = (select resturant_id from licenses where license_key ='$license_id' limit 0,1)",1);
 			
 			
-			$sridSql = mysql_fetch_object(mysql_query("Select id,srid from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1 "));
+			$sridSql = dbAbstract::ExecuteObject("Select id,srid from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1 ",1);
                         
-                        $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)"));
-                        $license_quantity = mysql_fetch_object(mysql_query("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1) and status != 'suspended'"));
-                        $reseller_chargify_id = mysql_fetch_object(mysql_query("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1)"));
+                        $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)",1);
+                        $license_quantity = dbAbstract::ExecuteObject("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1) and status != 'suspended'",1);
+                        $reseller_chargify_id = dbAbstract::ExecuteObject("Select chargify_subcription_id from users where id = (select reseller_id from licenses where license_key ='$license_id' limit 0,1)",1);
                         
                         $quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$chargify_subscription_id->premium_account);
                         $quantity = $quantity-1;
@@ -294,7 +294,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                         {
                             Log::write('My Account - tab_changepass.php', 'cancelVendesta srid:'.$sridSql->srid, 'MyAccount', 1);
                             $chargify->cancelVendesta($sridSql->srid);
-                            mysql_query("update resturants set srid = '' where id = ".$sridSql->id."");
+                            dbAbstract::Update("UPDATE resturants set srid = '' where id = ".$sridSql->id."",1);
                         }
                         ?>
                           <script type='text/javascript'>window.location='?mod=changepass'</script>
@@ -302,9 +302,9 @@ function getXMLHTTP() { //fuction to return the xml http object
                         
 		} else if ($_REQUEST['action'] == 'activate'){
 
-			mysql_query("UPDATE licenses SET  status='activated' WHERE secure_key ='$license_id' and reseller_id=$reseller_id");
-			mysql_query("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
-			mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
+			dbAbstract::Update("UPDATE licenses SET  status='activated' WHERE secure_key ='$license_id' and reseller_id=$reseller_id",1);
+			dbAbstract::Update("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+			dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
                         $subcription_method = 'automatic';
                         
                         if($card_no=='' && $credit_card_number =="-1")
@@ -312,7 +312,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                             $subcription_method = 'invoice';
                         }
 
-                        $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)"));
+                        $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
                         if(!empty($chargify_subscription_id->chargify_subscription_id))
                         {
                             $chargify->reactivateSubcription($chargify_subscription_id->chargify_subscription_id,$subcription_method,$credit_card_number,$card_no,$exp_month,$exp_year);
@@ -320,7 +320,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 
 		} else if ($_REQUEST['action'] == 'deactivate'){
 
-			mysql_query("UPDATE licenses SET  status='0' WHERE license_key ='$license_id' and reseller_id=$reseller_id");
+			dbAbstract::Update("UPDATE licenses SET  status='0' WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 
 		}
 
@@ -344,13 +344,13 @@ if($_SESSION['admin_type']!="admin")
     </tr>
     <?  if($_SESSION['admin_type']=="store owner")
         {
-            $licenseQry = mysql_query("select * from licenses where id in(Select license_id from resturants where owner_id = ".$_SESSION['owner_id'].")");
+            $licenseQry = dbAbstract::Execute("select * from licenses where id in(Select license_id from resturants where owner_id = ".$_SESSION['owner_id'].")",1);
         }
         else if($_SESSION['admin_type']=="reseller")
         {   
-            $licenseQry = mysql_query("select * from licenses where reseller_id  = ".$_SESSION['owner_id']."");
+            $licenseQry = dbAbstract::Execute("select * from licenses where reseller_id  = ".$_SESSION['owner_id']."",1);
         }
-    while($licenseRs	=	mysql_fetch_object($licenseQry)){ ?>
+    while($licenseRs	=	dbAbstract::returnObject($licenseQry,1)){ ?>
     
 
    <?  if( $counter++ % 2 == 0)
@@ -365,8 +365,8 @@ if($_SESSION['admin_type']!="admin")
 	  <?
       	if( $licenseRs->resturant_id ) {
 			$resurant_sql_str = "SELECT name FROM resturants WHERE id=".$licenseRs->resturant_id;
-			$resurant_qry = mysql_query( $resurant_sql_str );
-			$resurant_rs  = mysql_fetch_object( $resurant_qry ) ;
+			$resurant_qry = dbAbstract::Execute( $resurant_sql_str,1 );
+			$resurant_rs  = dbAbstract::returnObject( $resurant_qry,1 ) ;
 			$resturant_name = $resurant_rs->name;
 		} else {
 			$resturant_name = "";
@@ -507,8 +507,8 @@ if($_SESSION['admin_type']!="admin")
                     <option value="-1">Select Product</option>
                     <?
                     $product_sqlStr =  "SELECT product_id FROM chargify_products WHERE user_id  = (Select reseller_id from reseller_client where client_id = ".$_SESSION['owner_id'].")";
-                    $product_qry = mysql_query( $product_sqlStr );
-                    while($result=mysql_fetch_array($product_qry)) {
+                    $product_qry = dbAbstract::Execute( $product_sqlStr,1 );
+                    while($result=dbAbstract::returnArray($product_qry,1)) {
                     $product = $chargify->getProduct($result['product_id']);
 	 	    $price = number_format(round($product->price_in_cents/100,2),2);
 		    $price = "$".$price;
@@ -588,9 +588,9 @@ if($_SESSION['admin_type']!="admin")
       <td width="40%" align="right" valign="middle"><strong>Credit Card:</strong></td>
       <td align="left" valign="middle"><label>
         <select name="payment_profile_id" id="payment_profile_id" style="width:270px;" onchange="getCardData(this.value)">
-            <?php $mSQL = mysql_query("Select Payment_profile_id,card_number from chargify_payment_method where user_id = ".$_SESSION['owner_id']."");?>
+            <?php $mSQL = dbAbstract::Execute("Select Payment_profile_id,card_number from chargify_payment_method where user_id = ".$_SESSION['owner_id']."",1);?>
                     <option value="-1">Select Card</option>
-                    <? while($mResult = mysql_fetch_object($mSQL)){?>
+                    <? while($mResult = dbAbstract::returnObject($mSQL,1)){?>
                     <option value="<?=$mResult->Payment_profile_id?>"><?=$mResult->card_number?></option>
                     <?}?>
         </select>
@@ -820,3 +820,4 @@ if($_SESSION['admin_type']!="admin")
     }
 </script>
 
+<?php mysqli_close($mysqli);?>

@@ -36,7 +36,7 @@ if ($response==APPROVED) {
 } else {
 	$_SESSION['GATEWAY_RESPONSE']=$gw->responses['responsetext'];
 	if(!isset($repid_payment)){
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
             if(isset($api) && $api == true)
 			{
             	return;

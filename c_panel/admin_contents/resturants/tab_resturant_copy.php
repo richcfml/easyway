@@ -31,29 +31,25 @@ $errMessage='';
 				else if($destination=="0") $errMessage="Please select destination restaurant name";
 				else if($source==$destination) $errMessage="Source and destination hotels are same, please select different hotels";
 				else{
-					     $mysqlqry=mysql_query("select * from menus where rest_id=".$source ." Order by id");
+					     $mysqlqry=dbAbstract::Execute("select * from menus where rest_id=".$source ." Order by id",1);
 		 
-		 				 while($menu_rs = mysql_fetch_object($mysqlqry)){
-							 mysql_query("insert into menus(rest_id,menu_name,menu_desc,menu_ordering,status) values (
+		 				 while($menu_rs = dbAbstract::returnObject($mysqlqry,1)){
+							 $newMenuId = dbAbstract::Insert("insert into menus(rest_id,menu_name,menu_desc,menu_ordering,status) values (
 							 '". $destination ."','". $menu_rs->menu_name ."','". $menu_rs->menu_desc ."','". $menu_rs->menu_ordering ."'
-							 ,'". $menu_rs->status ."')");
-							 
-							 $newMenuId=mysql_insert_id();
+							 ,'". $menu_rs->status ."')", 1, 2);
 							  
-							   $mysqlcatqry=mysql_query("select * from categories where menu_id =".$menu_rs->id ."  Order by  cat_id");
+							   $mysqlcatqry=dbAbstract::Execute("select * from categories where menu_id =".$menu_rs->id ."  Order by  cat_id",1);
 							   
-							  		while($cat_rs = mysql_fetch_object($mysqlcatqry)){ 
+							  		while($cat_rs = dbAbstract::returnObject($mysqlcatqry,1)){ 
 									
-									 mysql_query("insert into categories(`parent_id`, `menu_id`, `cat_name`, `cat_des`, `cat_ordering`, `status`) values (
+									 $newCatId = dbAbstract::Insert("insert into categories(`parent_id`, `menu_id`, `cat_name`, `cat_des`, `cat_ordering`, `status`) values (
 											 '". $destination ."','". $newMenuId ."','". $cat_rs->cat_name ."','". $cat_rs->cat_des ."','". $cat_rs->cat_ordering ."'
-											 ,'". $cat_rs->status ."')");
-											 
-											  $newCatId=mysql_insert_id();
+											 ,'". $cat_rs->status ."')", 1, 2);
 											  	
-												$mysql_cat_products=mysql_query("select * from product where sub_cat_id =".$cat_rs->cat_id ." Order by  prd_id");
-													while($product_rs = mysql_fetch_object($mysql_cat_products)){ 
+												$mysql_cat_products=  dbAbstract::Execute("select * from product where sub_cat_id =".$cat_rs->cat_id ." Order by  prd_id",1);
+													while($product_rs = dbAbstract::returnObject($mysql_cat_products,1)){ 
 													
-													mysql_query("insert into product(
+													$newProductID = dbAbstract::Insert("insert into product(
 													`cat_id`, `sub_cat_id`, `item_num`, `item_title`, `item_code`, `item_des`, `retail_price`, `sale_price`, `item_image`, `feature_sub_cat`, `Alt_tag`, `Ptitle`, `Meta_des`, `Meta_tag`, `imagethumb`, `status` 
 													
 													) values ( '". $destination ."', '". $newCatId ."', '". $product_rs->item_num ."'
@@ -69,48 +65,14 @@ $errMessage='';
 													, '". $product_rs->Meta_des ."'
 													, '". $product_rs->Meta_tag ."'
 													, '". $product_rs->imagethumb ."'
-													, '". $product_rs->status ."'
-													 
-													
-																 )");
-											 
-											 			$newProductID=mysql_insert_id();
-												 
-														
-														
-													mysql_query("insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price` )  select ". $newProductID .", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price` from attribute where ProductID=". $product_rs->prd_id ."");
-													
-		 	
-														
+													, '". $product_rs->status ."')", 1, 2);
+	
+													dbAbstract::Insert("insert into attribute(`ProductID`, `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price` )  select ". $newProductID .", `option_name`, `Title`, `Price`, `option_display_preference`, `apply_sub_cat`, `Type`, `Required`, `OderingNO`, `rest_price` from attribute where ProductID=". $product_rs->prd_id ."",1);
 													}//PRODUCTS
-												
-//											 
-											  
-								 	
 									}//CATEGORTIES
 							 
 						 }//MENU
 						 $errMessage="Resturant Copied successfully!!!";
-				 	
-					/*$mysqlassocqry=mysql_query("select product_id,association_id from product_association pa inner join product p on p.prd_id =pa.product_id   where p.cat_id=".$source);
-					
-					
-						while($accoscrs = mysql_fetch_object($mysqlassocqry)){ 
-						
-							$mysqlassocProduqry=mysql_query("select prd_id from   product p    where p.rel_id=".$accoscrs->product_id);
-							$mysqlassocAssocqry=mysql_query("select prd_id from   product p    where p.rel_id=".$accoscrs->association_id);
-							$numrows1 = @mysql_num_rows($mysqlassocProduqry);	
-							$numrow2 = @mysql_num_rows($mysqlassocAssocqry);
-								
-							$product_data=mysql_fetch_object($mysqlassocProduqry);
-							$assoc_data=mysql_fetch_object($mysqlassocAssocqry);
-														
-							if($numrows1==1 && $numrow2==1)
-								mysql_query("insert into product_association (product_id,association_id) 
-								values(". $product_data->prd_id .",". $assoc_data->prd_id .")" );
-							
-						}//WHILE*/
-						 
 				}///ELSE 
 		}// POST
 
@@ -129,9 +91,9 @@ $errMessage='';
 			 
 		  $sourceoptions ='';
 		  $destinationoptions='';
-         $mysqlqry=mysql_query($qry);
+         $mysqlqry=dbAbstract::Execute($qry,1);
 		 
-		  while($resutarnt_rs = @mysql_fetch_object($mysqlqry)){
+		  while($resutarnt_rs = dbAbstract::returnObject($mysqlqry,1)){
 			 if($source==$resutarnt_rs->id)
 			  	$source_selected="Selected"; 
 			 else

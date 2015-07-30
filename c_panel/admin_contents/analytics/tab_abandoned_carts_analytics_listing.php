@@ -1,11 +1,10 @@
-<?
-	//$resturant_id = 141;
+<?php
 	$abandoned_carts = new abandoned_carts();
 	$abandoned_cartss = $abandoned_carts->get_abandoned_carts($resturant_id);
 	
 
-	if(!empty($abandoned_cartss) && mysql_num_rows($abandoned_cartss) > 0) {
-		$abandoned_carts->update_abandoned_carts_count($resturant_id, mysql_num_rows($abandoned_cartss));
+	if(!empty($abandoned_cartss) && dbAbstract::returnRowsCount($abandoned_cartss, 1) > 0) {
+		$abandoned_carts->update_abandoned_carts_count($resturant_id, dbAbstract::returnRowsCount($abandoned_cartss, 1));
 ?>
 		<style type="text/css">
 		
@@ -62,9 +61,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?
+				<?php
 					$count = 1;
-					while($abandoned_cart = mysql_fetch_object($abandoned_cartss)) {
+					while($abandoned_cart = dbAbstract::returnObject($abandoned_cartss, 1)) {
 					
 				?>
 						<tr>							
@@ -95,13 +94,13 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?
-											$userOrderQry = mysql_query("select OrderID, DesiredDeliveryDate from ordertbl where UserID=" . $abandoned_cart->customer_id . " LIMIT 10");
+										<?php
+											$userOrderQry = dbAbstract::Execute("select OrderID, DesiredDeliveryDate from ordertbl where UserID=" . $abandoned_cart->customer_id . " LIMIT 10", 1);
 
 											$i=0;
 											if($userOrderQry) {  
 												$i=1;
-												while($userOrderRs = mysql_fetch_object($userOrderQry)){
+												while($userOrderRs = dbAbstract::returnObject($userOrderQry, 1)){
 													$orderid = $userOrderRs->OrderID;
 													$colour = ($i%2==0) ? "#FFF": "#E4E4E4"; 
 													$i++;

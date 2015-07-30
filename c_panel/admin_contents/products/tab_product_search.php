@@ -6,8 +6,8 @@
 	if (isset($_REQUEST['submit1']))
 			{
 				$sub_cat			=	$_REQUEST['sub_cat'];
-				$search_titleQry	=	mysql_query("select * from product where sub_cat_id = $sub_cat");
-				$search_titlerows	= 	mysql_num_rows($search_titleQry);
+				$search_titleQry	=	dbAbstract::Execute("select * from product where sub_cat_id = $sub_cat",1);
+				$search_titlerows	= 	dbAbstract::returnRowsCount($search_titleQry,1);
 				
 				if($search_titlerows == 0){$message1 = "No Matches Were Found. Please Try Another Selection.";}	
 				else { $message1 = "We Found The Following Matches - Please Select One To Edit:";}
@@ -16,8 +16,8 @@
 	if (isset($_REQUEST['submit2']))
 			{
 				$searched_code		=	$_REQUEST['item_code'];
-				$search_codeQry		=	mysql_query("select * from product where item_code = $searched_code");
-				$search_coderows	= 	mysql_num_rows($search_codeQry);
+				$search_codeQry		=	dbAbstract::Execute("select * from product where item_code = $searched_code",1);
+				$search_coderows	= 	dbAbstract::returnRowsCount($search_codeQry,1);
 				
 				if($search_coderows == 0){$message2 = "No Matches Were Found. Please Try Another Selection.";}	
 				else { $message2 = "We Found The Following Matches - Please Select One To Edit:";}	
@@ -32,13 +32,13 @@
           <td><form name="form1" method="post" action="">
               <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
               <?
-			$subcat_qry	=	mysql_query("select * from categories where parent_id = $catid");
+			$subcat_qry	=	dbAbstract::Execute("select * from categories where parent_id = $catid",1);
 		?>
                 <tr>
   <td>Select Menu</td>
   <td><select name="sub_cat" id="sub_cat" >
 			<option value="-2" >Choose Menu </option>
-              	<? while($subcat_qryRs = mysql_fetch_object($subcat_qry)){?>
+              	<? while($subcat_qryRs = dbAbstract::returnObject($subcat_qry,1)){?>
 <option value="<?=$subcat_qryRs->cat_id?>" <? if($subcat_qryRs->cat_id==$sub_cat){?>selected="selected"<? }?>><?=$subcat_qryRs->cat_name?></option>
 
 	<? }?>
@@ -63,8 +63,8 @@
 									  if($search_titlerows > 0){ 
 										$i=0;
 										while ($i < $search_titlerows/2) {
-											$prd_id		= mysql_result($search_titleQry,$i,"prd_id");
-											$item_title = mysql_result($search_titleQry,$i,"item_title");
+											$prd_id		= dbAbstract::returnResult($search_titleQry, $i, "prd_id",1);
+											$item_title = dbAbstract::returnResult($search_titleQry, $i, "item_title",1);
 										
 							         ?>
                           - <a href="?subitem=editproduct2&amp;pid=<?=$prd_id?>&catid=<?=$catid?>&scid=<?=$sub_cat?>" class="linktextbig"><?=stripslashes(stripcslashes($item_title))?></a> <br> 
@@ -78,8 +78,8 @@
                           <? 
 								      
 							 while ($i < $search_titlerows) {
-											$prd_id		= mysql_result($search_titleQry,$i,"prd_id");
-											$item_title = mysql_result($search_titleQry,$i,"item_title");
+											$prd_id		= dbAbstract::returnResult($search_titleQry, $i, "prd_id",1);
+											$item_title = dbAbstract::returnResult($search_titleQry, $i, "item_title",1);
 							 ?>
                           - <a href="?subitem=editproduct2&amp;pid=<?=$prd_id?>&catid=<?=$catid?>&scid=<?=$sub_cat?>" class="linktextbig"><?=stripslashes(stripcslashes($item_title))?></a> <br> 
                           <? 
@@ -131,8 +131,8 @@
 									  if($search_coderows > 0){ 
 										$j=0;
 										while ($j < $search_coderows/2) {
-											$prd_id		= mysql_result($search_codeQry,$j,"prd_id");
-											$item_title = mysql_result($search_codeQry,$j,"item_title");
+											$prd_id		= dbAbstract::returnResult($search_codeQry, $j, "prd_id",1);
+											$item_title = dbAbstract::returnResult($search_codeQry, $j, "item_title",1);
 										
 							         ?>
                           - <a href="?subitem=editproduct2&amp;pid=<?=$prd_id?>&catid=<?=$catid?>&scid=<?=$sub_cat?>" class="linktextbig"><?=stripslashes(stripcslashes($item_title))?></a> <br> 
@@ -146,8 +146,8 @@
                           <? 
 								      
 							 while ($j < $search_coderows) {
-											$prd_id		= mysql_result($search_codeQry,$j,"prd_id");
-											$item_title = mysql_result($search_codeQry,$j,"item_title");
+											$prd_id		= dbAbstract::returnResult($search_codeQry, $j, "prd_id",1);
+											$item_title = dbAbstract::returnResult($search_codeQry, $j, "item_title",1);
 							 ?>
                           - <a href="?subitem=editproduct2&amp;pid=<?=$prd_id?>&catid=<?=$catid?>&scid=<?=$sub_cat?>" class="linktextbig"><?=stripslashes(stripcslashes($item_title))?></a> <br> 
                           <? 

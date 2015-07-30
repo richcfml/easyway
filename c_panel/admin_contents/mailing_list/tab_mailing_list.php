@@ -7,7 +7,7 @@ function limitText(limitField, limitCount, limitNum) {
 	}
 }
 </script>
-<?
+<?php
 $errMessage='';
 $confirm=false;
 $from_email='';
@@ -16,7 +16,7 @@ $email_subject='';
 if(isset($_REQUEST['mailid']))
 {
 	$mailid = $_REQUEST['mailid'];
-	mysql_query("DELETE from mailing_list where id=".$mailid);
+	dbAbstract::Delete("DELETE from mailing_list where id=".$mailid, 1);
 }
 
 if(isset($_POST['submit']))
@@ -26,8 +26,8 @@ if(isset($_POST['submit']))
 			$email_subject = @$_REQUEST['email_subject'];
 			$mail_body = @$_REQUEST['mailbox'];
 			//////////////get resturant name////////////
-			$restQry = mysql_query("select name, url_name from resturants where id=".$mRestaurantIDCP);
-			@$restRs = mysql_fetch_array($restQry);
+			$restQry = dbAbstract::Execute("select name, url_name from resturants where id=".$mRestaurantIDCP, 1);
+			@$restRs = dbAbstract::returnArray($restQry, 1);
 			$pattern = "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$";       
 
 			if (count($email_id) == 0) {
@@ -46,8 +46,8 @@ if(isset($_POST['submit']))
 			 // $MAIL_HOST_NAME="smtpout.secureserver.net";
 			  for ($i=0;$i<count($email_id);$i++)
 				  {
-					  @$mailQry	=	mysql_query("select email from mailing_list where id= ".$email_id[$i]."");
-					  while(@$mailRs	=	mysql_fetch_object($mailQry)){						
+					  @$mailQry	=	dbAbstract::Execute("select email from mailing_list where id= ".$email_id[$i]."", 1);
+					  while(@$mailRs	=	dbAbstract::returnObject($mailQry, 1)){						
 						  $subject = $email_subject;
 						  $mail = new PHPMailer();
 						  $mail->IsSMTP(); // telling the class to use SMTP
@@ -91,8 +91,8 @@ function SelectAll(){
 }
 </script>
 
-<?
-@$mailinglistQry	=	mysql_query("select * from mailing_list where resturant_id=".$mRestaurantIDCP);
+<?php
+@$mailinglistQry	=	dbAbstract::Execute("select * from mailing_list where resturant_id=".$mRestaurantIDCP, 1);
  $counter = 0;
 ?>
 <div id="main_heading">EXISTING MAILING LIST </div>
@@ -113,7 +113,7 @@ if($confirm) { ?>
   <tr>
     <td colspan="8"><input type="checkbox" name="checkbox" value="checkbox" onclick="SelectAll();" /> Check All / UnCheck All<br /></td>
   </tr>
-  <? while(@$mailinglistRs	=	mysql_fetch_object($mailinglistQry)){?>
+  <?php while(@$mailinglistRs	=	dbAbstract::returnObject($mailinglistQry, 1)){?>
    <?  if( $counter++ % 2 == 0)  
    			$bgcolor = '#F8F8F8';
 	   else $bgcolor = '';

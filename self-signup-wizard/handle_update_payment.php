@@ -3,14 +3,14 @@
 	
 	if(!empty($_REQUEST["subscription_id"]) && !empty($_REQUEST["product_id"])) {
 		
-		$resturant = mysql_query("SELECT id FROM resturants WHERE chargify_subscription_id='". $_REQUEST["subscription_id"] ."' LIMIT 1");
-		if(mysql_num_rows($resturant) > 0) {
-			$resturant = mysql_fetch_assoc($resturant);
+		$resturant = dbAbstract::Execute("SELECT id FROM resturants WHERE chargify_subscription_id='". $_REQUEST["subscription_id"] ."' LIMIT 1");
+		if(dbAbstract::returnRowsCount($resturant) > 0) {
+			$resturant = dbAbstract::returnAssoc($resturant);
 			$resturant = $resturant["id"];
 			// echo "UPDATE resturants
 				// SET chargify_subscription_canceled=0,status=1
 				// WHERE id=$resturant";
-			mysql_query("
+			dbAbstract::Update("
 				UPDATE resturants
 				SET chargify_subscription_canceled=0,status=1
 				WHERE id=$resturant
@@ -20,7 +20,7 @@
 				// SET chargify_subscription_canceled=0,status='activated'
 				// WHERE resturant_id=$resturant
 			// ";
-			mysql_query("
+			dbAbstract::Update("
 				UPDATE licenses
 				SET chargify_subscription_canceled=0,status='activated'
 				WHERE resturant_id=$resturant
@@ -42,3 +42,4 @@
 			</html>";
 	}
 ?>
+<?php mysqli_close($mysqli);?>

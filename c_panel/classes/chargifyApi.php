@@ -11,6 +11,7 @@ class chargifyApi
 {
    function createCustomer($first_name,$last_name,$email,$companyName ,$city,$state ,$zip ,$country,$address,$phone )
    {
+	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
         $paramater = '{"customer":{
         "first_name":"'.$first_name.'",
         "last_name":"'.$last_name.'",
@@ -25,7 +26,8 @@ class chargifyApi
         $post_array = json_decode($paramater);
         Log::write('CHARGIFY Post Array - Create Customer', print_r($post_array,true), 'chargify', 1);
 
-        $url = "https://easyway-ordering.chargify.com/customers.json";
+        $url = $ChargifyURL."customers.json";
+        Log::write('CHARGIFY Post Array - Create Customer', 'URL: '.$url, 'chargify', 1);
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $ch = curl_init();
@@ -52,6 +54,7 @@ class chargifyApi
 
    function updateCustomer($customer_id,$first_name,$last_name,$email,$companyName ,$city,$state ,$zip ,$country,$address,$phone )
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         
@@ -70,7 +73,7 @@ class chargifyApi
         $post_array = json_decode($paramater);
         Log::write('CHARGIFY Post Array - Update Customer', print_r($post_array,true), 'chargify', 1);
 
-        $url = "https://easyway-ordering.chargify.com/customers/".$customer_id.".json";
+        $url = $ChargifyURL."/customers/".$customer_id.".json";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -96,7 +99,8 @@ class chargifyApi
 
    function getSubcription($customer_id)
    {
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$customer_id.".json";
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
+        $url = $ChargifyURL."subscriptions/".$customer_id.".json";
 
         Log::write('CHARGIFY Post Array - Get Subscription Url', $url, 'chargify', 1);
         
@@ -137,6 +141,7 @@ class chargifyApi
    
    function createSubcription($product_id ,$customer_id,$payment_collection_method,$payment_profile_id,$card_number,$exp_month,$exp_year )
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         if($card_number=='')
         {
            $exp_month = '';
@@ -145,7 +150,7 @@ class chargifyApi
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/subscriptions.json";
+        $url = $ChargifyURL."subscriptions.json";
         if($payment_profile_id !="-1" && !empty($payment_profile_id))
         {
             $parameters ='{"subscription":{
@@ -203,7 +208,8 @@ class chargifyApi
 
    function createResellerSubcription($product_id ,$customer_id,$payment_collection_method,$payment_profile_id,$card_number,$exp_month,$exp_year,$license_quantity )
    {
-        //$premium = mysql_fetch_object(mysql_query("Select premium_account from chargify_products where"));
+        global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
+        
         if($card_number=='')
         {
            $exp_month = '';
@@ -212,17 +218,17 @@ class chargifyApi
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/subscriptions.json";
+        $url = $ChargifyURL."subscriptions.json";
         if($payment_profile_id !="-1" && !empty($payment_profile_id))
         {
             $parameters ='{"subscription":{
             "product_id":'.$product_id.',
             "customer_id":'.$customer_id.',
             "components": [{
-            "component_id": 39219,
+            "component_id": '.$ChargifyPremiumComponent.',
             "allocated_quantity": 0
             },{
-            "component_id": 35267,
+            "component_id": '.$ChargifyStandardComponent.',
             "allocated_quantity": 0
             }],
             "payment_profile_id":'.$payment_profile_id.',
@@ -235,10 +241,10 @@ class chargifyApi
             "product_id":'.$product_id.',
             "customer_id":'.$customer_id.',
             "components": [{
-            "component_id": 39219,
+            "component_id": '.$ChargifyPremiumComponent.',
             "allocated_quantity": 0
             },{
-            "component_id": 35267,
+            "component_id": '.$ChargifyStandardComponent.',
             "allocated_quantity": 0
             }],
 
@@ -285,10 +291,11 @@ class chargifyApi
 
    function updatePaymentProfile($first_name,$last_name,$billingAddress1,$billingAddress2,$city,$state ,$zip ,$country,$payment_profile_id,$exp_month,$exp_year )
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/payment_profiles/".$payment_profile_id.".json";
+        $url = $ChargifyURL."payment_profiles/".$payment_profile_id.".json";
         
         $parameters ='{"payment_profile":{
         "billing_address":"'.$billingAddress1.'",
@@ -331,7 +338,8 @@ class chargifyApi
 
    function getProduct($product_id)
    {
-        $url = "https://easyway-ordering.chargify.com/products/" . $product_id . ".json";
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
+        $url = $ChargifyURL."products/" . $product_id . ".json";
 	
         Log::write('CHARGIFY Post Array - Get Product Url', $url, 'chargify', 1);
 	
@@ -366,11 +374,11 @@ class chargifyApi
 
    function cancelSubcriptionByAdmin($chargify_subcription_id)
    {
-
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/subscriptions/" . $chargify_subcription_id . ".json";
+        $url = $ChargifyURL."subscriptions/" . $chargify_subcription_id . ".json";
 
         Log::write('CHARGIFY Post Array - Cancel Subscription By Admin URL', $url, 'chargify', 1);
         
@@ -401,10 +409,11 @@ class chargifyApi
 
    function cancelSubcriptionByRestowner($chargify_subcription_id)
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$chargify_subcription_id.".json";
+        $url = $ChargifyURL."subscriptions/".$chargify_subcription_id.".json";
         $parameters ='{"subscription":{
             "cancel_at_end_of_period":"true"
           }}';
@@ -439,6 +448,7 @@ class chargifyApi
 
    function reactivateSubcription($chargify_subcription_id,$payment_collection_method,$payment_profile_id,$card_number,$exp_month,$exp_year)
    {    //echo $chargify_subcription_id;
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;   
         if($card_number=='')
         {
            $exp_month = '';
@@ -449,7 +459,7 @@ class chargifyApi
         $password = 'x';
         $parameters = array();
        
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$chargify_subcription_id."/reactivate.json";
+        $url = $ChargifyURL."subscriptions/".$chargify_subcription_id."/reactivate.json";
 
         if($payment_profile_id !="-1" && !empty($payment_profile_id))
         {
@@ -511,6 +521,7 @@ class chargifyApi
    //***************cancel vendesta accouny**************//
    function cancelVendesta($srid)
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $url = "https://reputation-intelligence-api.vendasta.com/api/v2/account/delete/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1&srid=" . $srid;
 
         Log::write('VENDASTA Post Array - Cancel Vendasta Account URL:', $url, 'vendasta',1);
@@ -533,7 +544,7 @@ class chargifyApi
 
    function createVendestaPremium($catname,$country,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag,$phone,$Email)
    {
-
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
         $mURL = "https://reputation-intelligence-api.vendasta.com/api/v2/account/create/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1";
         $parameters = "address=".$rest_address."&city=".$rest_city."&companyName=".$catname."&country=".$country."&state=".$rest_state."&zip=".$rest_zip."&workNumber=".$phone."&email=".$Email;
         $parameters = $parameters."&demoAccountFlag=".$demoAccountFlag."&salesPersonEmail=cwilliams@easywayordering.com";
@@ -572,13 +583,14 @@ class chargifyApi
 
    function createMigration($subcription_id,$product_id )
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $paramater = '{"migration":{
          "product_id": "'.$product_id.'",
          "include_coupons": 0
        }}';
 
 
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/migrations.json";
+        $url = $ChargifyURL."subscriptions/".$subcription_id."/migrations.json";
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
 
@@ -606,13 +618,14 @@ class chargifyApi
 
    function allocationQuantity($subcription_id,$quantity,$premium,$status )
    {
+		global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
        if($premium ==1)
        {
-            $component_id = '39219';
+            $component_id = $ChargifyPremiumComponent;
        }
        else
        {
-            $component_id = '35267';
+            $component_id = $ChargifyStandardComponent;
        }
 
        if($quantity<=0)
@@ -638,7 +651,7 @@ class chargifyApi
             }';
        }
         //echo $paramater;
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/components/".$component_id."/allocations.json";
+        $url = $ChargifyURL."subscriptions/".$subcription_id."/components/".$component_id."/allocations.json";
 	//echo $url;
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
@@ -668,17 +681,17 @@ class chargifyApi
 
    function getallocationQuantity($subcription_id,$premium )
    {
-	
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	
        if($premium ==1)
        {
-            $component_id = '39219';
+            $component_id = $ChargifyPremiumComponent;
        }
        else
        {
-            $component_id = '35267';
+            $component_id = $ChargifyStandardComponent;
        }
 
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/components/".$component_id."/allocations.json";
+        $url = $ChargifyURL."subscriptions/".$subcription_id."/components/".$component_id."/allocations.json";
        	
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
@@ -717,7 +730,7 @@ class chargifyApi
    }
    function multipleAllocation($subcription_id,$quantityPremium,$quantityStandard,$premium )
    {
-      
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;      
        if($premium ==1)
        {
          $quantityPremium = $quantityPremium+1;
@@ -727,8 +740,8 @@ class chargifyApi
          }
          $paramater = '{
         "allocations": [
-          { "component_id": 39219, "quantity": '.$quantityPremium.' },
-          { "component_id": 35267, "quantity": '.$quantityStandard.' }
+          { "component_id": '.$ChargifyPremiumComponent.', "quantity": '.$quantityPremium.' },
+          { "component_id": '.$ChargifyStandardComponent.', "quantity": '.$quantityStandard.' }
         ]}';
        }
        else
@@ -740,13 +753,13 @@ class chargifyApi
          $quantityStandard = $quantityStandard+1;
          $paramater = '{
         "allocations": [
-          { "component_id": 39219, "quantity": '.$quantityPremium.' },
-          { "component_id": 35267, "quantity": '.$quantityStandard.'}
+          { "component_id": '.$ChargifyPremiumComponent.', "quantity": '.$quantityPremium.' },
+          { "component_id": '.$ChargifyStandardComponent.', "quantity": '.$quantityStandard.'}
         ]
       }';
        }
 
-        $url = "https://easyway-ordering.chargify.com/subscriptions/" . $subcription_id . "/allocations.json";
+        $url = $ChargifyURL."subscriptions/" . $subcription_id . "/allocations.json";
 
         $post_array = json_decode($paramater);
         Log::write('CHARGIFY Post Array - Multiple Allocation URL: \\n'.$url, print_r($post_array, true), 'chargify', 1);
@@ -775,6 +788,7 @@ class chargifyApi
 
    function createVendestaAccount($catname,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag)
    {
+   	   	global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
         $mURL = "https://reputation-intelligence-api.vendasta.com/api/v2/account/create/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1";
         $parameters = "address=".$rest_address."&city=".$rest_city."&companyName=".$catname."&country=US&state=".$rest_state."&zip=".$rest_zip;
         $parameters = $parameters . "&demoAccountFlag=" . $demoAccountFlag . "&salesPersonEmail=cwilliams@easywayordering.com";
@@ -799,14 +813,17 @@ class chargifyApi
         $mResult = (object) $mResult;
         return $mResult;
    }
-   
+
    function chargeExtraAmpunt($subcription_id )
    {
-        $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id."/charges.json";
-		$paramater = '{"charge":{
+        global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;
+        $paramater = '{"charge":{
          "amount": "150.00",
          "memo": "charges for tablet "
        }}';
+
+
+        $url = $ChargifyURL."subscriptions/".$subcription_id."/charges.json";
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
 

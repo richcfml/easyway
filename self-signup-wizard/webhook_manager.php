@@ -1,4 +1,4 @@
-<?
+<?php
 	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
 	$function_obj = new clsFunctions();
@@ -8,9 +8,9 @@
 		$state = $_REQUEST["payload"]["subscription"]["state"];
 		$subscription_id = $_REQUEST["payload"]["subscription"]["id"];
 		if($state == "canceled") {
-			$restaurant = mysql_query("SELECT id, license_id FROM resturants WHERE chargify_subscription_id=$subscription_id");
-			if(mysql_num_rows($restaurant) > 0) {
-                                $restaurant = mysql_fetch_assoc($restaurant);
+			$restaurant = dbAbstract::Execute("SELECT id, license_id FROM resturants WHERE chargify_subscription_id=$subscription_id");
+			if(dbAbstract::returnRowsCount($restaurant) > 0) {
+                                $restaurant = dbAbstract::returnAssoc($restaurant);
 				$restaurant_id = $restaurant["id"];
 				$license_id = $restaurant["license_id"];
                                 
@@ -29,15 +29,15 @@
                                 $api_response = curl_exec($ch);
                                 $result = json_decode($api_response);
                                 if($result['statusCode'] == 200 ){
-                                    mysql_query("UPDATE resturants SET vendasta_account_created=0 WHERE id=$restaurant_id");
+                                    dbAbstract::Update("UPDATE resturants SET vendasta_account_created=0 WHERE id=$restaurant_id");
                                 }else{
                                     echo 'Unable to delete vendasta account';
                                     echo $result['message'];
                                     exit;
                                 }
                                 
-				mysql_query("UPDATE licenses SET status='suspended', chargify_subscription_canceled=1 WHERE id=$license_id");
-				mysql_query("UPDATE resturants SET chargify_subscription_canceled=1, status=0 WHERE id=$restaurant_id");
+				dbAbstract::Update("UPDATE licenses SET status='suspended', chargify_subscription_canceled=1 WHERE id=$license_id");
+				dbAbstract::Update("UPDATE resturants SET chargify_subscription_canceled=1, status=0 WHERE id=$restaurant_id");
 				
 				$to = "cwilliams@easywayordering.com";
 				$to = "aliraza@qualityclix.com";
@@ -161,3 +161,4 @@
    // }
 // }
 	</script>
+        <?php mysqli_close($mysqli);?>

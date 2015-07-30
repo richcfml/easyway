@@ -25,7 +25,7 @@
 	 }else if( $_SESSION['admin_type'] == 'reseller')  {
 					$client_ids= $_SESSION['RESSELER_CLIENTS'] ;
 					$qry = "SELECT count(*) as total FROM resturants WHERE owner_id IN ( $client_ids ) and id=$restId";
-					$result=mysql_fetch_object(mysql_query($qry));
+					$result=dbAbstract::ExecuteObject($qry,1);
 					if($result->total==0)
 						 echo "<script>window.location='./?mod=resturant'</script>";
 			 }
@@ -45,12 +45,12 @@
   <? } ?>
  	
   <? 
-	@$customerQry		=	mysql_query("select count(*) as total from customer_registration where password != '' AND resturant_id= " .$Objrestaurant->id);
-	@$totalCustomers_rs	=	mysql_fetch_object($customerQry);
+	@$customerQry		=	dbAbstract::Execute("select count(*) as total from customer_registration where password != '' AND resturant_id= " .$Objrestaurant->id,1);
+	@$totalCustomers_rs	=	dbAbstract::returnObject($customerQry,1);
 	$totalCustomers=$totalCustomers_rs->total;
 	
-	@$orderQry			=	mysql_query("select count(*) as total from ordertbl where cat_id= ". $Objrestaurant->id ." AND Approve = 0");
-	@$totalOrders_rs 	=  mysql_fetch_object($orderQry);
+	@$orderQry			=	dbAbstract::Execute("select count(*) as total from ordertbl where cat_id= ". $Objrestaurant->id ." AND Approve = 0",1);
+	@$totalOrders_rs 	=  dbAbstract::returnObject($orderQry,1);
 	$totalOrders=$totalOrders_rs->total;	
 	if(!isset($item))$item='';
 	

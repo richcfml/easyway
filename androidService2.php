@@ -18,8 +18,8 @@ if (isset($_REQUEST['op'])) {
             $Objrestaurant = $Objrestaurant->getDetailbyUrl($restaurant_slug);
             $restuarant_id = $Objrestaurant->id;
             $categories = array();
-            $cat_qry = mysql_query("SELECT * FROM categories where parent_id = $restuarant_id ");
-            while ($row = mysql_fetch_assoc($cat_qry)){
+            $cat_qry = dbAbstract::Execute("SELECT * FROM categories where parent_id = $restuarant_id ");
+            while ($row = dbAbstract::returnAssoc($cat_qry)){
                 $desiredResult[] = $row;
             }
             $jsonTempData['result'] = $categories;
@@ -32,8 +32,8 @@ if (isset($_REQUEST['op'])) {
         if (isset($_REQUEST['catId']) && !empty($_REQUEST['catId'])) {
             $catId = $_REQUEST['catId'];
             $sub_categories = array();
-            $cat_qry = mysql_query("select * from product where sub_cat_id = $catId");
-            while ($row = mysql_fetch_assoc($cat_qry)){
+            $cat_qry = dbAbstract::Execute("select * from product where sub_cat_id = $catId");
+            while ($row = dbAbstract::returnAssoc($cat_qry)){
                 $desiredResult[] = $row;
             }
             $jsonTempData['result'] = $sub_categories;
@@ -47,8 +47,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['status']) && $_REQUEST['status']!=null) {
             $catId = $_REQUEST['catId'];
             $status = $_REQUEST['status'];
-            $response = mysql_query("UPDATE categories SET status = $status WHERE cat_id = $catId");
-            //$desiredResult['result'] = $response;
+            $response = dbAbstract::Update("UPDATE categories SET status = $status WHERE cat_id = $catId");
 			$desiredResult[]['result'] = $response;
             
         } else {
@@ -60,7 +59,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['status']) && $_REQUEST['status']!=null) {
             $product_id = $_REQUEST['productId'];
             $status = $_REQUEST['status'];
-            $response = mysql_query("UPDATE product SET status=$status WHERE prd_id=$product_id");
+            $response = dbAbstract::Update("UPDATE product SET status=$status WHERE prd_id=$product_id");
             $desiredResult[]['result'] = $response;
             
         } else {
@@ -71,9 +70,9 @@ if (isset($_REQUEST['op'])) {
         if (isset($_REQUEST['Slug']) && !empty($_REQUEST['Slug'])) {
             $restaurant_slug = $_REQUEST['Slug'];
 			
-            $response = mysql_query("SELECT * FROM resturants where url_name = '$restaurant_slug'");
+            $response = dbAbstract::Execute("SELECT * FROM resturants where url_name = '$restaurant_slug'");
 			
-            $desiredResult[] = mysql_fetch_assoc($response);
+            $desiredResult[] = dbAbstract::returnAssoc($response);
             
         } else {
             $jsonTempData['status'] = 'failed';
@@ -84,7 +83,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['status']) && $_REQUEST['status']!=null) {
             $restaurant_slug = $_REQUEST['Slug'];
             $status = $_REQUEST['status'];
-            $response = mysql_query("UPDATE resturants SET announce_status=$status WHERE url_name='$restaurant_slug'");
+            $response = dbAbstract::Update("UPDATE resturants SET announce_status=$status WHERE url_name='$restaurant_slug'");
             $desiredResult[]['result'] = $response;
             
         } else {
@@ -96,7 +95,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['text'])) {
             $restaurant_slug = $_REQUEST['Slug'];
             $text = $_REQUEST['text'];
-            $response = mysql_query("UPDATE resturants SET announcement='$text' WHERE url_name='$restaurant_slug'");
+            $response = dbAbstract::Update("UPDATE resturants SET announcement='$text' WHERE url_name='$restaurant_slug'");
             $desiredResult[]['result'] = $response;
             
         } else {
@@ -108,7 +107,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['status']) && $_REQUEST['status']!=null) {
             $restaurant_slug = $_REQUEST['Slug'];
             $status = $_REQUEST['status'];
-            $response = mysql_query("UPDATE resturants SET rest_open_close=$status WHERE url_name='$restaurant_slug'");
+            $response = dbAbstract::Update("UPDATE resturants SET rest_open_close=$status WHERE url_name='$restaurant_slug'");
             $desiredResult[]['result'] = $response;
             
         } else {
@@ -120,7 +119,7 @@ if (isset($_REQUEST['op'])) {
             isset($_REQUEST['status']) && $_REQUEST['status']!=null) {
             $restaurant_slug = $_REQUEST['Slug'];
             $status = $_REQUEST['status'];
-            $response = mysql_query("UPDATE resturants SET delivery_offer=$status WHERE url_name='$restaurant_slug'");
+            $response = dbAbstract::Update("UPDATE resturants SET delivery_offer=$status WHERE url_name='$restaurant_slug'");
             $desiredResult[]['result'] = $response;
             
         } else {
@@ -141,4 +140,5 @@ $outputArr = array();
 $outputArr['Response'] = $jsonData;
 
 print(json_encode($desiredResult));
+mysqli_close($mysqli);
 ?>

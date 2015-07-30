@@ -15,17 +15,17 @@ else if(isset($type) && $type=='reseller')
 }
 function restaurantOwner()
 {
+    global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
     if(!empty($_GET['ids']))
     {
-        $sql = mysql_query("Select id,firstname,lastname,email,company_name,address,country,state,city,zip from users where type ='store owner' and id in(".$_GET['ids'].")");
+        $sql = dbAbstract::Execute("Select id,firstname,lastname,email,company_name,address,country,state,city,zip from users where type ='store owner' and id in(".$_GET['ids'].")",1);
 
-        while($getids = mysql_fetch_assoc($sql))
+        while($getids = dbAbstract::returnAssoc($sql,1))
         {
              $chargify_customer_id = createCustomer($getids['firstname'],$getids['lastname'],$getids['email'],$getids['company_name'],$getids['city'],$getids['state'],$getids['zip'],$getids['country'],$getids['address']);
              if(!empty($chargify_customer_id))
              {
-                // echo "Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id'];
-                 mysql_query("Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id']);
+                 dbAbstract::Update("Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id'],1);
              }
          }
     }
@@ -35,47 +35,47 @@ function restaurantOwner()
  //for reseller subscrption
 function reseller()
 {
+    global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
 if(!empty($_GET['ids']))
 {
 	Log::write(__LINE__.'In Reseller: id:'.$_GET['ids'], $_GET['ids'], 'chargify', 1);
-     $sql = mysql_query("Select id,firstname,lastname,email,company_name,address,country,state,city,zip from users where type ='reseller' and chargify_customer_id is null and id in(".$_GET['ids'].")");
-     while($getids = mysql_fetch_assoc($sql))
+     $sql = dbAbstract::Execute("Select id,firstname,lastname,email,company_name,address,country,state,city,zip from users where type ='reseller' and chargify_customer_id is null and id in(".$_GET['ids'].")",1);
+     while($getids = dbAbstract::returnAssoc($sql,1))
      {
 		Log::write(__LINE__.'In Reseller: id:'.$_GET['ids'], print_r($getids,true), 'chargify', 1);
          $chargify_customer_id = createCustomer($getids['firstname'],$getids['lastname'],$getids['email'],$getids['company_name'],$getids['city'],$getids['state'],$getids['zip'],$getids['country'],$getids['address']);
          if(!empty($chargify_customer_id))
          {
-            // echo "Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id'];
-             mysql_query("Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id']);
+             dbAbstract::Update("Update users set chargify_customer_id =" .$chargify_customer_id ." where id = ".$getids['id'],1);
 
              $reseller_subscription = createResellerSubcription($chargify_customer_id);
-             mysql_query("Update users set chargify_subcription_id =" .$reseller_subscription ." where id = ".$getids['id']);
-             Log::write("Update users set chargify_subcription_id =" .$reseller_subscription ." where id = ".$getids['id'],"",'chargify', 1);
+             dbAbstract::Update("Update users set chargify_subcription_id =" .$reseller_subscription ." where id = ".$getids['id'],1);
+             
 			$query="INSERT INTO chargify_products
                                         SET user_id= '".addslashes($getids['id'])."'
-                                                ,product_id	= '3324722'
+                                                ,product_id	= '".$ChargifyStandardProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url='http://easyway-ordering.com/self-signup-wizard/index.php'
-                                                ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
-                                                ,hosted_page_url='https://easyway-ordering.chargify.com/h/3324722/subscriptions/new '
+                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
+                                                ,update_return_url= $ChargifyURL.'self-signup-wizard/handle_update_payment.php'
+                                                ,hosted_page_url='".$ChargifyURL."h/".$ChargifyStandardProduct."/subscriptions/new '
                                                 ,premium_account=0
                                                 ,status=1
                                 ";
-             mysql_query($query);
+             dbAbstract::Insert($query,1);
 			Log::write($query,"",'chargify', 1);
 			$query="INSERT INTO chargify_products
                                         SET user_id= '".addslashes($getids['id'])."'
-                                                ,product_id	= '3353278'
+                                                ,product_id	= '".$ChargifyPremiumProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url='http://easyway-ordering.com/self-signup-wizard/index.php'
-                                                ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
-                                                ,hosted_page_url='https://easyway-ordering.chargify.com/h/3353278/subscriptions/new '
+                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
+                                                ,update_return_url= $ChargifyURL.'self-signup-wizard/handle_update_payment.php'
+                                                ,hosted_page_url='".$ChargifyURL."h/".$ChargifyPremiumProduct."/subscriptions/new '
                                                 ,premium_account=1
                                                 ,status=1
                                 ";
-             mysql_query($query);
+             dbAbstract::Insert($query,1);
 								Log::write($query,"",'chargify', 1);
          }
 
@@ -86,6 +86,7 @@ if(!empty($_GET['ids']))
 
  function createCustomer($first_name,$last_name,$email,$companyName ,$city,$state ,$zip ,$country,$address )
    {
+     global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $paramater = '{"customer":{
         "first_name":"'.$first_name.'",
         "last_name":"'.$last_name.'",
@@ -99,7 +100,7 @@ if(!empty($_GET['ids']))
         $post_array = json_decode($paramater);
         Log::write('CHARGIFY Post Array - Create Customer', print_r($post_array,true), 'chargify', 1);
 
-        $url = "https://easyway-ordering.chargify.com/customers.json";
+        $url = $ChargifyURL."customers.json";
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $ch = curl_init();
@@ -118,27 +119,26 @@ if(!empty($_GET['ids']))
         Log::write('CHARGIFY Response Array - Create Customer', print_r($mResult,true), 'chargify', 1);
         $mResult = (object) $mResult;
 	$mResult->customer = (object) $mResult->customer;
-        //echo "<pre>";print_r($mResult);exit;
         return $mResult->customer->id;
    }
 
    function createResellerSubcription($customer_id )
    {
-        //$premium = mysql_fetch_object(mysql_query("Select premium_account from chargify_products where"));
         
+        global $ChargifyURL, $ChargifyResellerProduct, $ChargifyPremiumProduct, $ChargifyStandardProduct, $ChargifyPremiumComponent, $ChargifyStandardComponent;	   
         $username = '2aRl08rsgL3H3WiWl5ar';
         $password = 'x';
         $parameters = array();
-        $url = "https://easyway-ordering.chargify.com/subscriptions.json";
+        $url = $ChargifyURL."subscriptions.json";
         
         $parameters ='{"subscription":{
-        "product_id":"3393209",
+        "product_id":"'.$ChargifyResellerProduct.'",
         "customer_id":'.$customer_id.',
         "components": [{
-        "component_id":  35267,
+        "component_id":  '.$ChargifyStandardComponent.',
         "allocated_quantity": 0
         },{
-        "component_id": 39219,
+        "component_id": '.$ChargifyPremiumComponent.',
         "allocated_quantity": 0
         }],
         "payment_profile_id":"",
@@ -172,3 +172,4 @@ if(!empty($_GET['ids']))
 
 ?>
 
+<?php mysqli_close($mysqli);?>

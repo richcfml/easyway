@@ -1,6 +1,6 @@
 <?php
 
-	$custQry = mysql_query("select * from customer_registration where password != '' AND resturant_id=".$Objrestaurant->id);
+	$custQry = dbAbstract::Execute("select * from customer_registration where password != '' AND resturant_id=".$Objrestaurant->id, 1);
  	$counter = 0;
 
 	$mZipPostal = "Zip Code";
@@ -31,7 +31,7 @@
   <tr>
     <td colspan="8">&nbsp;</td>
   </tr>
-  <? while($custRs	=	mysql_fetch_object($custQry)){?>
+  <?php while($custRs	=	dbAbstract::returnObject($custQry, 1)){?>
   
   <tr bgcolor="<?=$bgcolor ?>" >
    

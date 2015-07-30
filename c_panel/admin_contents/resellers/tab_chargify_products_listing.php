@@ -52,20 +52,20 @@ if (isset($_REQUEST["action"])) {
         $yelp_review_request = 0;
     }
     if ($_REQUEST['action'] == 'delete') {
-        mysql_query(
+        dbAbstract::Delete(
                 "DELETE FROM chargify_products
-				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id"
+				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id",1
         );
         $message = "1 product deleted";
     }else if($_REQUEST['action'] == 'enable'){
-        mysql_query(
+        dbAbstract::Update(
                 "Update chargify_products set status = 1
-				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id"
+				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id",1
         );
     }else if($_REQUEST['action'] == 'disable'){
-        mysql_query(
+        dbAbstract::Update(
                 "Update chargify_products set status = 0
-				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id"
+				WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id",1
         );
     }
 
@@ -73,7 +73,7 @@ if (isset($_REQUEST["action"])) {
         
         if (isset($_REQUEST["submit"])) {
             
-            mysql_query(
+            dbAbstract::Update(
                     "UPDATE chargify_products
 					SET user_id=$reseller_id
 						,product_id='$product_id'
@@ -91,12 +91,12 @@ if (isset($_REQUEST["action"])) {
                                                 ,yelp_review_request='$yelp_review_request'
                                                 ,yelp_restaurant_url='$yelp_restaurant_url'
 					WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id
-					"
+					",1
             );
             $message = "Product Updated";
             $action = "add";
         } else {
-            $row_to_update = mysql_query(
+            $row_to_update = dbAbstract::Execute(
                             "SELECT settings_id
 						,product_id
 						,return_url
@@ -113,12 +113,12 @@ if (isset($_REQUEST["action"])) {
                                                 ,yelp_review_request
                                                 ,yelp_restaurant_url
 					FROM chargify_products 
-					WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id"
+					WHERE settings_id='$chargify_product_id' AND user_id=$reseller_id",1
             );
-            $row_to_update = mysql_fetch_assoc($row_to_update);
+            $row_to_update = dbAbstract::returnAssoc($row_to_update,1);
         }
     } else if ($_REQUEST['action'] == 'add') {
-        mysql_query(
+        dbAbstract::Insert(
                 "INSERT INTO chargify_products (
 					user_id
 					,product_id
@@ -152,13 +152,13 @@ if (isset($_REQUEST["action"])) {
 					,'$yelp_review_request'
 					,'$yelp_restaurant_url'
 				)
-				"
+				",1
         );
         $message = "Product Added";
     }
 }
 extract($row_to_update);
-$chargify_products_query = mysql_query("
+$chargify_products_query = dbAbstract::Execute("
 		SELECT settings_id
 			,product_id
 			,return_url
@@ -176,7 +176,7 @@ $chargify_products_query = mysql_query("
                         ,yelp_restaurant_url
 		FROM chargify_products 
 		WHERE user_id=$reseller_id
-	");
+	",1);
 $return_url = "http://easywayordering.com/self-signup-wizard/index.php";
 $update_return_url = "http://easywayordering.com/self-signup-wizard/handle_update_payment.php";
 ?>
@@ -331,9 +331,9 @@ $update_return_url = "http://easywayordering.com/self-signup-wizard/handle_updat
         <? } ?>
                 <table class="listig_table" width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
         <?
-                    if (mysql_num_rows($chargify_products_query) > 0) {
+                    if (dbAbstract::returnRowsCount($chargify_products_query,1) > 0) {
                         $counter = 0;
-                        while ($chargify_product = mysql_fetch_object($chargify_products_query)) {
+                        while ($chargify_product = dbAbstract::returnObject($chargify_products_query,1)) {
         ?>
 <?
                             if ($counter++ % 2 == 0)
@@ -438,4 +438,4 @@ $update_return_url = "http://easywayordering.com/self-signup-wizard/handle_updat
                             </tr>
                         </table>
                     </body>
-<? @mysql_close($mysql_conn); ?>
+<?php mysqli_close($mysqli);?>

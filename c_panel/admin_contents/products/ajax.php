@@ -11,7 +11,7 @@ if (isset($_GET['importimage']))
 	$mRandom = mt_rand(1, mt_getrandmax());
 	$mExtention = GetFileExt($mImageURL);
 	$mName = $mRandom.$mExtention;
-	$mPath = '../../img/'.$mName;
+	$mPath = '../../tempimages/'.$mName;
 	file_put_contents($mPath, file_get_contents($mImageURL));
 	
 	list($width, $height, $type, $attr) = getimagesize($mPath);        
@@ -47,12 +47,12 @@ else if (isset($_GET["sku"]))
     $q=str_replace("@","",$q);
     $q=trim($q);
     
-    $sql_res=mysql_query("SELECT * from bh_items WHERE ItemCode LIKE '$q%' ORDER BY ID LIMIT 3");
+    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode LIKE '$q%' ORDER BY ID LIMIT 3",1);
 ?>
 <div>
     <img class="imgCloseBH" src="images/cross2.png" style="float: right; cursor: hand; cursor: pointer; margin-top: 3px; margin-right: 3px;" />
 <?php
-    while($row=mysql_fetch_array($sql_res))
+    while($row=dbAbstract::returnArray($sql_res,1))
     {
     $mItemName=$row['ItemName'];
     ?>
@@ -72,10 +72,10 @@ else if (isset($_GET["sku1"]))
     $q=str_replace("@","",$q);
     $q=trim($q);
     
-    $sql_res=mysql_query("SELECT * from bh_items WHERE ItemCode = '$q'");
-    if (mysql_num_rows($sql_res)>0)
+    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode = '$q'",1);
+    if (dbAbstract::returnRowsCount($sql_res,1)>0)
     {
-        $row=mysql_fetch_array($sql_res);
+        $row=dbAbstract::returnArray($sql_res,1);
         echo($row['ItemName']);
     }
     else
@@ -91,3 +91,4 @@ function GetFileExt($fileName)
 	return substr($ext, 0, 4);
 }
 ?>
+<?php mysqli_close($mysqli);?>

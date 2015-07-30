@@ -1,4 +1,4 @@
-<? 
+<?php 
 	if(!is_numeric($loggedinuser->id)) {
 		 /*echo "<script type='text/javascript'>window.location='?item=login'</script>";*/
 		 header("location: ". $SiteUrl .$objRestaurant1->url ."/?item=login" );exit;
@@ -92,13 +92,13 @@ $mainOrdingAddress=$streets." ".$loggedinuser->cust_ord_city." ".$loggedinuser->
             <td colspan="2"><hr /></td>
         
           </tr>
-         <?
-		 $userOrderQry	=	mysql_query("select OrderID,DesiredDeliveryDate from ordertbl where UserID=".$loggedinuser->id);
+         <?php
+		 $userOrderQry	=	dbAbstract::Execute("select OrderID,DesiredDeliveryDate from ordertbl where UserID=".$loggedinuser->id);
 		 
 	$i=0;
 		  if($userOrderQry) {  
 	  	$i=1;
-      	while($userOrderRs	=	mysql_fetch_object($userOrderQry)){
+      	while($userOrderRs	=	dbAbstract::returnObject($userOrderQry)){
 				$orderid	=	$userOrderRs->OrderID;
 				$colour		=	($i%2==0) ? "#FFF": "#E4E4E4"; 
 				$i++;

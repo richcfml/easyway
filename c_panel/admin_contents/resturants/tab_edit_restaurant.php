@@ -1,9 +1,9 @@
- <?
+ <?php
  function prepareStringForMySQL($string){
     $string=str_replace ( "\r" , "<br/>",$string);
     $string=str_replace ( "\n" , "<br/>",$string);
     $string=str_replace ( "\t" , " ",$string);
-    $string=mysql_real_escape_string($string);
+    $string=dbAbstract::returnRealEscapedString($string);
     return $string;
 }
 	if ($_REQUEST['cid']) {
@@ -12,8 +12,8 @@
 	} else {
 		$catid 	=   $_SESSION['ResturantId']; 
 	}
-	$cat_info_qry	=	mysql_query("select * from resturants where id = $catid");
-	$cat_info_Rs	=	mysql_fetch_object($cat_info_qry);
+	$cat_info_qry	=	dbAbstract::Execute("select * from resturants where id = $catid",1);
+	$cat_info_Rs	=	dbAbstract::returnObject($cat_info_qry,1);
 	$header_image	=	$cat_info_Rs->header_image;
 	$optional_image	=	$cat_info_Rs->optionl_logo;
 	$cat_des		=	$cat_info_Rs->des;
@@ -48,8 +48,8 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 		if (isset($_REQUEST['submit'])){
-		$restQry=mysql_query("select name from resturants where name='$catname' AND id!='$catid'");
-		$restRs	=	mysql_num_rows($restQry);	
+		$restQry=dbAbstract::Execute("select name from resturants where name='$catname' AND id!='$catid'",1);
+		$restRs	=	dbAbstract::returnRowsCount($restQry,1);	
 		if($restRs > 0) 
 			$rest_exist = 1;	
 		
@@ -167,22 +167,14 @@
 							$rest_url_name = str_replace(" ","_", $catname); 
 							$rest_url_name = strtolower($rest_url_name); 
 							if($_SESSION['admin_type'] == 'admin') {
-									mysql_query("UPDATE resturants SET name= '".addslashes($catname)."', email= '".addslashes($email)."', fax= '".addslashes($fax)."', phone= '".addslashes($phone)."', logo= '$name', optionl_logo='$name1', delivery_charges=$delivery_charges, order_minimum=$order_minimum,  tax_percent=$tax_percent, business_hrs= '".addslashes($business_hrs)."',header_image= '$name3',time_zone_id = '$time_zone' ,payment_method= '$payment_method' ,announcement='".$rest_announcements."',announce_status =$announce_status,rest_open_close =$rest_open_close,delivery_offer=$delivery_offer,authoriseLoginID= '$authoriseLoginID',transKey= '$transKey',voice_email='$voice_email',phone_notification='$phone_notification_status',rest_address= '$rest_address',rest_city= '$rest_city',rest_state= '$rest_state',rest_zip= '$rest_zip',delivery_radius='$delivery_radius',meta_keywords='$meta_keywords',meta_description='$meta_description' where id = $catid");	
-									mysql_query("UPDATE analytics SET name= '".addslashes($catname)."', optionl_logo='$name1' , first_letter = '".strtoupper(substr(addslashes($catname), 0, 1))."' where resturant_id = $catid");	
+									dbAbstract::Update("UPDATE resturants SET name= '".addslashes($catname)."', email= '".addslashes($email)."', fax= '".addslashes($fax)."', phone= '".addslashes($phone)."', logo= '$name', optionl_logo='$name1', delivery_charges=$delivery_charges, order_minimum=$order_minimum,  tax_percent=$tax_percent, business_hrs= '".addslashes($business_hrs)."',header_image= '$name3',time_zone_id = '$time_zone' ,payment_method= '$payment_method' ,announcement='".$rest_announcements."',announce_status =$announce_status,rest_open_close =$rest_open_close,delivery_offer=$delivery_offer,authoriseLoginID= '$authoriseLoginID',transKey= '$transKey',voice_email='$voice_email',phone_notification='$phone_notification_status',rest_address= '$rest_address',rest_city= '$rest_city',rest_state= '$rest_state',rest_zip= '$rest_zip',delivery_radius='$delivery_radius',meta_keywords='$meta_keywords',meta_description='$meta_description' where id = $catid",1);	
+									dbAbstract::Update("UPDATE analytics SET name= '".addslashes($catname)."', optionl_logo='$name1' , first_letter = '".strtoupper(substr(addslashes($catname), 0, 1))."' where resturant_id = $catid",1);	
 								} else if ( $_SESSION['admin_type'] == 'store owner')   {
-									mysql_query("UPDATE resturants SET name= '".addslashes($catname)."', email= '".addslashes($email)."', fax= '".addslashes($fax)."', phone= '".addslashes($phone)."', logo= '$name', optionl_logo='$name1', delivery_charges=$delivery_charges, order_minimum=$order_minimum,  tax_percent=$tax_percent, business_hrs= '".addslashes($business_hrs)."',header_image= '$name3',time_zone_id = '$time_zone' ,announcement='".$rest_announcements."',announce_status =$announce_status,rest_open_close =$rest_open_close,delivery_offer=$delivery_offer,rest_address= '$rest_address',rest_city= '$rest_city',rest_state= '$rest_state',rest_zip= '$rest_zip',delivery_radius='$delivery_radius',meta_keywords='$meta_keywords',meta_description='$meta_description' where id = $catid");
-									mysql_query("UPDATE analytics SET name= '".addslashes($catname)."', optionl_logo='$name1' , first_letter = '".strtoupper(substr(addslashes($catname), 0, 1))."' where resturant_id = $catid");
+									dbAbstract::Update("UPDATE resturants SET name= '".addslashes($catname)."', email= '".addslashes($email)."', fax= '".addslashes($fax)."', phone= '".addslashes($phone)."', logo= '$name', optionl_logo='$name1', delivery_charges=$delivery_charges, order_minimum=$order_minimum,  tax_percent=$tax_percent, business_hrs= '".addslashes($business_hrs)."',header_image= '$name3',time_zone_id = '$time_zone' ,announcement='".$rest_announcements."',announce_status =$announce_status,rest_open_close =$rest_open_close,delivery_offer=$delivery_offer,rest_address= '$rest_address',rest_city= '$rest_city',rest_state= '$rest_state',rest_zip= '$rest_zip',delivery_radius='$delivery_radius',meta_keywords='$meta_keywords',meta_description='$meta_description' where id = $catid",1);
+									dbAbstract::Update("UPDATE analytics SET name= '".addslashes($catname)."', optionl_logo='$name1' , first_letter = '".strtoupper(substr(addslashes($catname), 0, 1))."' where resturant_id = $catid",1);
 	
 								}								
 	 ?>		
-			<?
-            if($rest_exist) {
-			 // $rest_url_name = $rest_url_name.$catid;
-			 // mysql_query("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid);	
-			 // mysql_query("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid);	
-			  }
-
-			?>	
 			<script language="javascript">
 				window.location="./?mod=resturant&item=restedit";
 			</script> 

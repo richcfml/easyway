@@ -12,7 +12,7 @@ else if(isset($_POST['x_sid']))
 }
 
 	header('Access-Control-Allow-Origin: *.easywayordering.com'); 
-    define("AMEX",3);
+        define("AMEX",3);
 	define("VISA",4);
 	define("MASTER",5);
 	define("DISCOVER",6);
@@ -119,7 +119,10 @@ else if(isset($_POST['x_sid']))
             else 
             {
  		include("new_site/index.php");
+                
             }
         }
+        mysqli_close($mysqli);
 ?>
+
 	

@@ -1,8 +1,8 @@
 <?php
-$mSQLQuery=mysql_query("SELECT Authorization_Num FROM gge4_authorization_num WHERE UserID=".$gUID." AND transaction_id='".$transactionid."'");
-if(mysql_num_rows($mSQLQuery) > 0) 
+$mSQLQuery=dbAbstract::Execute("SELECT Authorization_Num FROM gge4_authorization_num WHERE UserID=".$gUID." AND transaction_id='".$transactionid."'", 1);
+if(dbAbstract::returnRowsCount($mSQLQuery, 1) > 0) 
 {
-	$mRow=mysql_fetch_object($mSQLQuery);
+	$mRow=dbAbstract::returnObject($mSQLQuery, 1);
 	$mAuthorization_Num = $mRow->Authorization_Num;
         
 	$mXML = '<?xml version="1.0" encoding="utf-8" ?>

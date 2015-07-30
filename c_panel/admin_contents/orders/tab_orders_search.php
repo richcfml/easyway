@@ -1,6 +1,6 @@
-<?
-$orderquery=mysql_query("select  o.OrderID,o.DesiredDeliveryDate,o.order_receiving_method,DATE_FORMAT(OrderDate,'%m/%d/%Y')OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=1  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC");
-@$numrows=mysql_num_rows($orderquery);	
+<?php
+$orderquery=  dbAbstract::Execute("select  o.OrderID,o.DesiredDeliveryDate,o.order_receiving_method,DATE_FORMAT(OrderDate,'%m/%d/%Y')OrderDate,c.cust_your_name, c.LastName from customer_registration c,ordertbl o where o.UserID=c.id and Approve=1  AND payment_approv=1 AND o.cat_id = ". $Objrestaurant->id ." ORDER BY o.OrderID DESC",1);
+@$numrows=dbAbstract::returnRowsCount($orderquery,1);	
 ?>
 <div id="main_heading">VIEW APPROVED ORDERS</div>
  
@@ -14,7 +14,7 @@ $orderquery=mysql_query("select  o.OrderID,o.DesiredDeliveryDate,o.order_receivi
     </tr>
     <? 		
 	$counter=0;
-	while($orderRs=mysql_fetch_assoc($orderquery)){	 
+	while($orderRs=dbAbstract::returnAssoc($orderquery,1)){	 
      $OrderID = @$orderRs["OrderID"];
 	?>
     <!-- test code ends-->

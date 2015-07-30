@@ -3,14 +3,14 @@
 	{
 		if(!isset($_POST['serving_date'])) 
 		{ 
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu&wp_api=load_resturant" );
 			exit;
 		}
 	
 		if($cart->isempty()) 
 		{ 
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu&wp_api=load_resturant" );
 			exit;
 		}	
@@ -399,7 +399,7 @@
 	include "views/notify_customers.php";
 	if(!isset($repid_payment))
 	{
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&wp_api=thankyou" );
 		exit;
 	}

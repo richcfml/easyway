@@ -35,10 +35,10 @@ $total_cats = $arr['count'];
 $half = round($total_cats / 2);
 $mColumn1Count = -1;
 $mSQLMenu = "SELECT IFNULL(Column1Count, -1) AS Column1Count FROM menus WHERE id=".$menuid;
-if($mSQLMenuRes = mysql_query($mSQLMenu)){
-    if (mysql_num_rows($mSQLMenuRes)>0)
+if($mSQLMenuRes = dbAbstract::Execute($mSQLMenu)){
+    if (dbAbstract::returnRowsCount($mSQLMenuRes)>0)
     {
-            $mSQLMenuRow = mysql_fetch_object($mSQLMenuRes);
+            $mSQLMenuRow = dbAbstract::returnObject($mSQLMenuRes);
             if ($mSQLMenuRow->Column1Count>=0)
             {
                     $mColumn1Count = $mSQLMenuRow->Column1Count;

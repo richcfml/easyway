@@ -3,8 +3,8 @@ $errMessage='';
 	//////////////////////////////////////////////////////////////////
 	$resellerId  = 	$_REQUEST['resellerId'];
 	$user_id	=	$_REQUEST['userid'];
-	$user_qry	=	mysql_query("select * from users where id = $user_id");
-	$user_qryRs	=	mysql_fetch_object($user_qry);
+	$user_qry	=	dbAbstract::Execute("select * from users where id = $user_id",1);
+	$user_qryRs	=	dbAbstract::returnObject($user_qry,1);
 	
 				   
 		if (isset($_REQUEST['submit']))
@@ -25,7 +25,7 @@ $errMessage='';
 				
 				$errMessage="";
 				
-				$user_qry1	=	mysql_query("select * from users where username = '$user_name' AND id != $user_id");
+				$user_qry1	=	dbAbstract::Execute("select * from users where username = '$user_name' AND id != $user_id",1);
 				
 				if($first_name == '') {
 					 $errMessage = "Please enter first name";
@@ -37,7 +37,7 @@ $errMessage='';
 					 $errMessage = "Please enter email address in correct format";
 				} else if($user_name == '') {
 					 $errMessage = "Please enter user name";
-				} else if(mysql_num_rows($user_qry1) > 0) {
+				} else if(dbAbstract::returnRowsCount($user_qry1,1) > 0) {
 					 $errMessage = "User name already exists. Please select another.";
 				} else if($password == '') {
 					 $errMessage = "Please enter password";
@@ -51,22 +51,20 @@ $errMessage='';
 					 $errMessage = "Please enter zip/postal";
 				} else {
 					
-					$sql = "UPDATE users SET firstname= '".mysql_real_escape_string(stripslashes($first_name))."', lastname= '".mysql_real_escape_string(stripslashes($last_name))."', email= '".mysql_real_escape_string(stripslashes($email))."',username='".mysql_real_escape_string(stripslashes($user_name))."',password= '$password', country= '".mysql_real_escape_string(stripslashes($country))."', state= '".mysql_real_escape_string(stripslashes($state))."', city= '".mysql_real_escape_string(stripslashes($city))."', zip= '$zip',address='".mysql_real_escape_string(stripslashes($address))."' WHERE id=$user_id";
-				 mysql_query($sql);
+					$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."',username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$user_id";
+				 dbAbstract::Update($sql,1);
 				 
 				 $reseller_client_sql = "UPDATE reseller_client SET reseller_id = '".$reseller."' WHERE  client_id = '".$user_id."' ";
 				 if(!empty($user_qryRs->chargify_customer_id))
                                  {
                                     $chargify_customer_id = $chargify->updateCustomer($user_qryRs->chargify_customer_id,$first_name,$last_name,$email,$company_name,$city,$state,$zip,$country,$address,$phone);
                                  }
-				 if($result = mysql_query($reseller_client_sql))  { ?>
+				 if($result = dbAbstract::Update($reseller_client_sql,1))  { ?>
 					<script language="javascript">
 						window.location="./?mod=clients&resellerId=<?=$resellerId?>";
 					</script> 
 				 
-                 <? } else {
-					  die("ERROR: ".mysql_error()."<br/><br/><br/><br/><br/><br/>"); 
-				  }	 
+                 <? } 
 				}
 				?>
                 
@@ -118,8 +116,8 @@ $errMessage='';
 		<td width="574">
         	<?
 			$reseller_sql = "SELECT reseller_id from reseller_client WHERE client_id = '".$user_id."'";
-			$reseller_qry = mysql_query( $reseller_sql );
-			$reseller_rs = mysql_fetch_array( $reseller_qry );			
+			$reseller_qry = dbAbstract::Execute( $reseller_sql,1 );
+			$reseller_rs = dbAbstract::returnArray( $reseller_qry,1);			
 			?>
             <select name="reseller" id="reseller" style="width:270px;" >
             <option value="-1">Select Reseller</option>

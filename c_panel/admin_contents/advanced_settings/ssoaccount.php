@@ -104,8 +104,8 @@ function getclients( resellerId, pageName,owner_name ) {
 if (isset($_POST['submitButton'])){
     extract($_POST);
     
-    $sqlResult = mysql_query("SELECT name FROM bh_sso_accounts WHERE name ='" .prepareStringForMySQL($name). "'");
-    if(mysql_num_rows($sqlResult) > 0) {
+    $sqlResult = dbAbstract::Execute("SELECT name FROM bh_sso_accounts WHERE name ='" .prepareStringForMySQL($name). "'", 1);
+    if(dbAbstract::returnRowsCount($sqlResult, 1) > 0) {
 		 $errMessage = "SSO account name already exists. Please select another.";
     }else{
         if($_SESSION['admin_type']=="admin"){
@@ -128,7 +128,7 @@ if (isset($_POST['submitButton'])){
                                     ,reseller_id='".prepareStringForMySQL($reseller_id)."'
                                     ,owner_id='".prepareStringForMySQL($owner_id)."'
                                     ,created_by = '".$created_by."'";
-        $ssoid = mysql_query($queryInsertSSO);
+        $ssoid = dbAbstract::Insert($queryInsertSSO,1);
         if($ssoid > 0)
         {?>
             

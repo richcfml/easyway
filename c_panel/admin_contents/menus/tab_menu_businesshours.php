@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 require_once ("../classes/menu.php");
  
@@ -12,7 +12,7 @@ $func_obj = new clsFunctions();
 
 if(isset($_POST['update'])) {
                 Log::write("Delete menu hours", "QUERY -- delete from menu_hours  WHERE menu_id=".$_GET['menuid'], 'menu', 1 , 'cpanel');
-		mysql_query("delete from menu_hours  WHERE menu_id=".$_GET['menuid']);
+		dbAbstract::Delete("delete from menu_hours  WHERE menu_id=".$_GET['menuid'], 1);
 		
  
 	$open_hr_arr = $_POST['open_hr'];
@@ -31,8 +31,7 @@ if(isset($_POST['update'])) {
 		$close_time  = $close_hr_arr[$index].$close_min_arr[$index];
 		
                 Log::write("Adding menu business hours", "QUERY -- insert into menu_hours SET open='$open_time', close='$close_time',day=$index , menu_id=".$_GET['menuid'], 'menu', 1 , 'cpanel');
-		mysql_query("insert into menu_hours SET open='$open_time', close='$close_time',day=$index , menu_id=".$_GET['menuid']);
-		if(mysql_affected_rows()>0)
+		if(dbAbstract::Insert("insert into menu_hours SET open='$open_time', close='$close_time',day=$index , menu_id=".$_GET['menuid'], 1, 1)>0)
                     {
                         $updateMessage="Menu timings updated Successfully";
                     } 
@@ -147,3 +146,4 @@ if(isset($_POST['update'])) {
 </form>
 </body>
 
+<?php mysqli_close($mysqli);?>

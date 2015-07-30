@@ -45,17 +45,17 @@ if (isset($_POST["btnUpload"]))
 		if ($txtRestaurantID>0)
 		{
 			$mRestaurantID = $txtRestaurantID;
-			$mSQL = "UPDATE signupdetails SET `TimeZoneID`=".$ddlTimeZone.", `RestaurantName`='".mysql_real_escape_string($txtRestaurantName)."', `Address`='".mysql_real_escape_string($txtStreetAddress)."', `State`='".mysql_real_escape_string($txtState)."', `City`='".mysql_real_escape_string($txtCity)."', `ZipCode`='".mysql_real_escape_string($txtZip)."', `Country`='".$ddlCountry1."', `PhoneNumber`='".mysql_real_escape_string($txtPhone)."', `FaxNumber`='".mysql_real_escape_string($txtFax)."', `FullName`='".mysql_real_escape_string($txtFullName)."', `EmailAddress`='".mysql_real_escape_string($txtEmailAddress)."', `Password`='".mysql_real_escape_string($txtPassword)."', `UserName`='".mysql_real_escape_string($txtUserName)."', `OrderReceive`=".$rbOrders.", `Delivery`=".$rbDelivery.", `Tax`='".mysql_real_escape_string($txtTax)."', `Cash`=".$rbCash.", `CreditCard`=".$rbCreditCard.", `GateWay`=".$rbGateWay.", `DomainName`='".mysql_real_escape_string($txtDomainName)."', `NewDomain`=".$mNewDomain.", `MenuUse`=".$rbMenuUse.", `HostingInformation`=".$rbHosting.", `DeliveryMinimum`='".$txtDeliveryMinimum."', `DeliveryCharges`='".$txtDeliveryCharges."', `DeliveryRadius`='".$txtDeliveryRadius."', `ClientAddress`='".mysql_real_escape_string($txtClientAddress)."', `ClientState`='".mysql_real_escape_string($txtClientState)."', `ClientCity`='".mysql_real_escape_string($txtClientCity)."', `ClientZipCode`='".mysql_real_escape_string($txtClientZip)."', `ClientCountry`='".$ddlCountry2."' WHERE ID=".$txtRestaurantID;
-			mysql_query($mSQL);
+			$mSQL = "UPDATE signupdetails SET `TimeZoneID`=".$ddlTimeZone.", `RestaurantName`='".dbAbstract::returnRealEscapedString($txtRestaurantName)."', `Address`='".dbAbstract::returnRealEscapedString($txtStreetAddress)."', `State`='".dbAbstract::returnRealEscapedString($txtState)."', `City`='".dbAbstract::returnRealEscapedString($txtCity)."', `ZipCode`='".dbAbstract::returnRealEscapedString($txtZip)."', `Country`='".$ddlCountry1."', `PhoneNumber`='".dbAbstract::returnRealEscapedString($txtPhone)."', `FaxNumber`='".dbAbstract::returnRealEscapedString($txtFax)."', `FullName`='".dbAbstract::returnRealEscapedString($txtFullName)."', `EmailAddress`='".dbAbstract::returnRealEscapedString($txtEmailAddress)."', `Password`='".dbAbstract::returnRealEscapedString($txtPassword)."', `UserName`='".dbAbstract::returnRealEscapedString($txtUserName)."', `OrderReceive`=".$rbOrders.", `Delivery`=".$rbDelivery.", `Tax`='".dbAbstract::returnRealEscapedString($txtTax)."', `Cash`=".$rbCash.", `CreditCard`=".$rbCreditCard.", `GateWay`=".$rbGateWay.", `DomainName`='".dbAbstract::returnRealEscapedString($txtDomainName)."', `NewDomain`=".$mNewDomain.", `MenuUse`=".$rbMenuUse.", `HostingInformation`=".$rbHosting.", `DeliveryMinimum`='".$txtDeliveryMinimum."', `DeliveryCharges`='".$txtDeliveryCharges."', `DeliveryRadius`='".$txtDeliveryRadius."', `ClientAddress`='".dbAbstract::returnRealEscapedString($txtClientAddress)."', `ClientState`='".dbAbstract::returnRealEscapedString($txtClientState)."', `ClientCity`='".dbAbstract::returnRealEscapedString($txtClientCity)."', `ClientZipCode`='".dbAbstract::returnRealEscapedString($txtClientZip)."', `ClientCountry`='".$ddlCountry2."' WHERE ID=".$txtRestaurantID;
+			dbAbstract::Update($mSQL);
 		}
 		else
 		{
 			
 			$mSQL = "SELECT COUNT(*) AS UserCount FROM `users` WHERE LOWER(TRIM(username))='".trim(strtolower($_GET["username"]))."'";
-			$mResult = mysql_query($mSQL);
-			if (mysql_num_rows($mResult)>0)
+			$mResult = dbAbstract::Execute($mSQL);
+			if (dbAbstract::returnRowsCount($mResult)>0)
 			{
-				$mRow = mysql_fetch_object($mResult);
+				$mRow = dbAbstract::returnObject($mResult);
 				if ($mRow->UserCount>0)
 				{
 					$mDupError = "Username already in use.";
@@ -66,9 +66,8 @@ if (isset($_POST["btnUpload"]))
 					$mDupShowHide = " style='display: none;' ";
 					$mDupError = "";
 					$mSQL = "INSERT INTO  signupdetails (`TimeZoneID`, `RestaurantName`, `Address`, `State`, `City`, `ZipCode`, `Country`, `PhoneNumber`, `FaxNumber`, `FullName`, `EmailAddress`, `Password`, `UserName`, `OrderReceive`, `Delivery`, `Tax`, `Cash`, `CreditCard`, `GateWay`, `DomainName`, `NewDomain`, `MenuUse`, `HostingInformation`, `DeliveryMinimum`, `DeliveryCharges`, `DeliveryRadius`, `ClientAddress`, `ClientState`, `ClientCity`, `ClientZipCode`, `ClientCountry`) VALUES ";
-					$mSQL .= "(".$ddlTimeZone.", '".mysql_real_escape_string($txtRestaurantName)."', '".mysql_real_escape_string($txtStreetAddress)."', '".mysql_real_escape_string($txtState)."', '".mysql_real_escape_string($txtCity)."', '".mysql_real_escape_string($txtZip)."', '".$ddlCountry1."', '".mysql_real_escape_string($txtPhone)."', '".mysql_real_escape_string($txtFax)."', '".mysql_real_escape_string($txtFullName)."', '".mysql_real_escape_string($txtEmailAddress)."', '".mysql_real_escape_string($txtPassword)."', '".mysql_real_escape_string($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".mysql_real_escape_string($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".mysql_real_escape_string($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".mysql_real_escape_string($txtClientAddress)."', '".mysql_real_escape_string($txtClientState)."', '".mysql_real_escape_string($txtClientCity)."', '".mysql_real_escape_string($txtClientZip)."', '".mysql_real_escape_string($ddlCountry2)."')";
-					mysql_query($mSQL);
-					$mRestaurantID = mysql_insert_id();
+					$mSQL .= "(".$ddlTimeZone.", '".dbAbstract::returnRealEscapedString($txtRestaurantName)."', '".dbAbstract::returnRealEscapedString($txtStreetAddress)."', '".dbAbstract::returnRealEscapedString($txtState)."', '".dbAbstract::returnRealEscapedString($txtCity)."', '".dbAbstract::returnRealEscapedString($txtZip)."', '".$ddlCountry1."', '".dbAbstract::returnRealEscapedString($txtPhone)."', '".dbAbstract::returnRealEscapedString($txtFax)."', '".dbAbstract::returnRealEscapedString($txtFullName)."', '".dbAbstract::returnRealEscapedString($txtEmailAddress)."', '".dbAbstract::returnRealEscapedString($txtPassword)."', '".dbAbstract::returnRealEscapedString($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".dbAbstract::returnRealEscapedString($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".dbAbstract::returnRealEscapedString($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".dbAbstract::returnRealEscapedString($txtClientAddress)."', '".dbAbstract::returnRealEscapedString($txtClientState)."', '".dbAbstract::returnRealEscapedString($txtClientCity)."', '".dbAbstract::returnRealEscapedString($txtClientZip)."', '".dbAbstract::returnRealEscapedString($ddlCountry2)."')";
+					$mRestaurantID = dbAbstract::Insert($mSQL, 0 ,2);
 				}
 			}
 			else
@@ -84,10 +83,10 @@ if (isset($_POST["btnUpload"]))
 	else
 	{
 		$mSQL = "SELECT COUNT(*) AS UserCount FROM `users` WHERE LOWER(TRIM(username))='".trim(strtolower($_GET["username"]))."'";
-		$mResult = mysql_query($mSQL);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute($mSQL);
+		if (dbAbstract::returnRowsCount($mResult)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult);
 			if ($mRow->UserCount>0)
 			{
 				$mDupError = "Username already in use.";
@@ -98,9 +97,8 @@ if (isset($_POST["btnUpload"]))
 				$mDupShowHide = " style='display: none;' ";
 				$mDupError = "";
 				$mSQL = "INSERT INTO  signupdetails (`TimeZoneID`, `RestaurantName`, `Address`, `State`, `City`, `ZipCode`, `Country`, `PhoneNumber`, `FaxNumber`, `FullName`, `EmailAddress`, `Password`, `UserName`, `OrderReceive`, `Delivery`, `Tax`, `Cash`, `CreditCard`, `GateWay`, `DomainName`, `NewDomain`, `MenuUse`, `HostingInformation`, `DeliveryMinimum`, `DeliveryCharges`, `DeliveryRadius`, `ClientAddress`, `ClientState`, `ClientCity`, `ClientZipCode`, `ClientCountry`) VALUES ";
-				$mSQL .= "(".$ddlTimeZone.", '".mysql_real_escape_string($txtRestaurantName)."', '".mysql_real_escape_string($txtStreetAddress)."', '".mysql_real_escape_string($txtState)."', '".mysql_real_escape_string($txtCity)."', '".mysql_real_escape_string($txtZip)."', '".$ddlCountry1."', '".mysql_real_escape_string($txtPhone)."', '".mysql_real_escape_string($txtFax)."', '".mysql_real_escape_string($txtFullName)."', '".mysql_real_escape_string($txtEmailAddress)."', '".mysql_real_escape_string($txtPassword)."', '".mysql_real_escape_string($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".mysql_real_escape_string($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".mysql_real_escape_string($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".mysql_real_escape_string($txtClientAddress)."', '".mysql_real_escape_string($txtClientState)."', '".mysql_real_escape_string($txtClientCity)."', '".mysql_real_escape_string($txtClientZip)."', '".mysql_real_escape_string($ddlCountry2)."')";
-				mysql_query($mSQL);
-				$mRestaurantID = mysql_insert_id();
+				$mSQL .= "(".$ddlTimeZone.", '".dbAbstract::returnRealEscapedString($txtRestaurantName)."', '".dbAbstract::returnRealEscapedString($txtStreetAddress)."', '".dbAbstract::returnRealEscapedString($txtState)."', '".dbAbstract::returnRealEscapedString($txtCity)."', '".dbAbstract::returnRealEscapedString($txtZip)."', '".$ddlCountry1."', '".dbAbstract::returnRealEscapedString($txtPhone)."', '".dbAbstract::returnRealEscapedString($txtFax)."', '".dbAbstract::returnRealEscapedString($txtFullName)."', '".dbAbstract::returnRealEscapedString($txtEmailAddress)."', '".dbAbstract::returnRealEscapedString($txtPassword)."', '".dbAbstract::returnRealEscapedString($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".dbAbstract::returnRealEscapedString($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".dbAbstract::returnRealEscapedString($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".dbAbstract::returnRealEscapedString($txtClientAddress)."', '".dbAbstract::returnRealEscapedString($txtClientState)."', '".dbAbstract::returnRealEscapedString($txtClientCity)."', '".dbAbstract::returnRealEscapedString($txtClientZip)."', '".dbAbstract::returnRealEscapedString($ddlCountry2)."')";
+				$mRestaurantID = dbAbstract::Insert($mSQL, 0 ,2);
 			}
 		}
 		else
@@ -142,8 +140,8 @@ if (isset($_POST["btnUpload"]))
 					else
 					{
 						$mSQL = "INSERT INTO  signupuploads (`RestaurantID`, `FileName`, `MenuName`) VALUES ";
-						$mSQL .= "(".$mRestaurantID.", '".mysql_real_escape_string($mFileName)."', '".mysql_real_escape_string($txtMenuName)."')";
-						mysql_query($mSQL);
+						$mSQL .= "(".$mRestaurantID.", '".dbAbstract::returnRealEscapedString($mFileName)."', '".dbAbstract::returnRealEscapedString($txtMenuName)."')";
+						dbAbstract::Insert($mSQL);
 					}
 				}
 			}
@@ -266,8 +264,8 @@ if (isset($_GET["sdid"]))
 		{
 			if (isset($_GET["token"]))
 			{
-				$mResTK = mysql_query("SELECT IFNULL(RestaurantID, 0) AS RestaurantID, IFNULL(Token, '') AS Token FROM signupdetails WHERE ID=".$_GET["sdid"]);
-				$mRowTK = mysql_fetch_object($mResTK);
+				$mResTK = dbAbstract::Execute("SELECT IFNULL(RestaurantID, 0) AS RestaurantID, IFNULL(Token, '') AS Token FROM signupdetails WHERE ID=".$_GET["sdid"]);
+				$mRowTK = dbAbstract::returnObject($mResTK);
 				$mToken = $mRowTK->Token;
 				
 				if ($mToken==$_GET["token"])
@@ -292,10 +290,10 @@ if (isset($_GET["sdid"]))
 if ($mRestaurantID>0)
 {
 	$mSQL = "SELECT * FROM `signupdetails` WHERE ID=".$mRestaurantID;
-	$mResult = mysql_query($mSQL);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute($mSQL);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRestaurantDetails = mysql_fetch_object($mResult);
+		$mRestaurantDetails = dbAbstract::returnObject($mResult);
 	}
 }
 
@@ -308,8 +306,8 @@ function GetFileExt($pFileName)
 
 function fillTimeZones()
 {
-	$mSQL = mysql_query("SELECT * FROM times_zones");
-	while($mRes = mysql_fetch_object($mSQL))
+	$mSQL = dbAbstract::Execute("SELECT * FROM times_zones");
+	while($mRes = dbAbstract::returnObject($mSQL))
 	{
 		echo "<option value=".$mRes->id.">".$mRes->time_zone."</option>";
 	} 
@@ -1097,10 +1095,10 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 										{
 											$mID = $mRestaurantDetails->ID;
 											$mSQL = "SELECT * FROM `signupuploads` WHERE RestaurantID=".$mID;
-											$mResult = mysql_query($mSQL);
-											if (mysql_num_rows($mResult)>0)
+											$mResult = dbAbstract::Execute($mSQL);
+											if (dbAbstract::returnRowsCount($mResult)>0)
 											{
-												while ($mRow = mysql_fetch_object($mResult))
+												while ($mRow = dbAbstract::returnObject($mResult))
 												{
 									?>
 									<li class='UploadedMenu' id='li<?=$mRow->ID?>'>-<span class='UploadedMenuMargin'><?=$mRow->MenuName?></span>&nbsp;&nbsp;<span style='color: #933; cursor: hand; cursor: pointer;' class='clsRemove' ID='<?=$mRow->ID?>'>Remove</span></li>
@@ -1495,8 +1493,8 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 							//$mSQLPr = "SELECT product_id FROM `chargify_products` WHERE user_id = (SELECT user_id FROM chargify_products WHERE product_id='".$mProductID."')";
 							//Below we are using Hard coded userid of Claerence. This may change as per instructions of Clarence.
 							$mSQLPr = "SELECT product_id FROM `chargify_products` WHERE user_id = 414"; 
-							$mResPr = mysql_query($mSQLPr);
-							if (mysql_num_rows($mResPr)>0)
+							$mResPr = dbAbstract::Execute($mSQLPr);
+							if (dbAbstract::returnRowsCount($mResPr)>0)
 							{
 								$mObjCAPI = new chargifyApi;
 							?>
@@ -1531,7 +1529,7 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 								$mMonthly = "";
 								$mTotal = "";
 								
-								while($mRowPr = mysql_fetch_object($mResPr))
+								while($mRowPr = dbAbstract::returnObject($mResPr))
 								{
 									$mPrdID = $mRowPr->product_id;
 									$mProduct = $mObjCAPI->getProduct($mPrdID);
@@ -1685,5 +1683,6 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 			echo("<script type='text/javascript' language='javascript'>$('#ac-1').prop('checked',true);</script>");
 		}
 	}
-	@mysql_close($mysql_conn);
+//	@mysql_close($mysql_conn);
 ?>
+<?php mysqli_close($mysqli);?>

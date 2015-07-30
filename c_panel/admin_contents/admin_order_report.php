@@ -1,12 +1,12 @@
-<? require_once("../../../includes/config.php");
+<?php require_once("../../../includes/config.php");
  $OrderID = @$_GET['OrderID'];
  
  $prdQuery="select o.*,DATE_FORMAT(OrderDate,'%m/%d/%Y'),c.cust_your_name, c.LastName,c.cust_phone1,c.cust_odr_address DeliveryAddress from customer_registration c,ordertbl o where o.UserID=c.id  and
 	 o.OrderID = ". $OrderID ." ORDER BY o.OrderID DESC";
 	 
- 	 $prdQuery= mysql_query($prdQuery);
+ 	 $prdQuery= dbAbstract::Execute($prdQuery, 1);
  
-	 $Ord_RS=mysql_fetch_array($prdQuery);
+	 $Ord_RS=dbAbstract::returnArray($prdQuery, 1);
 	
  
 ?>
@@ -47,7 +47,7 @@
                 <td width="3%">&nbsp;</td>
               </tr>
               <tr> 
-                <? $customer_address=explode("~",$Ord_RS["cust_odr_address"]);
+                <?php $customer_address=explode("~",$Ord_RS["cust_odr_address"]);
 						$str_Cust_add="";
 						for($i=0;$i<count($customer_address);$i++){
 						$str_Cust_add=$str_Cust_add.$customer_address[$i];
@@ -82,10 +82,10 @@
                 <td colspan="3" ><strong>Order No: </strong><? echo $Ord_RS["OrderID"]?></td>
                 <td>&nbsp;</td>
               </tr>
-               <? 
-				$res_qry	=	mysql_query("select * from resturants where id =".$Ord_RS["cat_id"]);
+               <?php 
+				$res_qry	=	dbAbstract::Execute("select * from resturants where id =".$Ord_RS["cat_id"], 1);
 				
-				$res_rs		=	mysql_fetch_object($res_qry);
+				$res_rs		=	dbAbstract::returnObject($res_qry, 1);
 				?>
                 <tr>
                   <td colspan="3" ><strong>Restaurant Name:  </strong><?=$res_rs->name?></td>
@@ -122,10 +122,10 @@
                 <td colspan="3" class="style1"><strong>Order Detail</strong></td>
                 <td>&nbsp;</td>
               </tr>
-              <?   $prdQuery2 ="select od.*,p.prd_id,p.item_title,p.item_code,p.retail_price,p.sale_price  from orderdetails od, product p  where od.orderid = $OrderID and  p.prd_id=od.pid  ";
+              <?php   $prdQuery2 ="select od.*,p.prd_id,p.item_title,p.item_code,p.retail_price,p.sale_price  from orderdetails od, product p  where od.orderid = $OrderID and  p.prd_id=od.pid  ";
 			     $GrandTotal=0;
-				 $prdQuery2= mysql_query($prdQuery2);
-				while($Ord_RS2=mysql_fetch_array($prdQuery2,MYSQL_BOTH)){
+				 $prdQuery2= dbAbstract::Execute($prdQuery2, 1);
+				while($Ord_RS2=dbAbstract::returnArray($prdQuery2, 1)){
 				 $ProductID= $Ord_RS2["prd_id"]?>
 				                 <tr> 
                   <td colspan="3"><strong>Item Code:</strong> <? echo $Ord_RS2["item_code"]?></td>
@@ -149,32 +149,26 @@
                 <td colspan="3"><strong>Item Price:</strong> $<? echo $Ord_RS2["retail_price"]?></td>
                 <td>&nbsp;</td>
               </tr>
-              <? if($Ord_RS2['extra']) { ?>
+              <?php if($Ord_RS2['extra']) { ?>
               <tr> 
                 <td colspan="3"> 
-                  <? $sybTotelAttribute=0;
+                  <?php $sybTotelAttribute=0;
 					 $Tot_atrib_price_Plus=0;
 					$Tot_atrib_price_mines=0;
 					$TemOptNme="";
 					$OptType=0;
 					?>
-                  <? $attribueArray=explode("~", $Ord_RS2['extra'])?>
-                  <? for( $t=0;$t <count($attribueArray);$t++){
-										//  echo $attribueArray[$t]."<br>";
-										
+                  <?php $attribueArray=explode("~", $Ord_RS2['extra'])?>
+                  <?php for( $t=0;$t <count($attribueArray);$t++){		
 										$attribueArrayString=str_replace("|","~",$attribueArray[$t]);
 										 $ATrOptions= explode("~", $attribueArrayString);
-									
-									//	  echo $ATrOptions[0]."<br>";
-									//	    echo $ATrOptions[1]."<br>";
 										    
 											if(!empty($ATrOptions[0])){
 											$Atribut_Opt=trim($ATrOptions[0]);
 											$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 											$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-											$OptionNameQry=mysql_query("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'");
-										//	echo "select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'"."<br>";
-											$OptonNameRs=mysql_fetch_row($OptionNameQry);
+											$OptionNameQry=dbAbstract::Execute("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'", 1);
+											$OptonNameRs=dbAbstract::returnRow($OptionNameQry, 1);
 												
 											if($OptonNameRs[1]==2){  
 												
@@ -226,9 +220,9 @@
 													$Atribut_Opt=trim($ATrOptions[0]);
 													$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 													$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-													$OptionNameQry2=mysql_query("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'");
+													$OptionNameQry2=dbAbstract::Execute("select option_name,Type from attribute where ProductID=$ProductID AND Title='$Atribut_Opt'", 1);
 											
-													$OptonNameRs2=mysql_fetch_row($OptionNameQry2);
+													$OptonNameRs2=dbAbstract::returnRow($OptionNameQry2, 1);
 													
 													if($OptonNameRs2[1]==2){
 														if($OptonNameRs2[0]==$OptonNameRs[0]){ 
@@ -282,26 +276,26 @@
 											 ?>
 
                   <br> 
-                  <? }
+                  <?php }
 					}?>
-                  <?  } ?>                </td>
+                  <?php  } ?>                </td>
                 <td>&nbsp;</td>
               </tr>
-              <? } ?>
+              <?php } ?>
             	<tr>
                 	<td colspan="3">
                     
-                    <? if($Ord_RS2[associations]) {?>
+                    <?php if($Ord_RS2[associations]) {?>
 					<strong>Associated Items:</strong>
-					<?   
+					<?php   
                        	echo str_replace('|','- add $',$Ord_RS2[associations]);
                    ?>
-                    <? } ?>
+                    <?php } ?>
                     </td>                
                 </tr>
             
            	 <tr> 
-			  <? 
+			  <?php
 			  $assocItemArr = explode("~",$Ord_RS2[associations]);
 			  $assocTotalPrice = 0;
 			  for($j=0; $j<count($assocItemArr); $j++) {
@@ -311,7 +305,7 @@
 				  }
 		  	?>
                 <td colspan="3">
-                <? $itemTotalPrice = $Ord_RS2["retail_price"] + $Tot_atrib_price_Plus + $assocTotalPrice;
+                <?php $itemTotalPrice = $Ord_RS2["retail_price"] + $Tot_atrib_price_Plus + $assocTotalPrice;
 				  	 $Tot_atrib_price_Plus = 0;
 				?>
 				<strong>Item Total Price:</strong> $<? echo $itemTotalPrice;?>
@@ -320,13 +314,13 @@
               </tr>
               
             
-              <? $TotalPlus_atribue= $Ord_RS2['retail_price']+$Tot_atrib_price_Plus+$Tot_atrib_price_mines;?>
-              <? $itemQuanTotel=$Ord_RS2['quantity']*$TotalPlus_atribue;?>
+              <?php $TotalPlus_atribue= $Ord_RS2['retail_price']+$Tot_atrib_price_Plus+$Tot_atrib_price_mines;?>
+              <?php $itemQuanTotel=$Ord_RS2['quantity']*$TotalPlus_atribue;?>
               <tr> 
                 <td colspan="3" class="style1"><HR width="100%" noShade SIZE=1></td>
                 <td>&nbsp;</td>
               </tr>
-              <? }
+              <?php }
 			  
 			  if($Ord_RS["coupon_discount"] == ""){
 				 	$coupon_discount = '0.00';
@@ -376,3 +370,6 @@
 </table>
 </body>
 </html>
+<?php
+mysqli_close($mysqli);
+?>

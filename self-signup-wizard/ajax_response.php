@@ -1,4 +1,5 @@
-<?
+<?php
+
 	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
 	if(empty($_REQUEST["action"])) exit(0);
@@ -15,17 +16,17 @@
 	
 	function ajax_is_username_available() {
 		$username = iin_array($_REQUEST, "username", "");
-		$username = mysql_real_escape_string($username);
-		$users = mysql_query("SELECT COUNT(*) count FROM users WHERE username LIKE '$username'") or die(mysql_error());
-		$users = mysql_fetch_assoc($users);
+		$username = dbAbstract::returnRealEscapedString($username);
+		$users = dbAbstract::Execute("SELECT COUNT(*) count FROM users WHERE username LIKE '$username'");
+		$users = dbAbstract::returnAssoc($users);
 		echo $users["count"];
 	}
 	
 	function ajax_is_restaurant_name_available() {
 		$restaurant_name = iin_array($_REQUEST, "restaurant_name", "");
-		$restaurant_name = mysql_real_escape_string($restaurant_name);
-		$restaurant_names = mysql_query("SELECT COUNT(*) count FROM resturants WHERE name LIKE '$restaurant_name'") or die(mysql_error());
-		$restaurant_names = mysql_fetch_assoc($restaurant_names);
+		$restaurant_name = dbAbstract::returnRealEscapedString($restaurant_name);
+		$restaurant_names = dbAbstract::Execute("SELECT COUNT(*) count FROM resturants WHERE name LIKE '$restaurant_name'");
+		$restaurant_names = dbAbstract::returnAssoc($restaurant_names);
 		echo $restaurant_names["count"];
 	}
 	
@@ -33,11 +34,11 @@
 		$username = iin_array($_REQUEST, "username", "");
 		$password = iin_array($_REQUEST, "password", "");
 		if(!empty($_REQUEST["username"]) && !empty($_REQUEST["password"])) {
-			$username = mysql_real_escape_string($username);
-			$password = mysql_real_escape_string($password);
-			$user = mysql_query("SELECT id FROM users WHERE username LIKE '$username' AND password LIKE '$password'") or die(mysql_error());
-			if(mysql_num_rows($user) > 0) {
-				$user = mysql_fetch_assoc($user);
+			$username = dbAbstract::returnRealEscapedString($username);
+			$password = dbAbstract::returnRealEscapedString($password);
+			$user = dbAbstract::Execute("SELECT id FROM users WHERE username LIKE '$username' AND password LIKE '$password'");
+			if(dbAbstract::returnRowsCount($user) > 0) {
+				$user = dbAbstract::returnAssoc($user);
 				echo $user["id"];
 			} else {
 				echo 0;
@@ -51,3 +52,4 @@
 		return empty($arr[$key]) ? $default : $arr[$key];
 	}
 ?>
+<?php mysqli_close($mysqli);?>

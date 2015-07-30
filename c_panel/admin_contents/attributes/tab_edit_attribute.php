@@ -4,18 +4,17 @@
 	$catid 				= $_GET['catid'];
 	
 	
-	$prdandsubcatQry	= mysql_query("select p.item_title,c.cat_name,c.cat_id,sub_cat_id from product p,categories c where p.sub_cat_id=c.cat_id and p.prd_id=$prdid");
+	$prdandsubcatQry	= dbAbstract::Execute("select p.item_title,c.cat_name,c.cat_id,sub_cat_id from product p,categories c where p.sub_cat_id=c.cat_id and p.prd_id=$prdid", 1);
 	
-	$prdandsubcatRes 	= mysql_fetch_array($prdandsubcatQry);
-	//$catid 				= $prdandsubcatRes['cat_id'];
+	$prdandsubcatRes 	= dbAbstract::returnArray($prdandsubcatQry, 1);
 	$sub_cat_id 		= $prdandsubcatRes['sub_cat_id'];
-	$editattQry 		= mysql_query("select id,Type from attribute where option_name='".$name."' and ProductID=$prdid");
-	$editattRes 		= mysql_fetch_array($editattQry);
-	$attribute 			= mysql_query("select * from attribute where option_name='".$name."' and ProductID=$prdid order by id");
+	$editattQry 		= dbAbstract::Execute("select id,Type from attribute where option_name='".$name."' and ProductID=$prdid", 1);
+	$editattRes 		= dbAbstract::returnArray($editattQry, 1);
+	$attribute 			= dbAbstract::Execute("select * from attribute where option_name='".$name."' and ProductID=$prdid order by id", 1);
     $show 				= '';
 	$Checked_requied	= "";
 	
-	while($attrs = mysql_fetch_array($attribute)) 
+	while($attrs = dbAbstract::returnArray($attribute, 1)) 
 			{
 				if ($attrs['Price']!=0){	$p = "=".$attrs['Price'];	} else {	$p = "";	}
 				if ($attrs['rest_price']!=0 || $attrs['rest_price']!=""){	$rest_p = "|".$attrs['rest_price'];	} else {	$rest_p = "";	}
@@ -45,10 +44,10 @@
 		
 						if(empty($required)){ $required=0; }
 						
-						$ordingsecondary	= mysql_query("Select distinct(option_name),OderingNO from attribute Where ProductID=$prdid order By OderingNO");
+						$ordingsecondary	= dbAbstract::Execute("Select distinct(option_name),OderingNO from attribute Where ProductID=$prdid order By OderingNO", 1);
 										$i	= 0;
 						$StrorderNoSeconday	= "";
-			while($OrdSecondaryRs=mysql_fetch_array($ordingsecondary))
+			while($OrdSecondaryRs=dbAbstract::returnArray($ordingsecondary, 1))
 					{ 
 						if($i==0){	$StrorderNoSeconday=$StrorderNoSeconday.$OrdSecondaryRs[1];	}
 							 else{	$StrorderNoSeconday=$StrorderNoSeconday."~".$OrdSecondaryRs[1];	}
@@ -59,17 +58,17 @@
 		//*************************************************
 		//	Get Other OrderNo of this Attribute
 		//*************************************************	
-			$ordingquery	= mysql_query("Select distinct(option_name),OderingNO from attribute Where ProductID=$prdid AND option_name='$optionname'");
-			$OrdRs			= mysql_fetch_array($ordingquery); 
+			$ordingquery	= dbAbstract::Execute("Select distinct(option_name),OderingNO from attribute Where ProductID=$prdid AND option_name='$optionname'", 1);
+			$OrdRs			= dbAbstract::returnArray($ordingquery, 1); 
 			$orderNo		= $OrdRs[1];
 			
 		//***************************
 		//Delete This Attribute
 		//****************************
-			$old_option_name_query	= mysql_query("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid ");
+			$old_option_name_query	= dbAbstract::Execute("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid ", 1);
 					$old_title 		= array();
 							$o		= 0;
-					while($attrs_old = mysql_fetch_array($old_option_name_query)) 
+					while($attrs_old = dbAbstract::returnArray($old_option_name_query, 1)) 
 							{
 								$old_title[$o]=$attrs_old['Title'];
 								$old_ids[$o]=$attrs_old['id'];
@@ -92,37 +91,37 @@
 							
 							if ($applysubcat==1)
 								 { 
-									$selectprdQry	= mysql_query("select * from product where sub_cat_id=$sub_cat_id"); 
-									while ($selectprdRes=mysql_fetch_array($selectprdQry))
+									$selectprdQry	= dbAbstract::Execute("select * from product where sub_cat_id=$sub_cat_id", 1); 
+									while ($selectprdRes=dbAbstract::returnArray($selectprdQry, 1))
 										 {
 											$pid	= $selectprdRes['prd_id'];
-											$Exitst_option_name_query	=mysql_query("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$pid AND id=".$old_ids[$i]."  AND Title='".@$old_title[$i]."'");
+											$Exitst_option_name_query	=dbAbstract::Execute("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$pid AND id=".$old_ids[$i]."  AND Title='".@$old_title[$i]."'", 1);
 				
-									if(mysql_num_rows( $Exitst_option_name_query)>0)
+									if(dbAbstract::returnRowsCount( $Exitst_option_name_query, 1)>0)
 										{
                                                                                         Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET ProductID='$pid',option_name= '$optionname', Title= '$name', Price= '$value', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='$rest_price' WHERE ProductID='$pid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='".$old_title[$i]."'", 'menu', 1 , 'cpanel');
-											mysql_query("UPDATE attribute SET ProductID='$pid',option_name= '".mysql_real_escape_string($optionname)."', Title= '".mysql_real_escape_string($name)."', Price= '".mysql_real_escape_string($value)."', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='".mysql_real_escape_string($rest_price)."' WHERE ProductID='$pid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='".$old_title[$i]."'");
+											dbAbstract::Update("UPDATE attribute SET ProductID='$pid',option_name= '".dbAbstract::returnRealEscapedString($optionname)."', Title= '".dbAbstract::returnRealEscapedString($name)."', Price= '".dbAbstract::returnRealEscapedString($value)."', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='".dbAbstract::returnRealEscapedString($rest_price)."' WHERE ProductID='$pid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='".$old_title[$i]."'", 1);
 										}else{
                                                                                                 Log::write("Add new attribute", "QUERY -- INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '$optionname', '$name', '$value', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'$rest_price')", 'menu', 1 , 'cpanel');
-												mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '".mysql_real_escape_string($optionname)."', '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($value)."', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'".mysql_real_escape_string($rest_price)."')");     
+												dbAbstract::Insert("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$pid' , '".dbAbstract::returnRealEscapedString($optionname)."', '".dbAbstract::returnRealEscapedString($name)."', '".dbAbstract::returnRealEscapedString($value)."', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'".dbAbstract::returnRealEscapedString($rest_price)."')", 1);     
                                                                                                 Log::write("Set product HasAttributes=1 - tab_edit_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $pid . "", 'menu', 1 , 'cpanel');
-                                                                                                mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $pid . "");
+                                                                                                dbAbstract::Insert("UPDATE product set HasAttributes=1 WHERE prd_id = " . $pid . "", 1);
 											}	
 							} // end while 
 							} // end subcat if 
 					else {
-							 $Exitst_option_name_query=mysql_query("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid AND Title='".@$old_title[$i]."'");
+							 $Exitst_option_name_query=dbAbstract::Execute("Select * FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid AND Title='".@$old_title[$i]."'", 1);
 				
-							 if(mysql_num_rows( $Exitst_option_name_query)>0)
+							 if(dbAbstract::returnRowsCount( $Exitst_option_name_query, 1)>0)
 								{
                                                                         Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET ProductID='$prdid',option_name= '$optionname', Title= '$name', Price= '$value', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='$rest_price' WHERE ProductID='$prdid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='$old_title[$i]'", 'menu', 1 , 'cpanel');
-									mysql_query("UPDATE attribute SET ProductID='$prdid',option_name= '".mysql_real_escape_string($optionname)."', Title= '".mysql_real_escape_string($name)."', Price= '".mysql_real_escape_string($value)."', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='".mysql_real_escape_string($rest_price)."' WHERE ProductID='$prdid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='$old_title[$i]'");
+									dbAbstract::Update("UPDATE attribute SET ProductID='$prdid',option_name= '".dbAbstract::returnRealEscapedString($optionname)."', Title= '".dbAbstract::returnRealEscapedString($name)."', Price= '".dbAbstract::returnRealEscapedString($value)."', option_display_preference= 0, apply_sub_cat= '$applysubcat', Type= '$optionlayout', Required= $required, rest_price='".dbAbstract::returnRealEscapedString($rest_price)."' WHERE ProductID='$prdid' AND option_name= '$old_option_name' AND id=".$old_ids[$i]." AND Title='$old_title[$i]'", 1);
 									
 								}else{
                                                                                 Log::write("Add new attribute - tab_edit_attribute.php", "QUERY -- INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '$optionname', '$name', '$value', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'$rest_price')", 'menu', 1 , 'cpanel');
-										mysql_query("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '".mysql_real_escape_string($optionname)."', '".mysql_real_escape_string($name)."', '".mysql_real_escape_string($value)."', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'".mysql_real_escape_string($rest_price)."')");
+										dbAbstract::Insert("INSERT INTO attribute (ProductID, option_name, Title, Price, option_display_preference, apply_sub_cat, Type,Required,OderingNO,rest_price) VALUES ('$prdid' , '".dbAbstract::returnRealEscapedString($optionname)."', '".dbAbstract::returnRealEscapedString($name)."', '".dbAbstract::returnRealEscapedString($value)."', 0, '$applysubcat', '$optionlayout',$required,$orderNo,'".dbAbstract::returnRealEscapedString($rest_price)."')", 1);
                                                                                 Log::write("Set product HasAttributes=1 - tab_edit_attribute.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 'menu', 1 , 'cpanel');
-                                                                            mysql_query("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "");
+                                                                            dbAbstract::Update("UPDATE product set HasAttributes=1 WHERE prd_id = " . $prdid . "", 1);
 									}
 								}	// end subcat else
 					$i++;
@@ -131,14 +130,14 @@
 		//*********************************************
 		//*********************************************
 		if ($applysubcat==1) { 
-						$selectprdQry = mysql_query("select * from product where sub_cat_id=$sub_cat_id"); 
-						while ($selectprdRes=mysql_fetch_array($selectprdQry)) 
+						$selectprdQry = dbAbstract::Execute("select * from product where sub_cat_id=$sub_cat_id", 1); 
+						while ($selectprdRes=dbAbstract::returnArray($selectprdQry, 1)) 
 							{
 								$pid	= $selectprdRes['prd_id'];
 								for($o=$i;$o<count($old_title);$o++)
 									{
                                                                             $mQuery = "Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$pid AND Title='".@$old_title[$o]."'";
-                                                                            mysql_query($mQuery);
+                                                                            dbAbstract::Delete($mQuery, 1);
                                                                             Log::write("Delete Attribute - tab_edit_attribute.php - LINE 142", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');	
 									}	
 							}
@@ -147,22 +146,22 @@
 						for($o=$i;$o<count($old_title);$o++)
 							{								
 								$mQuery = "Delete FROM attribute WHERE option_name = '$old_option_name' and ProductID=$prdid AND Title='".@$old_title[$o]."'";
-                                                                mysql_query($mQuery);
+                                                                dbAbstract::Delete($mQuery, 1);
                                                                 Log::write("Delete Attribute - tab_edit_attribute.php - LINE 151", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
                                                                 $i++;
 										}
 					}
 		
 		//*******************************************************
-		$query_GetAtr_id	= mysql_query("Select Distinct(option_name),id from attribute  Where ProductID=$prdid and  option_name='$optionname'"); 
-		$Attribue_ID_RS		= mysql_fetch_row($query_GetAtr_id);
+		$query_GetAtr_id	= dbAbstract::Execute("Select Distinct(option_name),id from attribute  Where ProductID=$prdid and  option_name='$optionname'", 1); 
+		$Attribue_ID_RS		= dbAbstract::returnRow($query_GetAtr_id, 1);
 		$AT_ID				= $Attribue_ID_RS[1];
 			if ($applysubcat==1) {
                                                                         Log::write("Update category - tab_edit_attribute.php", "QUERY --UPDATE categories SET Apply_Attribute= 1, AttributeId= $AT_ID WHERE cat_id=$sub_cat_id", 'menu', 1 , 'cpanel');
-									mysql_query("UPDATE categories SET Apply_Attribute= 1, AttributeId= $AT_ID WHERE cat_id=$sub_cat_id");
+									dbAbstract::Update("UPDATE categories SET Apply_Attribute= 1, AttributeId= $AT_ID WHERE cat_id=$sub_cat_id", 1);
 								}else{
                                                                         Log::write("Update category - tab_edit_attribute.php", "QUERY --UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id", 'menu', 1 , 'cpanel');
-									mysql_query("UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id");
+									dbAbstract::Update("UPDATE categories SET Apply_Attribute= 0 WHERE cat_id=$sub_cat_id", 1);
 								}
 		//*******************************************************
 		
@@ -182,24 +181,24 @@
 		$orderNo=0;
 		if($moveup=="1"){
 			
-			$ordingquery		= mysql_query("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'");
-			$OrdRs				= mysql_fetch_array($ordingquery);
+			$ordingquery		= dbAbstract::Execute("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'", 1);
+			$OrdRs				= dbAbstract::returnArray($ordingquery, 1);
 			$orderNo			= $OrdRs[9];
-			$ChangAlreadyNoQry	= mysql_query("Select * from attribute Where ProductID=$prdid and OderingNO < $orderNo AND option_name !='$optionname' limit 0,1");
-			$OrdRsChange		= mysql_fetch_array($ChangAlreadyNoQry);
+			$ChangAlreadyNoQry	= dbAbstract::Execute("Select * from attribute Where ProductID=$prdid and OderingNO < $orderNo AND option_name !='$optionname' limit 0,1", 1);
+			$OrdRsChange		= dbAbstract::returnArray($ChangAlreadyNoQry, 1);
 			$changeorder		= $OrdRsChange[9];			
 			$chageorderOptionName	= $OrdRsChange[2];
 			
-			$ChangAlreadyNoQry2	= mysql_query("Select * from attribute Where ProductID=$prdid and OderingNO < $orderNo AND option_name ='$chageorderOptionName'");
-			 while ($OrdRsChange2=mysql_fetch_array($ChangAlreadyNoQry2)) {
+			$ChangAlreadyNoQry2	= dbAbstract::Execute("Select * from attribute Where ProductID=$prdid and OderingNO < $orderNo AND option_name ='$chageorderOptionName'", 1);
+			 while ($OrdRsChange2=dbAbstract::returnArray($ChangAlreadyNoQry2, 1)) {
                              Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0], 'menu', 1 , 'cpanel');
-                             mysql_query("UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0]);
+                             dbAbstract::Update("UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0], 1);
 			}
 		
-			$ordingquery2=mysql_query("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'");
-			  while($OrdRs2=mysql_fetch_array($ordingquery2)){
+			$ordingquery2=dbAbstract::Execute("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'", 1);
+			  while($OrdRs2=dbAbstract::returnArray($ordingquery2, 1)){
                                         Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0], 'menu', 1 , 'cpanel');
-					mysql_query("UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0]);
+					dbAbstract::Update("UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0], 1);
 			 }
 		}
 		
@@ -210,29 +209,25 @@
 		//Change number of already attribute 
 		//**************************************************************************************
 		
-			$ordingquery=mysql_query("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'");
-			$OrdRs=mysql_fetch_array($ordingquery);
+			$ordingquery=dbAbstract::Execute("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'", 1);
+			$OrdRs=dbAbstract::returnArray($ordingquery, 1);
 			$orderNo=$OrdRs[9];
-		//	echo"Select * from attribute Where ProductID=$prdid AND option_name='$optionname'"."<br>";
-			//echo "Select * from attribute Where ProductID=$prdid and OderingNO >=$orderNo AND option_name !='$optionname'"."<br>";
-			$ChangAlreadyNoQry=mysql_query("Select * from attribute Where ProductID=$prdid and OderingNO >$orderNo AND option_name !='$optionname' limit 0,1");
+                        $ChangAlreadyNoQry=dbAbstract::Execute("Select * from attribute Where ProductID=$prdid and OderingNO >$orderNo AND option_name !='$optionname' limit 0,1", 1);
 		
-			$OrdRsChange=mysql_fetch_array($ChangAlreadyNoQry);
+			$OrdRsChange=dbAbstract::returnArray($ChangAlreadyNoQry, 1);
 			$changeorder=$OrdRsChange[9];			
 			$chageorderOptionName=$OrdRsChange[2];
 			
-		$ChangAlreadyNoQry2=mysql_query("Select * from attribute Where ProductID=$prdid and OderingNO >$orderNo AND option_name ='$chageorderOptionName'");
-			 while ($OrdRsChange2=mysql_fetch_array($ChangAlreadyNoQry2)) {
+		$ChangAlreadyNoQry2=dbAbstract::Execute("Select * from attribute Where ProductID=$prdid and OderingNO >$orderNo AND option_name ='$chageorderOptionName'", 1);
+			 while ($OrdRsChange2=dbAbstract::returnArray($ChangAlreadyNoQry2, 1)) {
                              Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0], 'menu', 1 , 'cpanel');
-			   mysql_query("UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0]);
-		//	   echo "UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange[0]."<br>";
+			   dbAbstract::Update("UPDATE attribute SET OderingNO=".$orderNo." WHERE id=".$OrdRsChange2[0], 1);
 			}
 		
-			$ordingquery2=mysql_query("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'");
-			  while($OrdRs2=mysql_fetch_array($ordingquery2)){
+			$ordingquery2=dbAbstract::Execute("Select * from attribute Where ProductID=$prdid AND option_name='$optionname'", 1);
+			  while($OrdRs2=dbAbstract::returnArray($ordingquery2, 1)){
 					Log::write("Update attribute - tab_edit_attribute.php", "QUERY -- UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0], 'menu', 1 , 'cpanel');
-					mysql_query("UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0]);
-				//	echo "UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs[0]."<br>";
+					dbAbstract::Update("UPDATE attribute SET OderingNO=".$changeorder." WHERE id=".$OrdRs2[0], 1);
 			 }
 		
 		
@@ -246,12 +241,10 @@
 	}
  } // end submit ?>
 <font class="style3">
-<? 
-	$menuQuery = mysql_query("SELECT cat_name FROM categories WHERE 	cat_id = '".$sub_cat_id."' AND parent_id = '".$catid."'");
-	$menuRs = mysql_fetch_array($menuQuery);
-	
-	
-//echo $menuQuery['cat_name']. "<br />";
+<?php 
+	$menuQuery = dbAbstract::Execute("SELECT cat_name FROM categories WHERE 	cat_id = '".$sub_cat_id."' AND parent_id = '".$catid."'", 1);
+	$menuRs = dbAbstract::returnArray($menuQuery);
+
 echo "<strong>".stripslashes(stripcslashes($menuRs['cat_name']))." > ".stripslashes(stripcslashes($prdandsubcatRes['item_title']))?>
 </br>
 <div id="main_heading">Edit Menu</div>

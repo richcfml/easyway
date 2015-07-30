@@ -36,10 +36,10 @@ if ($card_token!=0) //Tokenization is ON and transaction is made from existing c
 	}
 	
 	$x_exp_date1 = "1217"; 
-	$mResult = mysql_query("SELECT card_expiry FROM general_detail WHERE data_2='".$card_token."' AND id_2=".$loggedinuser->id);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT card_expiry FROM general_detail WHERE data_2='".$card_token."' AND id_2=".$loggedinuser->id);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = mysql_fetch_object($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		if (is_numeric($mRow->card_expiry))
 		{
 			$x_exp_date1 = $mRow->card_expiry; 
@@ -132,7 +132,7 @@ if ($mRapidReOrderFlag==0) //Not for Rapid Re-Ordering (Order was not requested/
 					$_POST['invoice_number']=$mInvoiceNumber;
 		
 					//Insert record into new table gge4_authorization_num to save the Authorization_Num so that it can be used for refund Process.
-					mysql_query("INSERT INTO  gge4_authorization_num (UserID, transaction_id, Authorization_Num) VALUES (".$loggedinuser->id.", '".$mTransaction->Transaction_Tag."', '".$mTransaction->Authorization_Num."')");
+					dbAbstract::Insert("INSERT INTO  gge4_authorization_num (UserID, transaction_id, Authorization_Num) VALUES (".$loggedinuser->id.", '".$mTransaction->Transaction_Tag."', '".$mTransaction->Authorization_Num."')");
 					
 					if ($objRestaurant->tokenization==1) //Tokenization Enabled which means its possible that User may want to save the Token.
 					{

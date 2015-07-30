@@ -1,16 +1,7 @@
 <?	$reseller_id	=	(isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']); 
-	$reseller_qry	=	mysql_query("select * from users where id = $reseller_id");
-	$reseller_qryRs	=	mysql_fetch_object($reseller_qry);		   
+	$reseller_qry	=	dbAbstract::Execute("select * from users where id = $reseller_id",1);
+	$reseller_qryRs	=	dbAbstract::returnObject($reseller_qry,1);		   
 	 ?>
-   <script language="javascript">     
-	/*function DeleteUserProfile(uid){
-		abc= confirm('You Are About To Completely Delete Your Account Which Will Remove All Orders, Against Your Account. Are You Sure? YES/NO');
-		alert(abc);
-		if(abc == 'true'){
-			window.location="?mod=<?=$mod?>&item=deleteuser&userid="+uid;
-		};
-	}*/
-</script>
  
 <div id="main_heading">Reseller Profile</div>
 <div class="Table_Outer_Div">

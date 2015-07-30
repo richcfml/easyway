@@ -13,3 +13,4 @@ class loadMenu {
    }
 }
 ?>
+<?php mysqli_close($mysqli);?>

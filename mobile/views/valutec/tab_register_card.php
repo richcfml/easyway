@@ -1,6 +1,6 @@
 <?
 
-$InputCardNumber = mysql_real_escape_string($_POST['InputCardNumber']);
+$InputCardNumber = dbAbstract::returnRealEscapedString($_POST['InputCardNumber']);
 
 if (isCardRegistered($InputCardNumber)) {
     echo json_encode(array("success" => "0", "message" => "Invalid card number"));

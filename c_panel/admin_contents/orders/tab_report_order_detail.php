@@ -1,7 +1,7 @@
 <?
 	$order_id	=	$_REQUEST['oid'];
 	$flag = @$_REQUEST['f'];
-	$order_detailQry	=	mysql_query("select * from orderdetails where orderid = $order_id");
+	$order_detailQry	=	dbAbstract::Execute("select * from orderdetails where orderid = $order_id",1);
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -21,7 +21,7 @@
     <th><strong>Associated Items</strong></td>
     <th><strong>Extra</strong></td>
   </tr>
-  <? while($order_detailRs = mysql_fetch_object($order_detailQry)){?>
+  <? while($order_detailRs = dbAbstract::returnObject($order_detailQry,1)){?>
    <tr align="center" bgcolor="#F8F8F8">
     <td><?=stripslashes(stripcslashes(product_name($order_detailRs->pid)))?></td>
     <td><?=$order_detailRs->quantity?></td>

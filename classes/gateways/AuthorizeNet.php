@@ -80,7 +80,7 @@ if(!isset($tokenization))
 
 			} else {
 				$_SESSION['GATEWAY_RESPONSE']=$response->error_message;
-				@mysql_close($mysql_conn);
+				//@mysql_close($mysql_conn);
 
 				if(isset($wp_api) && $wp_api==true) 
 				{
@@ -107,20 +107,20 @@ if(!isset($tokenization))
 if(isset($repid_payment))
     {
 	
-	$cusprofile = mysql_fetch_object(mysql_query('SELECT * FROM auth_cc_tokens WHERE token = "'.mysql_real_escape_string($card_token).'"'));
+	$cusprofile = dbAbstract::ExecuteObject('SELECT * FROM auth_cc_tokens WHERE token = "'.dbAbstract::returnRealEscapedString($card_token).'"');
     
 	$custid=$cusprofile->customer_id;
 	
     $profile=$gw->loadProfile($custid, $objRestaurant->id);
 	
-    $userprofile = mysql_fetch_object(mysql_query('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$custid.'" ORDER BY id DESC LIMIT 1'));
+    $userprofile = dbAbstract::ExecuteObject('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$custid.'" ORDER BY id DESC LIMIT 1');
     $shipping_id=$userprofile->cust_shipping_id;
     Log::write("AuthorizeDotNet Rapid Payment User Profile:", print_r($profile, true), 'AuthorizeNet');
     
 	
     $transaction_id = $gw->useToken($cart_total,$card_token,$shipping_id,$profile->profile_id);
-	 $qry = 'INSERT INTO cydne_log (ToPhoneNumber, MessageID, MatchedMessageID, ReferenceId,FromPhoneNumber,Message,LogTime,SMSType) VALUES ("'.$payment_profile_id.'", "'.mysql_real_escape_string($amount).'", "'.mysql_real_escape_string($profile->profile_id).'", "'.mysql_real_escape_string($shipping_id).'","'.mysql_real_escape_string($transaction_id).'","'.mysql_real_escape_string(1111).'","'.mysql_real_escape_string(1111).'","'.mysql_real_escape_string(3).'")';
-	mysql_query($qry);
+	 $qry = 'INSERT INTO cydne_log (ToPhoneNumber, MessageID, MatchedMessageID, ReferenceId,FromPhoneNumber,Message,LogTime,SMSType) VALUES ("'.$payment_profile_id.'", "'.dbAbstract::returnRealEscapedString($amount).'", "'.dbAbstract::returnRealEscapedString($profile->profile_id).'", "'.dbAbstract::returnRealEscapedString($shipping_id).'","'.dbAbstract::returnRealEscapedString($transaction_id).'","'.dbAbstract::returnRealEscapedString(1111).'","'.dbAbstract::returnRealEscapedString(1111).'","'.dbAbstract::returnRealEscapedString(3).'")';
+	dbAbstract::Insert($qry);
     if($transaction_id>0)
     {
 
@@ -146,7 +146,7 @@ $profile=$gw->loadProfile($loggedinuser->id, $objRestaurant->id);
 
         Log::write("AuthorizeDotNet User Profile - Tokenization set", print_r($profile, true), 'AuthorizeNet');
 if(!empty ($profile ) &$card_token!=0){
-$userprofile = mysql_fetch_object(mysql_query('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$loggedinuser->id.'" AND Address = "'.mysql_real_escape_string($x_address).'" And City="'.mysql_real_escape_string($x_city).'" And state="'.mysql_real_escape_string($x_state).'" And zip_code="'.mysql_real_escape_string($x_zip).'"'));
+$userprofile = dbAbstract::ExecuteObject('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$loggedinuser->id.'" AND Address = "'.dbAbstract::returnRealEscapedString($x_address).'" And City="'.dbAbstract::returnRealEscapedString($x_city).'" And state="'.dbAbstract::returnRealEscapedString($x_state).'" And zip_code="'.dbAbstract::returnRealEscapedString($x_zip).'"');
 
 $shipping_id=$userprofile->cust_shipping_id;
 
@@ -179,7 +179,7 @@ if(!empty ($profile ) & $card_token ==  0)
              redirect($SiteUrl .$objRestaurant->url ."/?item=checkout" );exit;
     }
     if($payment_profileid>0 ){
-    $userprofile = mysql_fetch_object(mysql_query('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$loggedinuser->id.'" AND Address = "'.mysql_real_escape_string($x_address).'" And City="'.mysql_real_escape_string($x_city).'" And state="'.mysql_real_escape_string($x_state).'" And zip_code="'.mysql_real_escape_string($x_zip).'"'));
+    $userprofile = dbAbstract::ExecuteObject('SELECT * FROM auth_shipping_details WHERE customer_id = "'.$loggedinuser->id.'" AND Address = "'.dbAbstract::returnRealEscapedString($x_address).'" And City="'.dbAbstract::returnRealEscapedString($x_city).'" And state="'.dbAbstract::returnRealEscapedString($x_state).'" And zip_code="'.dbAbstract::returnRealEscapedString($x_zip).'"');
     $shipping_id=$userprofile->cust_shipping_id;
     if(empty ($shipping_id ) || $shipping_id==0){
     $shipping_id = $gw->getshippingid($x_first_name,$x_last_name,$x_address,$x_city,$x_state,$x_zip,$x_phone,$objRestaurant->id,$payment_profileid,$x_email,$loggedinuser->id);
@@ -242,7 +242,7 @@ if ( $response ==1) {
 
 			} else {
 				$_SESSION['GATEWAY_RESPONSE']=$error_message;
-				@mysql_close($mysql_conn);
+				//@mysql_close($mysql_conn);
 
                                 if (isset($api) && $api == true) {
                                     return;

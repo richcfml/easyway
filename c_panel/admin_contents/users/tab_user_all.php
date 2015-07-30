@@ -28,24 +28,24 @@ if(isset($_REQUEST['sch_button'])){
 } //isset($_REQUEST['sch_button']
 if (isset($_REQUEST['del_user_id'])) {
 	$id = $_REQUEST['del_user_id'];
-	mysql_query("DELETE FROM users WHERE id=$id");
+	dbAbstract::Delete("DELETE FROM users WHERE id=$id",1);
 } else if (isset($_REQUEST['user_active_id'])){
 	$id = $_REQUEST['user_active_id'];
 	$admin_type = $_SESSION['admin_type'];
-	mysql_query("UPDATE users SET  status='1', status_changed_by='".$admin_type."' WHERE id=$id");
+	dbAbstract::Update("UPDATE users SET  status='1', status_changed_by='".$admin_type."' WHERE id=$id",1);
 	// Activate all resturants of all clients of the resellers...
-	mysql_query("UPDATE resturants SET  status='1', status_changed_by='".$admin_type."' WHERE owner_id = '".$id."' ");
-	mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id = '".$id."') ");
+	dbAbstract::Update("UPDATE resturants SET  status='1', status_changed_by='".$admin_type."' WHERE owner_id = '".$id."' ",1);
+	dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id = '".$id."') ",1);
 
 
 
 } else if (isset($_REQUEST['user_deactive_id'])){
 	$id = $_REQUEST['user_deactive_id'];
 	$admin_type = $_SESSION['admin_type'];
-	mysql_query( "UPDATE users SET  status='0', status_changed_by='".$admin_type."'  WHERE id=$id" );
+	dbAbstract::Update( "UPDATE users SET  status='0', status_changed_by='".$admin_type."'  WHERE id=$id",1 );
 	// Deactivate all resturants of all clients of the resellers...
-	mysql_query("UPDATE resturants SET  status='0', status_changed_by='".$admin_type."' WHERE owner_id = '".$id."' ");
-	mysql_query("UPDATE analytics SET  status='0' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id = '".$id."') ");
+	dbAbstract::Update("UPDATE resturants SET  status='0', status_changed_by='".$admin_type."' WHERE owner_id = '".$id."' ",1);
+	dbAbstract::Update("UPDATE analytics SET  status='0' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id = '".$id."') ",1);
 
 } 
 //==========================================================================================
@@ -70,13 +70,9 @@ if($_SESSION['admin_type'] == 'admin') {
 	$clientQry	=	"select * from users WHERE type = 'store owner' AND id IN ( $ids ) ";
 }
 
-/*else if($_SESSION['admin_type'] == 'store owner') {
-	  $qry	=	"select * from resturants where owner_id = '".$_SESSION['owner_id']."' AND status = 1 ";
-	  
-}*/	
  
-$clientQry1 = mysql_query("$clientQry $and");
-$clientRows = @mysql_num_rows($clientQry1);			
+$clientQry1 = dbAbstract::Insert("$clientQry $and",1);
+$clientRows = dbAbstract::returnRowsCount($clientQry1,1);			
 $counter = 0;
 ?>
 
@@ -126,7 +122,7 @@ function searchRestByUser(){
       <th width="119"><strong>Zip/Postal</strong></th>
       <th width="300"><strong>Action</strong></th>
     </tr>
-    <? while($clientRs	=	mysql_fetch_object($clientQry1)){
+    <? while($clientRs	=	dbAbstract::returnObject($clientQry1,1)){
 		$number_rest_per_client = get_number_of_resturants( $clientRs->id );
 	 ?>
 

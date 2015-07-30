@@ -179,18 +179,18 @@ else if (isset($_GET['delsavedtoken'])) //Delete Saved Token
 
 function DeleteAutherizeNetToken($pTokenID, $pUserName, $pPassword)
 {
-	$mResult = mysql_query("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = mysql_fetch_object($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		$mPaymentProfileID = $mRow->data_2; //Token
 		$mUserID = $mRow->id_2;
 		$mDefaultCard = $mRow->data_3;
 		
-		$mResult = mysql_query("SELECT profile_id FROM auth_user_profile WHERE customer_id=".$mUserID);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT profile_id FROM auth_user_profile WHERE customer_id=".$mUserID);
+		if (dbAbstract::returnRowsCount($mResult)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult);
 			$mCustomerProfileID = $mRow->profile_id;
 			
 			
@@ -211,15 +211,15 @@ function DeleteAutherizeNetToken($pTokenID, $pUserName, $pPassword)
 			{
 				if ($mDefaultCard==1)
 				{
-					$mResult = mysql_query("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
-					if (mysql_num_rows($mResult)>0)
+					$mResult = dbAbstract::Execute("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
+					if (dbAbstract::returnRowsCount($mResult)>0)
 					{
-						$mRow = mysql_fetch_object($mResult);
-						mysql_query("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
+						$mRow = dbAbstract::returnObject($mResult);
+						dbAbstract::Execute("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
 					}
 				}
 				
-				if (mysql_query("DELETE FROM general_detail WHERE id=".$pTokenID))
+				if (dbAbstract::Delete("DELETE FROM general_detail WHERE id=".$pTokenID))
 				{
 					return "Success";
 				}
@@ -247,15 +247,15 @@ function DeleteAutherizeNetToken($pTokenID, $pUserName, $pPassword)
 
 function DeleteNMIToken($pTokenID, $pUserName, $pPassword)
 {
-	$mResult = mysql_query("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = mysql_fetch_object($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		$mPaymentProfileID = $mRow->data_2; //Token
 		$mUserID = $mRow->id_2;
 		$mDefaultCard = $mRow->data_3;
 		
-		$mRow = mysql_fetch_object($mResult);
+		
 		$mCustomerProfileID = $mRow->profile_id;
 					
 		$gw = new gwapi;
@@ -265,15 +265,15 @@ function DeleteNMIToken($pTokenID, $pUserName, $pPassword)
 		{
 			if ($mDefaultCard==1)
 			{
-				$mResult = mysql_query("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
-				if (mysql_num_rows($mResult)>0)
+				$mResult = dbAbstract::Execute("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
+				if (dbAbstract::returnRowsCount($mResult)>0)
 				{
-					$mRow = mysql_fetch_object($mResult);
-					mysql_query("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
+					$mRow = dbAbstract::returnObject($mResult);
+					dbAbstract::Update("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
 				}
 			}
 			
-			if (mysql_query("DELETE FROM general_detail WHERE id=".$pTokenID))
+			if (dbAbstract::Delete("DELETE FROM general_detail WHERE id=".$pTokenID))
 			{
 				return "Success";
 			}
@@ -296,28 +296,27 @@ function DeleteNMIToken($pTokenID, $pUserName, $pPassword)
 
 function DeleteGGe4Token($pTokenID, $pUserName, $pPassword) //Have to implement TransArmor (Token) Deletion after getting reply from GGe4 support
 {
-	$mResult = mysql_query("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = mysql_fetch_object($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		$mPaymentProfileID = $mRow->data_2; //Token
 		$mUserID = $mRow->id_2;
 		$mDefaultCard = $mRow->data_3;
 		
-		$mRow = mysql_fetch_object($mResult);
 		$mCustomerProfileID = $mRow->profile_id;
 
 		if ($mDefaultCard==1)
 		{
-			$mResult = mysql_query("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
-			if (mysql_num_rows($mResult)>0)
+			$mResult = dbAbstract::Execute("SELECT id FROM general_detail WHERE id_2=".$mUserID." AND data_2<>'".$mPaymentProfileID."' LIMIT 1");
+			if (dbAbstract::returnRowsCount($mResult)>0)
 			{
-				$mRow = mysql_fetch_object($mResult);
-				mysql_query("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
+				$mRow = dbAbstract::returnObject($mResult);
+				dbAbstract::Update("UPDATE general_detail SET data_3=1 WHERE id_2=".$mUserID." AND id=".$mRow->id);
 			}
 		}
 		
-		if (mysql_query("DELETE FROM general_detail WHERE id=".$pTokenID))
+		if (dbAbstract::Delete("DELETE FROM general_detail WHERE id=".$pTokenID))
 		{
 			return "Success";
 		}

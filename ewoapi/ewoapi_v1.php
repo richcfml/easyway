@@ -98,24 +98,24 @@ function checkDelivery()
         $day_of_week = 6;
     }
 
-    $mResult = mysql_query("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
-    if (mysql_num_rows($mResult)>0)
+    $mResult = dbAbstract::Execute("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
+    if (dbAbstract::returnRowsCount($mResult)>0)
     {
-        $mRow = mysql_fetch_object($mResult);
+        $mRow = dbAbstract::returnObject($mResult);
         $mUserID = $mRow->id;
         $mType = $mRow->type;
 
         if (trim(strtolower($mType))=="admin")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND status=1");
         }
         else if (trim(strtolower($mType))=="reseller")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
         }
         else if (trim(strtolower($mType))=="store owner")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id=".$mUserID." AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id=".$mUserID." AND status=1");
         }
         else
         {
@@ -123,12 +123,12 @@ function checkDelivery()
             exit;
         }
 
-        while ($rest_id = mysql_fetch_object($activeres)) 
+        while ($rest_id = dbAbstract::returnObject($activeres)) 
         {
-            $businessHrQry = mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_id->id);
-            $business_hours = mysql_fetch_object($businessHrQry);
-            $timezoneQry = mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id);
-            @$timezoneRs = mysql_fetch_array($timezoneQry);
+            $businessHrQry = dbAbstract::Execute("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_id->id);
+            $business_hours = dbAbstract::returnObject($businessHrQry);
+            $timezoneQry = dbAbstract::Execute("SELECT time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id);
+            @$timezoneRs = dbAbstract::returnArray($timezoneQry);
             date_default_timezone_set($timezoneRs['time_zone']);
             $current_time = date("Hi", time());
             if (isset($_GET["OPEN"]) || isset($_GET["open"]))
@@ -138,17 +138,17 @@ function checkDelivery()
                 {
                     if (($current_time >= $business_hours->open) && ($current_time <= $business_hours->close))
                     {
-                        $rest_url[] = mysql_fetch_array(mysql_query("SELECT * FROM resturants WHERE id = ".$rest_id->id));
+                        $rest_url[] = dbAbstract::ExecuteArray("SELECT * FROM resturants WHERE id = ".$rest_id->id);
                     }
                 }
                 else
                 {
-                    $rest_url[] = mysql_fetch_array(mysql_query("SELECT * FROM resturants WHERE id = ".$rest_id->id));
+                    $rest_url[] = dbAbstract::ExecuteArray("SELECT * FROM resturants WHERE id = ".$rest_id->id);
                 }
             }
             else
             {
-                $rest_url[] = mysql_fetch_array(mysql_query("SELECT * FROM resturants WHERE id = ".$rest_id->id));
+                $rest_url[] = dbAbstract::ExecuteArray("SELECT * FROM resturants WHERE id = ".$rest_id->id);
             }
         }
 
@@ -165,7 +165,7 @@ function checkDelivery()
                 $long = $array['results'][0]['geometry']['location']['lng'];
 
                 $qry = "SELECT * FROM resturants where id = ".$rest_arr['id'];
-                $vertices = mysql_fetch_array(mysql_query($qry));
+                $vertices = dbAbstract::ExecuteArray($qry);
                 if ($vertices['delivery_option'] == 'delivery_zones') 
                 {
                     if (!empty($vertices['zone1_coordinates'])) 
@@ -240,7 +240,7 @@ function checkDelivery()
                 else 
                 {
                     $qry = "SELECT * FROM rest_langitude_latitude WHERE rest_id = ".$rest_arr['id'];
-                    $lat_lon = mysql_fetch_array(mysql_query($qry));
+                    $lat_lon = dbAbstract::ExecuteArray($qry);
                     if (!empty($lat_lon)) 
                     {
                         $lon2 = $lat_lon['rest_longitude'];
@@ -322,7 +322,7 @@ function getCoordinates($radius, $rest_id)
 {
     $coordinates = array();
     $qry = "Select * from rest_langitude_latitude where rest_id = " . $rest_id . "";
-    $lat_lon = mysql_fetch_array(mysql_query($qry));
+    $lat_lon = dbAbstract::ExecuteArray($qry);
 
     if (!empty($lat_lon)) 
     {
@@ -372,24 +372,24 @@ function isOpen()
         $day_of_week = 6;
     }
 
-    $mResult = mysql_query("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
-    if (mysql_num_rows($mResult)>0)
+    $mResult = dbAbstract::Execute("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
+    if (dbAbstract::returnRowsCount($mResult)>0)
     {
-        $mRow = mysql_fetch_object($mResult);
+        $mRow = dbAbstract::returnObject($mResult);
         $mUserID = $mRow->id;
         $mType = $mRow->type;
 
         if (trim(strtolower($mType))=="admin")
         {
-            $activeres =  mysql_query("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND status=1");
+            $activeres =  dbAbstract::Execute("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND status=1");
         }
         else if (trim(strtolower($mType))=="reseller")
         {
-            $activeres = mysql_query("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
         }
         else if (trim(strtolower($mType))=="store owner")
         {
-            $activeres =  mysql_query("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND owner_id=".$mUserID." AND status=1");
+            $activeres =  dbAbstract::Execute("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1 AND owner_id=".$mUserID." AND status=1");
         }
         else
         {
@@ -397,17 +397,17 @@ function isOpen()
             exit;
         }
 
-        while($rest_id = mysql_fetch_object($activeres))
+        while($rest_id = dbAbstract::returnObject($activeres))
         {
-            $businessHrQry =  mysql_query("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = ". $rest_id->id ."");
-            $business_hours=mysql_fetch_object($businessHrQry);
-            $timezoneQry = mysql_query("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id );
-            @$timezoneRs = mysql_fetch_array($timezoneQry);
+            $businessHrQry =  dbAbstract::Execute("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = ". $rest_id->id ."");
+            $business_hours=dbAbstract::returnObject($businessHrQry);
+            $timezoneQry = dbAbstract::Execute("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id );
+            @$timezoneRs = dbAbstract::returnArray($timezoneQry);
             date_default_timezone_set($timezoneRs['time_zone']);
             $current_time=date("Hi",time());
             if($current_time >= $business_hours->open && $current_time <= $business_hours->close) 
             {
-                $rest_url =  mysql_fetch_object(mysql_query("SELECT url_name from resturants WHERE id  = ". $rest_id->id .""));
+                $rest_url =  dbAbstract::ExecuteObject("SELECT url_name from resturants WHERE id  = ". $rest_id->id ."");
                 $arr_resturl[]=$rest_url->url_name;
             }
         }
@@ -449,22 +449,22 @@ function login()
     session_start();
 
     $qry = "Select *,url_name as url from resturants where url_name = '" .$_GET['rest_slug'] . "' AND status=1";
-    $objRestaurant = mysql_fetch_object(mysql_query($qry));
+    $objRestaurant = dbAbstract::ExecuteObject($qry);
     $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
     $emailaddress = $_GET['email'];
     if (preg_match($pattern, $emailaddress) === 1) 
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
-            $user_qry  = mysql_query("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
-            if(mysql_num_rows($user_qry)>1)
+            $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
+            if(dbAbstract::returnRowsCount($user_qry)>1)
             { 
                 return NULL;
             }
 
-            if(mysql_num_rows($user_qry)==1)
+            if(dbAbstract::returnRowsCount($user_qry)==1)
             {
-                $user=mysql_fetch_object($user_qry,"users");
+                $user=dbAbstract::returnObject($user_qry,"users");
                 $loggedinuser->destroysession();
                 $loggedinuser = $user;
                 $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
@@ -479,7 +479,7 @@ function login()
                 exit;
             }
 
-            if(mysql_num_rows($user_qry)==0)
+            if(dbAbstract::returnRowsCount($user_qry)==0)
             {
                 if(!empty( $_GET['Fname'] )& !empty( $_GET['Lname'] )& !empty( $_GET['street1'] )& !empty( $_GET['city'] ) & !empty( $_GET['state'] ) & !empty( $_GET['zip'] ) & !empty( $_GET['phone'] ))
                 {
@@ -556,24 +556,24 @@ function checkDistance()
         $day_of_week = 6;
     }
 
-    $mResult = mysql_query("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
-    if (mysql_num_rows($mResult)>0)
+    $mResult = dbAbstract::Execute("SELECT id, type FROM users WHERE ewo_api_key='".$mAPIKey."'");
+    if (dbAbstract::returnRowsCount($mResult)>0)
     {
-        $mRow = mysql_fetch_object($mResult);
+        $mRow = dbAbstract::returnObject($mResult);
         $mUserID = $mRow->id;
         $mType = $mRow->type;
 
         if (trim(strtolower($mType))=="admin")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND status=1");
         }
         else if (trim(strtolower($mType))=="reseller")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id IN (SELECT client_id FROM reseller_client WHERE reseller_id=".$mUserID.") AND status=1");
         }
         else if (trim(strtolower($mType))=="store owner")
         {
-            $activeres = mysql_query("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id=".$mUserID." AND status=1");
+            $activeres = dbAbstract::Execute("SELECT id, time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1 AND owner_id=".$mUserID." AND status=1");
         }
         else
         {
@@ -581,12 +581,12 @@ function checkDistance()
             exit;
         }
         $result = array();
-        while ($rest_id = mysql_fetch_object($activeres)) 
+        while ($rest_id = dbAbstract::returnObject($activeres)) 
         {
-            $businessHrQry = mysql_query("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_id->id);
-            $business_hours = mysql_fetch_object($businessHrQry);
-            $timezoneQry = mysql_query("SELECT time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id);
-            @$timezoneRs = mysql_fetch_array($timezoneQry);
+            $businessHrQry = dbAbstract::Execute("SELECT open, close FROM business_hours WHERE day = ".$day_of_week." AND rest_id = ".$rest_id->id);
+            $business_hours = dbAbstract::returnObject($businessHrQry);
+            $timezoneQry = dbAbstract::Execute("SELECT time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id);
+            @$timezoneRs = dbAbstract::returnArray($timezoneQry);
             date_default_timezone_set($timezoneRs['time_zone']);
             $current_time = date("Hi", time());
             
@@ -594,10 +594,10 @@ function checkDistance()
             $mDestinationLatLang = array();
             
             $mSQLLatLang = "SELECT rest_latitude, rest_longitude FROM rest_langitude_latitude WHERE rest_id=".$rest_id->id;
-            $mResLatLang  = mysql_query($mSQLLatLang);
-            if (mysql_num_rows($mResLatLang)>0)
+            $mResLatLang  = dbAbstract::Execute($mSQLLatLang);
+            if (dbAbstract::returnRowsCount($mResLatLang)>0)
             {
-                $mRowLatLang = mysql_fetch_object($mResLatLang);
+                $mRowLatLang = dbAbstract::returnObject($mResLatLang);
                 $mDestinationLatLang = array($mRowLatLang->rest_latitude, $mRowLatLang->rest_longitude);
             }
             if (isset($_GET["OPEN"]) || isset($_GET["open"]))
@@ -608,8 +608,8 @@ function checkDistance()
                     if (($current_time >= $business_hours->open) && ($current_time <= $business_hours->close))
                     {
                         $mSQL = "SELECT * FROM resturants WHERE id = ".$rest_id->id;
-                        $mRes = mysql_query($mSQL);
-                        $mRow = mysql_fetch_object($mRes);
+                        $mRes = dbAbstract::Execute($mSQL);
+                        $mRow = dbAbstract::returnObject($mRes);
                         $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                         $mUserAddress = $_GET['address'];
                         $mSourceLatLang = getLatLong($mUserAddress);
@@ -637,8 +637,8 @@ function checkDistance()
                 else
                 {
                     $mSQL = "SELECT * FROM resturants WHERE id = ".$rest_id->id;
-                    $mRes = mysql_query($mSQL);
-                    $mRow = mysql_fetch_object($mRes);
+                    $mRes = dbAbstract::Execute($mSQL);
+                    $mRow = dbAbstract::returnObject($mRes);
                     $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                     $mUserAddress = $_GET['address'];
                     $mSourceLatLang = getLatLong($mUserAddress);
@@ -665,8 +665,8 @@ function checkDistance()
             else
             {
                 $mSQL = "SELECT * FROM resturants WHERE id = ".$rest_id->id;
-                $mRes = mysql_query($mSQL);
-                $mRow = mysql_fetch_object($mRes);
+                $mRes = dbAbstract::Execute($mSQL);
+                $mRow = dbAbstract::returnObject($mRes);
                 $mRestaurantAddress = $mRow->rest_address." ".$mRow->rest_city.", ".$mRow->rest_state." ".$mRow->rest_zip;
                 $mUserAddress = $_GET['address'];
                 $mSourceLatLang = getLatLong($mUserAddress);
@@ -726,3 +726,4 @@ function getDistance($pSourceLatLang, $pDestinationLatLang)
     return round($mDistance, 2); 
 }
 ?>
+<?php mysqli_close($mysqli);?>

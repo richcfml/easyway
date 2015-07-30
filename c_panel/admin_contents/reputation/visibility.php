@@ -455,11 +455,11 @@ $mSRID = $Objrestaurant->srid;
 <table style="width: 100%; border: 1px solid #CCCCCC;" cellpadding="0" cellspacing="0">
 <?php
 	$mSQL = "SELECT DISTINCT(Category) AS Category FROM vendasta_sources";
-	$mResultCat = mysql_query($mSQL);
+	$mResultCat = dbAbstract::Execute($mSQL,1);
 	$mCatCount = 0;
 	$mSourceCount = 0;
 	
-	while ($mRowCat=mysql_fetch_object($mResultCat))
+	while ($mRowCat=dbAbstract::returnObject($mResultCat,1))
 	{
 ?>
 	<tr style="background-color:#EFEFEF !important; border-bottom: 1px solid #CCCCCC !important; height: 40px;">
@@ -471,9 +471,9 @@ $mSRID = $Objrestaurant->srid;
 	</tr>
 <?php
 		$mSQL = "SELECT SourceID, SourceName, SourceImage FROM vendasta_sources WHERE Category='".$mRowCat->Category."'";
-		$mResultSo = mysql_query($mSQL);
+		$mResultSo = dbAbstract::Execute($mSQL,1);
 		$mCategory = strtolower(str_replace(" ", "", $mRowCat->Category));
-		while ($mRowSo=mysql_fetch_object($mResultSo))
+		while ($mRowSo=dbAbstract::returnObject($mResultSo,1))
 		{
 			$mSourceName = $mRowSo->SourceName;
 			$mURL = "https://reputation-intelligence-api.vendasta.com/api/v2/visibility/lookupListings/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1&srid=".$mSRID."&sourceId=".$mRowSo->SourceID;	

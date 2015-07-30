@@ -8,10 +8,10 @@ if(isset($_GET['owner_name']))
 }
 // get all client of specific reseller
 $reseller_client_sqlStr =  "SELECT client_id FROM reseller_client WHERE reseller_id  = '".$resellerId."' ";
-$reseller_client_qry = mysql_query( $reseller_client_sqlStr );
+$reseller_client_qry = dbAbstract::Execute($reseller_client_sqlStr,1);
 $client_ids = "";
 $i = 0;
-while ( $reseller_client_rs = mysql_fetch_array ( $reseller_client_qry ) ) {
+while ( $reseller_client_rs = dbAbstract::returnArray($reseller_client_qry,1)) {
 		   
 	if( $i == 0) 
 		$client_ids = $reseller_client_rs['client_id'];
@@ -22,7 +22,7 @@ while ( $reseller_client_rs = mysql_fetch_array ( $reseller_client_qry ) ) {
 }
 // this function will bring the only ids whic belongs to current reseller.
 $client_sql	=	"select * from users WHERE type = 'store owner' AND status = 1 AND id IN ( $client_ids ) ";
-$client_qry=mysql_query($client_sql);
+$client_qry=dbAbstract::Execute($client_sql,1);
 if( $_GET['pageName'] == 'add_resturant' || $_GET['pageName'] == 'edit_resturant' ){
 	$style = "width:270px;";
 	$dropDownName = "owner_name";
@@ -39,11 +39,12 @@ if( $_GET['pageName'] == 'add_resturant' || $_GET['pageName'] == 'edit_resturant
 ?>
 <select name="<?=$dropDownName?>" id="<?=$dropDownName?>" style=" <?=$style?>" <?=$jsFunction?> onChange="getCardInfo(this.value)">
 <option value="-1"><?=$optionDefaultCaption?></option>
-<? while($result=mysql_fetch_array($client_qry)) { 
+<?php while($result=dbAbstract::returnArray($client_qry,1)) { 
 if($result['id']==$value){     ?>
 <option value=<?=$result['id']?> selected><?=$result['firstname']." ".$result['lastname']?></option>
-<? }else{?>
-<option value=<?=$result['id']?>><?=$result['firstname']." ".$result['lastname']?></option><?
+<?php }else{?>
+<option value=<?=$result['id']?>><?=$result['firstname']." ".$result['lastname']?></option><?php
 }
 }?>
 </select>
+<?php mysqli_close($mysqli);?>

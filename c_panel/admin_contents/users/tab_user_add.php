@@ -5,7 +5,7 @@ if($_POST) {
 	extract($_POST);
 	
 	// to avoid duplicate insertion...
-	$sqlResult = @mysql_query("SELECT username FROM users WHERE username ='" .$user_name. "'");
+	$sqlResult = dbAbstract::Execute("SELECT username FROM users WHERE username ='" .$user_name. "'",1);
 	
 	$errMessage="";
 	if($first_name == '') {
@@ -18,7 +18,7 @@ if($_POST) {
 		 $errMessage = "Please enter email address in correct format";
 	} else if($user_name == '') {
 		 $errMessage = "Please enter user name";
-	} else if(mysql_num_rows($sqlResult) > 0) {
+	} else if(dbAbstract::returnRowsCount($sqlResult,1) > 0) {
 		 $errMessage = "User name already exists. Please select another.";
 	} else if($password == '') {
 		 $errMessage = "Please enter password";
@@ -43,9 +43,9 @@ if($_POST) {
 		
                 if(!empty($chargify_customer_id))
                 {   
-                    $sql="INSERT INTO users(firstname,lastname,email,username,password,country,state,city,zip,status,type,chargify_customer_id,address) values ('".mysql_real_escape_string(stripslashes($first_name))."','".mysql_real_escape_string(stripslashes($last_name))."','".mysql_real_escape_string(stripslashes($email))."','".mysql_real_escape_string(stripslashes($user_name))."','$password','".mysql_real_escape_string(stripslashes($country))."','".mysql_real_escape_string(stripslashes($state))."','".mysql_real_escape_string(stripslashes($city))."','$zip','1','".mysql_real_escape_string(stripslashes("store owner"))."','".$chargify_customer_id."','".mysql_real_escape_string(stripslashes($address))."')";
-                    mysql_query($sql);
-                    $client_id =mysql_insert_id();
+                    $sql="INSERT INTO users(firstname,lastname,email,username,password,country,state,city,zip,status,type,chargify_customer_id,address) values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."','".dbAbstract::returnRealEscapedString(stripslashes($email))."','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."','$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."','".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','".dbAbstract::returnRealEscapedString(stripslashes("store owner"))."','".$chargify_customer_id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."')";
+                    $client_id = dbAbstract::Insert($sql, 1, 2);
+                    
                     $resllerID=0;
                     if( $_SESSION['admin_type'] == 'admin' ) {
                             $reseller_client_sql = "INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$reseller."','".$client_id."')";
@@ -55,16 +55,14 @@ if($_POST) {
                                                     $resllerID=$_SESSION[owner_id];
                     }
                 }
-		if($result = mysql_query($reseller_client_sql))  {
+		if($result = dbAbstract::Insert($reseller_client_sql,1))  {
 			 ?>
 			<script language="javascript">
             window.location="./?mod=clients&resellerId=<?=$resllerID?>";
         </script>
 			 
 			 <?
-		} else {
-			die("ERROR: ".mysql_error()."<br/><br/><br/><br/><br/><br/>"); 
-		}
+		} 
 	}	
 }
 

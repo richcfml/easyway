@@ -79,8 +79,8 @@ if ($_GET['call'] == 'download') {
     $username = $_GET['username'];
     $password = $_GET['password'];
     $qry_str = "SELECT id, type, status FROM users WHERE username='" . prepareStringForMySQL($username) . "' AND password='" . prepareStringForMySQL($password) . "'";
-    $user = mysql_query($qry_str);
-    if (mysql_num_rows($user) > 0) {
+    $user = dbAbstract::Execute($qry_str);
+    if (dbAbstract::returnRowsCount($user) > 0) {
         echo "1";
         exit;
     } else {
@@ -477,3 +477,4 @@ if ($_GET['call'] == 'download') {
         <?php include('footer.php'); ?>
     </body>
 </html>
+<?php mysqli_close($mysqli);?>

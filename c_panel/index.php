@@ -26,40 +26,38 @@ if(!$_SESSION['admin_session_user_name'] && !$_SESSION['admin_session_pass'])
 <?php
 if($_SESSION['admin_type'] == 'admin') 
 {
-    $resturantQuery = mysql_query("SELECT * FROM resturants");
+	$resturantQuery = dbAbstract::Execute("SELECT * FROM resturants",1);
 } 
 else if($_SESSION['admin_type'] == 'reseller') 
 {
     $resellerId = $_SESSION['owner_id'];
     $client_ids = resellers_client( $resellerId );
 
-    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id IN ( $client_ids ) ");
-    $licenseQry		=	mysql_query("select * from licenses WHERE reseller_id = '".$resellerId."'");
-    $totalLicenses  = 	mysql_num_rows($licenseQry);
+	$resturantQuery = dbAbstract::Execute("SELECT * FROM resturants WHERE owner_id IN ( $client_ids ) ",1);
+	$licenseQry		=	dbAbstract::Execute("select * from licenses WHERE reseller_id = '".$resellerId."'",1);
+	$totalLicenses  = 	dbAbstract::returnRowsCount($licenseQry,1);
 
-} 
-else if($_SESSION['admin_type'] == 'store owner') 
-{
-    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE owner_id = '".$_SESSION['owner_id']."'");
+} else if($_SESSION['admin_type'] == 'store owner') {
+	$resturantQuery = dbAbstract::Execute("SELECT * FROM resturants WHERE owner_id = '".$_SESSION['owner_id']."'");
 }
 else if($_SESSION['admin_type'] == 'bh') 
 {
-    $resturantQuery = mysql_query("SELECT * FROM resturants WHERE bh_restaurant = 1");
+    $resturantQuery = dbAbstract::Execute("SELECT * FROM resturants WHERE bh_restaurant = 1",1);
 }
-@$totalResturants = mysql_num_rows($resturantQuery);
+@$totalResturants = dbAbstract::returnRowsCount($resturantQuery,1);
 
-$resellerQuery = mysql_query("SELECT * FROM users WHERE  type = 'reseller'");
-$totalresellers= mysql_num_rows($resellerQuery);
+$resellerQuery = dbAbstract::Execute("SELECT * FROM users WHERE  type = 'reseller'",1);
+$totalresellers= dbAbstract::returnRowsCount($resellerQuery,1);
 if($_SESSION['admin_type'] == 'admin') {
 
-$clientQuery = mysql_query("SELECT * FROM users WHERE  type = 'store owner'");
+$clientQuery = dbAbstract::Execute("SELECT * FROM users WHERE  type = 'store owner'",1);
 
 } else if($_SESSION['admin_type'] == 'reseller') {
 
-$clientQuery = mysql_query("SELECT * FROM users WHERE  id IN ( $client_ids )");
+$clientQuery = dbAbstract::Execute("SELECT * FROM users WHERE  id IN ( $client_ids )",1);
 
 }
-@$totalClients = mysql_num_rows($clientQuery);
+@$totalClients = dbAbstract::returnRowsCount($clientQuery,1);
 
  
 ?>
@@ -147,3 +145,4 @@ $clientQuery = mysql_query("SELECT * FROM users WHERE  id IN ( $client_ids )");
     </div>
 </body>
 </html>
+<?php mysqli_close($mysqli); ?>

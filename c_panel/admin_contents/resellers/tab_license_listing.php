@@ -72,12 +72,11 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
 		$license_key = rand(0,99999999);
 		$secure_key=md5($license_key * rand(0,45));
 		$license_qry = "INSERT INTO licenses ( license_key, reseller_id, status, dated,secure_key ) VALUES ( '$license_key', '$reseller_id', 'unused',".time().",'$secure_key' )";
-		mysql_query( $license_qry );
-		$insert_id = mysql_insert_id();				
+		$insert_id = dbAbstract::Insert($license_qry, 1, 2);
+		
 		$license_key = $insert_id.$license_key;
 		$license_update_qry_srt = "UPDATE licenses SET license_key ='".$license_key."' WHERE id = '".$insert_id."'";
-		mysql_query( $license_update_qry_srt );
- 
+		dbAbstract::Update($license_update_qry_srt,1);
 		}
 	}
 	
@@ -87,24 +86,24 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
             extract($_POST);
             
             
-            $resData = mysql_fetch_object(mysql_query("Select id,name,region,rest_address,rest_city,rest_state,phone,rest_zip,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1) and premium_account = 1"));
+            $resData = dbAbstract::ExecuteObject("Select id,name,region,rest_address,rest_city,rest_state,phone,rest_zip,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1) and premium_account = 1",1);
             
             $subcription_method = 'automatic';
             if($card_no=='' && $credit_card_number =="-1")
             {
                 $subcription_method = 'invoice';
             }
-            $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id,premium_account,name from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1) "));
-            $license_quantity = mysql_fetch_object(mysql_query("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = $reseller_id and status != 'suspended'"));
-            $reseller_chargify_id = mysql_fetch_object(mysql_query("Select chargify_subcription_id from users where id =$reseller_id"));
+            $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id,premium_account,name from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1) ",1);
+            $license_quantity = dbAbstract::ExecuteObject("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = $reseller_id and status != 'suspended'",1);
+            $reseller_chargify_id = dbAbstract::ExecuteObject("Select chargify_subcription_id from users where id =$reseller_id",1);
             if(!empty($chargify_subscription_id->chargify_subscription_id))
             {
                 $chargify_subscription = $chargify->reactivateSubcription($chargify_subscription_id->chargify_subscription_id,$subcription_method,$credit_card_number,$card_no,$exp_month,$exp_year);
                 if(!empty($chargify_subscription->subscription))
                 {
-			mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
-                        mysql_query("UPDATE licenses SET  status='activated' WHERE license_key ='$license_id' and reseller_id=$reseller_id");
-                        mysql_query("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
+			dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+                        dbAbstract::Update("UPDATE licenses SET  status='activated' WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
+                        dbAbstract::Update("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
                         if($subcription_method =='invoice')
                         {
                         $objMail = new testmail();
@@ -160,27 +159,27 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
                 $chargify_customer = $chargify_subscription->subscription->customer;
          
                 $credit_card_info = $chargify_subscription->subscription;
-                $check_card_data_Qry = mysql_fetch_object(mysql_query("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer->id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'"));
+                $check_card_data_Qry = dbAbstract::ExecuteObject("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer->id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
                 
                 if(empty($check_card_data_Qry))
                 {   
-                    mysql_query(
+                    dbAbstract::Insert(
                             "INSERT INTO chargify_payment_method
                             SET user_id= '".addslashes($reseller_id)."'
                                     ,chargify_customer_id= '".addslashes($chargify_customer->id)."'
                                     ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
-                                    ,card_number='".$credit_card_info->credit_card->masked_card_number."'"
+                                    ,card_number='".$credit_card_info->credit_card->masked_card_number."'",1
                     );
                 }
 
             
             if(!empty($resData))
             {
-                $getOwnerEmail = mysql_fetch_object(mysql_query("Select email from users where id = '".$owner_name."'"));
+                $getOwnerEmail = dbAbstract::ExecuteObject("Select email from users where id = '".$owner_name."'",1);
                 $cntry = $resData->region;
                 if($cntry=='0'){$cntry="GB";}else if($cntry=='1'){$cntry="US";} else if($cntry=='2'){$cntry="CA";}else{$cntry="US";}
                 $getSrid= $chargify->createVendestaPremium($resData->name,$cntry,$resData->rest_address,$resData->rest_city,$resData->rest_state,$resData->rest_zip,"false",$resData->phone,$getOwnerEmail->email);
-                mysql_query("UPDATE resturants SET srid='".$getSrid."' where id = $resData->id");
+                dbAbstract::Update("UPDATE resturants SET srid='".$getSrid."' where id = $resData->id",1);
 
                     }
                 }
@@ -199,19 +198,19 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
 	if($_REQUEST){
 			$license_id = $_REQUEST['license_id'];
 		if ($_REQUEST['action'] == 'del') {
-			mysql_query("DELETE FROM licenses WHERE license_key ='$license_id' and reseller_id=$reseller_id");
+			dbAbstract::Delete("DELETE FROM licenses WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 		
 		} else if ($_REQUEST['action'] == 'suspend'){
 		 
-			mysql_query("UPDATE licenses SET  status='suspended' WHERE license_key ='$license_id' and reseller_id=$reseller_id");
-			mysql_query("UPDATE resturants SET  status='2' WHERE id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
-			mysql_query("UPDATE analytics SET  status='2' WHERE resturant_id = (select resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
-			$sridSql = mysql_fetch_object(mysql_query("Select id,srid from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1 "));
+			dbAbstract::Update("UPDATE licenses SET  status='suspended' WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
+			dbAbstract::Update("UPDATE resturants SET  status='2' WHERE id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+			dbAbstract::Update("UPDATE analytics SET  status='2' WHERE resturant_id = (select resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+			$sridSql = dbAbstract::ExecuteObject("Select id,srid from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1) and premium_account = 1 ",1);
                         
-                        $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)"));
-			$license_quantity = mysql_fetch_object(mysql_query("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = $reseller_id and status != 'suspended'"));
+                        $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id,premium_account from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+			$license_quantity = dbAbstract::ExecuteObject("SELECT count(*) as total_license FROM `licenses` WHERE reseller_id = $reseller_id and status != 'suspended'",1);
                         
-                        $reseller_chargify_id = mysql_fetch_object(mysql_query("Select chargify_subcription_id from users where id =$reseller_id"));
+                        $reseller_chargify_id = dbAbstract::ExecuteObject("Select chargify_subcription_id from users where id =$reseller_id",1);
                         $quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$chargify_subscription_id->premium_account);
                        
 			if(!empty($quantity))
@@ -229,7 +228,7 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
                         if(!empty($sridSql->srid))
                         {   
                             $chargify->cancelVendesta($sridSql->srid);
-                            mysql_query("update resturants set srid = '' where id = ".$sridSql->id."");
+                            dbAbstract::Update("update resturants set srid = '' where id = ".$sridSql->id."",1);
                         }
                         
                         ?>
@@ -237,9 +236,9 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
                         <?
 		} else if ($_REQUEST['action'] == 'activate'){
 			
-			mysql_query("UPDATE licenses SET  status='activated' WHERE secure_key ='$license_id' and reseller_id=$reseller_id");	
-			mysql_query("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
-			mysql_query("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)");
+			dbAbstract::Update("UPDATE licenses SET  status='activated' WHERE secure_key ='$license_id' and reseller_id=$reseller_id",1);	
+			dbAbstract::Update("UPDATE resturants SET  status='1' WHERE id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
+			dbAbstract::Update("UPDATE analytics SET  status='1' WHERE resturant_id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
 			
                         $subcription_method = 'automatic';
                         if($card_no=='' && $credit_card_number =="-1")
@@ -247,7 +246,7 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
                             $subcription_method = 'invoice';
                         }
                         
-                        $chargify_subscription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)"));
+                        $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where secure_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
                         if(!empty($chargify_subscription_id->chargify_subscription_id))
                         {
                             $chargify->reactivateSubcription($chargify_subscription_id->chargify_subscription_id,$subcription_method,$credit_card_number,$card_no,$exp_month,$exp_year);
@@ -255,37 +254,37 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
 		
 		} else if ($_REQUEST['action'] == 'deactivate'){
 	
-			mysql_query("UPDATE licenses SET  status='0' WHERE license_key ='$license_id' and reseller_id=$reseller_id");
+			dbAbstract::Update("UPDATE licenses SET  status='0' WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 			
 		}
 	
 	}
  
  
-	$licenseQry		=	mysql_query("select count(*) total from licenses WHERE reseller_id = $reseller_id");
-	$rstotal  = mysql_fetch_object( $licenseQry ) ;
+	$licenseQry		=	dbAbstract::Execute("select count(*) total from licenses WHERE reseller_id = $reseller_id",1);
+	$rstotal  = dbAbstract::returnObject( $licenseQry,1 ) ;
 	$total_licenses =$rstotal->total;
 	
-	$active_licenses_Qry		=	mysql_query("select count(*) total from licenses WHERE status = 'activated' AND reseller_id = $reseller_id");
-	$rstotal  = mysql_fetch_object( $active_licenses_Qry ) ;
+	$active_licenses_Qry		=	dbAbstract::Execute("select count(*) total from licenses WHERE status = 'activated' AND reseller_id = $reseller_id",1);
+	$rstotal  = dbAbstract::returnObject( $active_licenses_Qry,1 ) ;
 	$total_active_licenses =$rstotal->total;
 	
  
-	$suspended_licenses_Qry		=	mysql_query("select count(*) total from licenses WHERE status = 'suspended' AND reseller_id = $reseller_id");
-	$rstotal  = mysql_fetch_object( $suspended_licenses_Qry ) ;
+	$suspended_licenses_Qry		=	dbAbstract::Execute("select count(*) total from licenses WHERE status = 'suspended' AND reseller_id = $reseller_id",1);
+	$rstotal  = dbAbstract::returnObject( $suspended_licenses_Qry,1 ) ;
 	$total_suspended_licenses =$rstotal->total;
 	 
-	$unused_licenses_Qry		=	mysql_query("select count(*) total from licenses WHERE status = 'unused' AND reseller_id = $reseller_id");
+	$unused_licenses_Qry		=	dbAbstract::Execute("select count(*) total from licenses WHERE status = 'unused' AND reseller_id = $reseller_id",1);
 	
-	$rstotal  = mysql_fetch_object( $unused_licenses_Qry ) ;
+	$rstotal  = dbAbstract::returnObject( $unused_licenses_Qry,1 ) ;
 	$total_unused_licenses =$rstotal->total;
 	
  
 
  
  
-$licenseQry		=	mysql_query("select * from licenses WHERE reseller_id = $reseller_id");
-$licenseRows	=	mysql_num_rows($licenseQry);
+$licenseQry		=	dbAbstract::Execute("select * from licenses WHERE reseller_id = $reseller_id",1);
+$licenseRows	=	dbAbstract::returnRowsCount($licenseQry,1);
 $counter = 0;
 
 ?>
@@ -340,7 +339,7 @@ $counter = 0;
       <th width="250"><strong>Action</strong></th>
       <? } ?>
     </tr>
-    <? while($licenseRs	=	mysql_fetch_object($licenseQry)){ ?>
+    <? while($licenseRs	=	dbAbstract::returnObject($licenseQry,1)){ ?>
   	
    <?  if( $counter++ % 2 == 0)  
    			$bgcolor = '#F8F8F8';
@@ -354,8 +353,8 @@ $counter = 0;
 	  <?
       	if( $licenseRs->resturant_id ) {
 			$resurant_sql_str = "SELECT name FROM resturants WHERE id=".$licenseRs->resturant_id;
-			$resurant_qry = mysql_query( $resurant_sql_str );
-			$resurant_rs  = mysql_fetch_object( $resurant_qry ) ;
+			$resurant_qry = dbAbstract::Execute( $resurant_sql_str,1 );
+			$resurant_rs  = dbAbstract::returnObject( $resurant_qry,1 ) ;
 			$resturant_name = $resurant_rs->name;
 		} else {
 			$resturant_name = "";
@@ -568,4 +567,4 @@ $counter = 0;
         }
     }
 </script>
-<? @mysql_close($mysql_conn);?>
+<?php mysqli_close($mysqli);?>

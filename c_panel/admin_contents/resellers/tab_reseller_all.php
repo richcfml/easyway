@@ -1,36 +1,36 @@
-<?
+<?php
 if(isset( $_REQUEST['id'])) {
 	$reseller_id = $_REQUEST['id'];
 	
 	if ($_REQUEST['action'] == 'del') {
 	
-		mysql_query("DELETE FROM users WHERE id=$reseller_id");
+		dbAbstract::Delete("DELETE FROM users WHERE id=$reseller_id",1);
 	
 	} else if ($_REQUEST['action'] == 'activate'){
 		
-		mysql_query("UPDATE users SET  status='1', status_changed_by='admin' WHERE id=$reseller_id");
+		dbAbstract::Update("UPDATE users SET  status='1', status_changed_by='admin' WHERE id=$reseller_id");
 		$clients_ids = resellers_client( $reseller_id);
 		// Activate all clients of this reseller...
-		mysql_query("UPDATE users SET  status='1', status_changed_by='admin' WHERE id IN ( $clients_ids )");
+		dbAbstract::Update("UPDATE users SET  status='1', status_changed_by='admin' WHERE id IN ( $clients_ids )",1);
 		// Activate all resturants of all clients of the resellers...
-		mysql_query("UPDATE resturants SET  status='1', status_changed_by='admin' WHERE owner_id IN ( $clients_ids )");
-		mysql_query("UPDATE analytics SET  status='1' where resturant_id in (SELECT id as resturant_id form resturants WHERE owner_id IN ( $clients_ids )");
+		dbAbstract::Update("UPDATE resturants SET  status='1', status_changed_by='admin' WHERE owner_id IN ( $clients_ids )");
+		dbAbstract::Update("UPDATE analytics SET  status='1' where resturant_id in (SELECT id as resturant_id FROM resturants WHERE owner_id IN ( $clients_ids ))");
 	
 	} else if ($_REQUEST['action'] == 'deactivate'){
-		mysql_query("UPDATE users SET  status='0', status_changed_by='admin' WHERE id=$reseller_id");
+		dbAbstract::Update("UPDATE users SET  status='0', status_changed_by='admin' WHERE id=$reseller_id",1);
 		$clients_ids = resellers_client( $reseller_id);
 		// Deactivate all clients of this reseller...
-		mysql_query("UPDATE users SET  status='0', status_changed_by='admin' WHERE id IN ( $clients_ids )");
+		dbAbstract::Update("UPDATE users SET  status='0', status_changed_by='admin' WHERE id IN ( $clients_ids )",1);
 		
 		// Deactivate all resturants of all clients of the resellers...
-		mysql_query("UPDATE resturants SET  status='0', status_changed_by='admin' WHERE owner_id IN ( $clients_ids )");
-		mysql_query("UPDATE analytics SET  status='0' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id IN ( $clients_ids ))");
+		dbAbstract::Update("UPDATE resturants SET  status='0', status_changed_by='admin' WHERE owner_id IN ( $clients_ids )",1);
+		dbAbstract::Update("UPDATE analytics SET  status='0' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id IN ( $clients_ids ))",1);
 
 	}
 } 
 
-$resellerQry	=	mysql_query("select * from users WHERE type = 'reseller'");
-$resellerRows	=	mysql_num_rows($resellerQry);
+$resellerQry	=	dbAbstract::Execute("select * from users WHERE type = 'reseller'",1);
+$resellerRows	=	dbAbstract::returnRowsCount($resellerQry,1);
 $counter = 0;
 ?>
 <div id="main_heading">
@@ -48,7 +48,7 @@ $counter = 0;
       <th width="80"><strong>Number of Licenses</strong></th>
       <th width="320"><strong>Action</strong></th>
     </tr>
-    <? while($resellerRs	=	mysql_fetch_object($resellerQry)){ ?>
+    <? while($resellerRs	=	dbAbstract::returnObject($resellerQry,1)){ ?>
    <?  if( $counter++ % 2 == 0)  
    			$bgcolor = '#F8F8F8';
 	   else $bgcolor = '';

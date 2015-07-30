@@ -1,8 +1,8 @@
 <? 
 		$pid		= $_REQUEST['pid'];
 		$catid 		= $_GET['catid'];
-		$menu_qry	= mysql_query("select * from product where prd_id = $pid");
-		$menu_qryRs	= mysql_fetch_object($menu_qry);
+		$menu_qry	= dbAbstract::Execute("select * from product where prd_id = $pid",1);
+		$menu_qryRs	= dbAbstract::returnObject($menu_qry,1);
 		
 		///////////////////$values variable used for arguments in get_menu_drop_down function /////////////////////////
 		$values = array($menu_qryRs->cat_id, $menu_qryRs->sub_cat_id);
@@ -87,8 +87,8 @@
 							$item_des = str_replace('"','&rdquo;',$item_des);
 							$item_des = str_replace("'",'&rsquo;',$item_des);							
 						   //echo 'in = '.$img_show_hide;
-                                                        Log::write("Update Product Status - tab_product_edit.php", "QUERY -- UPDATE product set cat_id = $catid, sub_cat_id = $menu,item_title = '".addslashes(trim($item_title))."', item_des = '".addslashes(trim($item_des))."', Ptitle = '".addslashes($p_title)."', Alt_tag = '".addslashes($alt_tags)."', Meta_des = '".addslashes($meta_des)."', Meta_tag = '".addslashes($meta_key)."', retail_price = '$r_price', item_image = '$name', feature_sub_cat = $feature_subcat,pos_id = '$pos_id' where prd_id = $pid", 'menu', 1 , 'cpanel'); 
-						 mysql_query("UPDATE product set cat_id = $catid, sub_cat_id = $menu,item_title = '".addslashes(trim($item_title))."', item_des = '".addslashes(trim($item_des))."', Ptitle = '".addslashes($p_title)."', Alt_tag = '".addslashes($alt_tags)."', Meta_des = '".addslashes($meta_des)."', Meta_tag = '".addslashes($meta_key)."', retail_price = '$r_price', item_image = '$name', feature_sub_cat = $feature_subcat,pos_id = '$pos_id' where prd_id = $pid");
+                                                        
+						 dbAbstract::Update("UPDATE product set cat_id = $catid, sub_cat_id = $menu,item_title = '".addslashes(trim($item_title))."', item_des = '".addslashes(trim($item_des))."', Ptitle = '".addslashes($p_title)."', Alt_tag = '".addslashes($alt_tags)."', Meta_des = '".addslashes($meta_des)."', Meta_tag = '".addslashes($meta_key)."', retail_price = '$r_price', item_image = '$name', feature_sub_cat = $feature_subcat,pos_id = '$pos_id' where prd_id = $pid",1);
 			?>
             
     <script language="javascript">
@@ -107,8 +107,8 @@ function populate(){
   }
   </script>
   		<?php 
-			$menuQuery = mysql_query("SELECT cat_name FROM categories WHERE  cat_id = '".$scid."' AND parent_id = '".$catid."'");
-			$menuRs = mysql_fetch_array($menuQuery);
+			$menuQuery = dbAbstract::Execute("SELECT cat_name FROM categories WHERE  cat_id = '".$scid."' AND parent_id = '".$catid."'",1);
+			$menuRs = dbAbstract::returnArray($menuQuery,1);
 		?>  
   
   		<strong><?=$menuRs['cat_name']; ?></strong>

@@ -5,9 +5,8 @@ public $faxid;
 	
 	public function sendfax($orderid,&$raw,$faxnum1,$rest_name) { 
 	
-		  	 mysql_query("insert into fax_log (orderid,status,fax_date,TrackingNumber,fax_message) values (". $orderid .",0,'". date("Y-m-d H:i:s")  ."',0,'fax sending started'  )" );
 			 
-			 $log_id = mysql_insert_id();
+			 $log_id = dbAbstract::Execute("INSERT INTO fax_log (orderid,status,fax_date,TrackingNumber,fax_message) VALUES (". $orderid .",0,'". date("Y-m-d H:i:s")  ."',0,'fax sending started'  )",0, 2);
 		
 
 		 
@@ -52,9 +51,9 @@ public $faxid;
  
  
 	if ($uploadResult['ResultCode']=="-1") {
-		 mysql_query("update fax_log set fax_message='fax sending failed unable to upload file ". mysql_real_escape_string( json_encode($uploadResult)) ." where id=". $log_id ."");
+		 dbAbstract::Update("UPDATE fax_log SET fax_message='fax sending failed unable to upload file ". dbAbstract::returnRealEscapedString( json_encode($uploadResult)) ." WHERE id=". $log_id ."");
 		
-		 mysql_query("update ordertbl set fax_tracking_number=123,fax_tries=1,resend_fax=0  where 	OrderID=". $orderid ." ");
+		 dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=123,fax_tries=1,resend_fax=0  WHERE OrderID=". $orderid ." ");
 			 
           return false;
         }
@@ -97,8 +96,8 @@ public $faxid;
 	 
 	if ($sendFaxResult['ResultCode']=="-1") {
 		
-	  	 mysql_query("update fax_log set fax_message='fax sending failed, fax logging failed  ". mysql_real_escape_string(json_encode($sendFaxResult)) ."'  where id=". $log_id ."");
-		  mysql_query("update ordertbl set fax_tracking_number=123,fax_tries=1,resend_fax=0 where 	OrderID=". $orderid ." ");
+	  	 dbAbstract::Update("UPDATE fax_log SET fax_message='fax sending failed, fax logging failed  ". dbAbstract::returnRealEscapedString(json_encode($sendFaxResult)) ."'  WHERE id=". $log_id ."");
+		  dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=123,fax_tries=1,resend_fax=0 WHERE OrderID=". $orderid ." ");
 
 		
 		 return false;
@@ -111,19 +110,16 @@ public $faxid;
 	$tracking_Number=$sendFaxResult["Items"]["FaxMessage"]["TrackingNumber"];
 	
  if($tracking_Number=='') $tracking_Number=123;
-	    mysql_query("update ordertbl set 	
-					fax_tracking_number='". $tracking_Number ."'
-					,fax_sent=1,resend_fax=0,fax_tries=0,json_sent=0
-					,fax_date='".date("Y-m-d H:i:s") ."' where OrderID=". $orderid ."");
+	    dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number='". $tracking_Number ."' ,fax_sent=1,resend_fax=0,fax_tries=0,json_sent=0 ,fax_date='".date("Y-m-d H:i:s") ."' WHERE OrderID=". $orderid ."");
 					
-	   mysql_query("update fax_log set fax_message='success' ,status=1,TrackingNumber='".  $tracking_Number ."' where id=". $log_id ."");
+	   dbAbstract::Update("UPDATE fax_log SET fax_message='success' ,status=1,TrackingNumber='".  $tracking_Number ."' WHERE id=". $log_id ."");
 		   
 		   
   
 	  } catch (SoapFault $exception) { 
 	
-	 		 mysql_query("update ordertbl set fax_tracking_number=123,fax_tries=1,resend_fax=0  where 	OrderID=". $orderid ." ");
-	 		 mysql_query("update fax_log set fax_message='". serialize($exception) ."'  where id=". $log_id ."");
+	 		 dbAbstract::Update("UPDATE ordertbl SET fax_tracking_number=123,fax_tries=1,resend_fax=0  WHERE OrderID=". $orderid ." ");
+	 		 dbAbstract::Update("UPDATE fax_log SET fax_message='". serialize($exception) ."'  WHERE id=". $log_id ."");
 		 
 	
 			 
@@ -144,14 +140,12 @@ private function xmlentities($string) {
 
 	public function resendfax(){
    
-	$qry="select o.fax_tracking_number,o.OrderID,r.name restaurantname,r.fax,o.fax_tries,r.email
-					 from ordertbl o INNER JOIN resturants r ON o.`cat_id` = r.id  
-					 where resend_fax=1  order by OrderID desc";
+	$qry="SELETC o.fax_tracking_number,o.OrderID,r.name restaurantname,r.fax,o.fax_tries,r.email FROM ordertbl o INNER JOIN resturants r ON o.`cat_id` = r.id WHERE resend_fax=1 ORDER BY OrderID DESC";
 					 
-	$mysql_query=mysql_query($qry);
+	$mysql_query=dbAbstract::Execute($qry);
 	$count=0;	
 	
-	while($faxtoresend=mysql_fetch_object($mysql_query)){
+	while($faxtoresend=dbAbstract::returnObject($mysql_query)){
 				$file_name='/home/public_html/easywayordering.com/public/pdffiles/pdf'. $faxtoresend->OrderID .'.pdf';
 				$fh = fopen($file_name, 'rb');
 				$fc = fread($fh, filesize($file_name));

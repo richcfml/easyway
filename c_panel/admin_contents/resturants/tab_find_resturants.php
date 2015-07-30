@@ -3,8 +3,8 @@ require_once("../../../includes/config.php");
 $clientId=$_REQUEST['clientId'];
 
 $qry	= "select * from resturants where owner_id ='".$clientId."' ";
-$cat_qry1 = mysql_query("$qry  order by name");
-$numrows1 = @mysql_num_rows($cat_qry1);	
+$cat_qry1 =dbAbstract::Execute("$qry  order by name",1);
+$numrows1 = dbAbstract::returnRowsCount($cat_qry1,1);	
 
 $i = 0;
 $name_str = get_reseller_client_names($clientId);
@@ -13,15 +13,15 @@ $name_str = get_reseller_client_names($clientId);
 <?
 if( $numrows1 > 0) {
 
-	while($cat_qryRs = @mysql_fetch_object($cat_qry1)){
+	while($cat_qryRs = dbAbstract::returnObject($cat_qry1,1)){
 					
-		$cat_id			= 	mysql_result($cat_qry1,$i,"id");
-		$cat_name		= 	mysql_result($cat_qry1,$i,"name");
-		$url_name		= 	mysql_result($cat_qry1,$i,"url_name");
-		$cat_image		= 	mysql_result($cat_qry1,$i,"optionl_logo");
-		$cat_des		= 	mysql_result($cat_qry1,$i,"des");
-		$cat_status		= 	mysql_result($cat_qry1,$i,"status");
-		$status_changed_by		= 	mysql_result($cat_qry1,$i,"status_changed_by");
+		$cat_id			= 	dbAbstract::returnResult($cat_qry1,$i,"id",1);
+		$cat_name		= 	dbAbstract::returnResult($cat_qry1,$i,"name",1);
+		$url_name		= 	dbAbstract::returnResult($cat_qry1,$i,"url_name",1);
+		$cat_image		= 	dbAbstract::returnResult($cat_qry1,$i,"optionl_logo",1);
+		$cat_des		= 	dbAbstract::returnResult($cat_qry1,$i,"des",1);
+		$cat_status		= 	dbAbstract::returnResult($cat_qry1,$i,"status",1);
+		$status_changed_by		= 	dbAbstract::returnResult($cat_qry1,$i,"status_changed_by",1);
 		$full_address	=	trim($cat_address.' '.$cat_zip);					
 		if($cat_image == ''){ $cat_image = 'default_200_by_200.jpg'; }
 		($i%2 == 0)?$row_bg='':$row_bg='bgcolor="#F8F8F8"';		
@@ -58,3 +58,4 @@ if( $numrows1 > 0) {
 <? } else { ?>
 	<strong>There is no resturant under this Client.</strong>
 <? }?>
+<?php mysqli_close($mysqli);?>

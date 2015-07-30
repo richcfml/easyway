@@ -256,8 +256,8 @@ if (!empty($_GET)) {
 
 if (isset($_POST['submit'])) {
 	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
-    $restQry = mysql_query("select name from resturants where name='$catname' AND id!='$catid'");
-    $restRs = mysql_num_rows($restQry);
+    $restQry = dbAbstract::Execute("SELECT name from resturants where name='$catname' AND id!='$catid'",1);
+    $restRs = dbAbstract::returnRowsCount($restQry,1);
     if ($restRs > 0)
         $rest_exist = 1;
 
@@ -269,8 +269,8 @@ if (isset($_POST['submit'])) {
     // check if chargify_subscription_id already taken
     $restRs1 = 0;
     if (!empty($chargify_subscription_id)) {
-        $restQry1 = mysql_query("SELECT COUNT(*) AS total FROM resturants WHERE chargify_subscription_id='$chargify_subscription_id' AND id!='$catid'");
-        $restRs1 = mysql_fetch_object($restQry1);
+        $restQry1 = dbAbstract::Execute("SELECT COUNT(*) AS total FROM resturants WHERE chargify_subscription_id='$chargify_subscription_id' AND id!='$catid'",1);
+        $restRs1 = dbAbstract::returnObject($restQry1,1);
         $restRs1 = $restRs1->total;
     }
 
@@ -360,7 +360,8 @@ if (isset($_POST['submit'])) {
         }
         ////////////////////////////////////////////////////////////
 
-        if (!empty($_FILES['userfile3']['name'])) {
+        if (!empty($_FILES['userfile3']['name'])) 
+        {
             $path3 = '../images/resturant_headers/';
             $exe3 = GetFileExt($_FILES['userfile3']['name']);
             $name3 = "img_" . $catid . "_cat_header." . $exe3;
@@ -406,10 +407,10 @@ if (isset($_POST['submit'])) {
 
 		// Get Chargify Product ID Starts Here // -- Gulfam
 		$mChargify_Settings_ID = 0;
-		$mResult = mysql_query("SELECT settings_id FROM chargify_products WHERE user_id=".addslashes($reseller));
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT settings_id FROM chargify_products WHERE user_id=".addslashes($reseller),1);
+		if (dbAbstract::returnRowsCount($mResult,1)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult,1);
 			if (is_numeric($mRow->settings_id))
 			{
 				$mChargify_Settings_ID = $mRow->settings_id;
@@ -458,13 +459,13 @@ if (isset($_POST['submit'])) {
 						,premium_account='" . addslashes(trim($premium_account)) . "'
 						,region='" . addslashes(trim($region)) . "'
 					where id = $catid";
-            mysql_query($queryUpdate);
+            dbAbstract::Update($queryUpdate,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Update Restaurant:'.$queryUpdate, 'restaurant', 1);
 			$queryAnalytics="UPDATE analytics 
 					SET name= '" . addslashes(trim($catname)) . "'
                                                 ,optionl_logo='$name1'
 					where resturant_id = $catid";
-            mysql_query($queryAnalytics);
+            dbAbstract::Update($queryAnalytics,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Analytics:'.$queryAnalytics, 'restaurant', 1);
             //When resturant has been created then the granted license status will become activated.
 			$queryLicences="UPDATE licenses 
@@ -472,7 +473,7 @@ if (isset($_POST['submit'])) {
 						,resturant_id=" . $catid . "
 						,activation_date= '" . time() . "' 
 					where id =" . $license_key;
-            mysql_query($queryLicences);
+            dbAbstract::Update($queryLicences,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Licences:'.$queryLicences, 'restaurant', 1);
         } else if ($_SESSION['admin_type'] == 'store owner' || $_SESSION['admin_type'] == 'reseller') {
 			$queryUpdate="UPDATE resturants 
@@ -503,21 +504,21 @@ if (isset($_POST['submit'])) {
 						,meta_description='" . addslashes(trim($meta_description)) . "'
 						,region='" . addslashes(trim($region)) . "'
 					where id = $catid";
-            mysql_query($queryUpdate);
+            dbAbstract::Update($queryUpdate,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant - Reseller:'.$queryUpdate, 'restaurant', 1);
 			$queryAnalytics="UPDATE analytics 
 					SET name= '" . prepareStringForMySQL($catname) . "'
 						,optionl_logo='$name1'
 					where resturant_id = $catid";
-            mysql_query($queryAnalytics);
+            dbAbstract::Update($queryAnalytics,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Analytics - Reseller:'.$queryAnalytics, 'restaurant', 1);
         }
 	$queryResellerClient="UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name;
-	mysql_query($queryResellerClient);
+	dbAbstract::Update($queryResellerClient,1);
     Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Reseller Clients:'.$queryResellerClient, 'restaurant', 1);
 	if(isset($region) && $region == "0"){
-            mysql_query("UPDATE resturants SET payment_gateway='authoriseDotNet'
-					where id = $catid"
+            dbAbstract::Update("UPDATE resturants SET payment_gateway='authoriseDotNet'
+					where id = $catid",1
             );
         }
         $addresslink = str_replace(' ', '+', $rest_address . " " . $rest_city . " " . $rest_state);
@@ -528,33 +529,30 @@ if (isset($_POST['submit'])) {
             $lat = $array['results'][0]['geometry']['location']['lat'];
             $long = $array['results'][0]['geometry']['location']['lng'];
 
-            $check_restid = mysql_fetch_object(mysql_query("select rest_id from rest_langitude_latitude where rest_id = $catid"));
+            $check_restid = dbAbstract::ExecuteObject("SELECT rest_id from rest_langitude_latitude where rest_id = $catid",1);
             if(!empty($check_restid))
             {
-                 mysql_query("UPDATE rest_langitude_latitude SET rest_id = '".$catid."', rest_latitude='".$lat."', rest_longitude= '".$long."' where rest_id = $catid");
+                 dbAbstract::Update("UPDATE rest_langitude_latitude SET rest_id = '".$catid."', rest_latitude='".$lat."', rest_longitude= '".$long."' where rest_id = $catid",1);
             }
             else
             {
-                 mysql_query("Insert into rest_langitude_latitude SET rest_id = '".$catid."', rest_latitude='".$lat."', rest_longitude= '".$long."'");
+                 dbAbstract::Insert("INSERT into rest_langitude_latitude SET rest_id = '".$catid."', rest_latitude='".$lat."', rest_longitude= '".$long."'",1);
             }
         }
 
         if($premium_account!=$_POST['hdnpremium'])
         {
 
-            $getSrid = mysql_fetch_object(mysql_query("select srid,premium_account,owner_id from resturants where id = $catid"));
-            //echo "select chargify_subcription_id from users where id = ( select reseller_id from reseller_client where client_id = $getSrid->owner_id)";
-            $getResellerID = mysql_fetch_object(mysql_query("select chargify_subcription_id from users where id = ( select reseller_id from reseller_client where client_id = $getSrid->owner_id)"));
-            $getOwnerEmail = mysql_fetch_object(mysql_query("Select email from users where id = '".$owner_name."'"));
+            $getSrid = dbAbstract::ExecuteObject("SELECT srid,premium_account,owner_id from resturants where id = $catid",1);
+            $getResellerID = dbAbstract::ExecuteObject("SELECT chargify_subcription_id from users where id = ( select reseller_id from reseller_client where client_id = $getSrid->owner_id)",1);
+            $getOwnerEmail = dbAbstract::ExecuteObject("SELECT email from users where id = '".$owner_name."'",1);
 
             $quantityPremium = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,1);
             $quantityStandard = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,0);
-            //print_r($quantity);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling multipleAllocations:subscriptionID:'.$getResellerID->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:'.$getSrid->premium_account, 'restaurant', 1);
             $chargify->multipleAllocation($getResellerID->chargify_subcription_id,$quantityPremium,$quantityStandard,$getSrid->premium_account);
 
             $srid = $getSrid->srid;
-            //echo $srid;
             $mURL = "https://reputation-intelligence-api.vendasta.com/api/v2/account/convertSalesAccount/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1&srid=".$srid;
 			
             if($premium_account == 1)
@@ -582,14 +580,14 @@ if (isset($_POST['submit'])) {
                 $demoAccountFlag = "true";
 				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
                 $chargify->cancelVendesta($srid);
-                mysql_query("update resturants set srid = '' where id ".$catid."");
+                dbAbstract::Update("UPDATE resturants set srid = '' where id ".$catid."",1);
 				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
                 $srid = $chargify->createVendestaPremium($catname,$cntry,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag,$phone,$getOwnerEmail->email);
                 
 		
 		if(!empty($srid))
                 {
-                    mysql_query("UPDATE resturants SET srid='".$srid."' where id = $catid");
+                    dbAbstract::Update("UPDATE resturants SET srid='".$srid."' where id = $catid",1);
                 }
             }
         }
@@ -601,12 +599,12 @@ if (isset($_POST['submit'])) {
     {
         if ($_POST["bh_restaurant"]=="1")
         {
-            mysql_query("UPDATE resturants SET bh_restaurant = 1 WHERE id=".$catid);
+            dbAbstract::Execute("UPDATE resturants SET bh_restaurant = 1 WHERE id=".$catid,1);
         }
         else if ($_POST["bh_restaurant"]=="0")
         {
-            mysql_query("UPDATE resturants SET bh_restaurant = 0 WHERE id=".$catid);
-            mysql_query("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid);
+            dbAbstract::Execute("UPDATE resturants SET bh_restaurant = 0 WHERE id=".$catid,1);
+            dbAbstract::Execute("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid,1);
         }
     }
     
@@ -614,11 +612,11 @@ if (isset($_POST['submit'])) {
     {
         if ($_POST["bh_featured"]=="1")
         {
-            mysql_query("UPDATE resturants SET bh_featured = 1 WHERE id=".$catid);
+            dbAbstract::Execute("UPDATE resturants SET bh_featured = 1 WHERE id=".$catid,1);
         }
         else if ($_POST["bh_featured"]=="0")
         {
-            mysql_query("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid);
+            dbAbstract::Execute("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid,1);
         }
     }
     
@@ -626,7 +624,7 @@ if (isset($_POST['submit'])) {
 } //end submit2		
 else if (isset($_POST["btnRemoveVIP"]))
 {
-    mysql_query("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid);
+    dbAbstract::Execute("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid,1);
     if (file_exists(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>")))
     {
         unlink(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>"));
@@ -654,8 +652,8 @@ else if (isset($_POST["btnRemoveVIP"]))
             if ($_SESSION['admin_type'] == 'admin') {
                 $client_id = $Objrestaurant->owner_id;
                 $reseller_sql = "SELECT reseller_id FROM reseller_client WHERE client_id = '" . $client_id . "' ";
-                $reseller_qry = mysql_query($reseller_sql);
-                $reseller_rs = mysql_fetch_array($reseller_qry);
+                $reseller_qry = dbAbstract::Execute($reseller_sql,1);
+                $reseller_rs = dbAbstract::returnArray($reseller_qry,1);
                 ?>
                 <tr align="left" valign="top"> 
                     <td width="76"></td>
@@ -693,8 +691,8 @@ else if (isset($_POST["btnRemoveVIP"]))
                 <td ><strong>Resturant Licenses Key:</strong><br />
                     <?
                     $rest_license_key_sql_str = "SELECT license_key FROM licenses WHERE id = $Objrestaurant->license_id";
-                    $rest_license_key_qry = mysql_query($rest_license_key_sql_str);
-                    $rest_license_key_rs = mysql_fetch_array($rest_license_key_qry);
+                    $rest_license_key_qry = dbAbstract::Execute($rest_license_key_sql_str,1);
+                    $rest_license_key_rs = dbAbstract::returnArray($rest_license_key_qry,1);
                     echo $rest_license_key_rs['license_key'];
                     ?>
                     <input type="hidden" name="rest_license_key" id="rest_license_key" value="<?= $Objrestaurant->license_id; ?>"  />

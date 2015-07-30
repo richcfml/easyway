@@ -9,8 +9,8 @@
 <?php
 
     $license_id = $_GET['license_id'];
-    $subcription_id = mysql_fetch_object(mysql_query("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)"));
-    $url = "https://easyway-ordering.chargify.com/subscriptions/".$subcription_id->chargify_subscription_id.".json";
+    $subcription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$license_id' limit 0,1)",1);
+    $url = $ChargifyURL."subscriptions/".$subcription_id->chargify_subscription_id.".json";
     
     $username = '2aRl08rsgL3H3WiWl5ar';
     $password = 'x';
@@ -150,3 +150,4 @@
     }
 
 ?>
+<?php mysqli_close($mysqli);?>

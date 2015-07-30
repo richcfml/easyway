@@ -22,10 +22,10 @@
 	else if ((isset($_GET["OrderID"])) && (is_numeric($_GET["OrderID"])))
 	{
 		$mOrderID = $_GET["OrderID"];
-		$mResult = mysql_query("SELECT cat_id FROM ordertbl WHERE OrderID=".$mOrderID);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT cat_id FROM ordertbl WHERE OrderID=".$mOrderID,1);
+		if (dbAbstract::returnRowsCount($mResult,1)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult,1);
 			$mRestaurantIDCP = $mRow->cat_id;
 		}
 		else
@@ -36,10 +36,10 @@
 	else if ((isset($_GET["userid"])) && (is_numeric($_GET["userid"])))
 	{
 		$mUserID = $_GET["userid"];
-		$mResult = mysql_query("SELECT resturant_id FROM customer_registration WHERE id=".$mUserID);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT resturant_id FROM customer_registration WHERE id=".$mUserID,1);
+		if (dbAbstract::returnRowsCount($mResult,1)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult,1);
 			$mRestaurantIDCP = $mRow->resturant_id;
 		}
 		else
@@ -50,10 +50,10 @@
 	else if ((isset($_GET["mailid"])) && (is_numeric($_GET["mailid"])))
 	{
 		$mMailID = $_GET["mailid"];
-		$mResult = mysql_query("SELECT resturant_id FROM mailing_list WHERE id=".$mMailID);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT resturant_id FROM mailing_list WHERE id=".$mMailID,1);
+		if (dbAbstract::returnRowsCount($mResult,1)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult,1);
 			$mRestaurantIDCP = $mRow->resturant_id;
 		}
 		else
@@ -64,10 +64,10 @@
 	else if ((isset($_GET["coupon_id"])) && (is_numeric($_GET["coupon_id"])))
 	{
 		$mCouponID = $_GET["coupon_id"];
-		$mResult = mysql_query("SELECT resturant_id FROM coupontbl WHERE coupon_id=".$mCouponID);
-		if (mysql_num_rows($mResult)>0)
+		$mResult = dbAbstract::Execute("SELECT resturant_id FROM coupontbl WHERE coupon_id=".$mCouponID,1);
+		if (dbAbstract::returnRowsCount($mResult,1)>0)
 		{
-			$mRow = mysql_fetch_object($mResult);
+			$mRow = dbAbstract::returnObject($mResult,1);
 			$mRestaurantIDCP = $mRow->resturant_id;
 		}
 		else
@@ -87,7 +87,7 @@
 	
         if ($_SESSION['admin_type'] == 'bh') 
         {
-            $mSQLBH = mysql_fetch_object(mysql_query("SELECT bh_restaurant FROM resturants WHERE id=".$mRestaurantIDCP));
+            $mSQLBH = dbAbstract::returnObject("SELECT bh_restaurant FROM resturants WHERE id=".$mRestaurantIDCP);
             if ($mSQLBH)
             {
                 if ($mSQLBH->bh_restaurant<=0)
@@ -102,7 +102,7 @@
         }
         
 	$Objrestaurant= $Objrestaurant_data->getDetail($mRestaurantIDCP);
-        
+		 
 	if (($Objrestaurant->region == 1)  || ($Objrestaurant->region == 2))
 	{
 		  $currency = "$";
@@ -122,7 +122,7 @@
 	{
 		$client_ids= $_SESSION['RESSELER_CLIENTS'] ;
 		$qry = "SELECT count(*) as total FROM resturants WHERE owner_id IN ( $client_ids ) and id=".$mRestaurantIDCP;
-		$result=mysql_fetch_object(mysql_query($qry));
+		$result=dbAbstract::ExecuteObject($qry,1);
 		if($result->total==0)
 		echo "<script>window.location='./?mod=resturant'</script>";
 	}
@@ -140,19 +140,19 @@ if($Objrestaurant)
 ?>
  	
 <?php 
-	@$customerQry		=	mysql_query("select count(*) as total from customer_registration where password != '' AND resturant_id= ".$mRestaurantIDCP);
-	@$totalCustomers_rs	=	mysql_fetch_object($customerQry);
+	@$customerQry		=	dbAbstract::Execute("SELECT count(*) as total from customer_registration where password != '' AND resturant_id= ".$mRestaurantIDCP,1);
+	@$totalCustomers_rs	=	dbAbstract::returnObject($customerQry,1);
 	$totalCustomers=$totalCustomers_rs->total;
 	
-	@$orderQry			=	mysql_query("select count(*) as total from ordertbl where cat_id= ".$mRestaurantIDCP." AND payment_approv = 1");
-	@$totalOrders_rs 	=  mysql_fetch_object($orderQry);
+	@$orderQry			=	dbAbstract::Execute("SELECT count(*) as total from ordertbl where cat_id= ".$mRestaurantIDCP." AND payment_approv = 1",1);
+	@$totalOrders_rs 	=  dbAbstract::returnObject($orderQry,1);
 	$totalOrders=$totalOrders_rs->total;	
 	if(!isset($item))
 	{
 		$item='';
 	}
 
-        $menyqry = mysql_fetch_array(mysql_query("SELECT  id, menu_name FROM menus where rest_id = $mRestaurantIDCP AND status = 1 ORDER BY menu_ordering ASC limit 1"));
+        $menyqry = dbAbstract::ExecuteArray("SELECT  id, menu_name FROM menus where rest_id = $mRestaurantIDCP AND status = 1 ORDER BY menu_ordering ASC limit 1",1);
         $menu_id = $menyqry['id'];
         $menu_name = $menyqry['menu_name'];
         if(!empty($menu_id))
@@ -188,7 +188,7 @@ if($Objrestaurant)
 				<div class="links <?=$mod=='analytics' ? 'selected' : ''?>"><a href="?mod=analytics&cid=<?=$mRestaurantIDCP?>"class="">Analytics</a></div>
 		<?php
         		$qry = "SELECT * FROM resturants WHERE id=".$mRestaurantIDCP;
-                $result=mysql_fetch_object(mysql_query($qry));
+                $result=dbAbstract::ExecuteObject($qry,1);
                 if($result->premium_account == 1)
 				{
 		?>

@@ -1,5 +1,4 @@
-<?
-		//$catid	=	$_REQUEST['catid'];
+<?php
 		if (! empty ( $_POST )) {
 						extract ( $_POST ) ;
 					} else if (! empty ( $HTTP_POST_VARS )) {
@@ -21,7 +20,7 @@
 						 $errMessage1="Please Enter Menu ordering no.";
 					}else{
                                                         Log::write("Adding new menu", "QUERY -- INSERT INTO menus SET rest_id= $restid, menu_name= '".addslashes($menu_name)."', menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."'", 'menu', 1 , 'cpanel');
-							mysql_query("INSERT INTO menus SET rest_id= $restid, menu_name= '".addslashes($menu_name)."', menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."'");
+							dbAbstract::Insert("INSERT INTO menus SET rest_id= $restid, menu_name= '".addslashes($menu_name)."', menu_ordering= $menu_ordering, menu_desc= '".addslashes($menu_desc)."'", 1);
 							?>
        			<script language="javascript">
 					window.location="?mod=menus&catid=<?=$restid?>";

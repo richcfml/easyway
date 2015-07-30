@@ -37,7 +37,7 @@ $mShow= " display:none;";
 	
 $mRestaurantID = $Objrestaurant->id;
 $mSettingsCount = $Objrestaurant->SelectCountIframeSettingsByRestaurantID($mRestaurantID);
-//mysql_query("DELETE FROM iframe_settings");
+
 function GetFileExt($pFileName)
 {
 	$mExt = substr($pFileName, strrpos($pFileName, '.'));

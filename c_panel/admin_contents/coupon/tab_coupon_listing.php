@@ -1,7 +1,7 @@
 <div id="main_heading">EDIT / REMOVE COUPONS</div>
-<?
+<?php
 if(isset($_REQUEST['coupon_id'])) {
-		mysql_query("DELETE FROM coupontbl where coupon_id = ".$_REQUEST['coupon_id']);
+		dbAbstract::Delete("DELETE FROM coupontbl where coupon_id = ".$_REQUEST['coupon_id'], 1);
 	}
 
   ?>
@@ -13,10 +13,10 @@ if(isset($_REQUEST['coupon_id'])) {
         <th width="22%"><strong>Coupon date</strong></th>
         <th width="50%"><strong>Action</strong></th>
       </tr>
-     <?
-         $coupon_qry 	= mysql_query("select * from coupontbl where resturant_id=". $Objrestaurant->id ." order by coupon_date desc");
+     <?php
+         $coupon_qry 	= dbAbstract::Execute("select * from coupontbl where resturant_id=". $Objrestaurant->id ." order by coupon_date desc", 1);
       ?>
-       <? while(@$couponRs = mysql_fetch_object($coupon_qry)){?>
+       <?php while(@$couponRs = dbAbstract::returnObject($coupon_qry, 1)){?>
       <tr>
       	<td><?=stripslashes($couponRs->coupon_code);?></td>
         <td><?=stripslashes($couponRs->coupon_title);?></td>

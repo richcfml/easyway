@@ -119,10 +119,10 @@
 						if (!($objRestaurant->isOpenHour))
 						{
 							$mSQL = "SELECT open AS OpenHours, close AS CloseHours FROM business_hours WHERE rest_id=". $objRestaurant->id." AND day=".$mDayNumber." AND open>".$mTime." ORDER BY open ASC LIMIT 1";
-							$mRes = mysql_query($mSQL);
-							if (mysql_num_rows($mRes)>0)
+							$mRes = dbAbstract::Execute($mSQL);
+							if (dbAbstract::returnRowsCount($mRes)>0)
 							{
-								$mRow = mysql_fetch_object($mRes);	
+								$mRow = dbAbstract::returnObject($mRes);	
 								$mRow->OpenHours = date("g:i A",strtotime($mRow->OpenHours));
 								$mRow->CloseHours = date("g:i A",strtotime($mRow->CloseHours));
 					?>

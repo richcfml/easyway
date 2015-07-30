@@ -1,8 +1,7 @@
-<?
-	//$resturant_id = 210;
-	$analytics = mysql_query("SELECT * FROM analytics WHERE resturant_id=$resturant_id");
-	if(!empty($analytics) && mysql_num_rows($analytics) > 0) {
-		$analytics = mysql_fetch_object($analytics);
+<?php
+	$analytics = dbAbstract::Execute("SELECT * FROM analytics WHERE resturant_id=$resturant_id", 1);
+	if(!empty($analytics) && dbAbstract::returnRowsCount($analytics, 1) > 0) {
+		$analytics = dbAbstract::returnObject($analytics, 1);
 ?>
 		<style type="text/css">
 		
@@ -56,10 +55,10 @@
 								<td class="title">Visits</td>
 								<?php
 								$mFaceBookVisits = "Not available";
-								$mResult = mysql_query("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$resturant_id);
-								if (mysql_num_rows($mResult)>0)
+								$mResult = dbAbstract::Execute("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$resturant_id, 1);
+								if (dbAbstract::returnRowsCount($mResult, 1)>0)
 								{
-									$mRow = mysql_fetch_object($mResult);
+									$mRow = dbAbstract::returnObject($mResult, 1);
 									if (is_numeric($mRow->VisitCount))
 									{
 										$mFaceBookVisits = $mRow->VisitCount;
@@ -83,7 +82,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?
+							<?php
 								$sources = json_decode(stripslashes($analytics->referring_traffic_sources));
 								if(count($sources) > 0 ) {
 									$count = 1;

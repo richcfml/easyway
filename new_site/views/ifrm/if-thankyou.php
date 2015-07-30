@@ -28,7 +28,7 @@ if( isset($clone))
 {
 	if($clone->isempty()|| $clone->order_created===0) 
   	{
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu&ifrm=load_resturant" );
 		exit;
 	}
@@ -43,7 +43,7 @@ if( isset($clone))
 			$objcdyne->sendSMS($loggedinuser->cust_phone1,"You now have ". $objRestaurant->name ."'s Rapid Re-Order!  Text one of your favorites to this number to Re-Order it","New Registeration",'',$objcdyne->SYSTEM_NEW_CUSTOMER);				
 		}
 			 
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		$cart->destroyclone();
 		$cart->destroysession();
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu&ifrm=load_resturant" );exit;
@@ -54,7 +54,7 @@ else
 {
 	if($cart->isempty()|| $cart->order_created===0) 
 	{
-		@mysql_close($mysql_conn);
+		//@mysql_close($mysql_conn);
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu&ifrm=load_resturant" );exit;
 	}
  	
@@ -65,14 +65,14 @@ else
 		{
 			$file_name = "pdffiles/pdf".$cart->order_id.".pdf";
 			include $site_root_path. "views/cart/views/notify_customers.php";
-			mysql_query("UPDATE ordertbl SET payment_approv=1 WHERE OrderID=".$cart->order_id); 	
-			@mysql_close($mysql_conn);	
+			dbAbstract::Update("UPDATE ordertbl SET payment_approv=1 WHERE OrderID=".$cart->order_id); 	
+			//@mysql_close($mysql_conn);	
 			echo "<script type=\"text/javascript\">window.location='".$SiteUrl.$objRestaurant->url."/?item=thankyou&ifrm=thankyou';</script>";
 			exit;
 		}
 		else 
 		{
-			@mysql_close($mysql_conn);
+			//@mysql_close($mysql_conn);
 			echo "<script type=\"text/javascript\">window.location='".$SiteUrl.$objRestaurant->url."/?item=failed&ifrm=failed&response_code=". $_POST['x_response_reason_code'] ."';</script>";
 			exit;
 		}
@@ -354,7 +354,7 @@ else
                                         if ($objRestaurant->payment_gateway=="suregate")
                                         {
                                             $mSQL = "UPDATE ordertbl SET PNRef='".$cart->PNRef."' WHERE OrderID=".$cart->order_id;
-                                            @mysql_query($mSQL);
+                                            dbAbstract::Update($mSQL);
                                         ?>
                                         <li>
                                             <?=$cart->PNRef?>
@@ -430,19 +430,21 @@ else
 	</div> 
 	<?php
 	$mSQL = "SELECT COUNT(*) AS AnalyticsCount FROM `analytics` WHERE resturant_id=".$objRestaurant->id;
-	$mRes = mysql_query($mSQL);
-	if (mysql_num_rows($mRes)>0)
+	$mRes = dbAbstract::Execute($mSQL);
+	if (dbAbstract::returnRowsCount($mRes)>0)
 	{
-		$mRow = mysql_fetch_object($mRes);
+		$mRow = dbAbstract::returnObject($mRes);
 		if ($mRow->AnalyticsCount>0) //Analytics Record exists
 		{
 			$mSQL = "UPDATE `analytics` SET fb_orders=fb_orders+1, fb_orders_amount=fb_orders_amount+".$cart->grand_total()." WHERE resturant_id=".$objRestaurant->id;
-		}
+                        dbAbstract::Update($mSQL);
+                }
 		else //Analytics Record do not exists
 		{
 			$mSQL = "INSERT INTO `analytics` (resturant_id, fb_orders, fb_orders_amount) VALUES (".$objRestaurant->id.", 1, ".$cart->grand_total().")";
-		}
-		mysql_query($mSQL);
+                        dbAbstract::Insert($mSQL);
+                }
+		
 	}
 	$cart->createclone();
  	$cart->destroysession();

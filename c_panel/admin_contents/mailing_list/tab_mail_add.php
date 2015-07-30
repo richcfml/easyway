@@ -1,11 +1,9 @@
-<?
-	/*$mysql_conn = mysql_connect("localhost","root","");
-	mysql_select_db("onlineorderingsystem",$mysql_conn);*/
+<?php
 	if($_POST) {
 		$textbox_array = $_POST['textbox'];
 		for($i = 0 ; $i<count($textbox_array); $i++ ) {
 			if($textbox_array[$i] != "") 
-				mysql_query("INSERT INTO mailing_list (email, resturant_id) VALUES('$textbox_array[$i]','".$mRestaurantIDCP."')") ;
+				dbAbstract::Insert("INSERT INTO mailing_list (email, resturant_id) VALUES('$textbox_array[$i]','".$mRestaurantIDCP."')", 1) ;
 		}	
 	}
 ?>

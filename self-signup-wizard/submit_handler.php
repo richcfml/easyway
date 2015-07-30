@@ -1,4 +1,4 @@
-<?
+<?php
 function get_file_extesion($file_name) {
 	return substr($file_name, strrpos($file_name, '.')+1);
 }
@@ -9,7 +9,7 @@ if (!(function_exists("prepareStringForMySQL")))
 		$string=str_replace ( "\r" , "<br/>",$string);
 		$string=str_replace ( "\n" , "<br/>",$string);
 		$string=str_replace ( "\t" , " ",$string);
-		$string=mysql_real_escape_string($string);
+		$string=dbAbstract::returnRealEscapedString($string);
 		return $string;
 	}
 }
@@ -33,25 +33,24 @@ if(empty($client_login_id)) {
 			,type
 			,status
 		) values (
-			'".mysql_real_escape_string(stripslashes($client_firstname))."'
-			,'".mysql_real_escape_string(stripslashes($client_lastname))."'
-			,'".mysql_real_escape_string(stripslashes($client_email))."'
-			,'".mysql_real_escape_string(stripslashes($client_username))."'
+			'".dbAbstract::returnRealEscapedString(stripslashes($client_firstname))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_lastname))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_email))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_username))."'
 			,'$client_password'
 			,'$client_phone'
-			,'".mysql_real_escape_string(stripslashes($client_country))."'
-			,'".mysql_real_escape_string(stripslashes($client_state))."'
-			,'".mysql_real_escape_string(stripslashes($client_city))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_country))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_state))."'
+			,'".dbAbstract::returnRealEscapedString(stripslashes($client_city))."'
 			,'$client_zip'
 			,'store owner'
 			,1
 		)";
 		//echo $sql;
 		
-	mysql_query($sql);
-	$client_id = mysql_insert_id();
+	$client_id = dbAbstract::Insert($sql,0,2);
 	$reseller_client_sql = "INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$reseller_id."','".$client_id."')";
-	mysql_query($reseller_client_sql);
+	dbAbstract::Insert($reseller_client_sql);
 }
 
 /* add restaurant */
@@ -69,12 +68,12 @@ $rest_url_name = strtolower(trim(preg_replace_callback('/[^a-zA-Z0-9]+/', functi
 //$rest_url_name = strtolower(trim(preg_replace('/-+/', '_', preg_replace('/[^a-zA-Z0-9]+/', '_', $restaurant_name)), '_'));
 
 // search if a license is unused else create one new
-$unused_licenses = mysql_query("SELECT id,license_key FROM licenses WHERE status='unused' AND reseller_id=$reseller_id LIMIT 1");
+$unused_licenses = dbAbstract::Execute("SELECT id,license_key FROM licenses WHERE status='unused' AND reseller_id=$reseller_id LIMIT 1");
 $license_id = 0;
 $license_key = "";
 $is_license_new = false;
-if(mysql_num_rows($unused_licenses) > 0) {
-	$license = mysql_fetch_assoc($unused_licenses);
+if(dbAbstract::returnRowsCount($unused_licenses) > 0) {
+	$license = dbAbstract::returnAssoc($unused_licenses);
 	$license_id = $license["id"];
 	$license_key = $license["license_key"];
 	//echo "license found";
@@ -82,16 +81,15 @@ if(mysql_num_rows($unused_licenses) > 0) {
 	//echo "new license added";
 	$license_key = rand(0,99999999);
 	$license_qry = "INSERT INTO licenses (reseller_id,status,dated) VALUES ('$reseller_id','unused',".time().")";
-	mysql_query( $license_qry );
-	$license_id = mysql_insert_id();				
+	$license_id = dbAbstract::Insert( $license_qry,0,2 );
 	$license_key = $license_id.$license_key;
 	$license_update_qry_srt = "UPDATE licenses SET license_key ='".$license_key."' WHERE id = '".$license_id."'";
-	mysql_query( $license_update_qry_srt );
+	dbAbstract::Update( $license_update_qry_srt );
 	$is_license_new = true;
 	
 	// increment user licences count in users table
 	$user_license_count_update_qry = "UPDATE users SET number_of_licenses=number_of_licenses+1 WHERE id = $reseller_id";
-	mysql_query( $user_license_count_update_qry );
+	dbAbstract::Update( $user_license_count_update_qry );
 }
 
 // if fax not provided then use default
@@ -116,11 +114,11 @@ $hosting_information = array(
 );
 
 // get local charfigy product id
-$chargify_product = mysql_query("SELECT settings_id,premium_account FROM chargify_products WHERE product_id='". $product_id ."'");
+$chargify_product = dbAbstract::Execute("SELECT settings_id,premium_account FROM chargify_products WHERE product_id='". $product_id ."'");
 $product_id = 0;
 //echo $product_id;
-if(mysql_num_rows($chargify_product) > 0) {
-	$chargify_product = mysql_fetch_assoc($chargify_product);
+if(dbAbstract::returnRowsCount($chargify_product) > 0) {
+	$chargify_product = dbAbstract::returnAssoc($chargify_product);
 	$product_id = $chargify_product["settings_id"];
         $premium_account_true = false;
         if($chargify_product["premium_account"] == 1)
@@ -219,12 +217,11 @@ $sql = 	"INSERT INTO resturants
 
 
 	";
-mysql_query($sql) or die(mysql_error());
+$catid = dbAbstract::Insert($sql,0,2);
 //echo $sql;
-$catid = mysql_insert_id();
 if($catid) {
 
-    mysql_query("INSERT INTO analytics
+    dbAbstract::Insert("INSERT INTO analytics
 		SET name= '" . prepareStringForMySQL($restaurant_name) . "'
 		,url_name= '" . addslashes($rest_url_name) . "'
 		,first_letter = '".strtoupper(substr($restaurant_name,0,1))."'
@@ -301,7 +298,7 @@ $postString .='
 ------VendastaBoundary
 Content-Disposition: form-data; name="country"
 
-'.mysql_real_escape_string(stripslashes($client_country)).'
+'.dbAbstract::returnRealEscapedString(stripslashes($client_country)).'
 ------VendastaBoundary
 Content-Disposition: form-data; name="email"
 
@@ -429,8 +426,8 @@ Content-Disposition: form-data; name="workNumber"
             $api_response = curl_exec($ch);
             $result = json_decode($api_response);
             if($result['statusCode'] == 201){
-                mysql_query("UPDATE resturants SET vendasta_account_created=1 WHERE id=$catid");
-                mysql_query("UPDATE resturants SET premium_account=1 WHERE id=$catid");
+                dbAbstract::Update("UPDATE resturants SET vendasta_account_created=1 WHERE id=$catid");
+                dbAbstract::Update("UPDATE resturants SET premium_account=1 WHERE id=$catid");
             } else{
                 echo "Unable to create Vendasta account the reason is as follows";
                 echo $result['message'];
@@ -438,13 +435,13 @@ Content-Disposition: form-data; name="workNumber"
             }
         }
 
-	mysql_query("UPDATE licenses SET status='activated', resturant_id=$catid,activation_date= '".time()."' WHERE id=$license_id");
+	dbAbstract::Update("UPDATE licenses SET status='activated', resturant_id=$catid,activation_date= '".time()."' WHERE id=$license_id");
 
 	for($j = 0; $j< 7; $j++) {
 		//hour and minutes are treaded as string
 		$open_time =  '0800';
 		$close_time = '1700';
-		mysql_query(
+		dbAbstract::Insert(
 			"INSERT INTO business_hours 
 			SET rest_id = '".$catid."'
 				,day= '".$j."'
@@ -671,9 +668,9 @@ Content-Disposition: form-data; name="workNumber"
 
 	header("location:/c_panel/login.php");
 	// login current user
-	// $user = mysql_query("SELECT * FROM users WHERE id='$client_id'");
-	// if(mysql_num_rows($user) > 0) {
-		// $user = mysql_fetch_assoc($user);
+	// $user = dbAbstract::Execute("SELECT * FROM users WHERE id='$client_id'");
+	// if(dbAbstract::returnRowsCount($user) > 0) {
+		// $user = dbAbstract::returnAssoc($user);
 		// $_SESSION['admin_session_user_name'] = $user["username"];
 		// $_SESSION['admin_session_pass'] = $user["password"];
 		// header("location:/c_panel/?mod=resturant");

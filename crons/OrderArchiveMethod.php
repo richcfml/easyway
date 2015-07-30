@@ -5,12 +5,12 @@ $insertQuery = "INSERT INTO order_table_archive
 SELECT * FROM ordertbl
 WHERE OrderDate < CURDATE( ) - INTERVAL 60 DAY";
 
-$result = mysql_query($insertQuery);
+$result = dbAbstract::Insert($insertQuery);
 
 /* Delete orders older than 60 days from ordertable*/
 $deleteQuery = "DELETE FROM ordertbl
 WHERE OrderDate < CURDATE( ) - INTERVAL 60 DAY";
 
-$result = mysql_query($deleteQuery);
-@mysql_close($mysql_conn);
+$result = dbAbstract::Delete($deleteQuery);
 ?>
+<?php mysqli_close($mysqli);?>

@@ -1,8 +1,8 @@
-<?
+<?php
 require_once("../includes/config.php");
 
 if($_REQUEST["type"] == "compare_last_two_months_count") {
-	mysql_query("
+	dbAbstract::Update("
 		update resturants 
 			set orders_last_month_count=(
 					SELECT count( * )
@@ -15,18 +15,18 @@ if($_REQUEST["type"] == "compare_last_two_months_count") {
 						FROM ordertbl
 						WHERE OrderDate BETWEEN CURDATE( ) - INTERVAL 60 DAY AND CURDATE( ) - INTERVAL 30 DAY
 						AND cat_id =resturants.id
-						AND payment_approv =1)");
+						AND payment_approv =1)",1);
 
 } else if($_REQUEST["type"] == "get_last_month_analytics") {
 	$rows_affected_count = 0;
 	// fetch all active resturants
-	$resturants = mysql_query("SELECT id FROM `resturants` WHERE status=1");
-	while($resturant = mysql_fetch_assoc($resturants)) {
+	$resturants = dbAbstract::Execute("SELECT id FROM `resturants` WHERE status=1",1);
+	while($resturant = dbAbstract::returnAssoc($resturants,1)) {
 		// last 30 days repeat customers, new customers, deliver method, pickup method, 
 		// credit card payment, cash payment orders count and total $ amount
 		$resturant_id = $resturant["id"];
 		if($resturant_id > 0) {
-			$result = mysql_query(
+			$result = dbAbstract::Execute(
 				"SELECT COALESCE(sum( if( ot2.Rows >1, 1, 0 ) ), 0) AS repeat_customers_orders_count, 
 						COALESCE(sum( if( ot2.Rows=1, 1, 0 ) ), 0) AS new_customers_orders_count, 
 						COALESCE(sum( if( ot2.order_receiving_method='Delivery', 1, 0 ) ), 0) AS delivery_orders_count, 
@@ -53,15 +53,15 @@ if($_REQUEST["type"] == "compare_last_two_months_count") {
 					AND cat_id=$resturant_id
 					AND payment_approv=1
 					GROUP BY `UserID`
-				)ot2
+				)ot2,1
 				"
 			);
-			$data = mysql_fetch_assoc($result);
+			$data = dbAbstract::returnAssoc($result,1);
 			
-			$analytics = mysql_query("SELECT id FROM analytics WHERE resturant_id=$resturant_id");
-			if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-				$analytics = mysql_fetch_assoc($analytics);
-				mysql_query(
+			$analytics = dbAbstract::Execute("SELECT id FROM analytics WHERE resturant_id=$resturant_id",1);
+			if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+				$analytics = dbAbstract::returnAssoc($analytics,1);
+				dbAbstract::Update(
 					"UPDATE `analytics` 
 					SET repeat_customers_orders_count=". $data["repeat_customers_orders_count"] .", " .
 						"new_customers_orders_count=". $data["new_customers_orders_count"] .", " .
@@ -82,10 +82,10 @@ if($_REQUEST["type"] == "compare_last_two_months_count") {
 						"mobile_total_amount=". $data["mobile_total_amount"] .", " .
 						"rapid_reorders_total_amount=". $data["rapid_reorders_total_amount"] .", " .
 						"cash_orders_total_value=". $data["cash_total_amount"] . "
-					WHERE id=".  $analytics["id"]
+					WHERE id=".  $analytics["id"],1
 				);
 			} else {
-				mysql_query(
+				dbAbstract::Insert(
 					"INSERT INTO `analytics` 
 					(
 						`resturant_id`, 
@@ -129,18 +129,14 @@ if($_REQUEST["type"] == "compare_last_two_months_count") {
 						$data["mobile_total_amount"] .", " .
 						$data["rapid_reorders_total_amount"] .", " .
 						$data["cash_total_amount"] . "
-					)"
-				) or die(mysql_error());
+					)",1
+				);
 				
 			}
 			$rows_affected_count++;
 		}
 	}
-//$result = mysql_query("SELECT * FROM analytics") or die(mysql_error());
 echo "<pre>";
-//while($obj = mysql_fetch_object($result)) {
-//	print_r($obj);
-//}
 	
 	echo "Analytics extracted for: " . $rows_affected_count . " resturnats";
 	echo "</pre>";
@@ -184,12 +180,11 @@ echo "<pre>";
 		$start_date = date('Y-m-d', strtotime('-30 days'));
 		$end_date = date('Y-m-d');
 		
-		$analytics = mysql_query("SELECT r.id, r.url_name FROM `resturants` r, `analytics` a WHERE r.id = a.resturant_id ORDER BY a.dated LIMIT 10");
-		if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-			while($row = mysql_fetch_assoc($analytics)) {
+		$analytics = dbAbstract::Execute("SELECT r.id, r.url_name FROM `resturants` r, `analytics` a WHERE r.id = a.resturant_id ORDER BY a.dated LIMIT 10",1);
+		if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+			while($row = dbAbstract::returnAssoc($analytics,1)) {
 				//get total views of a resturant
 				$resturant_slug = str_replace(',', '', $row["url_name"]);
-				//$resturant_slug = "slice_pizza";
 
 				$data = array();
 				
@@ -278,19 +273,19 @@ echo "<pre>";
 					}
 					$qry .= "dated=NOW()";
 					
-					mysql_query(
+					dbAbstract::Update(
 						"UPDATE `analytics` 
 						SET $qry
-						WHERE resturant_id=".  $row["id"]
-					) or die(mysql_error());
+						WHERE resturant_id=".  $row["id"],1
+					);
 					
 					echo $resturant_slug . "<br>";
 					echo "<pre>";print_r($data);echo "</pre>";
 				} else {
-					mysql_query(
+					dbAbstract::Update(
 						"UPDATE `analytics` 
 						SET dated=NOW()
-						WHERE resturant_id=".  $row["id"]);
+						WHERE resturant_id=".  $row["id"],1);
 					echo "No data found for: " . $resturant_slug . "<br>";
 				}
 			}
@@ -302,56 +297,57 @@ echo "<pre>";
 	}
 } else if($_REQUEST["type"] == "get_abondand_cart_analytics") {
 	
-	$result = mysql_query(
+	$result = dbAbstract::Execute(
 		"SELECT COUNT(*) AS `count`, `resturant_id`
 		FROM `abandoned_carts`
 		WHERE date_added BETWEEN CURDATE( ) - INTERVAL 30 DAY AND CURDATE( )
 		GROUP BY `resturant_id`
 		ORDER BY `resturant_id`
 		"
-	) or die(mysql_error());
-	while($data = mysql_fetch_assoc($result)) {
+	);
+	while($data = dbAbstract::returnAssoc($result,1)) {
 		$resturant_id = $data["resturant_id"];
-		$analytics = mysql_query("SELECT id FROM analytics WHERE resturant_id=$resturant_id");
-		if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-			$analytics = mysql_fetch_assoc($analytics);
-			mysql_query(
+		$analytics = dbAbstract::Execute("SELECT id FROM analytics WHERE resturant_id=$resturant_id",1);
+		if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+			$analytics = dbAbstract::returnAssoc($analytics,1);
+			dbAbstract::Update(
 				"UPDATE `analytics` 
 				SET abandoned_carts_count_last_month=". $data["count"] . "
-				WHERE id=".  $analytics["id"]
+				WHERE id=".  $analytics["id"],1
 			);
 		} else {
-			mysql_query(
-				"INSERT INTO `analytics` (resturant_id, abandoned_carts_count_last_month) VALUES ($resturant_id, " . $data["count"] . ")"
-			) or die(mysql_error());
+			dbAbstract::Insert(
+				"INSERT INTO `analytics` (resturant_id, abandoned_carts_count_last_month) VALUES ($resturant_id, " . $data["count"] . ")",1
+			);
 		}
 	}
 	
-	$result1 = mysql_query(
+	$result1 = dbAbstract::Execute(
 		"SELECT COUNT(*) AS `count`, `resturant_id`
 		FROM `abandoned_carts`
 		WHERE date_added BETWEEN CURDATE( ) - INTERVAL 60 DAY AND CURDATE( ) - INTERVAL 30 DAY
 		GROUP BY `resturant_id`
 		ORDER BY `resturant_id`
-		"
+		",1
 	);
-	while($data = mysql_fetch_assoc($result)) {
+	while($data = dbAbstract::returnAssoc($result,1)) {
 		$resturant_id = $data["resturant_id"];
-		$analytics = mysql_query("SELECT id FROM analytics WHERE resturant_id=$resturant_id");
-		if(!empty($analytics) && (mysql_num_rows($analytics) > 0)) {
-			$analytics = mysql_fetch_assoc($analytics);
-			mysql_query(
+		$analytics = dbAbstract::Execute("SELECT id FROM analytics WHERE resturant_id=$resturant_id",1);
+		if(!empty($analytics) && (dbAbstract::returnRowsCount($analytics,1) > 0)) {
+			$analytics = dbAbstract::returnAssoc($analytics,1);
+			dbAbstract::Update(
 				"UPDATE `analytics` 
 				SET abandoned_carts_count_second_last_month=". $data["count"] . "
-				WHERE id=".  $analytics["id"]
+				WHERE id=".  $analytics["id"],1
 			);
 		} else {
-			mysql_query(
-				"INSERT INTO `analytics` (resturant_id, abandoned_carts_count_second_last_month) VALUES ($resturant_id, " . $data["count"] . ")"
-			) or die(mysql_error());
+			dbAbstract::Insert(
+				"INSERT INTO `analytics` (resturant_id, abandoned_carts_count_second_last_month) VALUES ($resturant_id, " . $data["count"] . ")",1
+			);
 		}
 	}
 	echo "Abandoned Carts Analytics extracted.";
 }
 
 ?>
+<?php mysqli_close($mysqli);?>

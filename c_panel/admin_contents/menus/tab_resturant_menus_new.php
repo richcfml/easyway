@@ -18,12 +18,12 @@ function getdata($catid) {
         $menu_name = $_GET['menu_name'];
         $mSQL = "SELECT * FROM categories WHERE menu_id = " . $_GET['menuid'] . " ORDER BY cat_ordering";
     } else {
-        $menyqry = mysql_fetch_array(mysql_query("SELECT  id, menu_name FROM menus where rest_id = $catid AND status = 1 ORDER BY menu_ordering ASC limit 1"));
+        $menyqry = dbAbstract::ExecuteArray("SELECT  id, menu_name FROM menus where rest_id = $catid AND status = 1 ORDER BY menu_ordering ASC limit 1", 1);
         $menu_id = $menyqry['id'];
         $menu_name = $menyqry['menu_name'];
         $mSQL = "select * from categories where menu_id=" . $menu_id . " ORDER BY cat_ordering";
     }
-    if(mysql_num_rows(mysql_query($mSQL)) == 0)
+    if(dbAbstract::returnRowsCount(dbAbstract::Execute($mSQL, 1), 1) == 0)
     {?>
         <script type="text/javascript">
             $(function()
@@ -47,7 +47,7 @@ function getdata($catid) {
         </script>
 <?php
     }
-    return mysql_query($mSQL);
+    return dbAbstract::Execute($mSQL, 1);
 }
 
 if (isset($_POST["btnSubmit"])) {
@@ -60,7 +60,7 @@ if (isset($_POST["btnSubmit"])) {
 				$mRestIDSO = $Objrestaurant->id;
 				$mSQL = "UPDATE menus SET Column1Count=".trim($_POST["lblColumn1"])." WHERE id=".$menu_id;
 				Log::write("Update menus - tab_resturant_menus_new.php", "QUERY --".$mSQL, 'menu', 1 , 'cpanel');
-				mysql_query($mSQL);
+				dbAbstract::Update($mSQL, 1);
 			}
 		}
 	}
@@ -68,7 +68,6 @@ if (isset($_POST["btnSubmit"])) {
     if (isset($_POST["lblHidden"])) {
         if (strpos($_POST["lblHidden"], "|") !== false) {
             $mCatSplit = explode("|", $_POST["lblHidden"]);
-            //echo $mCatSplit;exit;
             for ($loopCount = 0; $loopCount < count($mCatSplit); $loopCount++) {
                 $mProdSplit = explode(",", $mCatSplit[$loopCount]);
                 for ($innerLoopCount = 0; $innerLoopCount < count($mProdSplit); $innerLoopCount++) {
@@ -76,74 +75,64 @@ if (isset($_POST["btnSubmit"])) {
                         $mCatID = $mProdSplit[$innerLoopCount];
                         $mSQL = "UPDATE categories SET cat_ordering=" . $loopCount . " WHERE cat_id=" . $mCatID;
                         Log::write("Update category - tab_resturant_menus_new.php", "QUERY --".$mSQL, 'menu', 1 , 'cpanel');
-                        mysql_query($mSQL);
+                        dbAbstract::Update($mSQL, 1);
                     } else {//Product/Item
                         $mProductID = $mProdSplit[$innerLoopCount];
                         $mSQL = "UPDATE product SET SortOrder=" . $innerLoopCount . ", sub_cat_id =" . $mCatID . " WHERE prd_id=" . $mProductID; //sub_cat_id is cat_id of Categories Table
                         Log::write("Update product - tab_resturant_menus_new.php", "QUERY --".$mSQL, 'menu', 1 , 'cpanel');
-                        mysql_query($mSQL);
+                        dbAbstract::Update($mSQL, 1);
                     }
                 }
             }
         }
        Log::write("Update menu name,desc", "QUERY -- UPDATE menus SET menu_name= '" . addslashes($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "' WHERE id =" . $menu_id, 'menu', 1 , 'cpanel');
-       $udpSql  = mysql_query("UPDATE menus SET menu_name= '" . prepareStringForMySQL($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id);
-       //echo  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST["menuname"];exit;
+       $udpSql  = dbAbstract::Update("UPDATE menus SET menu_name= '" . prepareStringForMySQL($_POST["menuname"]) . "', menu_desc = '" . prepareStringForMySQL($_POST['description_menu']) . "',menu_ordering= '".$_POST['menuordering']."' WHERE id =" . $menu_id, 1);
 
         $link =  $AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname'];
         $escaped_link = htmlentities($link, ENT_QUOTES, 'UTF-8');
-        header("Location: ".$link);
-//----------------------------------------------------------------------------------------------------
-//         redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id);
-//       redirect($AdminSiteUrl.'?mod=new_menu&catid='.$Objrestaurant->id.'&menuid='.$menu_id.'&menu_name='.$_POST['menuname']);
-//----------------------------------------------------------------------------------------------------
-       
+        header("Location: ".$link);       
        }
     $mRes = getdata($Objrestaurant->id);
-
-
 }
 
 if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 {
     $getProductdIds = 0;
     $getcategoriesIds =0;
-    $catQry = mysql_query("Select cat_id from categories where menu_id =".$menu_id."");
-    while($categoryID = mysql_fetch_assoc($catQry))
+    $catQry = dbAbstract::Execute("Select cat_id from categories where menu_id =".$menu_id."", 1);
+    while($categoryID = dbAbstract::returnAssoc($catQry, 1))
     {
         $getcategoriesIds .= $categoryID['cat_id'].",";
     }
     $getcategoriesIds = substr($getcategoriesIds,0,-1);
     
-    $prdQry = mysql_query("select prd_id from product where sub_cat_id in(".$getcategoriesIds." )");
-    while($prd = mysql_fetch_assoc($prdQry))
+    $prdQry = dbAbstract::Execute("select prd_id from product where sub_cat_id in(".$getcategoriesIds." )", 1);
+    while($prd = dbAbstract::returnAssoc($prdQry, 1))
     {
         $getProductdIds .= $prd['prd_id'].",";
     }
     $getProductdIds = substr($getProductdIds,0,-1);
     
-    
     $mQuery = "Delete from attribute where ProductID in( ".$getProductdIds.")";
-    mysql_query($mQuery);
+    dbAbstract::Delete($mQuery, 1);
     Log::write("Delete attribute - tab_resturant_menus_new.php - LINE 128", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
 
-    mysql_query("Delete from product_association where product_id in( ".$getProductdIds.") or association_id in( ".$getProductdIds.")");
+    dbAbstract::Delete("Delete from product_association where product_id in( ".$getProductdIds.") or association_id in( ".$getProductdIds.")", 1);
     Log::write("Delete product association - menu_ajax.php", "QUERY -- Delete from product_association where product_id in( ".$getProductdIds.") or association_id in( ".$getProductdIds.")", 'menu', 1 , 'cpanel');
     
-
-    mysql_query("Delete from product where sub_cat_id in(".$getcategoriesIds.")");
+    dbAbstract::Delete("Delete from product where sub_cat_id in(".$getcategoriesIds.")", 1);
     Log::write("Delete product - menu_ajax.php", "QUERY -- Delete from product where sub_cat_id in( ".$getcategoriesIds.")", 'menu', 1 , 'cpanel');
 
-    mysql_query("Delete from categories where menu_id = ".$menu_id."");
+    dbAbstract::Delete("Delete from categories where menu_id = ".$menu_id."", 1);
     Log::write("Delete category - menu_ajax.php", "QUERY -- Delete from categories where menu_id = ".$menu_id."", 'menu', 1 , 'cpanel');
 
-    mysql_query("Delete from menu_hours where menu_id = ".$menu_id."");
+    dbAbstract::Delete("Delete from menu_hours where menu_id = ".$menu_id."", 1);
     Log::write("Delete menu_hours - menu_ajax.php", "QUERY -- Delete from menu_hours where menu_id = ".$menu_id."", 'menu', 1 , 'cpanel');
 
-    $result = mysql_query("Delete from menus where id = ".$menu_id."");
+    $result = dbAbstract::Delete("Delete from menus where id = ".$menu_id."", 1);
     Log::write("Delete Menu - menu_ajax.php", "QUERY -- Delete from menus where id = ".$menu_id."", 'menu', 1 , 'cpanel');
 
-    $menyqry = mysql_fetch_array(mysql_query("SELECT  id, menu_name FROM menus where rest_id = $catid ORDER BY menu_ordering ASC limit 1"));
+    $menyqry = dbAbstract::ExecuteArray("SELECT  id, menu_name FROM menus where rest_id = $catid ORDER BY menu_ordering ASC limit 1", 1);
     $menu_id = $menyqry['id'];
     $menu_name = $menyqry['menu_name'];
     if(!empty($menu_id))
@@ -205,9 +194,6 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 
     <body style="cursor: auto; font-family: Arial;">
              <input type="hidden" value="<?=$Objrestaurant->id?>" id="restaurantid"/>
-
-        <?php  //include( $_SERVER['DOCUMENT_ROOT'] .'/c_panel/admin_contents/products/attr_assoc_popup.php'); ?>
-
         <?php include('../c_panel/admin_contents/products/attr_assoc_popup.php'); ?>
                <div style="position:relative;top: -25px;">
             <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-open" id="cbp-spmenu-s1" style="position: absolute;">
@@ -222,10 +208,10 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                  <div class="leftDivMenus"><span class="leftmenusimg" ><img src="img/Menus.png" id="leftimgMenus" style="width: 30px;"/></span><span class="leftheadingSpan" >Menus</span><i class="fa leftMenuArrow"></i></div>
                  <div style="clear:both"></div>
                  <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                    <?
-                    $menu_qry = mysql_query("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name");
+                    <?php
+                    $menu_qry = dbAbstract::Execute("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name", 1);
                     $menu_i = 0;
-                    while ($menuRs = mysql_fetch_array($menu_qry)) {
+                    while ($menuRs = dbAbstract::returnArray($menu_qry, 1)) {
                     ?>
 
                         <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
@@ -329,7 +315,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                 </div>
                 <div class="tab_container" style="min-height:660px;width:230px;margin-right: 40px;margin-top: -43px;">
 					<?php 
-						$menu_desc = mysql_fetch_array(mysql_query("Select * from menus where id = " . $menu_id . "")); 
+						$menu_desc = dbAbstract::ExecuteArray("Select * from menus where id = " . $menu_id . "", 1); 
 						$mMenuStatus = $menu_desc['status'];
 					?>
                     <div id="tab1" class="tab_content">

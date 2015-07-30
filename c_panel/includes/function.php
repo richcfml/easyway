@@ -6,8 +6,8 @@
 	
 	function ValidateAdmin_MySQL($user , $pass , $fun_qry_str , $pass_feild){
 					if(($user) && ($user != '')) { 
-                    	$quary = @mysql_query($fun_qry_str);
-                      	$quary_rs = @mysql_fetch_array($quary);
+                    	$quary = dbAbstract::Execute($fun_qry_str,1);
+                      	$quary_rs = dbAbstract::returnArray($quary,1);
 						
 						if(!empty($quary_rs['id'])) {
 						
@@ -19,8 +19,8 @@
 										$_SESSION['owner_id'] = $quary_rs['id'];
 										$_SESSION['status'] = $quary_rs['status'];
 										
-										$query1 = @mysql_query("SELECT * FROM categories WHERE parent_id = 0 AND owner_id = $_SESSION[owner_id]");
-										$cat_qryRs = @mysql_fetch_array($query1);	
+										$query1 = dbAbstract::Execute("SELECT * FROM categories WHERE parent_id = 0 AND owner_id = $_SESSION[owner_id]",1);
+										$cat_qryRs = dbAbstract::returnArray($query1,1);	
 										$_SESSION['restorant_logo'] = $cat_qryRs['cat_logo'];	
 										
 										return 1;
@@ -87,7 +87,7 @@ function prepareStringForMySQL($string)
     $string=str_replace ( "\r" , "<br/>",$string);
     $string=str_replace ( "\n" , "<br/>",$string);
     $string=str_replace ( "\t" , " ",$string);
-    $string=mysql_real_escape_string($string);
+    $string=dbAbstract::returnRealEscapedString($string);
     return $string;
 }
 ?>

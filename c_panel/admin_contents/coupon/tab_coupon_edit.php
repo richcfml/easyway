@@ -127,7 +127,7 @@ document.onmousemove=positiontip
 
 
 
-<? 	$errMessage='';
+<?php 	$errMessage='';
 
 	if (isset($_POST['submit'])){
 		
@@ -151,8 +151,8 @@ document.onmousemove=positiontip
 				$errMessage				=	"";
 				
 				//to check wheather same coupon code is already exists in the data base....
-				$couponCodeQuery = mysql_query("SELECT * FROM coupontbl WHERE coupon_code ='".$coupon_code."' AND coupon_id !=$couponId  AND resturant_id= ".$Objrestaurant->id);
-				@$CouponCodeNumRows = mysql_num_rows($couponCodeQuery);
+				$couponCodeQuery = dbAbstract::Execute("SELECT * FROM coupontbl WHERE coupon_code ='".$coupon_code."' AND coupon_id !=$couponId  AND resturant_id= ".$Objrestaurant->id, 1);
+				@$CouponCodeNumRows = dbAbstract::returnRowsCount($couponCodeQuery, 1);
 				   
 			if($coupon_title == ''){
 					$errMessage="Please Enter Coupon Title";
@@ -181,11 +181,11 @@ document.onmousemove=positiontip
 			}else{
 					if( $discount_applied == "whole order" ) {
 					 
-						mysql_query("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."',coupon_type = '1', coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId");
+						dbAbstract::Update("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."',coupon_type = '1', coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId", 1);
 					}else if ( $discount_applied == "selected items" && $type == "2" ) {
-						mysql_query("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type2',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_type = '2', coupon_items1= '".addslashes($coupon_items1)."',coupon_items2= '".addslashes($coupon_items2)."' ,coupon_time= '".addslashes($type1_time)."', coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId");
+						dbAbstract::Update("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type2',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_type = '2', coupon_items1= '".addslashes($coupon_items1)."',coupon_items2= '".addslashes($coupon_items2)."' ,coupon_time= '".addslashes($type1_time)."', coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId", 1);
 					}  else if ( $discount_applied == "selected items" && $type == "3" ) {
-					mysql_query("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type3',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."',coupon_type = '3', coupon_items1= '".addslashes($coupon_items3)."',coupon_items2= '' ,coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId");
+					dbAbstract::Update("UPDATE coupontbl SET coupon_title = '".addslashes($coupon_title)."',coupon_code = '".addslashes($coupon_code)."',	min_order_total = '$min_order_total',coupon_discount = '$coupon_discount_type3',discount_in = '$discount_in',coupon_date = '".addslashes($coupon_user_date)."',coupon_time= '".addslashes($type1_time)."',coupon_type = '3', coupon_items1= '".addslashes($coupon_items3)."',coupon_items2= '' ,coupon_des = '".addslashes($coupon_des)."' where coupon_id=$couponId", 1);
 					}							
 			?>
 <script language="javascript">
@@ -199,12 +199,12 @@ document.onmousemove=positiontip
 <div id="main_heading">EDIT / REMOVE COUPONS</div>
 <? if ($errMessage != "" ) { ?><div class="msg_done"><?=$errMessage?></div> <? }?> 
 
-  <?
+  <?php
 	 if($_REQUEST['coupon_id']){
 		 				$coupon_id 			= 	$_REQUEST['coupon_id'];
 						 
- 						$coupon_info_qry 	=	mysql_query("select * from coupontbl where coupon_id = $coupon_id");	
-						$coupon_infoRs		=	mysql_fetch_array($coupon_info_qry);
+ 						$coupon_info_qry 	=	dbAbstract::Execute("select * from coupontbl where coupon_id = $coupon_id", 1);	
+						$coupon_infoRs		=	dbAbstract::returnArray($coupon_info_qry, 1);
 						$coupon_title		=	$coupon_infoRs['coupon_title'];
 						$coupon_code		=	$coupon_infoRs['coupon_code'];
 						$min_order_total	=	$coupon_infoRs['min_order_total'];
@@ -292,29 +292,28 @@ document.onmousemove=positiontip
           <tr id="selected_items1" style="display:<?=$none_str?>; border:#DFDFDF solid thin; padding:5px;">
             <td width="120px" ><input type="radio"  name="type" id="type2" value="2" <? if ($coupon_type == 2) { ?> checked <? }?>/>&nbsp;Option 1:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: 50% off french fries when you order a chicken sandwich.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
             <td style="padding-bottom:10px"><input name="coupon_discount_type2" type="text" size="5" id="coupon_discount_type2" value="<? if($coupon_type == 2) {echo @$coupon_discount; }?>" onfocus="radioselect('type2');"> OFF &nbsp; 
-             <? if($coupon_type == 2)  
+             <?php if($coupon_type == 2)  
 				$str = explode(",",$coupon_items1);
 				 for($i = 0; $i < count($str); $i++) {
-					$items_query = mysql_query("SELECT  item_title FROM product WHERE prd_id='".$str[$i]."' ");
-					$items_rows = mysql_fetch_array($items_query);
-					//echo stripslashes( ($items_rows['item_title']) ); 
+					$items_query = dbAbstract::Execute("SELECT  item_title FROM product WHERE prd_id='".$str[$i]."' ", 1);
+					$items_rows = dbAbstract::returnArray($items_query, 1);
+					
 					if($i == 0  ) {
 						$items_str =   $items_rows['item_title'];
 					} else {
 						$items_str .= ", ".  $items_rows['item_title'];	
 					}	
 				 }
-				 //echo "<span style='color:#933'>".stripslashes($items_str)."</span>";
+				 
 			?>
             <span id="selitems1" style="color:#933;"><?=stripslashes(rtrim($items_str,', '))?></span>
             <a  href="admin_contents/coupon/popup.php?coupon_item=1&catid=<?=$mRestaurantIDCP?>&couponid=<?=$coupon_id?>"  rel="facebox" >
             <img style="border:none" src="../images/Select-icon.png" title="Add Items"  /></a> &nbsp;when Order a &nbsp; 
-             <?  if($coupon_type == 2)
+             <?php  if($coupon_type == 2)
 				$str1 = explode(",",$coupon_items2);
 				 for($i = 0; $i < count($str1); $i++) {
-					$items_query1 = mysql_query("SELECT  item_title FROM product WHERE prd_id='".$str1[$i]."' ");
-					$items_rows1 = mysql_fetch_array($items_query1);
-					//echo stripslashes( ($items_rows['item_title']) ); 
+					$items_query1 = dbAbstract::Execute("SELECT  item_title FROM product WHERE prd_id='".$str1[$i]."' ", 1);
+					$items_rows1 = dbAbstract::returnArray($items_query1, 1);
 					if($i == 0  ) {
 						$items_str1 =   $items_rows1['item_title'];
 					} else {
@@ -323,7 +322,6 @@ document.onmousemove=positiontip
 					
 					
 				 }
-				//echo "<span style='color:#933'>".stripslashes($items_str1)."</span>";
 			?>
             <span id="selitems2" style="color:#933;"><?=stripslashes(rtrim($items_str1,', '))?></span>
             <a  href="admin_contents/coupon/popup.php?coupon_item=2&catid=<?=$mRestaurantIDCP?>&couponid=<?=$coupon_id?>"  rel="facebox" ><img style="border:none" src="../images/Select-icon.png" title="Add Items"  /></a> 
@@ -333,24 +331,20 @@ document.onmousemove=positiontip
           <tr id="selected_items2" style="display:<?=$none_str?>; border:#DFDFDF solid thin; padding:5px;">
             <td width="120px" ><input type="radio"  name="type" id="type3" value="3" <? if ($coupon_type == 3) { ?> checked <? }?> />&nbsp;Option 2:&nbsp;(<a style="text-decoration:none;"  onMouseover="ddrivetip('Ex: <?=$currency?>1.00 off any appetizer.')" onMouseout="hideddrivetip()"  href="#"   >?</a>)&nbsp;&nbsp;</td>
             <td><input name="coupon_discount_type3" type="text" size="5" id="coupon_discount_type3" value="<? if($coupon_type == 3) { echo @$coupon_discount; }?>" onfocus="radioselect('type3');"> OFF any 
-             <? 
+             <?php 
 			 $items_str2="";
 			 if($coupon_type == 3)
 			 $str2=array();
 				$str2 = explode(",",$coupon_items1);
 				 for($i = 0; $i < count($str2); $i++) {
-					$items_query2 = mysql_query("SELECT cat_name FROM categories WHERE cat_id='".$str2[$i]."' ");
-					$items_rows2 = mysql_fetch_array($items_query2);
-					//echo stripslashes( ($items_rows['item_title']) ); 
+					$items_query2 = dbAbstract::Execute("SELECT cat_name FROM categories WHERE cat_id='".$str2[$i]."' ", 1);
+					$items_rows2 = dbAbstract::returnArray($items_query2, 1);
 					if($i == 0  ) {
 						$items_str2 =   $items_rows2['cat_name'];
 					} else {
 						$items_str2 .= ", ".  $items_rows2['cat_name'];	
-					}
-					
-						
+					}		
 				 }
-				//echo "<span style='color:#933'>".stripslashes($items_str2)."</span>";
 			?>
              <span id="selitems3" style="color:#933;"><?=stripslashes($items_str2)?></span>
             &nbsp;<a  href="admin_contents/coupon/popup.php?coupon_item=3&catid=<?=$mRestaurantIDCP?>&couponid=<?=$coupon_id?> "  rel="facebox" ><img style="border:none" src="../images/Select-icon.png" title="Add Categories"  /></a></td>

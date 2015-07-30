@@ -327,10 +327,10 @@
 									$mSourceName = "NA".$mCount;
 									
 									$mSQL = "SELECT IFNULL(SourceName, 'NA') AS SourceName FROM vendasta_sources WHERE SourceID='".$key."'";
-									$mResultQ = mysql_query($mSQL);
-									if (mysql_num_rows($mResultQ)>0)
+									$mResultQ = dbAbstract::Execute($mSQL,1);
+									if (dbAbstract::returnRowsCount($mResultQ,1)>0)
 									{
-										$mRowQ = mysql_fetch_object($mResultQ);
+										$mRowQ = dbAbstract::returnObject($mResultQ,1);
 										$mSourceName = $mRowQ->SourceName;
 									}
 									$mReviews[$mSourceName]= $value;

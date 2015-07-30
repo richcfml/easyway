@@ -1,4 +1,4 @@
-<?
+<?php
 		//$catid	=	$_REQUEST['catid'];
 		if (! empty ( $_POST )) {
 						extract ( $_POST ) ;
@@ -21,7 +21,7 @@
 						 $errMessage1="Please Enter Menu ordering no.";
 					}else{
                                             Log::write("Add new category - tab_resturant_menu_add.php", "QUERY --INSERT INTO categories SET parent_id= $catid, menu_id=$menu, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'", 'menu', 1 , 'cpanel');
-							mysql_query("INSERT INTO categories SET parent_id= $catid, menu_id=$menu, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'");
+							dbAbstract::Insert("INSERT INTO categories SET parent_id= $catid, menu_id=$menu, cat_name= '".addslashes($subcat_name)."', cat_ordering= $cat_ordering, cat_des= '".addslashes($subcat_des)."'", 1);
 							
 							?>
        			<script language="javascript">
@@ -42,12 +42,12 @@
 
   <tr>
   <td><strong>Menu Name:</strong><br />
-  <?
-  $menuQry = mysql_query("SELECT id, menu_name FROM menus WHERE rest_id = $catid ");   
+  <?php
+  $menuQry = dbAbstract::Execute("SELECT id, menu_name FROM menus WHERE rest_id = $catid ", 1);   
   ?>
   	<select name="menu" id="menu" style="width:330px;">
     	<option value="-1">======Select Menu======</option>
-        <? while($menuRs = mysql_fetch_array( $menuQry ) ) { ?>
+        <? while($menuRs = dbAbstract::returnArray( $menuQry,1 ) ) { ?>
         	<option value="<?=$menuRs['id']?>"><?=$menuRs['menu_name']?></option>
         <? }?>
     </select>

@@ -1037,8 +1037,8 @@
              <form action="admin_contents/products/copy_restaurant_menu.php?catid=<?php echo $_GET['catid']?>&menuid=<?php echo $_GET['menuid']?>&menu_name=<?php echo $_GET['menu_name']?>" method="get" name="frmCopy" >
               <div class='check_box_restaurant' style="margin-left: 10px;margin-top: 15px;">
               <?php $i = 0;
-                    $item_query = mysql_query("SELECT id,name from resturants where owner_id =(Select owner_id from resturants WHERE id = '".$Objrestaurant->id."') and id != '".$Objrestaurant->id."'");
-                        while($itemRs = mysql_fetch_object($item_query)){
+                    $item_query = dbAbstract::Execute("SELECT id,name from resturants where owner_id =(Select owner_id from resturants WHERE id = '".$Objrestaurant->id."') and id != '".$Objrestaurant->id."'",1);
+                        while($itemRs = dbAbstract::returnObject($item_query,1)){
                 ?>
                     <input type='checkbox' name='restaurantcheck[]' id='restaurantcheck_<?=$i?>' value=" <?= $itemRs->id ?>" class="chk_style">
                     <label for="restaurantcheck_<?=$i?>" style="color: #25AAE1; font-size:14px;height: 35px;"><?=stripslashes($itemRs->name) ?></label>
@@ -1048,7 +1048,7 @@
                     <input type="hidden" value ="<?=$_GET['menuid']?>" id="hdnMenu_id" name="hdnMenu_id"/>
                     <input type="hidden" value ="<?=$_GET['catid']?>" id="hdnRestaurantID" name="hdnRestaurantID"/>
                     <input type="hidden" value ="<?=$_GET['menu_name']?>" id="hdnMenuName" name="hdnMenuName"/>
-                    <?php if(mysql_num_rows($item_query)>0){?>
+                    <?php if(dbAbstract::returnRowsCount($item_query,1)>0){?>
                     <input type="submit" value="Copy Menu" id="btnCopyRestaurant" name="btnCopyRestaurant" class="cancel" style="margin-top: 60px;"><?php }
                     else{?>
                     <div style="text-align: center;font-size: 20px;padding: 13px;margin-top: 21px;">No restaurants available</div>

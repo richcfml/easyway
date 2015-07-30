@@ -1,5 +1,5 @@
-<?	$country_obj				=	new clscountry();
-	
+<?php
+        $country_obj				=	new clscountry();
 	$myimage				= new ImageSnapshot; //new instance
 	$myimage->ImageField	= $_FILES['company_logo']; //uploaded file array
 	function GetFileExt($fileName){
@@ -10,8 +10,8 @@
 	
 	$reseller_id	=	 	(isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']); 
 	
-	$reseller_qry	=	mysql_query("select * from users where id = $reseller_id");
-	$reseller_qryRs	=	mysql_fetch_object($reseller_qry);		   
+	$reseller_qry	=	dbAbstract::Execute("select * from users where id = $reseller_id",1);
+	$reseller_qryRs	=	dbAbstract::returnObject($reseller_qry,1);		   
 		if (isset($_REQUEST['submit']))
 			{		
 						if (! empty ( $_POST )) {
@@ -30,7 +30,7 @@
 				
 				$errMessage="";
 				
-				$reseller_qry1	=	mysql_query("select * from users where username = '$user_name' AND id != $reseller_id");
+				$reseller_qry1	=	dbAbstract::Execute("select * from users where username = '$user_name' AND id != $reseller_id",1);
 				
 				if($first_name == '') {
 					 $errMessage = "Please enter first name";
@@ -44,7 +44,7 @@
 					 $errMessage = "Please enter phone number";
 				} else if( $_SESSION['admin_type'] == 'admin' && $user_name == '') {
 					 $errMessage = "Please enter user name";
-				} else if(mysql_num_rows($reseller_qry1) > 0) {
+				} else if(dbAbstract::returnRowsCount($reseller_qry1,1) > 0) {
 					 $errMessage = "User name already exists. Please select another.";
 				} else if($_SESSION['admin_type'] == 'admin' && $password == '') {
 					 $errMessage = "Please enter password";
@@ -92,23 +92,21 @@
 					
 				    if( $_SESSION['admin_type'] == 'reseller' ) { 
 						
-						$sql = "UPDATE users SET firstname= '".mysql_real_escape_string(stripslashes($first_name))."', 
-						lastname= '".mysql_real_escape_string(stripslashes($last_name))."', 
+						$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', 
+						lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', 
 						phone ='$phone', 
-						country= '".mysql_real_escape_string(stripslashes($country))."', state= '".mysql_real_escape_string(stripslashes($state))."', 
-						city= '".mysql_real_escape_string(stripslashes($city))."', zip= '$zip',
-						company_name= '".mysql_real_escape_string(stripslashes($company_name))."',
-						company_logo= '".mysql_real_escape_string(stripslashes($image_name))."',
-						company_logo_link= '".mysql_real_escape_string(stripslashes($company_logo_link))."' WHERE id=$reseller_id";
+						country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', 
+						city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',
+						company_name= '".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
+						company_logo= '".dbAbstract::returnRealEscapedString(stripslashes($image_name))."',
+						company_logo_link= '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."' WHERE id=$reseller_id";
 
 					}
 					
-					  if( $_SESSION['admin_type'] == 'reseller' && $result = mysql_query($sql) ) {
+					  if( $_SESSION['admin_type'] == 'reseller' && $result = dbAbstract::Update($sql,1) ) {
 				 		 die("Your profile information has been updated successfully.");
 					
-					} else {
-					  die("ERROR: ".mysql_error()."<br/><br/><br/><br/><br/><br/>"); 
-				  	}	 
+					} 
 				}
 				?>
 		<?	}// end submit ?>

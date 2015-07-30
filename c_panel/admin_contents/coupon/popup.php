@@ -1,4 +1,4 @@
-<? 
+<?php 
 	include("../../../includes/config.php");
 	
 ?>
@@ -62,25 +62,24 @@ function saveSelectedItems(couponItem){
 </style>
 <form action="admin_contents/coupon/add_to_db.php" method="get" name="frmpopup" >
 <div style="width:1000px;">
-  	<? 
+  	<?php 
   	if( $_GET['coupon_item'] == "1" || $_GET['coupon_item'] == "2" ) { 		
   	?>
     <div class="heading">Check Items To Add To Coupon</div>
-   	<? }  else if( $_GET['coupon_item'] == "3") {?>
+   	<?php }  else if( $_GET['coupon_item'] == "3") {?>
     <div class="heading">Check Categories To Add To Coupon</div>
-    <? }?>
-    <?
+    <?php }?>
+    <?php
 	$counter = 0;
 	if ($_GET['coupon_item'] == "3") {
-		$item_query = mysql_query("SELECT * FROM categories WHERE parent_id='".$_GET['catid']."' AND status = '1' ");
-		//echo "SELECT * FROM categories WHERE parent_id='".$_GET['catid']."' ";
+		$item_query = dbAbstract::Execute("SELECT * FROM categories WHERE parent_id='".$_GET['catid']."' AND status = '1' ", 1);
 		}
 		
 	if ($_GET['coupon_item'] == "1" || $_GET['coupon_item'] == "2") {
-		$item_query = mysql_query("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND status = '1' ");
+		$item_query = dbAbstract::Execute("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND status = '1' ", 1);
 	}
 		if($_REQUEST['couponid'] != "") {
-		 $coupontbl_cats_selc_arr = mysql_fetch_array(mysql_query("SELECT * FROM coupontbl WHERE coupon_id=".$_REQUEST['couponid']));
+		 $coupontbl_cats_selc_arr = dbAbstract::ExecuteArray("SELECT * FROM coupontbl WHERE coupon_id=".$_REQUEST['couponid'], 1);
 		}
 			if ($_GET['coupon_item'] == 1){
 	
@@ -96,7 +95,7 @@ function saveSelectedItems(couponItem){
 			}
 	
 	$selec_i = 0;
-	 while($itemRs	=	mysql_fetch_object($item_query)){
+	 while($itemRs	=	dbAbstract::returnObject($item_query, 1)){
 		 if ($_GET['coupon_item'] == 3) {
 			$popselect_ = $itemRs->cat_id;
 		 } else {
@@ -110,21 +109,19 @@ function saveSelectedItems(couponItem){
 			$checked = "";  
 		 }
 		//if product is already associated then chech box will be checed else check box will unchecked.
-		 //$assoc_query = mysql_query("SELECT  id FROM product_association WHERE product_id='".$_GET['pid']."' AND association_id ='".$itemRs->prd_id."' ");
-		 //$assoc_rows = mysql_fetch_array($assoc_query);
 		 if( $_GET['coupon_item'] == "1" || $_GET['coupon_item'] == "2" ) { 			
 	?>
    <div class="check_box_dynamic_div"><input  name="itemcheck[]" id="itemcheck" type="checkbox"  value="<?=$itemRs->prd_id ?>~<?=$itemRs->item_title ?>" <?=$checked?>/><?=stripslashes($itemRs->item_title);  ?>
    </div>
-   		<?
+   		<?php
 		 } else if( $_GET['coupon_item'] == "3") {
 		?>
         <div class="check_box_dynamic_div"><input  name="itemcheck[]" id="itemcheck" type="checkbox"  value="<?=$itemRs->cat_id ?>~<?=$itemRs->cat_name ?>" <?=$checked?>/><?=stripslashes($itemRs->cat_name);  ?>
    </div>
-   		<?
+   		<?php
 		 }
 		?>
-   <? $counter++; }?>
+   <?php $counter++; }?>
   <input type="hidden" id="couponid" name="couponid" value="<?=$_GET['couponid'] ?>"  />
   <input type="hidden" id="coupon_item" name="coupon_item" value="<?=$_GET['coupon_item'] ?>"  />
 
@@ -138,3 +135,4 @@ function saveSelectedItems(couponItem){
 <br />
 
 <div style="float:right"><input id="close" type="image" src="../images/closelabel.gif" /></div>
+<?php mysqli_close($mysqli); ?>

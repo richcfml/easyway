@@ -1,8 +1,7 @@
-<?
-	//$resturant_id = 372;
-	$analytics = mysql_query("SELECT * FROM analytics WHERE resturant_id=$resturant_id");
-	if(!empty($analytics) && mysql_num_rows($analytics) > 0) {
-		$analytics = mysql_fetch_object($analytics);
+<?php
+	$analytics = dbAbstract::Execute("SELECT * FROM analytics WHERE resturant_id=$resturant_id", 1);
+	if(!empty($analytics) && dbAbstract::returnRowsCount($analytics, 1) > 0) {
+		$analytics = dbAbstract::returnObject($analytics, 1);
 ?>
 		<style type="text/css">
 		

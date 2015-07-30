@@ -78,4 +78,5 @@ height: 98px;
     </div>
     <br clear="all"/>
 </section>
+<?php mysqli_close($mysqli);?>
  

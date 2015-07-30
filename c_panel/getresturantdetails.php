@@ -29,21 +29,20 @@ class getresturantdetails {
         } else if ($day_name == 'Sunday') {
             $day_of_week = 6;
         }
-        $activeres = mysql_query("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1");
-        while ($rest_id = mysql_fetch_object($activeres)) {
-            $businessHrQry = mysql_query("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = " . $rest_id->id . "");
-            $business_hours = mysql_fetch_object($businessHrQry);
-            $timezoneQry = mysql_query("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id );
-		@$timezoneRs = mysql_fetch_array($timezoneQry);
+        $activeres = dbAbstract::Execute("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1  And delivery_offer = 1",1);
+        while ($rest_id = dbAbstract::returnObject($activeres,1)) {
+            $businessHrQry = dbAbstract::Execute("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = " . $rest_id->id . "",1);
+            $business_hours = dbAbstract::returnObject($businessHrQry,1);
+            $timezoneQry = dbAbstract::Execute("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id,1 );
+		@$timezoneRs = dbAbstract::returnArray($timezoneQry,1);
                 date_default_timezone_set($timezoneRs['time_zone']);
 
             $current_time = date("Hi", time());
 
             if ($current_time >= $business_hours->open && $current_time <= $business_hours->close) {
-                $rest_url[] = mysql_fetch_array(mysql_query("SELECT * from resturants WHERE id  = " . $rest_id->id . ""));
+                $rest_url[] = dbAbstract::returnArray(dbAbstract::Execute("SELECT * from resturants WHERE id  = " . $rest_id->id . ""),1);
             }
         }
-       //echo "<pre>";print_r($rest_url);exit;
          $street = $_GET['street'];
         $city = $_GET['city'];
         $state = $_GET['State'];
@@ -58,7 +57,7 @@ class getresturantdetails {
                 $long = $array['results'][0]['geometry']['location']['lng'];
 
                 $qry = "Select * from resturants where id = " . $rest_arr['id'] . "";
-                $vertices = mysql_fetch_array(mysql_query($qry));
+                $vertices = dbAbstract::ExecuteArray($qry,1);
                 if ($vertices['delivery_option'] == 'delivery_zones') {
                     if (!empty($vertices['zone1_coordinates'])) {
                         $zone1_coordinates = explode('~', $vertices['zone1_coordinates']);
@@ -103,7 +102,7 @@ class getresturantdetails {
                     }
                 } else {
                     $qry = "Select * from rest_langitude_latitude where rest_id = " . $rest_arr['id'] . "";
-                    $lat_lon = mysql_fetch_array(mysql_query($qry));
+                    $lat_lon = dbAbstract::ExecuteArray($qry,1);
                     if (!empty($lat_lon)) {
                         $lon2 = $lat_lon['rest_longitude'];
                         $lat2 = $lat_lon['rest_latitude'];
@@ -156,7 +155,7 @@ class getresturantdetails {
     function getCoordinates($radius, $rest_id) {
         $coordinates = array();
         $qry = "Select * from rest_langitude_latitude where rest_id = " . $rest_id . "";
-        $lat_lon = mysql_fetch_array(mysql_query($qry));
+        $lat_lon = dbAbstract::ExecuteArray($qry,1);
 
         if (!empty($lat_lon)) {
             $lon2 = $lat_lon['rest_longitude'];
@@ -189,16 +188,16 @@ class getresturantdetails {
 			   } else if($day_name == 'Sunday') {
 					  $day_of_week = 6;
 			   }
-                         $activeres =  mysql_query("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1");
-                         while($rest_id = mysql_fetch_object($activeres)){
-                         $businessHrQry =  mysql_query("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = ". $rest_id->id ."");
-                         $business_hours=mysql_fetch_object($businessHrQry);
-                           $timezoneQry = mysql_query("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id );
-                         @$timezoneRs = mysql_fetch_array($timezoneQry);
+                         $activeres =  dbAbstract::Execute("SELECT id,time_zone_id FROM resturants WHERE rest_open_close = 1",1);
+                         while($rest_id = dbAbstract::returnObject($activeres)){
+                         $businessHrQry =  dbAbstract::Execute("SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = ". $rest_id->id ."",1);
+                         $business_hours=dbAbstract::returnObject($businessHrQry,1);
+                           $timezoneQry = dbAbstract::Execute("SELECT  time_zone FROM times_zones WHERE id = ".$rest_id->time_zone_id,1 );
+                         $timezoneRs = dbAbstract::returnArray($timezoneQry,1);
                          date_default_timezone_set($timezoneRs['time_zone']);
                          $current_time=date("Hi",time());
 			 if($current_time >= $business_hours->open && $current_time <= $business_hours->close) {
-                             $rest_url =  mysql_fetch_object(mysql_query("SELECT url_name from resturants WHERE id  = ". $rest_id->id .""));
+                             $rest_url =  dbAbstract::ExecuteObject("SELECT url_name from resturants WHERE id  = ". $rest_id->id ."",1);
                              $arr_resturl[]=$rest_url->url_name;
 
 
@@ -212,4 +211,4 @@ class getresturantdetails {
 }
 ?>
 
-
+<?php mysqli_close($mysqli);?>

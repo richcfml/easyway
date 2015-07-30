@@ -13,14 +13,14 @@ if(isset($_POST['cc']))
 	if(trim($cc)=='' || trim($exd)=='' || $token=='')
 	{
 		echo json_encode(array("css"=>"alert-error","message"=>"Please enter credit card information"));
-		@mysql_close($mysql_conn);	
+		//@mysql_close($mysql_conn);	
 		exit;
 	}
 	
 	if(trim($mPhoneNumber)=='')
 	{
 		echo json_encode(array("css"=>"alert-error","message"=>"Please enter valid mobile number"));
-		@mysql_close($mysql_conn);	
+		//@mysql_close($mysql_conn);	
 		exit;
 	}
 	
@@ -85,7 +85,7 @@ if(isset($_POST['cc']))
 			echo json_encode(array("css"=>"success","message"=>"Credit card selected successfully","token"=>$_POST));
 		}
 	}
-	@mysql_close($mysql_conn);	
+	//@mysql_close($mysql_conn);	
 	exit;
 }
 ?>

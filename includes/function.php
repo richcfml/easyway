@@ -7,8 +7,8 @@
 	function ValidateAdmin_MySQL($user , $pass , $fun_qry_str , $pass_feild){
 					
 					if(($user) && ($user != '')) { 
-                    	$quary = @mysql_query($fun_qry_str);
-                      	$quary_rs = @mysql_fetch_array($quary);
+                    	$quary = dbAbstract::Execute($fun_qry_str);
+                      	$quary_rs = dbAbstract::returnArray($quary);
 						
 						if(!empty($quary_rs['id'])) {
 						//echo "select * from adminuser where adminUserPass = $pass";
@@ -127,8 +127,7 @@ function SendHtmlMail($email, $subject_mail, $body, $from){
 		//////////////////////////////GET CONTENTS/////////////////////////////////////////////
 		function get_contents($type){
 
-		$contents_qry		=	mysql_query("select * from bottom_contents where content_text_type = $type");
-		$contents_infoRs	=	mysql_fetch_object($contents_qry);	
+		$contents_infoRs = dbAbstract::ExecuteObject("SELECT * FROM bottom_contents WHERE content_text_type = $type");	
 		return	stripslashes($contents_infoRs->content_text);
 		
 		}
@@ -152,40 +151,30 @@ EOD;
 	}	
 	
 	//////////////////////////////GET CONTENTS/////////////////////////////////////////////
-		function get_product_subcat($id){
-
-		$pro_subcat_qry		=	mysql_query("select sub_cat_id from product where prd_id=$id");
-		$pro_subcat_qry_infoRs	=	mysql_fetch_object($pro_subcat_qry);	
-		return	$pro_subcat_qry_infoRs->sub_cat_id;
+		function get_product_subcat($id)
+                {
+                    $pro_subcat_qry_infoRs = dbAbstract::ExecuteObject("SELECT sub_cat_id FROM product WHERE prd_id=$id");
+                    return $pro_subcat_qry_infoRs->sub_cat_id;
 		
 		}
 		//////////////////////////////////////////////////////////////////////////////////////
 		
-		function get_subcat_id($catID){
-
-				$Subquery = mysql_query("select cat_id,cat_name from categories where parent_id=".$catID." order by cat_id LIMIT 0,1");
-				$Subid	=	mysql_fetch_object($Subquery);
-		return	$SubCatid = $Subid->cat_id;
-		
-		
+		function get_subcat_id($catID)
+                {
+                    $Subid = dbAbstract::ExecuteObject("SELECT cat_id,cat_name FROM categories WHERE parent_id=".$catID." ORDER BY cat_id LIMIT 0,1");
+                    return $SubCatid = $Subid->cat_id;
 		}
 		//////////////////////////////////////////////////////////////////////////////////////
-		function get_cat_tax($catID){
-				$cat_taxquery = mysql_query("select id,tax_percent from resturants where id =".$catID);
-				//$cat_taxquery = mysql_query("select cat_id,tax_percent from categories where cat_id =".$catID);
-				$cat_tax	=	mysql_fetch_object($cat_taxquery);
-		return	$tax = $cat_tax->tax_percent;
-		
-		
+		function get_cat_tax($catID)
+                {
+                    $cat_tax = dbAbstract::ExecuteObject("SELECT id,tax_percent FROM resturants WHERE id =".$catID);
+                    return $tax = $cat_tax->tax_percent;
 		}
 		//////////////////////////////////////////////////////////////////////////////////////
-		function get_subcat_des($subcatID){
-
-				$subcat_query = mysql_query("select cat_id,cat_des from categories where cat_id =".$subcatID);
-				$subcat_des	=	mysql_fetch_object($subcat_query);
-		return	stripslashes($subcat_des->cat_des);
-		
-		
+		function get_subcat_des($subcatID)
+                {
+                    $subcat_des = dbAbstract::ExecuteObject("SELECT cat_id,cat_des FROM categories WHERE cat_id =".$subcatID);
+                    return stripslashes($subcat_des->cat_des);
 		}
 		//////////////////////////////////////////////////////////////////////////////////////
 		
@@ -215,17 +204,17 @@ EOD;
 							$data=strtr($string,array('&'  => '&amp;',
 									   '&#0084;'  => ' ',
 									   '&#0093;'  => ' ',                                                                       
-									   '�'  => '"',
-									   '�'  => '"',
 									   '“'  => '"',
-									   '�'  => '"',
+									   '”'  => '"',
+									   'â€œ'  => '"',
+									   'â€'  => '"',
 									   ' '  => ' ',
 									   '>'  => '&gt;',
 									   '<'  => '&lt;',
 									   '"'  => '&quot;',
 									   '&rdquo;'  => '"',
 									   '&rsquo;'  => '&apos;',
-									   '’;'  => '---',
+									   'â€™;'  => '---',
 									   '\'' => '&apos;' 									  
 									    )
 						);
@@ -298,29 +287,29 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 {
 	//14 May 2014, Gulfam - New requimrnet is to send Phone calls whatever the Fax status is
 	ini_set('diplay_errors',0);
-	$order_qry = mysql_query("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
+	$order_qry = dbAbstract::Execute("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
 							submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate  FROM ordertbl WHERE OrderID =".$orderId);
-	$order_rs  = mysql_fetch_assoc( $order_qry );
+	$order_rs  = dbAbstract::returnAssoc($order_qry);
  
-	$order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price,quantity as item_qty,prd.retail_price as item_price,RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for
+	$order_detail_qry = dbAbstract::Execute("SELECT item_title , 0 as item_total_price,quantity as item_qty,prd.retail_price as item_price,RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for
 								FROM orderdetails  ord Inner join product prd
  								on ord.pid=prd.prd_id
  								WHERE orderid = ". $order_rs['OrderID'] ."" );
   
-	$cust_qry = mysql_query("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
-	$cust_rs  = mysql_fetch_assoc( $cust_qry );
+	$cust_qry = dbAbstract::Execute("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
+	$cust_rs  = dbAbstract::returnAssoc( $cust_qry );
 
-	$rest_qry = mysql_query("SELECT phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
-	$rest_rs  = mysql_fetch_assoc( $rest_qry );
+	$rest_qry = dbAbstract::Execute("SELECT phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
+	$rest_rs  = dbAbstract::returnAssoc( $rest_qry );
  	
-	$mPhoneQuery = mysql_query("SELECT PhoneNumber FROM ordertbl WHERE  OrderID = ".$orderId);
+	$mPhoneQuery = dbAbstract::Execute("SELECT PhoneNumber FROM ordertbl WHERE  OrderID = ".$orderId);
 	$mPhone = "";
-	if (mysql_num_rows($mPhoneQuery)>0)
+	if (dbAbstract::returnRowsCount($mPhoneQuery)>0)
 	{
-		$mRow = mysql_fetch_object($mPhoneQuery);
+		$mRow = dbAbstract::returnObject($mPhoneQuery);
 		if (trim($mRow->PhoneNumber)!="")
 		{
-			$mPhone  = mysql_fetch_assoc( $rest_qry );
+			$mPhone  = dbAbstract::returnAssoc( $rest_qry );
 		}
 	}
 
@@ -328,7 +317,7 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 	$associated_items_price = 0;
 	$extra_items_price = 0;
 	$index=1;
-	while ($order_detail_rs = mysql_fetch_object ($order_detail_qry )) 
+	while ($order_detail_rs = dbAbstract::returnObject($order_detail_qry )) 
 	{
 		$associated_items_price = 0;
 		$extra_items_price = 0;
@@ -452,11 +441,8 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 		$order_rs['coupon_discount']=0;
    	}
 
-	//$sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
-	//Gulfam (14 May 2015)- Above line is commented and below is added because in field $order_rs['total'] 
-        //the discount is already deducted and taxes etc are added. Moreover above line's 
-        //logic is wrong as well
-        $sub_total = $order_rs['total'];
+	$sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
+	
 	$order["TOTAL"]=array(
 				"sub_total"=>number_format($sub_total,2), 
 				"coupon_discount"=>number_format($order_rs['coupon_discount'],2),
@@ -484,14 +470,13 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 			$json_sent=0;	
 			//	echo "<pre>";print_r($e);echo "</pre>"; 
 	}
-	$qry= "UPDATE ordertbl SET pay_load_json='". mysql_real_escape_string(json_encode($order)) ."' , json_sent=". $json_sent .", faxid=".$faxid." WHERE OrderID=".$orderId;
-	mysql_query ($qry);
+	$qry= "UPDATE ordertbl SET pay_load_json='". dbAbstract::returnRealEscapedString(json_encode($order)) ."' , json_sent=". $json_sent .", faxid=".$faxid." WHERE OrderID=".$orderId;
+	dbAbstract::Update($qry);
 }
 	// Parameters added by Saad 22Sept2014
 function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 {
-    $qryresult =  mysql_query("SELECT pos_json,pos_json_sent FROM ordertbl WHERE OrderID=".$orderId);
-    $pos_jason_result=mysql_fetch_object($qryresult);
+    $pos_jason_result = dbAbstract::ExecuteObject("SELECT pos_json,pos_json_sent FROM ordertbl WHERE OrderID=".$orderId);
     if($pos_jason_result->pos_json_sent==0)
     {
         if($creditCardProfileId == 0){ // Cash delievery
@@ -499,29 +484,28 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
         }else if($typeForOrderServerOnly){ // New card and not saved in db
             $creditCardType = $creditCardProfileId;
         }else{ // Card information stored in db
-            $cardTypeQuery = mysql_query("SELECT data_type FROM general_detail where data_2 = '".$creditCardProfileId."'");
-            $cardType = mysql_fetch_object($cardTypeQuery);
+            $cardType = dbAbstract::ExecuteObject("SELECT data_type FROM general_detail WHERE data_2 = '".$creditCardProfileId."'");
             $creditCardType = $cardType->data_type;
         }
 
-        $order_qry = mysql_query("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
+        $order_qry = dbAbstract::Execute("SELECT IFNULL(CouponCode, '') AS CouponCode, OrderID, Totel as total,coupon_discount, driver_tip,delivery_chagres,Tax,UserID,order_receiving_method,DesiredDeliveryDate,
                                                         submit_time,asap_order,payment_method,fax_sent,fax_date,DelSpecialReq,DeliveryAddress,cat_id,OrderDate,Approve,payment_approv,coupons,order_confirm,est_delivery_time,vip_discount,transaction_id,refund_request,is_guest,platform_used  FROM ordertbl WHERE OrderID =".$orderId);
 
-        $order_rs  = mysql_fetch_assoc($order_qry);
+        $order_rs  = dbAbstract::returnAssoc($order_qry);
 
 
-        $order_detail_qry = mysql_query("SELECT item_title , 0 as item_total_price, 0 as item_tax, 0 as item_tax_rate, quantity as item_qty,prd.retail_price as item_price, RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
+        $order_detail_qry = dbAbstract::Execute("SELECT item_title , 0 as item_total_price, 0 as item_tax, 0 as item_tax_rate, quantity as item_qty,prd.retail_price as item_price, RequestNote as special_notes,extra, pid as item_id ,associations as associated_items, item_for,prd.pos_id
                                                                          FROM orderdetails  ord Inner join product prd
                                                                          on ord.pid=prd.prd_id
                                                                          WHERE orderid = ". $order_rs['OrderID'] ."");
 
 
-        $cust_qry = mysql_query("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
-        $cust_rs  = mysql_fetch_assoc($cust_qry );
+        $cust_qry = dbAbstract::Execute("SELECT cust_your_name, LastName ,cust_phone1  FROM customer_registration WHERE  id = ". $order_rs['UserID'] ."	");
+        $cust_rs  = dbAbstract::returnAssoc($cust_qry );
 
 
-        $rest_qry = mysql_query("SELECT id as restid, name as restname, phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
-        $rest_rs  = mysql_fetch_assoc($rest_qry );
+        $rest_qry = dbAbstract::Execute("SELECT id as restid, name as restname, phone, phone_notification  FROM resturants WHERE  id = ". $order_rs['cat_id'] ."	");
+        $rest_rs  = dbAbstract::returnAssoc($rest_qry );
 
         $associated_items_price = 0;
         $extra_items_price = 0;
@@ -529,7 +513,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
 
         $restTaxRate = $this->get_cat_tax($rest_rs['restid']);
         
-        while ( $order_detail_rs  = mysql_fetch_object($order_detail_qry))
+        while ( $order_detail_rs  = dbAbstract::returnObject($order_detail_qry))
         {
             $associated_items_price = 0;
             $extra_items_price = 0;
@@ -602,7 +586,6 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
                               "auth_id"=>"105fdb19-1fc9-4c81-8bbd-61427912f83c",
                               "app_key"=>"8346-a056344a2699"
                                 );
-
         $order["ORDERINFO"]=array(
                                 "OrderID"  => $order_rs['OrderID'],
                                 "Total"  => $order_rs['total'],
@@ -667,11 +650,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
                 $order_rs['coupon_discount']=0;
         }
 
-        //$sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
-        //Gulfam (14 May 2015)- Above line is commented and below is added because in field $order_rs['total'] 
-        //the discount is already deducted and taxes etc are added. Moreover above line's 
-        //logic is wrong as well
-        $sub_total = $order_rs['total'];
+        $sub_total = $order_rs['total'] - ($order_rs['coupon_discount']+$order_rs['driver_tip']+$order_rs['delivery_chagres']+$order_rs['Tax']);
 
         $order["TOTAL"]=array(
                 "sub_total"=>number_format($sub_total,2),
@@ -704,7 +683,7 @@ function posttoORDRSRVR($orderId,$creditCardProfileId,$typeForOrderServerOnly)
     $result_info= json_decode($result,true);
     Log::write("Post to Order Server", "Curl Execution End. Result: ".$result_info['Result']."", 'orderserver', 1 , '');
     curl_close($cURL);
-    mysql_query("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".mysql_real_escape_string($encoded)."' WHERE OrderID =".$orderId."");
+    dbAbstract::Update("UPDATE ordertbl  set pos_json_sent=". $result_info['Result'].",pos_json='".dbAbstract::returnRealEscapedString($encoded)."' WHERE OrderID =".$orderId."");
 }
 
 function replaceSpecial($data) {
@@ -764,10 +743,10 @@ function writePdf($arrCustomer,$arrRestaurant,$arrOrder,$arrSummary,$pdfHeaderIm
 {
 		$mRegion = 1;
 	
-		$mRes =	mysql_query("SELECT IFNULL(R.region, 1) AS Rest_Region FROM resturants R INNER JOIN customer_registration CR ON CR.resturant_id = R.id INNER JOIN ordertbl OT ON OT.UserID = CR.id WHERE OT.OrderID = ".$orderId);
-		if (mysql_num_rows($mRes)>0)
+		$mRes =	dbAbstract::Execute("SELECT IFNULL(R.region, 1) AS Rest_Region FROM resturants R INNER JOIN customer_registration CR ON CR.resturant_id = R.id INNER JOIN ordertbl OT ON OT.UserID = CR.id WHERE OT.OrderID = ".$orderId);
+		if (dbAbstract::returnRowsCount($mRes)>0)
 		{
-			$mRow = mysql_fetch_array($mRes);
+			$mRow = dbAbstract::returnArray($mRes);
 			$mRegion = $mRow["Rest_Region"];
 		}
 	
@@ -880,27 +859,27 @@ function writePdf($arrCustomer,$arrRestaurant,$arrOrder,$arrSummary,$pdfHeaderIm
 	}//WRITE PDF
 	
 	
-		function encrypt($string, $key) {
-  $result = '';
-  for($i=0; $i<strlen($string); $i++) {
-    $char = substr($string, $i, 1);
-    $keychar = substr($key, ($i % strlen($key))-1, 1);
-    $char = chr(ord($char)+ord($keychar));
-    $result.=$char;
-  }
-  return base64_encode($result);
-			}
-			function decrypt($string, $key) {
-		  $result = '';
-		  $string = base64_decode($string);
-		  for($i=0; $i<strlen($string); $i++) {
-			$char = substr($string, $i, 1);
-			$keychar = substr($key, ($i % strlen($key))-1, 1);
-			$char = chr(ord($char)-ord($keychar));
-			$result.=$char;
-		  }
-		  return $result;
-		}
+        function encrypt($string, $key) {
+          $result = '';
+          for($i=0; $i<strlen($string); $i++) {
+            $char = substr($string, $i, 1);
+            $keychar = substr($key, ($i % strlen($key))-1, 1);
+            $char = chr(ord($char)+ord($keychar));
+            $result.=$char;
+          }
+            return base64_encode($result);
+                }
+        function decrypt($string, $key) {
+          $result = '';
+          $string = base64_decode($string);
+          for($i=0; $i<strlen($string); $i++) {
+                $char = substr($string, $i, 1);
+                $keychar = substr($key, ($i % strlen($key))-1, 1);
+                $char = chr(ord($char)-ord($keychar));
+                $result.=$char;
+          }
+          return $result;
+        }
 
 } //Class End 
 
@@ -1063,7 +1042,6 @@ class testmail  {
 								  }
 		
 	}
-
 function redirect($to){
 	echo"<script>window.location='$to';</script>";
 	
@@ -1097,7 +1075,7 @@ function prepareStringForMySQL($string)
     }
     
     $string=str_replace ( "\t" , " ",$string);
-    $string=mysql_real_escape_string($string);
+    $string=dbAbstract::returnRealEscapedString($string);
     return $string;
 }
 
@@ -1116,22 +1094,19 @@ function url_title($mystr){
 }
 
 function currencyToNumber($price){
-	preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $attr->Price);
+	return preg_replace_callback("/[^0-9.]+/", function ($matches) { return ''; }, $price);
 }
 
 
 // currencyToNumber with plus minus sign
 function currencyToNumber_WPM($price){
-	preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $attr->Price);
+	return preg_replace_callback("/[^0-9+-.]+/", function ($matches) { return ''; }, $price);
 }
 
 function func_pregreplace($re, $replacement, $str){
 	$result='';
-	$result .= preg_replace_callback($re,
-										function ($matches) use($replacement) {
-											return $replacement;
-										}, $str);
-						
+	$result .= preg_replace_callback($re,function ($matches) use($replacement) {
+                                                    return $replacement;}, $str);
 	return $result;
 }
 ?>

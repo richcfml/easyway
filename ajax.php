@@ -7,7 +7,7 @@ function prepareStringForMySQL($string){
     $string=str_replace ( "\r" , "<br/>",$string);
     $string=str_replace ( "\n" , "<br/>",$string);
     $string=str_replace ( "\t" , " ",$string);
-    $string=mysql_real_escape_string($string);
+    $string=dbAbstract::returnRealEscapedString($string);
     return $string;
 }
 
@@ -17,12 +17,12 @@ if (isset($_GET["call"]))
 	{
 		if (isset($_GET["username"]))
 		{
-			mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'ABCD', '1')");
+			dbAbstract::Insert("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'ABCD', '1')");
 			$mSQL = "SELECT COUNT(*) AS UserCount FROM `users` WHERE LOWER(TRIM(username))='".trim(strtolower($_GET["username"]))."'";
-			$mResult = mysql_query($mSQL);
-			if (mysql_num_rows($mResult)>0)
+			$mResult = dbAbstract::Execute($mSQL);
+			if (dbAbstract::returnRowsCount($mResult)>0)
 			{
-				$mRow = mysql_fetch_object($mResult);
+				$mRow = dbAbstract::returnObject($mResult);
 				if ($mRow->UserCount>0)
 				{
 					echo("duplicate");
@@ -57,26 +57,27 @@ if (isset($_GET["call"]))
 		}
 
 		$mSQL = "INSERT INTO  signupdetails (`TimeZoneID`, `RestaurantName`, `Address`, `State`, `City`, `ZipCode`, `Country`, `PhoneNumber`, `FaxNumber`, `FullName`, `EmailAddress`, `Password`, `UserName`, `OrderReceive`, `Delivery`, `Tax`, `Cash`, `CreditCard`, `GateWay`, `DomainName`, `NewDomain`, `MenuUse`, `HostingInformation`, `DeliveryMinimum`, `DeliveryCharges`, `DeliveryRadius`, `ClientAddress`, `ClientState`, `ClientCity`, `ClientZipCode`, `ClientCountry`) VALUES ";
-		$mSQL .= "(".$ddlTimeZone.", '".mysql_real_escape_string($txtRestaurantName)."', '".mysql_real_escape_string($txtStreetAddress)."', '".mysql_real_escape_string($txtState)."', '".mysql_real_escape_string($txtCity)."', '".mysql_real_escape_string($txtZip)."', '".$ddlCountry1."', '".mysql_real_escape_string($txtPhone)."', '".mysql_real_escape_string($txtFax)."', '".mysql_real_escape_string($txtFullName)."', '".mysql_real_escape_string($txtEmailAddress)."', '".mysql_real_escape_string($txtPassword)."', '".mysql_real_escape_string($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".mysql_real_escape_string($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".mysql_real_escape_string($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".mysql_real_escape_string($txtClientAddress)."', '".mysql_real_escape_string($txtClientState)."', '".mysql_real_escape_string($txtClientCity)."', '".mysql_real_escape_string($txtClientZip)."', '".mysql_real_escape_string($ddlCountry2)."')";   
-		if (mysql_query($mSQL))
+		$mSQL .= "(".$ddlTimeZone.", '".dbAbstract::returnRealEscapedString($txtRestaurantName)."', '".dbAbstract::returnRealEscapedString($txtStreetAddress)."', '".dbAbstract::returnRealEscapedString($txtState)."', '".dbAbstract::returnRealEscapedString($txtCity)."', '".dbAbstract::returnRealEscapedString($txtZip)."', '".$ddlCountry1."', '".dbAbstract::returnRealEscapedString($txtPhone)."', '".dbAbstract::returnRealEscapedString($txtFax)."', '".dbAbstract::returnRealEscapedString($txtFullName)."', '".dbAbstract::returnRealEscapedString($txtEmailAddress)."', '".dbAbstract::returnRealEscapedString($txtPassword)."', '".dbAbstract::returnRealEscapedString($txtUserName)."', ".$rbOrders.", ".$rbDelivery.", '".dbAbstract::returnRealEscapedString($txtTax)."', ".$rbCash.", ".$rbCreditCard.", ".$rbGateWay.", '".dbAbstract::returnRealEscapedString($txtDomainName)."', ".$mNewDomain.", ".$rbMenuUse.", ".$rbHosting.", '".$txtDeliveryMinimum."', '".$txtDeliveryCharges."', '".$txtDeliveryRadius."', '".dbAbstract::returnRealEscapedString($txtClientAddress)."', '".dbAbstract::returnRealEscapedString($txtClientState)."', '".dbAbstract::returnRealEscapedString($txtClientCity)."', '".dbAbstract::returnRealEscapedString($txtClientZip)."', '".dbAbstract::returnRealEscapedString($ddlCountry2)."')";   
+                $mInsertID = dbAbstract::Insert($mSQL, 0, 2);
+		if ($mInsertID > 0)
 		{
-			$mSDID = mysql_insert_id();
+			$mSDID = $mInsertID;
 			$mEchoFlag = 0;
 			
 			if (isset($_GET["savebtn"]))
 			{
 				$mProductID = $ddlProducts;
 				$mSQL = "SELECT `user_id`, IFNULL(`premium_account`, 0) AS `premium_account` FROM `chargify_products` WHERE product_id=".$mProductID;
-				$mResPre = mysql_query($mSQL);
-				$mRowPre = mysql_fetch_object($mResPre);
+				$mResPre = dbAbstract::Execute($mSQL);
+				$mRowPre = dbAbstract::returnObject($mResPre);
 				$mPremiumAccount = $mRowPre->premium_account;
 				$mParentID = $mRowPre->user_id;
 				
 				$mSQL = "SELECT id, license_key FROM licenses WHERE reseller_id=".$mParentID." AND status='unused' LIMIT 1";
-				$mResLi = mysql_query($mSQL);
-				if (mysql_num_rows($mResLi)>0)
+				$mResLi = dbAbstract::Execute($mSQL);
+				if (dbAbstract::returnRowsCount($mResLi)>0)
 				{
-					$mRowLi = mysql_fetch_object($mResLi);
+					$mRowLi = dbAbstract::returnObject($mResLi);
 					$mLicenseID = $mRowLi->id;
 					$mLicense = $mRowLi->license_key;
 					$mMessage = "";
@@ -138,18 +139,17 @@ if (isset($_GET["call"]))
 										}
 										
 										$mSQL = "UPDATE `signupdetails` SET CustomerID='".$mCustomerID."', SubscriptionID='".$mSubscriptionID."', SRID='".$mSRID."' WHERE ID=".$mSDID;
-										mysql_query($mSQL);
+										dbAbstract::Update($mSQL);
 										
 										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, password, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
 										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$txtPassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
-										mysql_query($mSQL);
-										$mUserID = mysql_insert_id();
+										$mUserID = dbAbstract::Insert($mSQL, 0, 2);
 										
 										$mSQL = "INSERT INTO chargify_payment_method (user_id, chargify_customer_id, Payment_profile_id, card_number, billing_address, billing_address_2, billing_city, billing_country, billing_state, billing_zip, first_name, last_name, expiration_month, expiration_year) VALUES ";
 										$mSQL .= "(".$mUserID.", ".$mCustomerID.", ".$mPaymant_Profile_ID.", '".$mMaskedCC."', '".$txtClientAddress."', '', '".$txtClientCity."', '".$ddlCountry2."', '".$txtClientState."', '".$txtClientZip."', '".$mFirstName."', '".$mLastName."', '".$ddlExpMonth."', '".$ddlExpYear."')";
-										mysql_query($mSQL);
+										dbAbstract::Insert($mSQL);
 										
-										mysql_query("INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$mParentID."','".$mUserID."')");
+										dbAbstract::Insert("INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$mParentID."','".$mUserID."')");
 										
 										$mOrderDest = "email";	
 										if ($rbOrders==1)
@@ -196,8 +196,8 @@ if (isset($_GET["call"]))
 										
 										
 										$mSQL = "SELECT * FROM `signupdetails` WHERE ID=".$mSDID;
-										$mResSD = mysql_query($mSQL);
-										$mRowSD = mysql_fetch_object($mResSD);
+										$mResSD = dbAbstract::Execute($mSQL);
+										$mRowSD = dbAbstract::returnObject($mResSD);
 
 										if ($mRowSD->delivery_option=="delivery_zones")
 										{
@@ -213,12 +213,11 @@ if (isset($_GET["call"]))
 										$mSQL = "INSERT INTO `resturants` (name, delivery_charges, owner_id, license_id, status, email, fax, order_destination, phone, payment_method, region, time_zone_id, rest_address, rest_city, rest_state, rest_zip, delivery_radius, zone1, zone1_delivery_charges, zone1_min_total, zone1_coordinates, zone2, zone2_delivery_charges, zone2_min_total, zone2_coordinates, zone3, zone3_delivery_charges, zone3_min_total, zone3_coordinates, chargify_product_id, chargify_subscription_id, domain_name_details, website_integration_type, hosting_information, premium_account, srid, delivery_option, url_name) ";
 										$mSQL .= " VALUES ('".prepareStringForMySQL($mRowSD->RestaurantName)."', '".$mRowSD->DeliveryCharges."', ".$mUserID.", ".$mLicenseID.", 1, '".$mRowSD->EmailAddress."', '".$mRowSD->FaxNumber."', '".$mOrderDest."', '".$mRowSD->PhoneNumber."', '".$mPaymentMethod."', ".$mRegion.", ".$mRowSD->TimeZoneID.", '".$mRowSD->Address."', '".$mRowSD->City."', '".$mRowSD->State."', '".$mRowSD->ZipCode."', '".$mRowSD->DeliveryRadius."', '".$mRowSD->zone1."', '".$mRowSD->zone1_delivery_charges."', '".$mRowSD->zone1_min_total."', '".$mRowSD->zone1_coordinates."', '".$mRowSD->zone2."', '".$mRowSD->zone2_delivery_charges."', '".$mRowSD->zone2_min_total."', '".$mRowSD->zone2_coordinates."', '".$mRowSD->zone3."', '".$mRowSD->zone3_delivery_charges."', '".$mRowSD->zone3_min_total."', '".$mRowSD->zone3_coordinates."', ".$mProductID.", '".$mRestSubscriptionID."', '".$mRowSD->DomainName."', '".$mRowSD->MenuUse."', '".$mRowSD->HostingInformation."', ".$mPremiumAccount.",  '".$mSRID."', '".$mDelOpt."', '".$mRest_url_name."')";
 
-										mysql_query($mSQL);
-										$mRestaurantID = mysql_insert_id();
+										$mRestaurantID = dbAbstract::Insert($mSQL, 0, 2);
 										
-										mysql_query("UPDATE `signupdetails` SET RestaurantID=".$mRestaurantID." WHERE ID=".$mSDID);
+										dbAbstract::Update("UPDATE `signupdetails` SET RestaurantID=".$mRestaurantID." WHERE ID=".$mSDID);
 										
-										mysql_query("UPDATE licenses SET  status='activated', resturant_id=".$mRestaurantID." WHERE license_key ='".$mLicense."' and reseller_id=".$mParentID);	
+										dbAbstract::Update("UPDATE licenses SET  status='activated', resturant_id=".$mRestaurantID." WHERE license_key ='".$mLicense."' and reseller_id=".$mParentID);	
 										
 										/* ------------------------------ Email Starts ----------------------------- */
 										$mDelStr = "";
@@ -313,10 +312,10 @@ if (isset($_GET["call"]))
 										
 										$mMenuStr = "";
 										$mSQL = "SELECT MenuName FROM signupuploads WHERE RestaurantID=".$mSDID;
-										$mResMen = mysql_query($mSQL);
-										if (mysql_num_rows($mResMen)>0)
+										$mResMen = dbAbstract::Execute($mSQL);
+										if (dbAbstract::returnRowsCount($mResMen)>0)
 										{
-											while ($mRowMen = mysql_fetch_object($mResMen))
+											while ($mRowMen = dbAbstract::returnObject($mResMen))
 											{
 												$mMenuStr .= '<tr>
 																<td valign="top" style="width: 45%;">
@@ -684,10 +683,10 @@ if (isset($_GET["call"]))
 													$objMail->clearattachments();
 													
 													$mSQL = "SELECT FileName FROM signupuploads WHERE RestaurantID=".$mSDID;
-													$mResMen = mysql_query($mSQL);
-													if (mysql_num_rows($mResMen)>0)
+													$mResMen = dbAbstract::Execute($mSQL);
+													if (dbAbstract::returnRowsCount($mResMen)>0)
 													{
-														while ($mRowMen = mysql_fetch_object($mResMen))
+														while ($mRowMen = dbAbstract::returnObject($mResMen))
 														{
 															$objMail->addattachment("signupUploads/".$mRowMen->FileName);
 														}
@@ -738,8 +737,8 @@ if (isset($_GET["call"]))
 				$objMail->clearattachments();
 				
 				$mToken = "";
-				$mResTKn = mysql_query("SELECT IFNULL(Token, 0) AS Token FROM signupdetails WHERE ID=".$mSDID);
-				$mRowTKn = mysql_fetch_object($mResTKn);
+				$mResTKn = dbAbstract::Execute("SELECT IFNULL(Token, 0) AS Token FROM signupdetails WHERE ID=".$mSDID);
+				$mRowTKn = dbAbstract::returnObject($mResTKn);
 				if ($mRowTKn->Token>0)
 				{
 					$mToken = $mRowTKn->Token;
@@ -748,7 +747,7 @@ if (isset($_GET["call"]))
 				{
 					$mToken = mt_rand(1, mt_getrandmax());
 				}
-				mysql_query("UPDATE signupdetails SET Token='".$mToken."' WHERE ID=".$mSDID);
+				dbAbstract::Update("UPDATE signupdetails SET Token='".$mToken."' WHERE ID=".$mSDID);
 				
 				$mMessage = '<table style="font:Arial; font-family: Arial; font-size: 14px; width: 80%; border: 0" border="0" cellpadding="0" cellspacing="0">
 								<tr>
@@ -788,14 +787,14 @@ if (isset($_GET["call"]))
 								</tr>
 							</table>';
 							
-				$mResMS = mysql_query("SELECT IFNULL(MenusMailSent, 0) AS MenusMailSent, IFNULL(MailSent, 0) AS MailSent FROM signupdetails WHERE ID=".$mSDID);
-				$mRowMS = mysql_fetch_object($mResMS);
+				$mResMS = dbAbstract::Execute("SELECT IFNULL(MenusMailSent, 0) AS MenusMailSent, IFNULL(MailSent, 0) AS MailSent FROM signupdetails WHERE ID=".$mSDID);
+				$mRowMS = dbAbstract::returnObject($mResMS);
 				
 				if ($mRowMS->MenusMailSent==0)
 				{
 					$objMail->sendTo($mMessage, "Signup wizard Started", "menus@easywayordering.com", true);
 					$objMail->sendTo($mMessage, "Signup wizard Started", "gulfam@qualityclix.com", true);
-					mysql_query("UPDATE signupdetails SET MenusMailSent=1 WHERE ID=".$mSDID);
+					dbAbstract::Update("UPDATE signupdetails SET MenusMailSent=1 WHERE ID=".$mSDID);
 				}
 				
 				if ($mRowMS->MailSent==0)
@@ -803,7 +802,7 @@ if (isset($_GET["call"]))
 					if (trim($txtEmailAddress)!="")
 					{
 						$objMail->sendTo($mMessage, "Signup wizard Started", $txtEmailAddress, true);
-						mysql_query("UPDATE signupdetails SET MailSent=1 WHERE ID=".$mSDID);
+						dbAbstract::Update("UPDATE signupdetails SET MailSent=1 WHERE ID=".$mSDID);
 					}
 				}
 			}
@@ -835,9 +834,9 @@ if (isset($_GET["call"]))
 			$mNewDomain = 1;
 		}
 
-		$mSQL = "UPDATE signupdetails SET `TimeZoneID`=".$ddlTimeZone.", `RestaurantName`='".mysql_real_escape_string($txtRestaurantName)."', `Address`='".mysql_real_escape_string($txtStreetAddress)."', `State`='".mysql_real_escape_string($txtState)."', `City`='".mysql_real_escape_string($txtCity)."', `ZipCode`='".mysql_real_escape_string($txtZip)."', `Country`='".$ddlCountry1."', `PhoneNumber`='".mysql_real_escape_string($txtPhone)."', `FaxNumber`='".mysql_real_escape_string($txtFax)."', `FullName`='".mysql_real_escape_string($txtFullName)."', `EmailAddress`='".mysql_real_escape_string($txtEmailAddress)."', `Password`='".mysql_real_escape_string($txtPassword)."', `UserName`='".mysql_real_escape_string($txtUserName)."', `OrderReceive`=".$rbOrders.", `Delivery`=".$rbDelivery.", `Tax`='".mysql_real_escape_string($txtTax)."', `Cash`=".$rbCash.", `CreditCard`=".$rbCreditCard.", `GateWay`=".$rbGateWay.", `DomainName`='".mysql_real_escape_string($txtDomainName)."', `NewDomain`=".$mNewDomain.", `MenuUse`=".$rbMenuUse.", `HostingInformation`=".$rbHosting.", `DeliveryMinimum`='".$txtDeliveryMinimum."', `DeliveryCharges`='".$txtDeliveryCharges."', `DeliveryRadius`='".$txtDeliveryRadius."', `ClientAddress`='".mysql_real_escape_string($txtClientAddress)."', `ClientState`='".mysql_real_escape_string($txtClientState)."', `ClientCity`='".mysql_real_escape_string($txtClientCity)."', `ClientZipCode`='".mysql_real_escape_string($txtClientZip)."', `ClientCountry`='".$ddlCountry2."' WHERE ID=".$txtRestaurantID;
+		$mSQL = "UPDATE signupdetails SET `TimeZoneID`=".$ddlTimeZone.", `RestaurantName`='".dbAbstract::returnRealEscapedString($txtRestaurantName)."', `Address`='".dbAbstract::returnRealEscapedString($txtStreetAddress)."', `State`='".dbAbstract::returnRealEscapedString($txtState)."', `City`='".dbAbstract::returnRealEscapedString($txtCity)."', `ZipCode`='".dbAbstract::returnRealEscapedString($txtZip)."', `Country`='".$ddlCountry1."', `PhoneNumber`='".dbAbstract::returnRealEscapedString($txtPhone)."', `FaxNumber`='".dbAbstract::returnRealEscapedString($txtFax)."', `FullName`='".dbAbstract::returnRealEscapedString($txtFullName)."', `EmailAddress`='".dbAbstract::returnRealEscapedString($txtEmailAddress)."', `Password`='".dbAbstract::returnRealEscapedString($txtPassword)."', `UserName`='".dbAbstract::returnRealEscapedString($txtUserName)."', `OrderReceive`=".$rbOrders.", `Delivery`=".$rbDelivery.", `Tax`='".dbAbstract::returnRealEscapedString($txtTax)."', `Cash`=".$rbCash.", `CreditCard`=".$rbCreditCard.", `GateWay`=".$rbGateWay.", `DomainName`='".dbAbstract::returnRealEscapedString($txtDomainName)."', `NewDomain`=".$mNewDomain.", `MenuUse`=".$rbMenuUse.", `HostingInformation`=".$rbHosting.", `DeliveryMinimum`='".$txtDeliveryMinimum."', `DeliveryCharges`='".$txtDeliveryCharges."', `DeliveryRadius`='".$txtDeliveryRadius."', `ClientAddress`='".dbAbstract::returnRealEscapedString($txtClientAddress)."', `ClientState`='".dbAbstract::returnRealEscapedString($txtClientState)."', `ClientCity`='".dbAbstract::returnRealEscapedString($txtClientCity)."', `ClientZipCode`='".dbAbstract::returnRealEscapedString($txtClientZip)."', `ClientCountry`='".$ddlCountry2."' WHERE ID=".$txtRestaurantID;
 		
-		if (mysql_query($mSQL))
+		if (dbAbstract::Update($mSQL))
 		{
 			$mEchoFlag = 0;
 			if (isset($_GET["savebtn"]))
@@ -852,10 +851,10 @@ if (isset($_GET["call"]))
 							if (is_numeric($mIDs[$loopCount]) && ($mIDs[$loopCount]>0))
 							{
 								$mSQL = "SELECT FileName FROM `signupuploads` WHERE ID=".$mIDs[$loopCount];
-								$mResFiles = mysql_query($mSQL);
-								if (mysql_num_rows($mResFiles)>0)
+								$mResFiles = dbAbstract::Execute($mSQL);
+								if (dbAbstract::returnRowsCount($mResFiles)>0)
 								{
-									$mRowFile = mysql_fetch_object($mResFiles);
+									$mRowFile = dbAbstract::returnObject($mResFiles);
 									$mFileName = $mRowFile->FileName;
 									if (file_exists(realpath("signupUploads/".$mFileName))) 
 									{
@@ -863,7 +862,7 @@ if (isset($_GET["call"]))
 									}
 									
 									$mSQL = "DELETE FROM `signupuploads` WHERE ID=".$mIDs[$loopCount];
-									mysql_query($mSQL);
+									dbAbstract::Delete($mSQL);
 								}
 							}
 						}
@@ -873,16 +872,16 @@ if (isset($_GET["call"]))
 		
 				$mProductID = $ddlProducts;
 				$mSQL = "SELECT `user_id`, IFNULL(`premium_account`, 0) AS `premium_account` FROM `chargify_products` WHERE product_id=".$mProductID;
-				$mResPre = mysql_query($mSQL);
-				$mRowPre = mysql_fetch_object($mResPre);
+				$mResPre = dbAbstract::Execute($mSQL);
+				$mRowPre = dbAbstract::returnObject($mResPre);
 				$mPremiumAccount = $mRowPre->premium_account;
 				$mParentID = $mRowPre->user_id;
 				
 				$mSQL = "SELECT id, license_key FROM licenses WHERE reseller_id=".$mParentID." AND status='unused' LIMIT 1";
-				$mResLi = mysql_query($mSQL);
-				if (mysql_num_rows($mResLi)>0)
+				$mResLi = dbAbstract::Execute($mSQL);
+				if (dbAbstract::returnRowsCount($mResLi)>0)
 				{
-					$mRowLi = mysql_fetch_object($mResLi);
+					$mRowLi = dbAbstract::returnObject($mResLi);
 					$mLicense = $mRowLi->license_key;
 					$mLicenseID = $mRowLi->id;
 					$mMessage = "";
@@ -942,19 +941,18 @@ if (isset($_GET["call"]))
 											$mSRID = $mObjCAPI->createVendestaPremium($txtRestaurantName, $txtStreetAddress, $txtCity, $txtState, $txtZip, 'false');
 										}
 										$mSQL = "UPDATE `signupdetails` SET CustomerID='".$mCustomerID."', SubscriptionID='".$mSubscriptionID."', SRID='".$mSRID."' WHERE ID=".$txtRestaurantID;
-										mysql_query($mSQL);
+										dbAbstract::Update($mSQL);
 															
 										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, password, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
 										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$txtPassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
-										mysql_query($mSQL);
-										$mUserID = mysql_insert_id();
+										$mUserID = dbAbstract::Insert($mSQL, 0 , 2);
 										
 										$mSQL = "INSERT INTO chargify_payment_method (user_id, chargify_customer_id, Payment_profile_id, card_number, billing_address, billing_address_2, billing_city, billing_country, billing_state, billing_zip, first_name, last_name, expiration_month, expiration_year) VALUES ";
 										$mSQL .= "(".$mUserID.", ".$mCustomerID.", ".$mPaymant_Profile_ID.", '".$mMaskedCC."', '".$txtClientAddress."', '', '".$txtClientCity."', '".$ddlCountry2."', '".$txtClientState."', '".$txtClientZip."', '".$mFirstName."', '".$mLastName."', '".$ddlExpMonth."', '".$ddlExpYear."')";
-										mysql_query($mSQL);
+										dbAbstract::Insert($mSQL);
 										
 										
-										mysql_query("INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$mParentID."','".$mUserID."')");
+										dbAbstract::Insert("INSERT INTO reseller_client (reseller_id,client_id) VALUES ('".$mParentID."','".$mUserID."')");
 										
 										$mOrderDest = "email";	
 										if ($rbOrders==1)
@@ -1001,8 +999,8 @@ if (isset($_GET["call"]))
 										
 										
 										$mSQL = "SELECT * FROM `signupdetails` WHERE ID=".$txtRestaurantID;
-										$mResSD = mysql_query($mSQL);
-										$mRowSD = mysql_fetch_object($mResSD);
+										$mResSD = dbAbstract::Execute($mSQL);
+										$mRowSD = dbAbstract::returnObject($mResSD);
 
 										if ($mRowSD->delivery_option=="delivery_zones")
 										{
@@ -1018,12 +1016,11 @@ if (isset($_GET["call"]))
 										$mSQL = "INSERT INTO `resturants` (name, delivery_charges, owner_id, license_id, status, email, fax, order_destination, phone, payment_method, region, time_zone_id, rest_address, rest_city, rest_state, rest_zip, delivery_radius, zone1, zone1_delivery_charges, zone1_min_total, zone1_coordinates, zone2, zone2_delivery_charges, zone2_min_total, zone2_coordinates, zone3, zone3_delivery_charges, zone3_min_total, zone3_coordinates, chargify_product_id, chargify_subscription_id, domain_name_details, website_integration_type, hosting_information, premium_account, srid, delivery_option, url_name) ";
 										$mSQL .= " VALUES ('".prepareStringForMySQL($mRowSD->RestaurantName)."', '".$mRowSD->DeliveryCharges."', ".$mUserID.", ".$mLicenseID.", 1, '".$mRowSD->EmailAddress."', '".$mRowSD->FaxNumber."', '".$mOrderDest."', '".$mRowSD->PhoneNumber."', '".$mPaymentMethod."', ".$mRegion.", ".$mRowSD->TimeZoneID.", '".$mRowSD->Address."', '".$mRowSD->City."', '".$mRowSD->State."', '".$mRowSD->ZipCode."', '".$mRowSD->DeliveryRadius."', '".$mRowSD->zone1."', '".$mRowSD->zone1_delivery_charges."', '".$mRowSD->zone1_min_total."', '".$mRowSD->zone1_coordinates."', '".$mRowSD->zone2."', '".$mRowSD->zone2_delivery_charges."', '".$mRowSD->zone2_min_total."', '".$mRowSD->zone2_coordinates."', '".$mRowSD->zone3."', '".$mRowSD->zone3_delivery_charges."', '".$mRowSD->zone3_min_total."', '".$mRowSD->zone3_coordinates."', ".$mProductID.", '".$mRestSubscriptionID."', '".$mRowSD->DomainName."', '".$mRowSD->MenuUse."', '".$mRowSD->HostingInformation."', ".$mPremiumAccount.",  '".$mSRID."', '".$mDelOpt."', '".$mRest_url_name."')";
 
-										mysql_query($mSQL);
-										$mRestaurantID = mysql_insert_id();
+										$mRestaurantID = dbAbstract::Insert($mSQL, 0, 2);
 										
-										mysql_query("UPDATE `signupdetails` SET RestaurantID=".$mRestaurantID." WHERE ID=".$txtRestaurantID);
+										dbAbstract::Update("UPDATE `signupdetails` SET RestaurantID=".$mRestaurantID." WHERE ID=".$txtRestaurantID);
 										
-										mysql_query("UPDATE licenses SET  status='activated', resturant_id=".$mRestaurantID." WHERE license_key ='".$mLicense."' and reseller_id=".$mParentID);	
+										dbAbstract::Update("UPDATE licenses SET  status='activated', resturant_id=".$mRestaurantID." WHERE license_key ='".$mLicense."' and reseller_id=".$mParentID);	
 										
 										/* ------------------------------ Email Starts ----------------------------- */
 										$mDelStr = "";
@@ -1118,10 +1115,10 @@ if (isset($_GET["call"]))
 										
 										$mMenuStr = "";
 										$mSQL = "SELECT MenuName FROM signupuploads WHERE RestaurantID=".$txtRestaurantID;
-										$mResMen = mysql_query($mSQL);
-										if (mysql_num_rows($mResMen)>0)
+										$mResMen = dbAbstract::Execute($mSQL);
+										if (dbAbstract::returnRowsCount($mResMen)>0)
 										{
-											while ($mRowMen = mysql_fetch_object($mResMen))
+											while ($mRowMen = dbAbstract::returnObject($mResMen))
 											{
 												$mMenuStr .= '<tr>
 																<td valign="top" style="width: 45%;">
@@ -1489,10 +1486,10 @@ if (isset($_GET["call"]))
 													$objMail->clearattachments();
 													
 													$mSQL = "SELECT FileName FROM signupuploads WHERE RestaurantID=".$txtRestaurantID;
-													$mResMen = mysql_query($mSQL);
-													if (mysql_num_rows($mResMen)>0)
+													$mResMen = dbAbstract::Execute($mSQL);
+													if (dbAbstract::returnRowsCount($mResMen)>0)
 													{
-														while ($mRowMen = mysql_fetch_object($mResMen))
+														while ($mRowMen = dbAbstract::returnObject($mResMen))
 														{
 															$objMail->addattachment("signupUploads/".$mRowMen->FileName);
 														}
@@ -1543,8 +1540,8 @@ if (isset($_GET["call"]))
 				$objMail = new testmail();
 				$objMail->clearattachments();
 				$mToken = "";
-				$mResTKn = mysql_query("SELECT IFNULL(Token, 0) AS Token FROM signupdetails WHERE ID=".$txtRestaurantID);
-				$mRowTKn = mysql_fetch_object($mResTKn);
+				$mResTKn = dbAbstract::Execute("SELECT IFNULL(Token, 0) AS Token FROM signupdetails WHERE ID=".$txtRestaurantID);
+				$mRowTKn = dbAbstract::returnObject($mResTKn);
 				if ($mRowTKn->Token>0)
 				{
 					$mToken = $mRowTKn->Token;
@@ -1553,7 +1550,7 @@ if (isset($_GET["call"]))
 				{
 					$mToken = mt_rand(1, mt_getrandmax());
 				}
-				mysql_query("UPDATE signupdetails SET Token='".$mToken."' WHERE ID=".$txtRestaurantID);
+				dbAbstract::Update("UPDATE signupdetails SET Token='".$mToken."' WHERE ID=".$txtRestaurantID);
 				
 				$mMessage = '<table style="font:Arial; font-family: Arial; font-size: 14px; width: 80%; border: 0" border="0" cellpadding="0" cellspacing="0">
 								<tr>
@@ -1592,14 +1589,14 @@ if (isset($_GET["call"]))
 									</td>
 								</tr>
 							</table>';
-				$mResMS = mysql_query("SELECT IFNULL(MenusMailSent, 0) AS MenusMailSent, IFNULL(MailSent, 0) AS MailSent FROM signupdetails WHERE ID=".$txtRestaurantID);
-				$mRowMS = mysql_fetch_object($mResMS);
+				$mResMS = dbAbstract::Execute("SELECT IFNULL(MenusMailSent, 0) AS MenusMailSent, IFNULL(MailSent, 0) AS MailSent FROM signupdetails WHERE ID=".$txtRestaurantID);
+				$mRowMS = dbAbstract::returnObject($mResMS);
 				
 				if ($mRowMS->MenusMailSent==0)
 				{
 					$objMail->sendTo($mMessage, "Signup wizard Started", "menus@easywayordering.com", true);
 					$objMail->sendTo($mMessage, "Signup wizard Started", "gulfam@qualityclix.com", true);
-					mysql_query("UPDATE signupdetails SET MenusMailSent=1 WHERE ID=".$txtRestaurantID);
+					dbAbstract::Update("UPDATE signupdetails SET MenusMailSent=1 WHERE ID=".$txtRestaurantID);
 				}
 				
 				if ($mRowMS->MailSent==0)
@@ -1607,7 +1604,7 @@ if (isset($_GET["call"]))
 					if (trim($txtEmailAddress)!="")
 					{
 						$objMail->sendTo($mMessage, "Signup wizard Started", $txtEmailAddress, true);
-						mysql_query("UPDATE signupdetails SET MailSent=1 WHERE ID=".$txtRestaurantID);
+						dbAbstract::Update("UPDATE signupdetails SET MailSent=1 WHERE ID=".$txtRestaurantID);
 					}
 				}
 			}
@@ -1634,7 +1631,7 @@ if (isset($_GET["call"]))
 				$mSQL .="  ,zone2='$zone2',zone2_delivery_charges='$zone2_delivery_charges',zone2_min_total='$zone2_min_total',zone2_coordinates='$zone2_coordinates'";
 				$mSQL .="  ,zone3='$zone3',zone3_delivery_charges='$zone3_delivery_charges',zone3_min_total='$zone3_min_total',zone3_coordinates='$zone3_coordinates'";
 				$mSQL .= ",delivery_option='delivery_zones' where id=".$id;
-				mysql_query($mSQL);
+				dbAbstract::Update($mSQL);
 				$mTmpID = $id;
 			}
 			else
@@ -1643,22 +1640,16 @@ if (isset($_GET["call"]))
 				$mSQL .="  ,zone2='$zone2',zone2_delivery_charges='$zone2_delivery_charges',zone2_min_total='$zone2_min_total',zone2_coordinates='$zone2_coordinates'";
 				$mSQL .="  ,zone3='$zone3',zone3_delivery_charges='$zone3_delivery_charges',zone3_min_total='$zone3_min_total',zone3_coordinates='$zone3_coordinates'";
 				$mSQL .= ",delivery_option='delivery_zones'";
-				mysql_query($mSQL);
-				$mTmpID = mysql_insert_id();
+				$mTmpID = dbAbstract::Insert($mSQL, 0, 2);
 			}
 		}
 		else
 		{
-			/*
-				$mSQL = "INSERT INTO `signupdetails` (zone1, zone1_delivery_charges, zone1_min_total, zone1_coordinates, zone2, zone2_delivery_charges ,zone2_min_total, zone2_coordinates, zone3, zone3_delivery_charges, zone3_min_total, zone3_coordinates='$zone3_coordinates, delivery_option) VALUES ";
-				$mSQL .= " ('$zone1', '$zone1_delivery_charges', '$zone1_min_total', '$zone1_coordinates', '$zone2', '$zone2_delivery_charges', '$zone2_min_total', '$zone2_coordinates', '$zone3', '$zone3_delivery_charges', '$zone3_min_total', '$zone3_coordinates', 'delivery_zones') ";
-				*/
 			$mSQL = "INSERT INTO `signupdetails` SET zone1='$zone1',zone1_delivery_charges='$zone1_delivery_charges',zone1_min_total='$zone1_min_total',zone1_coordinates='$zone1_coordinates'";
 			$mSQL .="  ,zone2='$zone2',zone2_delivery_charges='$zone2_delivery_charges',zone2_min_total='$zone2_min_total',zone2_coordinates='$zone2_coordinates'";
 			$mSQL .="  ,zone3='$zone3',zone3_delivery_charges='$zone3_delivery_charges',zone3_min_total='$zone3_min_total',zone3_coordinates='$zone3_coordinates'";
 			$mSQL .= ",delivery_option='delivery_zones'";
-			mysql_query($mSQL);
-			$mTmpID = mysql_insert_id();
+			$mTmpID = dbAbstract::Insert($mSQL, 0, 2);
 		}
 
 		echo($mTmpID);
@@ -1667,7 +1658,6 @@ if (isset($_GET["call"]))
 	{
 		echo("error");
 	}
+        mysqli_close($mysqli);
 }
-
-@mysql_close($mysql_conn);
 ?>

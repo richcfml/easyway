@@ -210,17 +210,17 @@ if (isset($_POST["btnSearch"]))
 if ($mRestaurantID>0)
 {
 	$mSQL = "SELECT * FROM `signupdetails` WHERE ID=".$mRestaurantID;
-	$mResult = mysql_query($mSQL);
-	if (mysql_num_rows($mResult)>0)
+	$mResult = dbAbstract::Execute($mSQL);
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRestaurantDetails = mysql_fetch_object($mResult);
+		$mRestaurantDetails = dbAbstract::returnObject($mResult);
 	}
 }
 
 function fillTimeZones()
 {      
-	$mSQL = mysql_query("SELECT * FROM times_zones");
-	while($mRes = mysql_fetch_object($mSQL))
+	$mSQL = dbAbstract::Execute("SELECT * FROM times_zones");
+	while($mRes = dbAbstract::returnObject($mSQL))
 	{       
 		echo "<option value=".$mRes->id.">".$mRes->time_zone."</option>";
 	}
@@ -1983,3 +1983,4 @@ else if ($_GET["plan"]=="premium")
             </script>");
 }
 ?>
+<?php mysqli_close($mysqli);?>

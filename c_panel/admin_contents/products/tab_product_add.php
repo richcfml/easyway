@@ -62,9 +62,7 @@ $item_des ='';
 							$item_des = str_replace("'",'&rsquo;',$item_des);
 							// echo "INSERT INTO product set cat_id = $catid, sub_cat_id = $sub_cat,item_title = '".addslashes($item_title)."', item_code = $item_id, item_des = '".addslashes($item_des)."', retail_price = '$r_price', sale_price = '0.00', rest_price = '$rest_price', feature_sub_cat = $feature_subcat, img_show_hide = $img_show_hide";
                                                         Log::write("Add new product  - tab_product_add.php", "QUERY -- INSERT INTO product set cat_id = $catid, sub_cat_id = $sub_cat,item_title = '".addslashes($item_title)."', item_des = '".addslashes($item_des)."', retail_price = '$r_price', feature_sub_cat = $feature_subcat", 'menu', 1 , 'cpanel');
-						 mysql_query("INSERT INTO product set cat_id = $catid, sub_cat_id = $sub_cat,item_title = '".addslashes($item_title)."', item_des = '".addslashes($item_des)."', retail_price = '$r_price', feature_sub_cat = $feature_subcat");
-			
-			$lastid = mysql_insert_id();
+						 $lastid = dbAbstract::Insert("INSERT INTO product set cat_id = $catid, sub_cat_id = $sub_cat,item_title = '".addslashes($item_title)."', item_des = '".addslashes($item_des)."', retail_price = '$r_price', feature_sub_cat = $feature_subcat",1,2);
 			
 			if(!empty($_FILES['userfile']['name'])){
 				
@@ -86,16 +84,16 @@ $item_des ='';
 							$image->save($uploadfile);
 					}
                                         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product set item_image = '$name' where prd_id = ".$lastid, 'menu', 1 , 'cpanel'); 
-				 mysql_query("UPDATE product set item_image = '$name' where prd_id = ".$lastid);	
+				 dbAbstract::Update("UPDATE product set item_image = '$name' where prd_id = ".$lastid,1);	
 				 			
 										
 			} // End of IF
 			if($_REQUEST[itemcheck]){
 				foreach ($itemcheck as $arr)
                                     Log::write("Add new product  - tab_product_add.php", "QUERY -- INSERT INTO product_association set product_id = $lastid, association_id = $arr", 'menu', 1 , 'cpanel');
-				 mysql_query("INSERT INTO product_association set product_id = $lastid, association_id = $arr");
+				 dbAbstract::Insert("INSERT INTO product_association set product_id = $lastid, association_id = $arr",1);
                                     Log::write("Set product HasAssociates=1 - tab_product_add.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $lastid . "", 'menu', 1, 'cpanel');
-                                    mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $lastid . "");
+                                 dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $lastid . "",1);
         }
 			
 			if($_POST[submit] == 'Save and New')
@@ -138,11 +136,11 @@ $item_des ='';
        <?
         $count = 0;
   
-        $item_query = mysql_query("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND prd_id!='".$_GET['pid']."'");
-         while($itemRs	=	mysql_fetch_object($item_query)){
+        $item_query = dbAbstract::Execute("SELECT * FROM product WHERE cat_id='".$_GET['catid']."' AND prd_id!='".$_GET['pid']."'",1);
+         while($itemRs	=	dbAbstract::returnObject($item_query,1)){
             //if product is already associated then chech box will be checed else check box will unchecked.
-             $assoc_query = mysql_query("SELECT  id FROM product_association WHERE product_id='".$_GET['pid']."' AND association_id ='".$itemRs->prd_id."' ");
-             $assoc_rows = mysql_fetch_array($assoc_query);	
+             $assoc_query = dbAbstract::Execute("SELECT  id FROM product_association WHERE product_id='".$_GET['pid']."' AND association_id ='".$itemRs->prd_id."' ",1);
+             $assoc_rows = dbAbstract::returnArray($assoc_query,1);	
              if($count % 2 == 0) echo "<br />";
       ?>
       <input  name="itemcheck[]" id="itemcheck" type="checkbox" <? if($assoc_rows['id']) { ?>  checked="checked" <? }?> value="<?=$itemRs->prd_id ?>"   /><?=stripslashes($itemRs->item_title) ?>

@@ -1036,3 +1036,4 @@ $postString .='
 		}
 	}
 }
+mysqli_close($mysqli);

@@ -32,9 +32,9 @@
 	
 	$mOrderID = $_GET["Orderid"];
 	$mSQL = "SELECT *, DATE_FORMAT(OrderDate,'%m/%d/%Y') AS OrderDateF FROM ordertbl WHERE OrderID =".$mOrderID; 
-	$mResult= mysql_query($mSQL);
+	$mResult= dbAbstract::Execute($mSQL);
 
-	if (mysql_num_rows($mResult)<1)
+	if (dbAbstract::returnRowsCount($mResult)<1)
 	{
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu&ifrm=load_resturant");
 		exit;
@@ -45,9 +45,9 @@
 	
 	
 	$mProducts = array();
-	$mSQLS = mysql_query("SELECT OD.item_for AS ItemFor, OD.quantity AS Quantity, P.prd_id AS ProductID FROM orderdetails OD, product P WHERE OD.orderid = ".$mOrderID." AND P.prd_id=OD.pid");
+	$mSQLS = dbAbstract::Execute("SELECT OD.item_for AS ItemFor, OD.quantity AS Quantity, P.prd_id AS ProductID FROM orderdetails OD, product P WHERE OD.orderid = ".$mOrderID." AND P.prd_id=OD.pid");
 
-	while($mRowS = mysql_fetch_array($mSQLS))
+	while($mRowS = dbAbstract::returnArray($mSQLS))
 	{
 		$product = product::getdetail($mRowS["ProductID"]);	
 		$attribute_index = 1;
@@ -207,7 +207,7 @@
 	}
 	// Submit Code Ends Here
  	
-	$mOrderArray=mysql_fetch_array($mResult);
+	$mOrderArray=dbAbstract::returnArray($mResult);
 	
 	if($mOrderArray["coupon_discount"] == "")
 	{
@@ -224,7 +224,7 @@
 
 	$mGrandTotal=0;
 	$mSQL ="SELECT OD.*, P.prd_id, P.item_title, P.item_code, P.retail_price, P.sale_price FROM orderdetails OD, product P WHERE OD.orderid = ".$mOrderID." AND P.prd_id=OD.pid";
-	$mResult= mysql_query($mSQL);
+	$mResult= dbAbstract::Execute($mSQL);
 ?>
 <style type="text/css">
 .tblH tr
@@ -303,7 +303,7 @@
 		</td>
 	</tr>
 	<?php
-	if (mysql_num_rows($mResult)>0)
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
 	?>
 	<tr>
@@ -314,7 +314,7 @@
 	</tr>
 	<?php
 		$mLoopCount = 1;
-		while($mRow=mysql_fetch_array($mResult))
+		while($mRow=dbAbstract::returnArray($mResult))
 		{
 			$mProductID= $mRow["prd_id"]
 		?>
@@ -410,8 +410,8 @@
 						$Atribut_Opt=trim($ATrOptions[0]);
 						$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 						$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-						$OptionNameQry=mysql_query("SELECT option_name,Type FROM attribute WHERE ProductID=".$mProductID);
-						$OptonNameRs=mysql_fetch_row($OptionNameQry);
+						$OptionNameQry=dbAbstract::Execute("SELECT option_name,Type FROM attribute WHERE ProductID=".$mProductID);
+						$OptonNameRs=dbAbstract::returnRow($OptionNameQry);
 											
 						if($OptonNameRs[1]==2)
 						{  
@@ -464,8 +464,8 @@
 									$Atribut_Opt=trim($ATrOptions[0]);
 									$Atribut_Opt=str_replace("^",'"',$Atribut_Opt);
 									$Atribut_Opt=str_replace("'",'"',$Atribut_Opt);
-									$OptionNameQry2=mysql_query("SELECT option_name,Type from attribute WHERE ProductID=".$mProductID);
-									$OptonNameRs2=mysql_fetch_row($OptionNameQry2);
+									$OptionNameQry2=dbAbstract::Execute("SELECT option_name,Type from attribute WHERE ProductID=".$mProductID);
+									$OptonNameRs2=dbAbstract::returnRow($OptionNameQry2);
 									if($OptonNameRs2[1]==2)
 									{
 										if($OptonNameRs2[0]==$OptonNameRs[0])

@@ -1,11 +1,11 @@
-<? 	if($_POST) {
+<?php 	if($_POST) {
 		
 		if($_POST['discount_opt'] == "1" || $_POST['discount_opt'] == "3") {
 			// to avoid duplicate email insertion...
-			$emailQry = mysql_query("select * from mailing_list where email='".$_POST['email']."'");
-			$numRows=mysql_num_rows($emailQry);
+			$emailQry = dbAbstract::Execute("select * from mailing_list where email='".$_POST['email']."'");
+			$numRows=dbAbstract::returnRowsCount($emailQry);
 			if($numRows == 0) {		
-				mysql_query("insert into mailing_list (email, resturant_id) VALUES ('".$_POST['email']."','". $objRestaurant->id ."')");	
+				dbAbstract::Insert("insert into mailing_list (email, resturant_id) VALUES ('".$_POST['email']."','". $objRestaurant->id ."')");	
 			}
 		}  
 		
@@ -15,11 +15,11 @@
 			$email_str = "";
 			$email_str = $_POST['mobile']."@".$_POST['carrier'];
 			
-			$emailQry = mysql_query("select * from mailing_list where email='".$email_str ."'");
-			$numRows=mysql_num_rows($emailQry);
+			$emailQry = dbAbstract::Execute("select * from mailing_list where email='".$email_str ."'");
+			$numRows=dbAbstract::returnRowsCount($emailQry);
 			
 			if($numRows == 0) {
-				mysql_query("insert into mailing_list (email, resturant_id) VALUES ('".$email_str."','". $objRestaurant->id ."')");	
+				dbAbstract::Insert("insert into mailing_list (email, resturant_id) VALUES ('".$email_str."','". $objRestaurant->id ."')");	
 			}
 		}  
 		

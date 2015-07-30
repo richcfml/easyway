@@ -10,9 +10,9 @@ if(isset($_POST['btnsubmit']))
 	//Modified01082013
 	if($restaurant_refundpassword==$refundpassword)
 	{
-		$qry=mysql_query("SELECT c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,o.cdata,o.Totel
-						FROM `ordertbl` o inner join `customer_registration` c on o. UserID=c.id where OrderID='". $refundid ."' and cat_id=". $Objrestaurant->id  ." and transaction_id >0 and payment_approv=1");
-		$details=mysql_fetch_object($qry);
+		$qry=dbAbstract::Execute("SELECT c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,o.cdata,o.Totel
+						FROM `ordertbl` o inner join `customer_registration` c on o. UserID=c.id where OrderID='". $refundid ."' and cat_id=". $Objrestaurant->id  ." and transaction_id >0 and payment_approv=1",1);
+		$details=dbAbstract::returnObject($qry,1);
 		if (!isset($details->transaction_id)) 
 		{
 			$result=2;
@@ -32,26 +32,24 @@ if(isset($_POST['btnsubmit']))
 else if(isset($_POST['btnrefund']))
 {
 	$transactionid=$function_obj->decrypt($_POST['trasaction_key'],$key);
-    $qry=mysql_query("SELECT c.id AS ID, c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,IFNULL(o.CardToken, '') AS CardToken,o.cdata,o.Totel
-					FROM `ordertbl` o inner join `customer_registration` c on o. UserID=c.id where transaction_id='". $transactionid ."' and cat_id=". $Objrestaurant->id  ." and transaction_id >0 and payment_approv=1");
-	$details=mysql_fetch_object($qry);
-	//Modified01082013
+    $qry=dbAbstract::Execute("SELECT c.id AS ID, c.cust_your_name,c.LastName,c.cust_email,o.OrderID,o.Totel,o.OrderDate,o.transaction_id,IFNULL(o.CardToken, '') AS CardToken,o.cdata,o.Totel
+					FROM `ordertbl` o inner join `customer_registration` c on o. UserID=c.id where transaction_id='". $transactionid ."' and cat_id=". $Objrestaurant->id  ." and transaction_id >0 and payment_approv=1",1);
+	$details=dbAbstract::returnObject($qry,1);
 	$gUID = $details->ID; //UserID 
 	$amount = $details->Totel;
 	$cc = $details->cdata;
 	$gCardToken = $details->CardToken;
-    //Log::write('refund page', 'Transaction Id#'.$transactionid);
+    
  	if( $Objrestaurant->payment_gateway=="authoriseDotNet")  
 	{
 		$Objrestaurant->payment_gateway="AuthorizeNet";
 	}
 	require_once 'admin_contents/gateways/'. $Objrestaurant->payment_gateway .'.php';
-    //Log::write('refund', 'Response : '.serialize($response));
-    //Log::write('refund', 'Response : '.serialize($response1));
+    
 	if($success==1)
 	{       
                 Log::write("Update Order detail in ordertbl - tab_order_approve.php", "QUERY -- update ordertbl set payment_approv=0 where OrderID=". $_POST['order_id']  ."", 'order', 1 , 'cpanel');
-		mysql_query("update ordertbl set payment_approv=0 where OrderID=". $_POST['order_id']  ."");
+		dbAbstract::Update("update ordertbl set payment_approv=0 where OrderID=". $_POST['order_id']  ."",1);
 		$user_email;
 		$testmail=new testmail();
 		$message="<br/> Dear Customer <br/><br/> Your Order Payment is refunded: <br/><br/> Order ID: ". $_POST['order_id'] ."<br/><br/> Order Date: ". $_POST['order_date'] ."<br/><br/> Order Total: ". $_POST['Totel'] ." <br/> ";

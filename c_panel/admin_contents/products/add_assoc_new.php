@@ -4,23 +4,23 @@ require_once("../../../includes/config.php");
 //	if(isset($_REQUEST['apply_subcat'])) {
 	if (strpos($_SERVER['HTTP_REFERER'], 'product') != true) {
 		$scat_id = $_REQUEST['sub_cat_id'];
-		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
-		while($prodRs = mysql_fetch_array($prodQry)){
+		$prodQry = dbAbstract::Execute("select prd_id from product where sub_cat_id= $scat_id",1);
+		while($prodRs = dbAbstract::returnArray($prodQry,1)){
                     Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'", 'menu', 1 , 'cpanel');
-			mysql_query("DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'");
+			dbAbstract::Delete("DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'",1);
 
 		}
 		
-		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
-		while($prodRs = mysql_fetch_array($prodQry)){
+		$prodQry = dbAbstract::Execute("select prd_id from product where sub_cat_id= $scat_id",1);
+		while($prodRs = dbAbstract::returnArray($prodQry,1)){
 			$association_id = $_GET['itemcheck'];
 			for($i=0; $i<count($_GET['itemcheck']); $i++) {
 				if($prodRs['prd_id'] != $association_id[$i]) {
                                     Log::write("Add new product association - add_assoc_new.php", "QUERY -- INSERT INTO product_association SET product_id = '".$prodRs['prd_id']."', association_id = '".$association_id[$i]."'", 'menu', 1 , 'cpanel');
 				$query = "INSERT INTO product_association SET product_id = '".$prodRs['prd_id']."', association_id = '".$association_id[$i]."'";
-				mysql_query($query);
+				dbAbstract::Insert($query,1);
                                 Log::write("Set product HasAssociates=1 - add_assoc_new.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $prodRs['prd_id'] . "", 'menu', 1, 'cpanel');
-                                mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
+                                dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "",1);
                             }
 			}// end for
 		}// end while
@@ -53,28 +53,6 @@ require_once("../../../includes/config.php");
 	}
         else {
 		if($_REQUEST['apply_subcat']) {
-
-//		$scat_id = $_REQUEST['sub_cat_id'];
-//		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
-//		while($prodRs = mysql_fetch_array($prodQry)){
-//			Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$_GET['product_id']."' ", 'menu', 1 , 'cpanel');
-//			mysql_query("DELETE FROM product_association where product_id = '".$prodRs['prd_id']."'");
-//
-//		}
-//
-//		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $scat_id");
-//		while($prodRs = mysql_fetch_array($prodQry)){
-//			$association_id = $_GET['itemcheck'];
-//                        $orderNo = 1;
-//			for($i=0; $i<count($_GET['itemcheck']); $i++) {
-//				if($prodRs['prd_id'] != $association_id[$i]) {
-//				$query = "INSERT INTO product_association SET product_id = '".$prodRs['prd_id']."', association_id = '".$association_id[$i]."',sortOrder = ".$orderNo."";
-//				mysql_query($query);
-//                                mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
-//                                $orderNo++;
-//				}
-//			}// end for
-//		}// end while
                 
                 // Saad Changes 24-Sept-2014 -
                 $subMenuId = $_GET['sub_cat_id'];
@@ -82,20 +60,20 @@ require_once("../../../includes/config.php");
                 $selectedProductId = $_GET['product_id'];
                 //Delete all associated items for selected productId
                 Log::write("Delete product association - add_assoc_new.php", "QUERY -- DELETE FROM product_association where product_id = '".$_GET['product_id']."' ", 'menu', 1 , 'cpanel');
-                mysql_query("DELETE FROM product_association where product_id = '".$selectedProductId."'");
+                dbAbstract::Delete("DELETE FROM product_association where product_id = '".$selectedProductId."'",1);
                 // Update Has Associates for selected productId
                 Log::write("Update product association - add_assoc_new.php", "QUERY -- UPDATE product set HasAssociates=0 WHERE prd_id = " . $prodRs['prd_id'], 'menu', 1 , 'cpanel');
-                mysql_query("UPDATE product set HasAssociates=0 WHERE prd_id = " . $prodRs['prd_id'] . "");
+                dbAbstract::Update("UPDATE product set HasAssociates=0 WHERE prd_id = " . $prodRs['prd_id'] . "",1);
                     
-		$prodQry = mysql_query("select prd_id from product where sub_cat_id= $subMenuId");
+		$prodQry = dbAbstract::Execute("select prd_id from product where sub_cat_id= $subMenuId",1);
 
-		while($prodRs = mysql_fetch_array($prodQry)){
+		while($prodRs = dbAbstract::returnArray($prodQry,1)){
                     $association_id = $_GET['itemcheck'];
                     $countOfItemChecked = count($association_id);
                     $isAssociationInserted = false;
                     $maxOrderNo = 0;
                     
-                    $maxOrderNoQuery = mysql_fetch_object(mysql_query("Select max(sortOrder) as maxOrder from product_association where product_id = ".$prodRs['prd_id']));
+                    $maxOrderNoQuery = dbAbstract::ExecuteObject("SELECT max(sortOrder) as maxOrder from product_association where product_id = ".$prodRs['prd_id'],1);
 
                     if($maxOrderNoQuery->maxOrder != null) {
                         // MaxOrder is present -- Get it and use it for other products;
@@ -106,14 +84,14 @@ require_once("../../../includes/config.php");
                     for($i=0; $i<$countOfItemChecked; $i++) {
                         if($prodRs['prd_id'] != $association_id[$i]) {
                             //echo "Select count(id) from product_association where product_id = ".$prodRs['prd_id']." && association_id = ".$association_id[$i]." <br/>";
-                            $isAssocAlreadyExist = mysql_query("Select 1 from product_association where product_id = '".$prodRs['prd_id']."'&& association_id = '".$association_id[$i]."'");
+                            $isAssocAlreadyExist = dbAbstract::Execute("SELECT 1 from product_association where product_id = '".$prodRs['prd_id']."'&& association_id = '".$association_id[$i]."'",1);
 
-                            if(mysql_num_rows($isAssocAlreadyExist)> 0) {
+                            if(dbAbstract::returnRowsCount($isAssocAlreadyExist,1)> 0) {
                                // "Already exist, do nothing just move for another association"
                             } else {
                                 // no entry in association for that particular product id, now insert it and move for another association
                                 $query = "INSERT INTO product_association SET product_id = ".$prodRs['prd_id'].", association_id = ".$association_id[$i].",sortOrder = ".$maxOrderNo."";
-                                mysql_query($query);
+                                dbAbstract::Insert($query,1);
                                 $isAssociationInserted = true;
                                 $maxOrderNo++;
                             }
@@ -121,22 +99,22 @@ require_once("../../../includes/config.php");
                     }// end for
                     if($isAssociationInserted) {
                         //if association is inserted for product then also update their status
-                        mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "");
+                        dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $prodRs['prd_id'] . "",1);
                     }
 		}// end while
 	}
         else
         {
-		mysql_query("DELETE FROM product_association where product_id = '".$_GET['product_id']."' ");
+		dbAbstract::Delete("DELETE FROM product_association where product_id = '".$_GET['product_id']."' ",1);
 		
 		$association_id = $_GET['itemcheck'];
                 $orderNo = 1;
 	  for($i=0; $i<count($_GET['itemcheck']); $i++) {
 		  $query = "INSERT INTO product_association SET product_id = '".$_GET['product_id']."', association_id = '".$association_id[$i]."',sortOrder = ".$orderNo."";
                   Log::write("Add new product association - add_assoc_new.php", "QUERY -- ".$query, 'menu', 1 , 'cpanel');
-		  mysql_query($query);
+		  dbAbstract::Insert($query,1);
                 Log::write("Set product HasAssociates=1 - add_assoc_new.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['product_id'] . "", 'menu', 1, 'cpanel');
-                mysql_query("UPDATE product set HasAssociates=1 WHERE prd_id = " . $_GET['product_id'] . "");
+                dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $_GET['product_id'] . "",1);
                 $orderNo++;
 	  }
           
@@ -146,8 +124,8 @@ require_once("../../../includes/config.php");
         <script type="text/javascript" language="javascript">
             window.location.href = "<?=$AdminSiteUrl?>?mod=new_menu&item=updateproduct_new&prd_id=<?=$_GET['product_id']?>&sub_cat=<?=$_GET['sub_cat_id']?>";
         </script>
-         <?
+         <?php
       }
 	
 ?>
-	
+<?php mysqli_close($mysqli);?>	

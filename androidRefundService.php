@@ -31,19 +31,19 @@ if (isset($_REQUEST['op'])) {
 
             $Objrestaurant = getRestaurantDetailsBySlug($restaurant_slug, $Objrestaurant);
             $mRestaurantID = $Objrestaurant->id;
-            $mResult = mysql_query("SELECT refund_password FROM resturants WHERE id=" . $mRestaurantID);
+            $mResult = dbAbstract::Execute("SELECT refund_password FROM resturants WHERE id=" . $mRestaurantID);
 
-            if (mysql_num_rows($mResult) > 0) {
-                $mRow = mysql_fetch_object($mResult);
+            if (dbAbstract::returnRowsCount($mResult) > 0) {
+                $mRow = dbAbstract::returnObject($mResult);
                 if ($mPassword == $mRow->refund_password) {
-                    $mResult = mysql_query("SELECT R.id AS ID FROM resturants R INNER JOIN customer_registration CR ON CR.resturant_id=R.id INNER JOIN ordertbl O ON O.UserID=CR.id WHERE O.OrderID=" . $mOrderID);
-                    if (mysql_num_rows($mResult) > 0) {
-                        $mRow = mysql_fetch_object($mResult);
+                    $mResult = dbAbstract::Execute("SELECT R.id AS ID FROM resturants R INNER JOIN customer_registration CR ON CR.resturant_id=R.id INNER JOIN ordertbl O ON O.UserID=CR.id WHERE O.OrderID=" . $mOrderID);
+                    if (dbAbstract::returnRowsCount($mResult) > 0) {
+                        $mRow = dbAbstract::returnObject($mResult);
                         if ($mRestaurantID == $mRow->ID) {
 
-                            $mResult = mysql_query("SELECT IFNULL(transaction_id, '') AS transaction_id, IFNULL(payment_approv, 0) AS payment_approv, IFNULL(payment_method, '') AS payment_method FROM `ordertbl` WHERE OrderID=" . $mOrderID);
-                            if (mysql_num_rows($mResult) > 0) {
-                                $mRow = mysql_fetch_object($mResult);
+                            $mResult = dbAbstract::Execute("SELECT IFNULL(transaction_id, '') AS transaction_id, IFNULL(payment_approv, 0) AS payment_approv, IFNULL(payment_method, '') AS payment_method FROM `ordertbl` WHERE OrderID=" . $mOrderID);
+                            if (dbAbstract::returnRowsCount($mResult) > 0) {
+                                $mRow = dbAbstract::returnObject($mResult);
                                 if ((trim($mRow->transaction_id) == "") || (trim($mRow->transaction_id) == "0")) {
                                     $jsonTempData['status'] = 'failed';
                                     $jsonTempData['message'] = 'Order can not be refunded.';
@@ -62,9 +62,9 @@ if (isset($_REQUEST['op'])) {
                                 $mTransactionID = $mRow->transaction_id;
                                 $transactionid = $mTransactionID;
 
-                                $mResult = mysql_query("SELECT C.id AS UserID, C.cust_your_name AS FirstName, C.LastName AS LastName, C.cust_email AS Email, O.Totel AS Total, O.cdata AS CData, O.OrderDate AS OrderDate FROM `ordertbl` O INNER JOIN `customer_registration` C on O.UserID=C.id WHERE O.OrderID=" . $mOrderID);
-                                if (mysql_num_rows($mResult) > 0) {
-                                    $mRow = mysql_fetch_object($mResult);
+                                $mResult = dbAbstract::Execute("SELECT C.id AS UserID, C.cust_your_name AS FirstName, C.LastName AS LastName, C.cust_email AS Email, O.Totel AS Total, O.cdata AS CData, O.OrderDate AS OrderDate FROM `ordertbl` O INNER JOIN `customer_registration` C on O.UserID=C.id WHERE O.OrderID=" . $mOrderID);
+                                if (dbAbstract::returnRowsCount($mResult) > 0) {
+                                    $mRow = dbAbstract::returnObject($mResult);
 
                                     $gUID = $mRow->UserID;
                                     $amount = $mRow->Total;
@@ -75,9 +75,9 @@ if (isset($_REQUEST['op'])) {
                                     $mOrderDate = $mRow->OrderDate;
                                     $mTotal = $mRow->Total;
 
-                                    $mResult = mysql_query("SELECT IFNULL(payment_gateway, '') AS payment_gateway, url_name AS url, IFNULL(phone, '') AS phone, IFNULL(fax, '') AS fax, IFNULL(email, '') AS email FROM resturants WHERE id=" . $mRestaurantID);
-                                    if (mysql_num_rows($mResult) > 0) {
-                                        $mRow = mysql_fetch_object($mResult);
+                                    $mResult = dbAbstract::Execute("SELECT IFNULL(payment_gateway, '') AS payment_gateway, url_name AS url, IFNULL(phone, '') AS phone, IFNULL(fax, '') AS fax, IFNULL(email, '') AS email FROM resturants WHERE id=" . $mRestaurantID);
+                                    if (dbAbstract::returnRowsCount($mResult) > 0) {
+                                        $mRow = dbAbstract::returnObject($mResult);
                                         if (trim($mRow->payment_gateway) != "") {
                                             $success = 0;
                                             $mURL = $mRow->url;
@@ -90,10 +90,9 @@ if (isset($_REQUEST['op'])) {
 
                                             $Objrestaurant = new restaurant();
                                             $Objrestaurant = $Objrestaurant->getDetail($mRestaurantID);
-                                            //mysql_query("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Services', '".$mRow->payment_gateway."')");
                                             require_once 'c_panel/admin_contents/gateways/' . $mRow->payment_gateway . '.php';
                                             if ($success == 1) {
-                                                mysql_query("UPDATE ordertbl set payment_approv=0 where OrderID=" . $mOrderID);
+                                                dbAbstract::Update("UPDATE ordertbl set payment_approv=0 where OrderID=" . $mOrderID);
                                                 $mObjMail = new testmail();
                                                 $message = "<br/> Dear Customer <br/><br/> Your Order Payment is refunded: <br/><br/> Order ID: " . $mOrderID . "<br/><br/> Order Date: " . $mOrderDate . "<br/><br/> Order Total: " . $mTotal . " <br/> ";
                                                 $message .=" <a href='http://www.easywayordering.com/" . $mURL . "/'>http://www.easywayordering.com/" . $mURL . "/</a>";
@@ -169,4 +168,5 @@ $outputArr = array();
 $outputArr['Response'] = $jsonData;
 
 print_r(json_encode($outputArr));
+mysqli_close($mysqli);
 ?>

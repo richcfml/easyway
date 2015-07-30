@@ -49,10 +49,10 @@ $total_cats = $arr['count'];
 $half = round($total_cats / 2);
 $mColumn1Count = -1;
 $mSQLMenu = "SELECT IFNULL(Column1Count, -1) AS Column1Count FROM menus WHERE id=".$menuid;
-$mSQLMenuRes = mysql_query($mSQLMenu);
-if (mysql_num_rows($mSQLMenuRes)>0)
+$mSQLMenuRes = dbAbstract::Execute($mSQLMenu);
+if (dbAbstract::returnRowsCount($mSQLMenuRes)>0)
 {
-	$mSQLMenuRow = mysql_fetch_object($mSQLMenuRes);
+	$mSQLMenuRow = dbAbstract::returnObject($mSQLMenuRes);
 	if ($mSQLMenuRow->Column1Count>=0)
 	{
 		$mColumn1Count = $mSQLMenuRow->Column1Count;
@@ -1174,7 +1174,7 @@ $.each(attributeRequired, function(index, value) {
                                             </div>
                                         <? } else { ?>
                                             <div class="product_name">
-                                                <a id="prd_<?=$menulist->prd_id?>" class="<?php echo('pr-'.$menulist->prd_id); ?>"  onMouseover="ddrivetip('<span><?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "/n", str_replace("<br>", "\n",str_replace("<br/>", "\n", $menulist->item_title)))))) ?></span><br /><br /><?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "®", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))) ?>')" onMouseout="hideddrivetip()" <?php if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#" onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>, -1);" <? } ?> ><?= stripslashes($menulist->item_title) ?></a>
+                                                <a id="prd_<?=$menulist->prd_id?>" class="<?php echo('pr-'.$menulist->prd_id); ?>"  onMouseover="ddrivetip('<span><?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "/n", str_replace("<br>", "\n",str_replace("<br/>", "\n", $menulist->item_title)))))) ?></span><br /><br /><?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "ï¿½", str_replace("&#228;", "ï¿½", str_replace("&#232;", "ï¿½", str_replace("&#241;", "ï¿½", $menulist->item_des))))))) ?>')" onMouseout="hideddrivetip()" <?php if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#" onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>, -1);" <? } ?> ><?= stripslashes($menulist->item_title) ?></a>
                                             </div>
                                         <? } ?>
 
