@@ -1086,7 +1086,7 @@ function prepareStringForMySQL($string)
     return $string;
 }
 
-function unserializeData($data){
+/*function unserializeData($data){
 	$result = @unserialize($data);
 	if($result === false){
 		$result = unserialize($data);
@@ -1115,5 +1115,5 @@ function func_pregreplace($re, $replacement, $str){
 	$result .= preg_replace_callback($re,function ($matches) use($replacement) {
                                                     return $replacement;}, $str);
 	return $result;
-}
+}*/
 ?>
