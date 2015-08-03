@@ -10,7 +10,7 @@ class dbAbstract
 {
     public static function Execute($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
-        global $mysqli;
+        global $dbh;
         if ($pC_Panel==0)
         {
             Log::write("Execute - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -20,8 +20,11 @@ class dbAbstract
             Log::write("Execute - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysqli_query($mysqli, $pSQL);
-        
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
+
+		//$mResult =  mysqli_query($mysqli, $pSQL);
+
         if ($pLogResults == true)
         {
             if ($pC_Panel==0)
@@ -34,13 +37,12 @@ class dbAbstract
             }
         }
         
-        return $mResult;
-                
+        return $mResult;   
     }
     
     public static function ExecuteArray($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
-        global $mysqli;
+        global $dbh;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteArray - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -49,7 +51,10 @@ class dbAbstract
         {
             Log::write("ExecuteArray - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
-        $mResult =  mysqli_query($mysqli, $pSQL);
+        
+		//$mResult =  $dbh->query($mysqli, $pSQL);
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
         
         if ($pLogResults == true)
         {
@@ -63,9 +68,13 @@ class dbAbstract
             }
         }
         
-        if (mysqli_num_rows($mResult) > 0)
+        if ($mResult->rowCount() > 0)
         {
-            return mysqli_fetch_array($mResult);
+			$mResult = $mResult->fetchAll(PDO::FETCH_ASSOC);
+			if(count($mResult)==1){
+				return $mResult[0];
+			}
+            return $mResult->fetchAll(PDO::FETCH_ASSOC);
         }
         else
         {
@@ -75,7 +84,7 @@ class dbAbstract
     
     public static function ExecuteObject($pSQL, $pC_Panel = 0, $pClassName = "", $pLogResults = false)
     {
-        global $mysqli;
+        global $dbh;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteObject - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -85,7 +94,9 @@ class dbAbstract
             Log::write("ExecuteObject - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysqli_query($mysqli, $pSQL);
+        //$mResult =  $dbh->query($mysqli, $pSQL);
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
         
         if ($pLogResults == true)
         {
@@ -99,15 +110,15 @@ class dbAbstract
             }
         }
         
-        if (mysqli_num_rows($mResult) > 0)
+        if ($mResult->rowCount() > 0)
         {
             if ($pClassName=="")
             {
-                return mysqli_fetch_object($mResult);
+                return $mResult->fetchObject();
             }
             else
             {
-                return mysqli_fetch_object($mResult, $pClassName);
+                return $mResult->fetchObject($pClassName);
             }
         }
         else
@@ -118,7 +129,7 @@ class dbAbstract
     
     public static function ExecuteAssoc($pSQL, $pC_Panel = 0, $pLogResults = false)
     {
-        global $mysqli;
+        global $dbh;
         if ($pC_Panel==0)
         {
             Log::write("ExecuteAssoc - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract');
@@ -128,7 +139,8 @@ class dbAbstract
             Log::write("ExecuteAssoc - dbAbstract.php", "QUERY -- ".$pSQL, 'dbAbstract', 1, 'cpanel');
         }
         
-        $mResult =  mysqli_query($mysqli, $pSQL);
+        $mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
         
         if ($pLogResults == true)
         {
@@ -142,9 +154,9 @@ class dbAbstract
             }
         }
         
-        if (mysqli_num_rows($mResult) > 0)
+        if ($mResult->rowCount() > 0)
         {
-            return mysqli_fetch_assoc($mResult);
+            return $mResult->fetch(PDO::FETCH_ASSOC);
         }
         else
         {
@@ -154,9 +166,11 @@ class dbAbstract
     
     public static function Update($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        global $mysqli;
-        $mResult =  mysqli_query($mysqli, $pSQL);
-        $mAffectedRows = mysqli_affected_rows($mysqli);
+        global $dbh;
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
+		
+        $mAffectedRows = $mResult->rowCount();
 
         if ($pC_Panel==0)
         {
@@ -197,15 +211,17 @@ class dbAbstract
         }
         else if ($pReturnType == 1) //Return number of rows affected
         {
-            return mysqli_affected_rows($mysqli);
+            return $mAffectedRows;
         }
     }
     
     public static function Insert($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        global $mysqli;
-        $mResult =  mysqli_query($mysqli, $pSQL);
-        $mAffectedRows = mysqli_affected_rows($mysqli);
+        global $dbh;
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
+		
+        $mAffectedRows = $mResult->rowCount();
         
         if ($pC_Panel==0)
         {
@@ -250,15 +266,16 @@ class dbAbstract
         }
         else if ($pReturnType == 2) //Return last inserted id
         {
-            return mysqli_insert_id($mysqli);
+            return $dbh->lastInsertId();
         }
     }
     
     public static function Delete($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
-        global $mysqli;
-        $mResult =  mysqli_query($mysqli, $pSQL);
-        $mAffectedRows = mysqli_affected_rows($mysqli);
+         global $dbh;
+		$mResult = $dbh->prepare($pSQL);
+		$mResult->execute();
+		$mAffectedRows = $dbh->rowCount();
         
         if ($pC_Panel==0)
         {
@@ -307,11 +324,11 @@ class dbAbstract
     {
         if ($pClassName=="")
         {
-            $mObject =  mysqli_fetch_object($pResult);
+            $mObject =  $pResult->fetchObject();
         }
         else
         {
-            $mObject =  mysqli_fetch_object($pResult, $pClassName);
+            $mObject =  $pResult->fetchObject($pClassName);
         }
      
         if ($pLogResults)
@@ -330,7 +347,7 @@ class dbAbstract
     
     public static function returnRow($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mRow = mysqli_fetch_row($pResult);
+        $mRow = $pResult->fetch();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -347,7 +364,7 @@ class dbAbstract
     
     public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject =  mysqli_fetch_array($pResult);
+        $mObject =  $pResult->fetchAll();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -364,7 +381,7 @@ class dbAbstract
     
     public static function returnAssoc($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject = mysqli_fetch_assoc($pResult);
+        $mObject = $pResult->fetch(PDO::FETCH_ASSOC);
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -381,7 +398,7 @@ class dbAbstract
     
     public static function returnRowsCount($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mRowsCount = mysqli_num_rows($pResult);
+        $mRowsCount = $pResult->rowCount();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -398,7 +415,8 @@ class dbAbstract
     
     public static function returnResult($pResult, $pRowNum, $pField, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mReturn = mysqli_result($pResult, $pRowNum, $pField);
+        //$mReturn = mysqli_result($pResult, $pRowNum, $pField);
+		$mReturn = $pResult[$pRowNum][$pField];
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -415,6 +433,12 @@ class dbAbstract
     
     public static function returnRealEscapedString($pString, $pC_Panel = 0, $pLogResults = false)
     {
+		/*
+		* We do not need this function any more.
+		* Which is why, instead we use what is called "a prepared statement", 
+		* as it eliminates the  need to sanitize the inputs in the first place.
+		*/
+		return $pString;
         global $mysqli;
         $mReturn =  mysqli_real_escape_string($mysqli, $pString);
         if ($pLogResults)
