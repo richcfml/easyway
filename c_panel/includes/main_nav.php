@@ -145,9 +145,8 @@
 			?> 
 			<div class="links <?=$mod=='apikey' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=apikey" >API Key</a></div> 	
 <!--                        <div class="links <?=$mod=='ssoaccount' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=ssoaccount" >SSO Accounts</a></div> -->
-                        <div class="links <?=$mod=='feedback' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=feedback" >Customer Feedback</a></div> 
                         <?php 
-			if($_SESSION['admin_type'] == 'bh') 
+			if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
 			{ 
 			?>
                             <div class="links <?=$mod=='feedback' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=feedback" >Customer Feedback</a></div> 	
