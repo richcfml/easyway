@@ -56,7 +56,10 @@ if ($mVerifyRequest==1) //Valid Session
         }
         else
         {
-            $mInvalidUser = 1;
+            if (!isset($_GET["dislike"]))
+            {
+                $mInvalidUser = 1;
+            }
         }
     }
     
