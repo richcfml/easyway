@@ -31,9 +31,10 @@ if ($mVerifyRequest==1) //Valid Session
                         else
                         {
                                 $mSQL = "SELECT email FROM bh_sso_user WHERE email='".prepareStringForMySQL($_GET['email'] )."' AND password !='NULL'";
-                                $user_qry  = dbAbstract::Execute($mSQL);
+                                Log::write("check email exist - sso.php - IF", "QUERY --".$mSQL, 'sso', 1);
+                                $user_qry  = mysql_query($mSQL);
 
-                                if(dbAbstract::returnRowsCount($user_qry)>0 )
+                                if(mysql_num_rows($user_qry)>0 )
                                 {
                                     $mReturn = errorFunction("17","Email already exists","Email already exists","Data Error");
                                 }
@@ -54,7 +55,9 @@ if ($mVerifyRequest==1) //Valid Session
                                             , ssoAccountID='". $mVerifyRequest ."'
                                             , status=1";
 
-                                    $sso_id = dbAbstract::Insert($qry,0,2);
+                                    Log::write("Add SSO user - sso.php - IF", "QUERY --".$qry, 'sso', 1);
+                                    $sso_qry = mysql_query($qry);
+                                    $sso_id = mysql_insert_id();
                                     $mReturn[] = array("response" => "Thanks for registering!","sso_acc" =>$sso_id);
                                 }
                         }
@@ -71,7 +74,9 @@ if ($mVerifyRequest==1) //Valid Session
         {
             session_regenerate_id(true);
             $qry = "select * from bh_sso_user WHERE email = '". $_GET['email'] ."' and password = '".$_GET['password']."'";
-            $userResult = dbAbstract::ExecuteObject($qry);
+            Log::write("Sign In - sso.php - IF", "QUERY --".$mSQL, 'sso', 1);
+            $userResult = mysql_fetch_object(mysql_query(($qry)));
+            Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);
 
             if ($userResult->id >0 && $userResult->status ==1)
             {   
@@ -95,7 +100,9 @@ if ($mVerifyRequest==1) //Valid Session
             {
                 
                     $qry = "select * from bh_sso_user WHERE email = '". $_GET['email'] ."'";
-                    $userResult = dbAbstract::ExecuteObject($qry);
+                    Log::write("Get user Detail - sso.php - IF", "QUERY --".$qry, 'sso', 1);
+                    $userResult = mysql_fetch_object(mysql_query(($qry)));
+                    Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);
                     if (!empty($userResult))
                     {
                         $mReturn = array(
@@ -129,7 +136,8 @@ if ($mVerifyRequest==1) //Valid Session
             {
                 
                 $qry = "select * from bh_sso_user WHERE email = '". $_GET['email'] ."'";
-                $userResult = dbAbstract::ExecuteObject($qry);
+                $userResult = mysql_fetch_object(mysql_query(($qry)));
+                Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);
 
                 $firstName = (!isset($_GET['firstname']) || empty($_GET['firstname'])) ? $userResult->firstName   : prepareStringForMySQL($_GET['firstname']);
                 $lastName = (!isset($_GET['lastname'])|| empty($_GET['lastname'])) ? $userResult->lastName  : prepareStringForMySQL($_GET['lastname']);
@@ -154,7 +162,9 @@ if ($mVerifyRequest==1) //Valid Session
                             , loyality_member='".$loyality_member."'
                             , address2='".prepareStringForMySQL($address2)."'    
                              WHERE email = '". $_GET['email'] ."'";
-                $afftected_rows = dbAbstract::Update($update_qry,0,1);
+                Log::write("Update SSO user - sso.php - IF", "QUERY --".$update_qry, 'sso', 1);
+                $query = mysql_query($update_qry);
+                $afftected_rows = mysql_affected_rows();
                 if($afftected_rows)
                 {
                     $mReturn[] = array("response" => "Account Updated successfully");
@@ -190,7 +200,9 @@ if ($mVerifyRequest==1) //Valid Session
         else if (isset($_GET["resetPassword"]) || isset($_GET["resetpassword"]))
         {
             $qry = "select password from bh_sso_user WHERE email = '". $_GET['email'] ."'";
-            $userResult = dbAbstract::ExecuteObject($qry);
+            Log::write("Reset Password - sso.php - IF", "QUERY --".$qry, 'sso', 1);
+            $userResult = mysql_fetch_object(mysql_query($qry));
+            Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);
 
             if (!empty($userResult->password))
             {  
@@ -238,9 +250,11 @@ else if ($mVerifyRequest==3) //Session ID expred
 function adminLogin()
 {   
     $qry = "Select * from users where ewo_api_key = '".$_GET["apikey"]."'";
-    $exeQry = dbAbstract::Execute($qry);
-    $resultArray = dbAbstract::returnObject($exeQry);
-    $countRows = dbAbstract::returnRowsCount($exeQry);
+    Log::write("Admin Login - sso.php - IF", "QUERY --".$qry, 'menu', 1);
+    $exeQry = mysql_query($qry);
+    $resultArray = mysql_fetch_object($exeQry);
+    $countRows = mysql_num_rows($exeQry);
+    Log::write('Admin Response Array - sso.php', print_r($resultArray,true), 'sso', 1);
     
     if ($countRows >0 && $resultArray->status ==1)
     {
@@ -260,8 +274,8 @@ function verifyRequest()
 {
     if (isset($_GET["apikey"]))
     {
-        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$_GET["apikey"]."'");
-        $qryCount = dbAbstract::returnRowsCount($Qry);
+        $Qry = mysql_query("Select * from users where ewo_api_key = '".$_GET["apikey"]."'");
+        $qryCount = mysql_num_rows($Qry);
         if ($qryCount <= 0)
         {
             return 3; //sso (session id) is different than current session id (Session expired)
@@ -286,6 +300,5 @@ function errorFunction($errorCode,$errorDescription,$errorMessage,$errorTitile)
         );
     return $result;
 }
-mysqli_close($mysqli);
 /* General (Helping) Functions Ends Here */
 ?>

@@ -212,8 +212,21 @@ if ($mVerifyRequest==1) //Valid Session
                     if ($rest_url)
                     {
                         dbAbstract::Insert("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", 0, 2, 1)");
+                        $mLikeCount = returnLikeCount($rest_url->id);
+                        $mDislikeCount = returnDislikeCount($rest_url->id);
+                        $mLikePercentage = 0;
+
+                        if (($mLikeCount==0) && ($mDislikeCount==0))
+                        {
+                            $mLikePercentage = 0;
+                        }
+                        else
+                        {
+                            $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+                        }
                         $mReturn = array(
-                                "successDescription" => "Restaurant liked successfully"
+                                "successDescription" => "Restaurant liked successfully",
+                                "satisfactionPercentage" => $mLikePercentage
                             );
                     }
             }
@@ -226,12 +239,75 @@ if ($mVerifyRequest==1) //Valid Session
         {
             if (isset($_GET["slug"]))
             {
-                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
-                $rest_url = dbAbstract::ExecuteObject($mSQL);
-                if ($rest_url)
+                if (isset($_GET["options"]) && count($_GET["options"])>0)
                 {
-                    dbAbstract::Insert("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", 0, 2, 0)");
-                    $mReturn = array("successDescription" => "Restaurant disliked successfully");
+                    $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                    $rest_url = dbAbstract::ExecuteObject($mSQL);
+                    if ($rest_url)
+                    {
+                        $mBRRID = dbAbstract::Insert("INSERT INTO bh_rest_rating (rest_id, user_id, favorite, Rating) VALUES (".$rest_url->id.", 0, 2, 0)", 0, 2);
+                        
+                        $mDislikeComments = "";
+                        $mDislikeEmail = "";
+                        $mDislikeOptions = prepareStringForMySQL(implode(", ", $_GET["options"]));
+                        
+
+                        if (isset($_GET["comments"]))
+                        {
+                            $mDislikeComments = prepareStringForMySQL($_GET["comments"]);
+                        }
+
+                        if (isset($_GET["email"]))
+                        {
+                            $mDislikeEmail = prepareStringForMySQL($_GET["email"]);
+                        }
+
+                        dbAbstract::Insert("INSERT INTO bh_dislike (bh_rest_rating_id, Reason, Comments, Email) VALUES (".$mBRRID.", '".$mDislikeOptions."', '".$mDislikeComments."', '".$mDislikeEmail."')");
+
+                        $mLikeCount = returnLikeCount($rest_url->id);
+                        $mDislikeCount = returnDislikeCount($rest_url->id);
+                        $mLikePercentage = 0;
+
+                        if (($mLikeCount==0) && ($mDislikeCount==0))
+                        {
+                            $mLikePercentage = 0;
+                        }
+                        else
+                        {
+                            $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+                        }
+                        
+                        /*Email Sending Code Starts*/
+                        require	"../includes/class.phpmailer.php";
+                        $mMailBody = "<div style='font-family: Arial; font-size: 14px; size: 14px; line-height: 2'>";
+                        $mMailBody .= "<strong>Restaurant Slug: </strong>".$_GET["slug"]."<br />";
+                        $mMailBody .= "<strong>Restaurant Name: </strong>".$rest_url->name."<br />";
+                        $mMailBody .= "<strong>Dislike Reason/Options : </strong>".implode(", ", $_GET["options"])."<br />";
+                        if ($mDislikeEmail!="")
+                        {
+                            $mMailBody .= "<strong>Email: </strong>".$mDislikeEmail."<br />";
+                        }
+                        
+                        if ($mDislikeComments!="")
+                        {
+                            $mMailBody .= "<strong>Comments: </strong>".$mDislikeComments."<br />";
+                        }
+                        $mMailBody .= "</div>";
+                        
+                        $objEMail = new testmail();
+                        $objEMail->from="info@easywayordering.com";
+                        $objEMail->sendTo($mMailBody, "BH restaurant feedback", "BHfeedback@easywayordering.com", true);
+                        /*Email Sending Code Ends*/
+                        
+                        $mReturn = array(
+                                "successDescription" => "Restaurant disliked successfully",
+                                "satisfactionPercentage" => $mLikePercentage
+                            );
+                    }
+                }
+                else
+                {
+                    $mReturn = errorFunction("24", "Please specify at least one Option.", "Please specify at least one Option.", "Attribute Error");
                 }
             }
             else
@@ -1347,6 +1423,5 @@ function returnLocationArray($rest_url, $mLikePercentage = 0)
             "satisfactionPercentage" => $mLikePercentage
         );
     }
-    mysqli_close($mysqli);
 }
 ?>
