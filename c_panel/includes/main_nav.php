@@ -52,6 +52,10 @@
 	{ 
 		$admin_include_content = "admin_contents/advanced_settings/ssoaccount.php";
 	}
+        if($mod == 'feedback')	
+	{ 
+		$admin_include_content = "admin_contents/advanced_settings/feedback.php";
+	}
 	if($mod == 'news')			
 	{ 
 		$admin_include_content = "admin_contents/news/tab_news_main.php";
@@ -140,8 +144,18 @@
 			} 
 			?> 
 			<div class="links <?=$mod=='apikey' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=apikey" >API Key</a></div> 	
-                        <div class="links <?=$mod=='ssoaccount' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=ssoaccount" >SSO Accounts</a></div> 	
-			<br style="clear:both" />
+<!--                        <div class="links <?=$mod=='ssoaccount' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=ssoaccount" >SSO Accounts</a></div> -->
+                        <div class="links <?=$mod=='feedback' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=feedback" >Customer Feedback</a></div> 
+                        <?php 
+			if($_SESSION['admin_type'] == 'bh') 
+			{ 
+			?>
+                            <div class="links <?=$mod=='feedback' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=feedback" >Customer Feedback</a></div> 	
+			<?php 
+			} 
+			?> 
+                        
+                        <br style="clear:both" />
 		</div>
 <?php 
 	} 
