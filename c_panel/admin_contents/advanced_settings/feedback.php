@@ -1,5 +1,5 @@
 <?php 
-$likeQry = mysql_query("SELECT
+$likeQry = dbAbstract::Execute("SELECT
      bh.rest_id,
     SUM(bh.Rating = '0') AS `dislike`,
     SUM(bh.Rating = '1') AS `like`,
@@ -7,7 +7,7 @@ $likeQry = mysql_query("SELECT
 FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id where r.bh_restaurant = 1
 GROUP BY rest_id");
 
-$dislikeQry = mysql_query("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id inner join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1");
+$dislikeQry = dbAbstract::Execute("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id left join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1");
 
 ?>
 <div>
@@ -23,7 +23,7 @@ $dislikeQry = mysql_query("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating
           <th width="100"><strong>Dislike</strong></th>
           <th width="100"><strong>Satisfaction Percentage</strong></th>
         </tr>
-        <?php while($likeArray	= mysql_fetch_array($likeQry)){
+        <?php while($likeArray	= dbAbstract::returnArray($likeQry)){
               $mLikePercentage = 0;
               if (($likeArray['like']==0) && ($likeArray['dislike']==0))
               {
@@ -63,7 +63,7 @@ $dislikeQry = mysql_query("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating
           <th width="300"><strong>Comments</strong></th>
           <th width="100"><strong>Date</strong></th>
         </tr>
-        <?php while($dislikeArray	= mysql_fetch_array($dislikeQry)){
+        <?php while($dislikeArray = dbAbstract::returnArray($dislikeQry)){
               if( $counter++ % 2 == 0)  
               {
                 $bgcolor = '#F8F8F8';

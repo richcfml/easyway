@@ -3,7 +3,7 @@
 require_once("../../../includes/config.php");
 if(isset($_GET['count']))
 {
-    $likeQry = mysql_query("SELECT
+    $likeQry = dbAbstract::Execute("SELECT
          bh.rest_id,
         SUM(bh.Rating = '0') AS `dislike`,
         SUM(bh.Rating = '1') AS `like`,
@@ -13,7 +13,7 @@ if(isset($_GET['count']))
 
     $out = 'Name,Like,Dislike,Satisfaction Percentage';
     $out .="\n";
-    while($likeArray = mysql_fetch_array($likeQry)){
+    while($likeArray = dbAbstract::returnArray($likeQry)){
         $mLikePercentage = 0;
         if (($likeArray['like']==0) && ($likeArray['dislike']==0))
         {
@@ -38,19 +38,20 @@ if(isset($_GET['count']))
 else if(isset($_GET['import']))
 {
     
-$result = mysql_query("SELECT r.url_name as RestaurantSlug,dl.Reason, dl.Comments,date(dl.CreateDate) as `Date` FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id inner join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1");
+$result = dbAbstract::Execute("SELECT r.url_name as RestaurantSlug,dl.Reason, dl.Comments,date(dl.CreateDate) as `Date` FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id left join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1");
 
     ob_end_clean();
 // I assume you already have your $result
-$num_fields = mysql_num_fields($result);
 
 // Fetch MySQL result headers
 $headers = array();
-$headers[] = "No.";
-for ($i = 0; $i < $num_fields; $i++) {
-    $headers[] = strtoupper(mysql_field_name($result , $i));
-}
 
+$headers = array();
+$headers[] = "No.";
+$headers[] = "RESTAURANT SLUG";
+$headers[] = "REASON";
+$headers[] = "COMMENTS";
+$headers[] = "Date";
 // Filename with current date
 $current_date = date("y/m/d");
 $filename = "customerfeedback.csv";
@@ -67,7 +68,7 @@ if ($fp && $result) {
     fputcsv($fp, $headers);
     $row_tally = 0;
     // Write mysql rows to csv
-    while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+    while ($row = dbAbstract::returnAssoc($result)) {
     
    $row_tally = $row_tally + 1;
     echo $row_tally.",";
