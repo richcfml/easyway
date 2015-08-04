@@ -41,6 +41,7 @@ class restaurant
     public $bh_restaurant;
     public $bh_featured;
     public $URL;
+        public $bh_banner_image;
 
     public $active_menu_link_color, 
             $appearence, 

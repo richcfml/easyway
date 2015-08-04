@@ -395,6 +395,33 @@ if (isset($_POST['submit'])) {
             $image->save($uploadfile5);
         } 
         //--------------VIP List Image End---------------------------
+        
+        //--------------BH Banner Image Start---------------------------
+        if (!empty($_FILES['userfile6']['name'])) 
+        {
+            $path6 = '../images/resturant_bh_banner/';
+            $exe6 = GetFileExt($_FILES['userfile6']['name']);
+            $name6 = "img_" . $catid . "_bh_banner." . $exe6;
+
+            $newWidth = 1200;
+            $newHeight = 600;
+                
+            $uploadfile6 = $path6.$name6;
+            move_uploaded_file($_FILES['userfile6']['tmp_name'], $uploadfile6);
+            list($width, $height, $type, $attr) = getimagesize("$uploadfile6");
+            
+            $ratio = min(array(1200/ $width, 600/ $height));
+            $newWidth = $ratio * $width;
+            $newHeight = $ratio * $height;
+            
+            $image = new SimpleImage();
+            $image->load($uploadfile6);
+            $image->resizeToWidth($newWidth, $newHeight);
+            $image->save($uploadfile6);
+            dbAbstract::Update("UPDATE resturants SET bh_banner_image='".$name6."' WHERE id=".$catid);
+        } 
+        //--------------BH Banner Image End---------------------------
+        
         ///////////////////////////////////////////////////////////
 
         $homefeatute = 0;
@@ -631,6 +658,16 @@ else if (isset($_POST["btnRemoveVIP"]))
     }
     $errMessage = "VIP list image removed successfully.";
 }
+else if (isset($_POST["btnRemoveBhBanner"]))
+{
+    dbAbstract::Update("UPDATE resturants SET bh_banner_image='' WHERE id =".$catid);
+    if (file_exists(realpath("../images/resturant_bh_banner/<?=$objRestaurant->bh_banner_image?>")))
+    {
+        unlink(realpath("../images/resturant_bh_banner/<?=$objRestaurant->bh_banner_image?>"));
+    }
+    $errMessage = "BH banner image removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 
@@ -852,6 +889,30 @@ else if (isset($_POST["btnRemoveVIP"]))
                 </td>
             </tr>
             <!--//--------------VIP LIST Image End----------------------------->
+            <?php
+            if ($Objrestaurant->bh_restaurant==1)
+            {
+            ?>
+            <!----------------BH Banner Image Start----------------------------->
+            <tr align="left" valign="top">
+                <td>&nbsp;</td>
+                <td><strong>BH Banner Image</strong><br> <font color="#666666"><!--(system will
+                    resize to 1200x600)--></font>
+                    <input name="userfile6" type="file" id="userfile6">
+                    <?php
+                    if (trim($Objrestaurant->bh_banner_image)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove BH Banner image" id="btnRemoveBhBanner" name="btnRemoveBhBanner" />
+                    <?php
+                    }
+                    ?>
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+            <!--//--------------BH Banner Image End----------------------------->
             <tr align="left" valign="top">
                 <td></td>
                 <td><strong>Order Minimum:</strong><br />
