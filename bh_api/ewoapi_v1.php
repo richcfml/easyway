@@ -1187,6 +1187,7 @@ function checkSignatureSandwich($pRestaurantID)
 
 function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
 {
+    global $SiteUrl;
     $mThumbnailURL = "";
     $mBannerURL = "";
     
@@ -1209,7 +1210,6 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
     $mOpen = checkOpen($rest_url->id, $rest_url->time_zone_id);
     if (isset($_GET["detail"]) || (isset($_GET["getrestaurantdetails"])))
     {
-        global $SiteUrl;
         $mDeliveryCharges = $rest_url->delivery_charges;
         $mOrderMinimum = $rest_url->order_minimum;
 
