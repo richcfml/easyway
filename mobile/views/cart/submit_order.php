@@ -457,5 +457,5 @@
 	$_SESSION['total'] = $total=$cart->grand_total();
 	$_SESSION['cart'] = $cart->order_created;
 	//-------------------------------------//
-	redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou" );
+        redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&orderid=".$cart->order_id );
 ?>

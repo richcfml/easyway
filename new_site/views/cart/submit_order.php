@@ -469,7 +469,7 @@
 	if(!isset($repid_payment))
 	{
 		//@mysql_close($mysql_conn);
-		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou" );
+		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&orderid=".$cart->order_id );
 		exit;
 	}
 ?>

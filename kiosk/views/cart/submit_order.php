@@ -280,7 +280,7 @@
 	$confimration_email .= $common_confimration_email .' <a href=\"http://easywayordering.com/ozzies/\">http://www.easywayordering.com/'. $objRestaurant->url .'/</a><br>Phone: '. $objRestaurant->phone .'<br>Fax: '. $objRestaurant->fax .'<br>';
 	$_SESSION["invoice_number_thankyou"] = $_POST['invoice_number'];
 	include "views/notify_customers.php";
-        redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&kiosk=1" );
+        redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&kiosk=1&orderid=".$cart->order_id );
         exit;
 ?>
 
