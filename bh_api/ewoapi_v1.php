@@ -1187,6 +1187,25 @@ function checkSignatureSandwich($pRestaurantID)
 
 function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
 {
+    $mThumbnailURL = "";
+    $mBannerURL = "";
+    
+    if (trim($rest_url->optionl_logo)!="")
+    {
+        if (file_exists(realpath("../images/logos_thumbnail/".$rest_url->optionl_logo)))
+        {
+            $mThumbnailURL = $SiteUrl."images/logos_thumbnail/".$rest_url->optionl_logo;
+        }
+    }
+    
+    if (trim($rest_url->bh_banner_image)!="")
+    {
+        if (file_exists(realpath("../images/resturant_bh_banner/".$rest_url->bh_banner_image)))
+        {
+            $mBannerURL = $SiteUrl."images/resturant_bh_banner/".$rest_url->bh_banner_image;
+        }
+    }
+    
     $mOpen = checkOpen($rest_url->id, $rest_url->time_zone_id);
     if (isset($_GET["detail"]) || (isset($_GET["getrestaurantdetails"])))
     {
@@ -1248,7 +1267,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                         "facebookURL" => $rest_url->facebookLink,
                         "url" => $SiteUrl.$rest_url->url_name."/",
                         "domain" => $rest_url->URL,
-                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "images" => array("thumbUrl" => $mThumbnailURL, bannerURL => $mBannerURL),
                         "menu_url" => $SiteUrl.$rest_url->url_name."/",
                         "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
                         "announcement" => $rest_url->announcement,
@@ -1278,7 +1297,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                         "facebookURL" => $rest_url->facebookLink,
                         "url" => $SiteUrl.$rest_url->url_name."/",
                         "domain" => $rest_url->URL,
-                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "images" => array("thumbUrl" => $mThumbnailURL, bannerURL => $mBannerURL),
                         "menu_url" => $SiteUrl.$rest_url->url_name."/",
                         "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
                         "announcement" => $rest_url->announcement,
@@ -1313,7 +1332,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                         "facebookURL" => $rest_url->facebookLink,
                         "url" => $SiteUrl.$rest_url->url_name."/",
                         "domain" => $rest_url->URL,
-                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "images" => array("thumbUrl" => $mThumbnailURL, bannerURL => $mBannerURL),
                         "menu_url" => $SiteUrl.$rest_url->url_name."/",
                         "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
                         "announcement" => $rest_url->announcement,
@@ -1344,7 +1363,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                         "facebookURL" => $rest_url->facebookLink,
                         "url" => $SiteUrl.$rest_url->url_name."/",
                         "domain" => $rest_url->URL,
-                        "images" => array("thumbUrl" => $SiteUrl."images/resturant_logos/".$rest_url->logo, headerURL => $SiteUrl."images/resturant_headers/".$rest_url->header_image),
+                        "images" => array("thumbUrl" => $mThumbnailURL, bannerURL => $mBannerURL),
                         "menu_url" => $SiteUrl.$rest_url->url_name."/",
                         "delivery" => ($rest_url->delivery_offer=="1"?"y":"n"),
                         "announcement" => $rest_url->announcement,
