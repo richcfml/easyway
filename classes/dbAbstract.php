@@ -168,7 +168,10 @@ class dbAbstract
     {
         global $dbh;
 		$mResult = $dbh->prepare($pSQL);
-		$mResult->execute();
+		
+		if($mResult->execute()){
+			$qResult = true;
+		}else $qResult = false;
 		
         $mAffectedRows = $mResult->rowCount();
 
@@ -193,7 +196,7 @@ class dbAbstract
             }
         }
         
-        if ($mResult==false) //LOG Failed queries
+        if ($qResult==false) //LOG Failed queries
         {
             if ($pC_Panel==0)
             {
@@ -207,7 +210,7 @@ class dbAbstract
         
         if ($pReturnType == 0) //Return true or false
         {
-            return $mResult;
+            return $qResult;
         }
         else if ($pReturnType == 1) //Return number of rows affected
         {
@@ -219,7 +222,10 @@ class dbAbstract
     {
         global $dbh;
 		$mResult = $dbh->prepare($pSQL);
-		$mResult->execute();
+		
+		if($mResult->execute()){
+			$qResult = true;
+		}else $qResult = false;
 		
         $mAffectedRows = $mResult->rowCount();
         
@@ -244,7 +250,7 @@ class dbAbstract
             }
         }
         
-        if ($mResult==false) //LOG Failed queries
+        if ($qResult==false) //LOG Failed queries
         {
             if ($pC_Panel==0)
             {
@@ -258,7 +264,7 @@ class dbAbstract
         
         if ($pReturnType == 0) //Return true or false
         {
-            return $mResult;
+            return $qResult;
         }
         else if ($pReturnType == 1) //Return number of rows affected
         {
