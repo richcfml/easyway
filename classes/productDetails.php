@@ -35,7 +35,7 @@ class productDetails {
         
         $attributes_array = array();
         $distinct_attributes_array = array();
-        while ($row = dbAbstract::returnObject($cat_qry1, 0, "", true)) 
+        while ($attribute = dbAbstract::returnObject($cat_qry1)) 
         {
             if (!isset($distinct_attributes_array[$attribute->option_name])) 
             {
