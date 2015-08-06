@@ -91,7 +91,7 @@ if($_POST) {
                                                 ,product_id	= '".$ChargifyStandardProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
+                                                ,return_url= '".$ChargifyURL."self-signup-wizard/index.php'
                                                 ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
                                                 ,hosted_page_url='".$ChargifyURL."h/".$ChargifyStandardProduct."/subscriptions/new '
                                                 ,premium_account=0
@@ -103,7 +103,7 @@ if($_POST) {
                                                 ,product_id	= '".$ChargifyPremiumProduct."'
                                                 ,api_access_key='2aRl08rsgL3H3WiWl5ar'
                                                 ,site_shared_key='Lh2aYDxDHC5oBUkADFF'
-                                                ,return_url= $ChargifyURL.'self-signup-wizard/index.php'
+                                                ,return_url= '".$ChargifyURL."self-signup-wizard/index.php'
                                                 ,update_return_url='http://easywayordering.com/self-signup-wizard/handle_update_payment.php'
                                                 ,hosted_page_url='".$ChargifyURL."h/".$ChargifyPremiumProduct."/subscriptions/new '
                                                 ,premium_account=1
