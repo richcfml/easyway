@@ -922,6 +922,7 @@ function isJSON($pString)
 
 if (!function_exists('json_encode')) {
     function json_encode($data) {
+        Log::write("JSON DATA: ",$data , 'debug');
         switch ($type = gettype($data)) {
             case 'NULL':
                 return 'null';
