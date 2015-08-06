@@ -370,7 +370,7 @@ class dbAbstract
     
     public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject =  $pResult->fetchAll();
+        $mObject =  $pResult->fetch();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
