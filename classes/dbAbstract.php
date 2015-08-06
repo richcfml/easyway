@@ -370,16 +370,16 @@ class dbAbstract
     
     public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject =  $pResult->fetchAll();
+        $mObject =  $pResult->fetch();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
             {
-                Log::write("DB Abstract returnArary Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 0);
+                Log::write("DB Abstract returnArray Function - dbAbstract.php", "QUERY -- ".$mObject, 'dbAbstract', 0);
             }
             else
             {
-                Log::write("DB Abstract returnArray Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 1, 'cpanel');
+                Log::write("DB Abstract returnArray Function - dbAbstract.php", "QUERY -- ".$mObject, 'dbAbstract', 1, 'cpanel');
             }
         }
         return $mObject;
