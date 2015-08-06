@@ -273,42 +273,80 @@ if (isset($_POST['submit'])) {
         $restRs1 = $restRs1->total;
     }
 
-    if ($catname == '') {
+    if ($catname == '') 
+    {
         $errMessage = "Please Enter Restaurant Name";
-    } else if ($email == '') {
+    } 
+    else if ($email == '') 
+    {
         $errMessage = "Please enter email address";
-    } else if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
+    } 
+    else if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) 
+    {
         $errMessage = "Please enter email address in correct format";
-    } else if ($phone == '') {
+    } 
+    else if ($phone == '') 
+    {
         $errMessage = "Please enter phone number";
-    } else if ($fax == '') {
+    } 
+    else if ($fax == '') 
+    {
         $errMessage = "Please enter fax number";
-    } else if (!empty($_FILES['userfile']['name']) && $myimage->ProcessImage() == false) {
+    } 
+    /*else if (!empty($_FILES['userfile']['name']) && $myimage->ProcessImage() == false) 
+    {
         $errMessage = "Pleaser Enter Valid Logo";
-    } else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) {
+    } 
+    else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) 
+    {
         $errMessage = "Pleaser Enter Valid Logo Thumbnail";
-    } else if ($rest_zip == '') {
+    }*/ 
+    else if ($rest_zip == '') 
+    {
         $errMessage = "Please enter resturant zip code";
-    } else if ($delivery_radius == '') {
+    } 
+    else if ($delivery_radius == '') 
+    {
         $errMessage = "Please enter delivery radius for resturant";
-    } else if ($order_minimum == '') {
+    } 
+    else if ($order_minimum == '') 
+    {
         $errMessage = "Please enter minimum order ammount";
-    } else if ($tax_percent == '') {
+    } 
+    else if ($tax_percent == '') 
+    {
         $errMessage = "Please enter sales tax percentage";
-    } else if ($delivery_charges == '') {
+    } 
+    else if ($delivery_charges == '') 
+    {
         $errMessage = "Please enter delivery charges";
-    } else if ($time_zone < 0) {
+    } 
+    else if ($time_zone < 0) 
+    {
         $errMessage = "Please select resturant's time zone";
-    } else if ($credit == '' && $cash == '' && $_SESSION['admin_type'] == 'admin') {
+    } 
+    else if ($credit == '' && $cash == '' && $_SESSION['admin_type'] == 'admin') 
+    {
         $errMessage = "Please select payment method";
-    } else if ($restRs1 > 0) {
+    } 
+    else if ($restRs1 > 0) 
+    {
         $errMessage = "Chargify Subscription ID not available";
-    } else {
-        if (!empty($credit) & !empty($cash)) {
+    } 
+    else 
+    {
+        echo("ABCDE");
+        exit;
+        if (!empty($credit) & !empty($cash)) 
+        {
             $payment_method = "both";
-        } else if (!empty($credit)) {
+        } 
+        else if (!empty($credit)) 
+        {
             $payment_method = "credit";
-        } else if (!empty($cash)) {
+        } 
+        else if (!empty($cash)) 
+        {
             $payment_method = "cash";
         }
         if (!empty($_FILES['userfile']['name'])) {
