@@ -335,8 +335,6 @@ if (isset($_POST['submit'])) {
     } 
     else 
     {
-        echo("ABCDE");
-        exit;
         if (!empty($credit) & !empty($cash)) 
         {
             $payment_method = "both";
