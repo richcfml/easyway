@@ -190,7 +190,6 @@ $loop_index_check = FALSE;
                 },
                 success: function(data)
                 {
-                    console.log(data);
                     data = JSON.parse(data);
                     attributes_array = data.attr;
                     association_array = data.assoc;
