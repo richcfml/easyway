@@ -370,7 +370,7 @@ class dbAbstract
     
     public static function returnArray($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mObject =  $pResult->fetch();
+        $mObject =  $pResult->fetchAll();
         if ($pLogResults)
         {
             if ($pC_Panel==0)
@@ -404,19 +404,26 @@ class dbAbstract
     
     public static function returnRowsCount($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        $mRowsCount = $pResult->rowCount();
-        if ($pLogResults)
+        if ($pResult)
         {
-            if ($pC_Panel==0)
+            $mRowsCount = $pResult->rowCount();
+            if ($pLogResults)
             {
-                Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".$mRowsCount, 'dbAbstract', 0);
+                if ($pC_Panel==0)
+                {
+                    Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".$mRowsCount, 'dbAbstract', 0);
+                }
+                else
+                {
+                    Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".$mRowsCount, 'dbAbstract', 1, 'cpanel');
+                }
             }
-            else
-            {
-                Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".$mRowsCount, 'dbAbstract', 1, 'cpanel');
-            }
+            return $mRowsCount;
         }
-        return $mRowsCount;
+        else
+        {
+            return 0;
+        }
     }
     
     public static function returnResult($pResult, $pRowNum, $pField, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
