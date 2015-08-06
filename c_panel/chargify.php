@@ -171,5 +171,3 @@ if(!empty($_GET['ids']))
    }
 
 ?>
-
-<?php mysqli_close($mysqli);?>

@@ -90,4 +90,3 @@ else
 <?php
 }
 ?>
-<?php mysqli_close($mysqli);?>

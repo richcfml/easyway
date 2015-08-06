@@ -726,4 +726,3 @@ function getDistance($pSourceLatLang, $pDestinationLatLang)
     return round($mDistance, 2); 
 }
 ?>
-<?php mysqli_close($mysqli);?>

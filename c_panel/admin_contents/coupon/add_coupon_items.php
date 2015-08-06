@@ -37,8 +37,6 @@ include("../../../includes/config.php");
                 dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $_GET['product_id'] . "", 1);
     }
 	}// end if
-
-mysqli_close($mysqli);
 ?>
 	
 <script type="text/javascript" language="javascript">http://

@@ -1658,6 +1658,5 @@ if (isset($_GET["call"]))
 	{
 		echo("error");
 	}
-        mysqli_close($mysqli);
 }
 ?>

@@ -1027,4 +1027,3 @@ function GetFileExt($pFileName)
 }
 
 ?>
-<?php mysqli_close($mysqli);?>

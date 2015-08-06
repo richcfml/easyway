@@ -22,4 +22,3 @@ if(isset($_SESSION['admin_session_user_name'])){
 }
 
 ?>
-<?php mysqli_close($mysqli);?>

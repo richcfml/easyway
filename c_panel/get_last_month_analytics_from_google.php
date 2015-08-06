@@ -173,7 +173,5 @@ if($client->getAccessToken()) {
 		$testmail->sendTo($message, $subject, $to, true);
 	}
 }
-mysqli_close($mysqli);
 exit(0);
-
 ?>

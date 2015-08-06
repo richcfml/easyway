@@ -350,4 +350,3 @@ echo "<pre>";
 }
 
 ?>
-<?php mysqli_close($mysqli);?>

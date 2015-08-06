@@ -7,5 +7,4 @@ if(isset($_GET['payment_id']) && $_GET['payment_id']!='-1')
 
     echo json_encode($mSQL);
 }
-mysqli_close($mysqli);
 ?>

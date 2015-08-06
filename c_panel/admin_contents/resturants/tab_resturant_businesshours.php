@@ -173,5 +173,4 @@ if(isset($_GET['action'])){
 <input type="hidden" name="update" id="update" value="Update">
  <div>&nbsp;&nbsp;<input type="submit" name="submitBH" id="submitBH" value="Update"></div>
 </form>
-<?php mysqli_close($mysqli);?>
 

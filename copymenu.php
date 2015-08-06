@@ -233,4 +233,3 @@
         </table>
     </form>
 </body>
-<?php mysqli_close($mysqli);?>

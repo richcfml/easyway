@@ -36,5 +36,4 @@ window.location.href = "../../?mod=coupon&item=add&catid=<?=$_GET['category_id']
 </script>
 <?php
 	}
-       mysqli_close($mysqli);
 ?>

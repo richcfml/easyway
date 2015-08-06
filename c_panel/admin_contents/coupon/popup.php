@@ -135,4 +135,3 @@ function saveSelectedItems(couponItem){
 <br />
 
 <div style="float:right"><input id="close" type="image" src="../images/closelabel.gif" /></div>
-<?php mysqli_close($mysqli); ?>

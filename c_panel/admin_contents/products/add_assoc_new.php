@@ -128,4 +128,3 @@ require_once("../../../includes/config.php");
       }
 	
 ?>
-<?php mysqli_close($mysqli);?>	

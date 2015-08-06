@@ -6,4 +6,3 @@ $ajax=1;
 include "includes/main_nav.php";
  include $admin_include_content; 
  ?>
-<?php mysqli_close($mysqli);?>

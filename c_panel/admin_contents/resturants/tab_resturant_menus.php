@@ -61,5 +61,4 @@ if($subitem == 'editattribute3'){ $include =  "../attributes/tab_edit_attribute2
 <? }?>
 <br>
 <? include $include; ?>
-<?php mysqli_close($mysqli);?>
 </body>

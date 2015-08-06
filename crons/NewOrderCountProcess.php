@@ -45,4 +45,3 @@ $implodeArray = implode(', ', $restaurantIdArray);
 
 $otherRestaurantIds = dbAbstract::Update("UPDATE resturants set orders_last_month_count = 0, orders_last_but_second_month_count = 0 Where id NOT in ($implodeArray)");
 ?>
-<?php mysqli_close($mysqli);?>

@@ -552,5 +552,4 @@ if (isset($_POST['sendResume'])) {
 
         echo("<script type='text/javascript' language='javascript'>$('html, body').animate({scrollTop : 996},800);</script>");
     }
-   mysqli_close($mysqli);
 ?>

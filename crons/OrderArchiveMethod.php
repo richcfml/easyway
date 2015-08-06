@@ -13,4 +13,3 @@ WHERE OrderDate < CURDATE( ) - INTERVAL 60 DAY";
 
 $result = dbAbstract::Delete($deleteQuery);
 ?>
-<?php mysqli_close($mysqli);?>

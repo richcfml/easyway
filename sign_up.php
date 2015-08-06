@@ -1983,4 +1983,3 @@ else if ($_GET["plan"]=="premium")
             </script>");
 }
 ?>
-<?php mysqli_close($mysqli);?>

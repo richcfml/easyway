@@ -104,4 +104,3 @@ require_once("../includes/config.php");
 </form>
 </body>
 </html>
-<?php mysqli_close($mysqli);?>

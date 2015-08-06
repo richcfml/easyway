@@ -210,5 +210,3 @@ class getresturantdetails {
 
 }
 ?>
-
-<?php mysqli_close($mysqli);?>

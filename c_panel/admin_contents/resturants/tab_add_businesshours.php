@@ -14,7 +14,6 @@ require_once("../../../includes/config.php");
 	Log::write("Add restaurant business hours - tab_add_businesshours.php", "QUERY --INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'", 'menu', 1 , 'cpanel');
 	dbAbstract::Insert("INSERT INTO business_hours SET rest_id= '".$buninessHrRs['rest_id']."' , day= '".$buninessHrRs['day']."', open='".$buninessHrRs['open']."', close='".$buninessHrRs['close']."'",1);
 	}
-        <?php mysqli_close($mysqli);?>
 ?>
 
 <script language="javascript">

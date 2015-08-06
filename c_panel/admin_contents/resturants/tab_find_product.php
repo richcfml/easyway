@@ -30,4 +30,3 @@ if($result['product_id']==$value){
 }
 } ?>
 </select>
-<?php mysqli_close($mysqli);?>

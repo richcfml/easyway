@@ -1685,4 +1685,3 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 	}
 //	@mysql_close($mysql_conn);
 ?>
-<?php mysqli_close($mysqli);?>

@@ -145,4 +145,3 @@ $clientQuery = dbAbstract::Execute("SELECT * FROM users WHERE  id IN ( $client_i
     </div>
 </body>
 </html>
-<?php mysqli_close($mysqli); ?>

@@ -438,4 +438,3 @@ $update_return_url = "http://easywayordering.com/self-signup-wizard/handle_updat
                             </tr>
                         </table>
                     </body>
-<?php mysqli_close($mysqli);?>

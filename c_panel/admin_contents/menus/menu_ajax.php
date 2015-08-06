@@ -1657,5 +1657,4 @@ function replaceBhSpecialChars($pDescription)
     $pDescription = str_replace(" ", " ", $pDescription);
     return $pDescription;
 }
-mysqli_close($mysqli);
 ?>

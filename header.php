@@ -93,4 +93,3 @@
                 <h4><a href="sign_up.php" class="ewo-blue-btn"><strong>Get Started Today!</strong></a></h4></div>
         </div>
     </section>
-<?php mysqli_close($mysqli);?>

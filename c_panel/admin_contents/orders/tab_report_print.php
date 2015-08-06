@@ -248,4 +248,3 @@ function populate1(){
 
 </body>
 </html>
-<?php mysqli_close($mysqli);?>

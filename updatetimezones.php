@@ -149,4 +149,3 @@ if (isset($_POST["btnSubmit"]))
 		<input type="submit" value="Update Time Zones" style="width: 150px;" id="btnSubmit" name="btnSubmit" />
 	</form>
 </body>
-<?php mysqli_close($mysqli);?>

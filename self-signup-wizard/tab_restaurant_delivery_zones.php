@@ -622,4 +622,3 @@ function keyUpHandler(e){
 </script>
 	</body>
 </html>
-<?php mysqli_close($mysqli);?>

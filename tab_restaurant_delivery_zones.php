@@ -322,4 +322,3 @@ require_once("includes/config.php");
 </script>
 </form>
 </body>
-<?php mysqli_close($mysqli);?>

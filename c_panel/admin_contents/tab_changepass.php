@@ -819,5 +819,3 @@ if($_SESSION['admin_type']!="admin")
         }
     }
 </script>
-
-<?php mysqli_close($mysqli);?>

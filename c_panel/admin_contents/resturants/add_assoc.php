@@ -11,7 +11,6 @@
                 Log::write("Set product HasAssociates=1 - add_assoc.php", "QUERY -- UPDATE product set HasAttributes=1 WHERE prd_id = " . $_GET['product_id'] . "", 'menu', 1, 'cpanel');
                 dbAbstract::Update("UPDATE product set HasAssociates=1 WHERE prd_id = " . $_GET['product_id'] . "",1);
 	}
-      mysqli_close($mysqli);
 ?>
 	
 <script type="text/javascript" language="javascript">http://

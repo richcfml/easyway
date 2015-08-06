@@ -38,7 +38,6 @@ include("../../../includes/config.php");
     }
 	}// end if
 
-mysqli_close($mysqli);
 ?>
 	
 <script type="text/javascript" language="javascript">http://

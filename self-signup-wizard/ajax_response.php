@@ -52,4 +52,3 @@
 		return empty($arr[$key]) ? $default : $arr[$key];
 	}
 ?>
-<?php mysqli_close($mysqli);?>

@@ -838,4 +838,3 @@ option><option value="TH">Thailand</option><option value="TL">Timor-Leste</optio
 </div>    
 </body>
 </html>
-<?php mysqli_close($mysqli);?>

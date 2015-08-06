@@ -56,6 +56,5 @@ if( $numrows1 > 0) {
 	} ?>
    
 <? } else { ?>
-	<strong>There is no resturant under this Client.</strong>
+	<strong>There is no restaurant under this Client.</strong>
 <? }?>
-<?php mysqli_close($mysqli);?>

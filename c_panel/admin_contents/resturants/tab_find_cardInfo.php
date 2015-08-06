@@ -14,5 +14,3 @@ $card_qry = dbAbstract::Execute( $Card_sqlStr,1 );
 <option value=<?=$result['Payment_profile_id']?>><?=$result['card_number']?></option>
 <? } ?>
 </select>
-
-<?php mysqli_close($mysqli);?>

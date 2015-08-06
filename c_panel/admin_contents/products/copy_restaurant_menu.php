@@ -57,7 +57,6 @@ if(isset($_REQUEST['restaurantcheck']))
          }
     }
 }
-mysqli_close($mysqli);
 header('Location:'. $AdminSiteUrl.'?mod=new_menu&catid='.$_REQUEST['hdnRestaurantID'].'&menuid='.$_REQUEST['hdnMenu_id'].'&menu_name='.$_REQUEST['hdnMenuName']);exit;
 
 ?>

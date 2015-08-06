@@ -44,4 +44,3 @@
 		return $x;
 	}
 ?>
-<?php mysqli_close($mysqli);?>

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 if(!$_SESSION['admin_session_user_name'] && !$_SESSION['admin_session_pass']){ header("location:login.php");}
  ?>
@@ -9,4 +9,3 @@ if(!$_SESSION['admin_session_user_name'] && !$_SESSION['admin_session_pass']){ h
             print_r($drop_qry_rs);
 	 }
 ?>
-<?php mysqli_close($mysqli);?>

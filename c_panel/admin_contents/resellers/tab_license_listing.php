@@ -567,4 +567,3 @@ $counter = 0;
         }
     }
 </script>
-<?php mysqli_close($mysqli);?>

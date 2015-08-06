@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 
@@ -8,4 +8,3 @@ while($user = dbAbstract::returnAssoc($result,1)) {
 }
 
 ?>
-<?php mysqli_close($mysqli);?>

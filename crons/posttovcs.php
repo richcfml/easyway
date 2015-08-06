@@ -64,6 +64,4 @@
 		}
 	}
 	unset($mFax);
-	//@mysql_close($mysql_conn);
 ?>
-<?php mysqli_close($mysqli);?>

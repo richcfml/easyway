@@ -122,7 +122,6 @@ else if(isset($_POST['x_sid']))
                 
             }
         }
-        mysqli_close($mysqli);
 ?>
 
 	

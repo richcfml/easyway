@@ -215,4 +215,4 @@ $message = 'EasyWay - Analytics extracted for: ' . $rows_affected_count . ' rest
 
 $testmail=new testmail();
 $testmail->sendTo($message, $subject, $to, true);
-mysqli_close($mysqli);?>
+?>

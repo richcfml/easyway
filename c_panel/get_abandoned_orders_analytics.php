@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../includes/config.php");
 include("../includes/class.phpmailer.php");
 
@@ -153,4 +153,3 @@ $testmail=new testmail();
 $testmail->sendTo($message, $subject, $to, true);
 
 ?>
-<?php mysqli_close($mysqli);?>

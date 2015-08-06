@@ -52,4 +52,3 @@ while($reselleridsarray = dbAbstract::returnAssoc($sql,1))
 <strong>Reseller Ids:</strong><?echo $resellerids?>
 
 </div>
-<?php mysqli_close($mysqli);?>

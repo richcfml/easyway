@@ -53,6 +53,4 @@ dbAbstract::Execute("INSERT INTO `abandoned_carts` VALUES (1,0,141,'{\"restauran
 		DROP TEMPORARY TABLE IF EXISTS tmep;
 		",1
 	);
-        
-        mysqli_close($mysqli);
 ?>

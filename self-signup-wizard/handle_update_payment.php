@@ -42,4 +42,3 @@
 			</html>";
 	}
 ?>
-<?php mysqli_close($mysqli);?>

@@ -477,4 +477,3 @@ if ($_GET['call'] == 'download') {
         <?php include('footer.php'); ?>
     </body>
 </html>
-<?php mysqli_close($mysqli);?>

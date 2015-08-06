@@ -25,4 +25,3 @@ $testmail=new testmail();
 $testmail->sendTo($message, $subject, $to, true);
 
 ?>
-<?php mysqli_close($mysqli);?>

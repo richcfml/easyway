@@ -168,5 +168,4 @@ $outputArr = array();
 $outputArr['Response'] = $jsonData;
 
 print_r(json_encode($outputArr));
-mysqli_close($mysqli);
 ?>

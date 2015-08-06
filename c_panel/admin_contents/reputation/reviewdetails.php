@@ -167,4 +167,3 @@ else
 		</td>
 	</tr>
 </table>
-<?php mysqli_close($mysqli);?>

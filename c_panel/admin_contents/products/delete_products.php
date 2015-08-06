@@ -9,7 +9,6 @@ Log::write("Delete attribute - delete_products.php - LINE 8", "QUERY --".$mQuery
 
 Log::write("Delete product - delete_products.php", "QUERY -- delete from product WHERE prd_id = ".$product_id, 'menu', 1 , 'cpanel');
 dbAbstract::Delete("delete from product WHERE prd_id = ".$product_id,1);
-mysqli_close($mysqli);
 ?>
  <script language="javascript">
     window.location="../../?mod=menus&catid=<?=$catid?>";

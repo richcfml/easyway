@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../../includes/config.php");
 $resturantId=$_POST['rest_id'];
 $Status=$_POST['status'];
@@ -24,4 +24,3 @@ if($Status==0) {
 	 	 
 	  echo $newStatus."-".$newStatusMsg."-".$err;
 ?>
-<?php mysqli_close($mysqli);?>

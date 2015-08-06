@@ -209,4 +209,3 @@ function json_string($array){
     echo '}';
 }
 ?>
-<?php mysqli_close($mysqli);?>

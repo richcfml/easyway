@@ -281,7 +281,7 @@ class dbAbstract
          global $dbh;
 		$mResult = $dbh->prepare($pSQL);
 		$mResult->execute();
-		$mAffectedRows = $dbh->rowCount();
+		$mAffectedRows = $mResult->rowCount();
         
         if ($pC_Panel==0)
         {

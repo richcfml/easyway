@@ -49,4 +49,3 @@ $counter = 0;
     </tr>
   </table>
 </body>
-<?php mysqli_close($mysqli);?>

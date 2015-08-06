@@ -47,4 +47,3 @@ if($result['id']==$value){     ?>
 }
 }?>
 </select>
-<?php mysqli_close($mysqli);?>

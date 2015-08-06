@@ -91,4 +91,3 @@ function GetFileExt($fileName)
 	return substr($ext, 0, 4);
 }
 ?>
-<?php mysqli_close($mysqli);?>
