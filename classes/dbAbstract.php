@@ -404,14 +404,6 @@ class dbAbstract
     
     public static function returnRowsCount($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        if ($pC_Panel==0)
-        {
-            Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".print_r($pResult), 'dbAbstract', 0);    
-        }
-        else
-        {
-            Log::write("DB Abstract returnRowsCount Function - dbAbstract.php", "QUERY -- ".print_r($pResult), 'dbAbstract', 1, 'cpanel');
-        }
         $mRowsCount = $pResult->rowCount();
         if ($pLogResults)
         {
