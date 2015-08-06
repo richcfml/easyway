@@ -4477,7 +4477,7 @@ class TCPDF {
 		if (isset($this->spot_colors[$name])) {
 			return $this->spot_colors[$name];
 		}
-		$color = preg_replace_callback('/[\s]*/', function ($matches) { return ''; }, $name); // remove extra spaces
+		$color = preg_replace('/[\s]*/', '', $name); // remove extra spaces
 		$color = strtolower($color);
 		if (isset($this->spotcolor[$color])) {
 			$this->AddSpotColor($this->spotcolor[$color][4], $this->spotcolor[$color][0], $this->spotcolor[$color][1], $this->spotcolor[$color][2], $this->spotcolor[$color][3]);
@@ -5635,9 +5635,9 @@ class TCPDF {
 	 * @since (4.5.019) 2009-02-28
 	 */
 	public function removeSHY($txt='') {
-		$txt = preg_replace_callback('/([\\xc2]{1}[\\xad]{1})/', function ($matches) { return ''; }, $txt);
+		$txt = preg_replace('/([\\xc2]{1}[\\xad]{1})/', '', $txt);
 		if (!$this->isunicode) {
-			$txt = preg_replace_callback('/([\\xad]{1})/', function ($matches) { return ''; }, $txt);
+			$txt = preg_replace('/([\\xad]{1})/', '', $txt);
 		}
 		return $txt;
 	}
@@ -7756,7 +7756,7 @@ class TCPDF {
 							if (preg_match('/[\s]+width[\s]*=[\s]*"([^"]*)"/si', $svgtag, $tmp)) {
 								$ow = $this->getHTMLUnitToUnits($tmp[1], 1, $this->svgunit, false);
 								$owu = sprintf('%.3F', ($ow * $dpi / 72)).$this->pdfunit;
-								$svgtag = preg_replace_callback('/[\s]+width[\s]*=[\s]*"[^"]*"/si', function ($matches) use($owu) { return ' width="'.$owu.'"'; }, $svgtag, 1);
+								$svgtag = preg_replace('/[\s]+width[\s]*=[\s]*"[^"]*"/si', ' width="'.$owu.'"', $svgtag, 1);
 							} else {
 								$ow = $w;
 							}
@@ -7764,8 +7764,7 @@ class TCPDF {
 							if (preg_match('/[\s]+height[\s]*=[\s]*"([^"]*)"/si', $svgtag, $tmp)) {
 								$oh = $this->getHTMLUnitToUnits($tmp[1], 1, $this->svgunit, false);
 								$ohu = sprintf('%.3F', ($oh * $dpi / 72)).$this->pdfunit;
-								
-								$svgtag = preg_replace_callback('/[\s]+height[\s]*=[\s]*"[^"]*"/si', function ($matches) use($ohu) { return ' height="'.$ohu.'"'; }, $svgtag, 1);
+								$svgtag = preg_replace('/[\s]+height[\s]*=[\s]*"[^"]*"/si', ' height="'.$ohu.'"', $svgtag, 1);
 							} else {
 								$oh = $h;
 							}
@@ -7776,7 +7775,7 @@ class TCPDF {
 								$vbox = sprintf(' viewBox="0 0 %.3F %.3F" ', $vbw, $vbh);
 								$svgtag = $vbox.$svgtag;
 							}
-							$svgimg = preg_replace_callback('/<svg([^\>]*)>/si', function ($matches) use($svgtag) { return '<svg'.$svgtag.'>'; }, $svgimg, 1);
+							$svgimg = preg_replace('/<svg([^\>]*)>/si', '<svg'.$svgtag.'>', $svgimg, 1);
 						}
 						$img->readImageBlob($svgimg);
 					} else {
@@ -8498,8 +8497,8 @@ class TCPDF {
 		}
 		$dest = strtoupper($dest);
 		if ($dest{0} != 'F') {
-			$name = preg_replace_callback('/[\s]+/', function ($matches) { return '_'; }, $name);
-			$name = preg_replace_callback('/[^a-zA-Z0-9_\.-]/', function ($matches) { return ''; }, $name);
+			$name = preg_replace('/[\s]+/', '_', $name);
+			$name = preg_replace('/[^a-zA-Z0-9_\.-]/', '', $name);
 		}
 		if ($this->sign) {
 			// *** apply digital signature to the document ***
@@ -8826,7 +8825,7 @@ class TCPDF {
 					$aa = substr($page, $pos, ($endnum - $pos + 1));
 					// get compensation factor
 					$ratio = substr($page, ($pos + $startnum), ($endnum - $pos - $startnum));
-					$ratio = preg_replace_callback('/[^0-9\.]/', function ($matches) { return ''; }, $ratio);
+					$ratio = preg_replace('/[^0-9\.]/', '', $ratio);
 					$ratio = floatval($ratio);
 					if ($type == 'u') {
 						$chrdiff = floor(($diff + 12) * $ratio);
@@ -9852,7 +9851,7 @@ class TCPDF {
 			$font_path_parts['filename'] = substr($font_path_parts['basename'], 0, -(strlen($font_path_parts['extension']) + 1));
 		}
 		$font_name = strtolower($font_path_parts['filename']);
-		$font_name = preg_replace_callback('/[^a-z0-9_]/', function ($matches) { return ''; }, $font_name);
+		$font_name = preg_replace('/[^a-z0-9_]/', '', $font_name);
 		$search  = array('bold', 'oblique', 'italic', 'regular');
 		$replace = array('b', 'i', 'i', '');
 		$font_name = str_replace($search, $replace, $font_name);
@@ -9914,7 +9913,7 @@ class TCPDF {
 			}
 		}
 		// set encoding maps (if any)
-		$fmetric['enc'] = preg_replace_callback('/[^A-Za-z0-9_\-]/', function ($matches) { return ''; }, $enc);
+		$fmetric['enc'] = preg_replace('/[^A-Za-z0-9_\-]/', '', $enc);
 		$fmetric['diff'] = '';
 		if (($fmetric['type'] == 'TrueType') OR ($fmetric['type'] == 'Type1')) {
 			if (!empty($enc) AND ($enc != 'cp1252') AND isset($this->encmaps->encmap[$enc])) {
@@ -9958,7 +9957,7 @@ class TCPDF {
 			// get font info
 			$fmetric['Flags'] = $flags;
 			preg_match ('#/FullName[\s]*\(([^\)]*)#', $font, $matches);
-			$fmetric['name'] = preg_replace_callback('/[^a-zA-Z0-9_\-]/', function ($matches) { return ''; }, $matches[1]);
+			$fmetric['name'] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $matches[1]);
 			preg_match('#/FontBBox[\s]*{([^}]*)#', $font, $matches);
 			$fmetric['bbox'] = trim($matches[1]);
 			$bv = explode(' ', $fmetric['bbox']);
@@ -10260,7 +10259,7 @@ class TCPDF {
 					$offset += 2;
 					$offset = ($table['name']['offset'] + $stringStorageOffset + $stringOffset);
 					$fmetric['name'] = substr($font, $offset, $stringLength);
-					$fmetric['name'] = preg_replace_callback('/[^a-zA-Z0-9_\-]/', function ($matches) { return ''; }, $fmetric['name']);
+					$fmetric['name'] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $fmetric['name']);
 					break;
 				} else {
 					$offset += 4; // skip String length, String offset
@@ -13444,7 +13443,7 @@ class TCPDF {
 	 * @public
 	 */
 	public function convertHTMLColorToDec($hcolor='#FFFFFF', $defcol=array('R'=>128,'G'=>128,'B'=>128)) {
-		$color = preg_replace_callback('/[\s]*/', function ($matches) { return ''; }, $hcolor); // remove extra spaces
+		$color = preg_replace('/[\s]*/', '', $hcolor); // remove extra spaces
 		$color = strtolower($color);
 		// check for javascript color array syntax
 		if (strpos($color, '[') !== false) {
@@ -16324,15 +16323,9 @@ class TCPDF {
 		foreach ($this->outlines as $i => $o) {
 			$oid = $this->_newobj();
 			// covert HTML title to string
-			$title = preg_replace_callback($nltags, function ($matches) { return '\n'; }, $o['t']);
-			//$title = preg_replace($nltags, "\n", $o['t']);
-			
-			$title = preg_replace_callback("/[\r]+/si", function ($matches) { return ''; }, $title);
-			//$title = preg_replace("/[\r]+/si", '', $title);
-			
-			$title = preg_replace_callback("/[\n]+/si", function ($matches) { return '\n'; }, $title);
-			//$title = preg_replace("/[\n]+/si", "\n", $title);
-			
+			$title = preg_replace($nltags, "\n", $o['t']);
+			$title = preg_replace("/[\r]+/si", '', $title);
+			$title = preg_replace("/[\n]+/si", "\n", $title);
 			$title = strip_tags($title);
 			$title = $this->stringTrim($title);
 			$out = '<</Title '.$this->_textstring($title, $oid);
@@ -17942,8 +17935,7 @@ class TCPDF {
 		if (empty($name)) {
 			$name = $layer;
 		} else {
-			$name = preg_replace_callback('/[^a-zA-Z0-9_\-]/', function($matches){ return ''; }, $name);
-			//$name = preg_replace('/[^a-zA-Z0-9_\-]/', '', $name);
+			$name = preg_replace('/[^a-zA-Z0-9_\-]/', '', $name);
 		}
 		$this->pdflayers[] = array('layer' => $layer, 'name' => $name, 'print' => $print, 'view' => $view);
 		$this->openMarkedContent = true;
@@ -18265,10 +18257,7 @@ class TCPDF {
 	public function cropMark($x, $y, $w, $h, $type='T,R,B,L', $color=array(0,0,0)) {
 		$this->SetLineStyle(array('width' => (0.5 / $this->k), 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $color));
 		$type = strtoupper($type);
-		
-		$type = preg_replace_callback('/[^A-Z\-\,]*/', function ($matches) { return ''; }, $type);
-		//$type = preg_replace('/[^A-Z\-\,]*/', '', $type);
-		
+		$type = preg_replace('/[^A-Z\-\,]*/', '', $type);
 		// split type in single components
 		$type = str_replace('-', ',', $type);
 		$type = str_replace('TL', 'T,L', $type);
@@ -18744,11 +18733,8 @@ class TCPDF {
 			$out .= "\n".'endobj';
 			$this->_out($out);
 			if ($grad['transparency']) {
-				$shading_transparency = preg_replace_callback('/\/ColorSpace \/[^\s]+/si', function ($matches) { return '/ColorSpace /DeviceGray'; }, $out);
-				//$shading_transparency = preg_replace('/\/ColorSpace \/[^\s]+/si', '/ColorSpace /DeviceGray', $out);
-				
-				$shading_transparency = preg_replace_callback('/\/Function [0-9]+ /si', function ($matches) use($ft) { return '/Function '.$ft.' '; }, $shading_transparency);
-				//$shading_transparency = preg_replace('/\/Function [0-9]+ /si', '/Function '.$ft.' ', $shading_transparency);
+				$shading_transparency = preg_replace('/\/ColorSpace \/[^\s]+/si', '/ColorSpace /DeviceGray', $out);
+				$shading_transparency = preg_replace('/\/Function [0-9]+ /si', '/Function '.$ft.' ', $shading_transparency);
 			}
 			$this->gradients[$id]['id'] = $this->n;
 			// set pattern object
@@ -19956,12 +19942,8 @@ class TCPDF {
 		// get the CSS part
 		$tidy_head = tidy_get_head($tidy);
 		$css = $tidy_head->value;
-		$css = preg_replace_callback('/<style([^>]+)>/ims', function ($matches) { return '<style>'; }, $css);
-		//$css = preg_replace('/<style([^>]+)>/ims', '<style>', $css);
-		
-		$css = preg_replace_callback('/<\/style>(.*)<style>/ims', function ($matches) { return '\n'; }, $css);
-		//$css = preg_replace('/<\/style>(.*)<style>/ims', "\n", $css);
-		
+		$css = preg_replace('/<style([^>]+)>/ims', '<style>', $css);
+		$css = preg_replace('/<\/style>(.*)<style>/ims', "\n", $css);
 		$css = str_replace('/*<![CDATA[*/', '', $css);
 		$css = str_replace('/*]]>*/', '', $css);
 		preg_match('/<style>(.*)<\/style>/ims', $css, $matches);
@@ -19978,12 +19960,8 @@ class TCPDF {
 		// fix some self-closing tags
 		$html = str_replace('<br>', '<br />', $html);
 		// remove some empty tag blocks
-		$html = preg_replace_callback('/<div([^\>]*)><\/div>/', function ($matches) { return ''; }, $html);
-		//$html = preg_replace('/<div([^\>]*)><\/div>/', '', $html);
-		
-		$html = preg_replace_callback('/<p([^\>]*)><\/p>/', function ($matches) { return ''; }, $html);
-		//$html = preg_replace('/<p([^\>]*)><\/p>/', '', $html);
-		
+		$html = preg_replace('/<div([^\>]*)><\/div>/', '', $html);
+		$html = preg_replace('/<p([^\>]*)><\/p>/', '', $html);
 		if ($tagvs !== '') {
 			// set vertical space for some XHTML tags
 			$this->setHtmlVSpace($tagvs);
@@ -20005,28 +19983,16 @@ class TCPDF {
 			return array();
 		}
 		// remove comments
-		$cssdata = preg_replace_callback('/\/\*[^\*]*\*\//', function ($matches) { return ''; }, $cssdata);
-		//$cssdata = preg_replace('/\/\*[^\*]*\*\//', '', $cssdata);
-		
+		$cssdata = preg_replace('/\/\*[^\*]*\*\//', '', $cssdata);
 		// remove newlines and multiple spaces
-		$cssdata = preg_replace_callback('/[\s]+/', function ($matches) { return ' '; }, $cssdata);
-		//$cssdata = preg_replace('/[\s]+/', ' ', $cssdata);
-		
+		$cssdata = preg_replace('/[\s]+/', ' ', $cssdata);
 		// remove some spaces
-		$cssdata = preg_replace_callback('/[\s]*([;:\{\}]{1})[\s]*/', function ($matches) { return '\\1'; }, $cssdata);
-		//$cssdata = preg_replace('/[\s]*([;:\{\}]{1})[\s]*/', '\\1', $cssdata);
-		
+		$cssdata = preg_replace('/[\s]*([;:\{\}]{1})[\s]*/', '\\1', $cssdata);
 		// remove empty blocks
-		$cssdata = preg_replace_callback('/([^\}\{]+)\{\}/', function ($matches) { return ''; }, $cssdata);
-		//$cssdata = preg_replace('/([^\}\{]+)\{\}/', '', $cssdata);
-		
+		$cssdata = preg_replace('/([^\}\{]+)\{\}/', '', $cssdata);
 		// replace media type parenthesis
-		$cssdata = preg_replace_callback('/@media[\s]+([^\{]*)\{/i', function ($matches) { return '@media \\1§'; }, $cssdata);
-		//$cssdata = preg_replace('/@media[\s]+([^\{]*)\{/i', '@media \\1§', $cssdata);
-		
-		$cssdata = preg_replace_callback('/\}\}/si', function ($matches) { return '}§'; }, $cssdata);
-		//$cssdata = preg_replace('/\}\}/si', '}§', $cssdata);
-		
+		$cssdata = preg_replace('/@media[\s]+([^\{]*)\{/i', '@media \\1§', $cssdata);
+		$cssdata = preg_replace('/\}\}/si', '}§', $cssdata);
 		// trim string
 		$cssdata = trim($cssdata);
 		// find media blocks (all, braille, embossed, handheld, print, projection, screen, speech, tty, tv)
@@ -20037,8 +20003,7 @@ class TCPDF {
 				$cssblocks[$type] = $matches[2][$key];
 			}
 			// remove media blocks
-			$cssdata = preg_replace_callback('/@media[\s]+([^\§]*)§([^§]*)§/i', function ($matches) { return ''; }, $cssdata);
-			//$cssdata = preg_replace('/@media[\s]+([^\§]*)§([^§]*)§/i', '', $cssdata);
+			$cssdata = preg_replace('/@media[\s]+([^\§]*)§([^§]*)§/i', '', $cssdata);
 		}
 		// keep 'all' and 'print' media, other media types are discarded
 		if (isset($cssblocks['all']) AND !empty($cssblocks['all'])) {
@@ -20116,8 +20081,7 @@ class TCPDF {
 		if (isset($dom[$key]['attribute']['id']) AND !empty($dom[$key]['attribute']['id'])) {
 			$id = strtolower($dom[$key]['attribute']['id']);
 		}
-		$selector = preg_replace_callback('/([\>\+\~\s]{1})([\.]{1})([^\>\+\~\s]*)/si', function ($matches) { return '\\1*.\\3'; }, $selector);
-		//$selector = preg_replace('/([\>\+\~\s]{1})([\.]{1})([^\>\+\~\s]*)/si', '\\1*.\\3', $selector);
+		$selector = preg_replace('/([\>\+\~\s]{1})([\.]{1})([^\>\+\~\s]*)/si', '\\1*.\\3', $selector);
 		$matches = array();
 		if (preg_match_all('/([\>\+\~\s]{1})([a-zA-Z0-9\*]+)([^\>\+\~\s]*)/si', $selector, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE) > 0) {
 			$parentop = array_pop($matches[1]);
@@ -20323,8 +20287,7 @@ class TCPDF {
 						$cmd = substr($cmd, 0, ($pos + 1));
 						if (strpos($tagstyle, $cmd) !== false) {
 							// remove duplicate commands (last commands have high priority)
-							$tagstyle = preg_replace_callback('/'.$cmd.'[^;]+/i', function ($matches) { return ''; }, $tagstyle);
-							//$tagstyle = preg_replace('/'.$cmd.'[^;]+/i', '', $tagstyle);
+							$tagstyle = preg_replace('/'.$cmd.'[^;]+/i', '', $tagstyle);
 						}
 					}
 				}
@@ -20332,9 +20295,7 @@ class TCPDF {
 			$tagstyle .= ';'.$style['c'];
 		}
 		// remove multiple semicolons
-		$tagstyle = preg_replace_callback('/[;]+/', function ($matches) { return ';'; }, $tagstyle);
-		//$tagstyle = preg_replace('/[;]+/', ';', $tagstyle);
-		
+		$tagstyle = preg_replace('/[;]+/', ';', $tagstyle);
 		return $tagstyle;
 	}
 
@@ -20687,15 +20648,7 @@ class TCPDF {
 		}
 		return $val;
 	}
-	
-	private function unserializeData($data){
-		$result = @unserialize($data);
-		if($result === false){
-			$result = unserialize($data);
-		}
-		return $result;
-	}
-	
+
 	/**
 	 * Returns the HTML DOM array.
 	 * @param $html (string) html code
@@ -20710,9 +20663,9 @@ class TCPDF {
 		$matches = array();
 		if (preg_match_all('/<cssarray>([^\<]*)<\/cssarray>/isU', $html, $matches) > 0) {
 			if (isset($matches[1][0])) {
-				$css = array_merge($css, $this->unserializeData($this->unhtmlentities($matches[1][0])));
+				$css = array_merge($css, 	($this->unhtmlentities($matches[1][0])));
 			}
-			$html = preg_replace_callback('/<cssarray>(.*?)<\/cssarray>/isU', function ($matches) { return ''; }, $html);
+			$html = preg_replace('/<cssarray>(.*?)<\/cssarray>/isU', '', $html);
 		}
 		// extract external CSS files
 		$matches = array();
@@ -20752,8 +20705,8 @@ class TCPDF {
 		// create a special tag to contain the CSS array (used for table content)
 		$csstagarray = '<cssarray>'.htmlentities(serialize($css)).'</cssarray>';
 		// remove head and style blocks
-		$html = preg_replace_callback('/<head([^\>]*)>(.*?)<\/head>/siU', function ($matches) { return ''; }, $html);
-		$html = preg_replace_callback('/<style([^\>]*)>([^\<]*)<\/style>/isU', function ($matches) { return ''; }, $html);
+		$html = preg_replace('/<head([^\>]*)>(.*?)<\/head>/siU', '', $html);
+		$html = preg_replace('/<style([^\>]*)>([^\<]*)<\/style>/isU', '', $html);
 		// define block tags
 		$blocktags = array('blockquote','br','dd','dl','div','dt','h1','h2','h3','h4','h5','h6','hr','li','ol','p','pre','ul','tcpdf','table','tr','td');
 		// define self-closing tags
@@ -20761,9 +20714,9 @@ class TCPDF {
 		// remove all unsupported tags (the line below lists all supported tags)
 		$html = strip_tags($html, '<marker/><a><b><blockquote><body><br><br/><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr/><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
 		//replace some blank characters
-		$html = preg_replace_callback('/<pre/', function ($matches) { return '<xre'; }, $html); // preserve pre tag
-		$html = preg_replace_callback('/<(table|tr|td|th|tcpdf|blockquote|dd|div|dl|dt|form|h1|h2|h3|h4|h5|h6|br|hr|li|ol|ul|p)([^\>]*)>[\n\r\t]+/', function ($matches) { return '<\\1\\2>'; }, $html);
-		$html = preg_replace_callback('@(\r\n|\r)@', function ($matches) { return '\n'; }, $html);
+		$html = preg_replace('/<pre/', '<xre', $html); // preserve pre tag
+		$html = preg_replace('/<(table|tr|td|th|tcpdf|blockquote|dd|div|dl|dt|form|h1|h2|h3|h4|h5|h6|br|hr|li|ol|ul|p)([^\>]*)>[\n\r\t]+/', '<\\1\\2>', $html);
+		$html = preg_replace('@(\r\n|\r)@', "\n", $html);
 		$repTable = array("\t" => ' ', "\0" => ' ', "\x0B" => ' ', "\\" => "\\\\");
 		$html = strtr($html, $repTable);
 		$offset = 0;
@@ -20772,11 +20725,11 @@ class TCPDF {
 			$html_b = substr($html, $offset, ($pos - $offset + 6));
 			while (preg_match("'<xre([^\>]*)>(.*?)\n(.*?)</pre>'si", $html_b)) {
 				// preserve newlines on <pre> tag
-				$html_b = preg_replace_callback("'<xre([^\>]*)>(.*?)\n(.*?)</pre>'si", function ($matches) { return "<xre\\1>\\2<br />\\3</pre>"; }, $html_b);
+				$html_b = preg_replace("'<xre([^\>]*)>(.*?)\n(.*?)</pre>'si", "<xre\\1>\\2<br />\\3</pre>", $html_b);
 			}
 			while (preg_match("'<xre([^\>]*)>(.*?)".$this->re_space['p']."(.*?)</pre>'".$this->re_space['m'], $html_b)) {
 				// preserve spaces on <pre> tag
-				$html_b = preg_replace_callback("'<xre([^\>]*)>(.*?)".$this->re_space['p']."(.*?)</pre>'".$this->re_space['m'], function ($matches) { return "<xre\\1>\\2&nbsp;\\3</pre>"; }, $html_b);
+				$html_b = preg_replace("'<xre([^\>]*)>(.*?)".$this->re_space['p']."(.*?)</pre>'".$this->re_space['m'], "<xre\\1>\\2&nbsp;\\3</pre>", $html_b);
 			}
 			$html = $html_a.$html_b.substr($html, $pos + 6);
 			$offset = strlen($html_a.$html_b);
@@ -20787,66 +20740,54 @@ class TCPDF {
 			$html_b = substr($html, $offset, ($pos - $offset + 11));
 			while (preg_match("'<textarea([^\>]*)>(.*?)\n(.*?)</textarea>'si", $html_b)) {
 				// preserve newlines on <textarea> tag
-				$html_b = preg_replace_callback("'<textarea([^\>]*)>(.*?)\n(.*?)</textarea>'si", function ($matches) { return "<textarea\\1>\\2<TBR>\\3</textarea>"; }, $html_b);
-				
-				$html_b = preg_replace_callback("'<textarea([^\>]*)>(.*?)[\"](.*?)</textarea>'si", function ($matches) { return "<textarea\\1>\\2''\\3</textarea>"; }, $html_b);
+				$html_b = preg_replace("'<textarea([^\>]*)>(.*?)\n(.*?)</textarea>'si", "<textarea\\1>\\2<TBR>\\3</textarea>", $html_b);
+				$html_b = preg_replace("'<textarea([^\>]*)>(.*?)[\"](.*?)</textarea>'si", "<textarea\\1>\\2''\\3</textarea>", $html_b);
 			}
 			$html = $html_a.$html_b.substr($html, $pos + 11);
 			$offset = strlen($html_a.$html_b);
 		}
-		$html = preg_replace_callback('/([\s]*)<option/si', function ($matches) { return '<option'; }, $html);
-		$html = preg_replace_callback('/<\/option>([\s]*)/si', function ($matches) { return '</option>'; }, $html);
+		$html = preg_replace('/([\s]*)<option/si', '<option', $html);
+		$html = preg_replace('/<\/option>([\s]*)/si', '</option>', $html);
 		$offset = 0;
 		while (($offset < strlen($html)) AND ($pos = strpos($html, '</option>', $offset)) !== false) {
 			$html_a = substr($html, 0, $offset);
 			$html_b = substr($html, $offset, ($pos - $offset + 9));
 			while (preg_match("'<option([^\>]*)>(.*?)</option>'si", $html_b)) {
-				
-				$html_b = preg_replace_callback("'<option([\s]+)value=\"([^\"]*)\"([^\>]*)>(.*?)</option>'si", function ($matches) { return "\\2#!TaB!#\\4#!NwL!#"; }, $html_b);
-				
-				$html_b = preg_replace_callback("'<option([^\>]*)>(.*?)</option>'si", function ($matches) { return "\\2#!NwL!#"; }, $html_b);
+				$html_b = preg_replace("'<option([\s]+)value=\"([^\"]*)\"([^\>]*)>(.*?)</option>'si", "\\2#!TaB!#\\4#!NwL!#", $html_b);
+				$html_b = preg_replace("'<option([^\>]*)>(.*?)</option>'si", "\\2#!NwL!#", $html_b);
 			}
 			$html = $html_a.$html_b.substr($html, $pos + 9);
 			$offset = strlen($html_a.$html_b);
 		}
 		if (preg_match("'</select'si", $html)) {
-			$html = preg_replace_callback("'<select([^\>]*)>'si", function ($matches) { return "<select\\1 opt=\""; }, $html);
-			$html = preg_replace_callback("'#!NwL!#</select>'si", function ($matches) { return "\" />"; }, $html);
+			$html = preg_replace("'<select([^\>]*)>'si", "<select\\1 opt=\"", $html);
+			$html = preg_replace("'#!NwL!#</select>'si", "\" />", $html);
 		}
 		$html = str_replace("\n", ' ', $html);
 		// restore textarea newlines
 		$html = str_replace('<TBR>', "\n", $html);
 		// remove extra spaces from code
-		
-		$html = preg_replace_callback('/[\s]+<\/(table|tr|ul|ol|dl)>/', function ($matches) { return '</\\1>'; }, $html);
-		$html = preg_replace_callback('/'.$this->re_space['p'].'+<\/(td|th|li|dt|dd)>/'.$this->re_space['m'], function ($matches) { return '</\\1>'; }, $html);
-		$html = preg_replace_callback('/[\s]+<(tr|td|th|li|dt|dd)/', function ($matches) { return '<\\1'; }, $html);
-		$html = preg_replace_callback('/'.$this->re_space['p'].'+<(ul|ol|dl|br)/'.$this->re_space['m'], function ($matches) { return '<\\1'; }, $html);
-		preg_replace_callback('/<\/(table|tr|td|th|blockquote|dd|dt|dl|div|dt|h1|h2|h3|h4|h5|h6|hr|li|ol|ul|p)>[\s]+</', function ($matches) { return '</\\1><'; }, $html);
-		$html = preg_replace_callback('/<\/(td|th)>/', function ($matches) { return '<marker style="font-size:0"/></\\1>'; }, $html);
-		$html = preg_replace_callback('/<\/table>([\s]*)<marker style="font-size:0"\/>/', function ($matches) { return '</table>'; }, $html);
-		$html = preg_replace_callback('/'.$this->re_space['p'].'+<img/'.$this->re_space['m'], function ($matches) { return chr(32).'<img'; }, $html);
-		$html = preg_replace_callback('/<img([^\>]*)>[\s]+([^\<])/xi', function ($matches) { return '<img\\1>&nbsp;\\2'; }, $html);
-		$html = preg_replace_callback('/<img([^\>]*)>/xi', function ($matches) { return '<img\\1><span><marker style="font-size:0"/></span>'; }, $html);
-		$html = preg_replace_callback('/<xre/', function ($matches) { return '<pre'; }, $html); // restore pre tag
-		$html = preg_replace_callback('/<textarea([^\>]*)>([^\<]*)<\/textarea>/xi', function ($matches) { return '<textarea\\1 value="\\2" />'; }, $html);
-		
-		$html = preg_replace_callback('/<li([^\>]*)><\/li>/', function ($matches) { return '<li\\1>&nbsp;</li>'; }, $html);
-		
-		$html = preg_replace_callback('/<li([^\>]*)>'.$this->re_space['p'].'*<img/'.$this->re_space['m'], function ($matches) { return '<li\\1><font size="1">&nbsp;</font><img'; }, $html);;
-		
-		$html = preg_replace_callback('/<([^\>\/]*)>[\s]/', function ($matches) { return '<\\1>&nbsp;'; }, $html); // preserve some spaces
-
-		
-		$html = preg_replace_callback('/[\s]<\/([^\>]*)>/', function ($matches) { return '&nbsp;</\\1>'; }, $html); // preserve some spaces
-		
-		$html = preg_replace_callback('/'.$this->re_space['p'].'+/'.$this->re_space['m'], function ($matches) { return chr(32); }, $html); // replace multiple spaces with a single space
-		
+		$html = preg_replace('/[\s]+<\/(table|tr|ul|ol|dl)>/', '</\\1>', $html);
+		$html = preg_replace('/'.$this->re_space['p'].'+<\/(td|th|li|dt|dd)>/'.$this->re_space['m'], '</\\1>', $html);
+		$html = preg_replace('/[\s]+<(tr|td|th|li|dt|dd)/', '<\\1', $html);
+		$html = preg_replace('/'.$this->re_space['p'].'+<(ul|ol|dl|br)/'.$this->re_space['m'], '<\\1', $html);
+		$html = preg_replace('/<\/(table|tr|td|th|blockquote|dd|dt|dl|div|dt|h1|h2|h3|h4|h5|h6|hr|li|ol|ul|p)>[\s]+</', '</\\1><', $html);
+		$html = preg_replace('/<\/(td|th)>/', '<marker style="font-size:0"/></\\1>', $html);
+		$html = preg_replace('/<\/table>([\s]*)<marker style="font-size:0"\/>/', '</table>', $html);
+		$html = preg_replace('/'.$this->re_space['p'].'+<img/'.$this->re_space['m'], chr(32).'<img', $html);
+		$html = preg_replace('/<img([^\>]*)>[\s]+([^\<])/xi', '<img\\1>&nbsp;\\2', $html);
+		$html = preg_replace('/<img([^\>]*)>/xi', '<img\\1><span><marker style="font-size:0"/></span>', $html);
+		$html = preg_replace('/<xre/', '<pre', $html); // restore pre tag
+		$html = preg_replace('/<textarea([^\>]*)>([^\<]*)<\/textarea>/xi', '<textarea\\1 value="\\2" />', $html);
+		$html = preg_replace('/<li([^\>]*)><\/li>/', '<li\\1>&nbsp;</li>', $html);
+		$html = preg_replace('/<li([^\>]*)>'.$this->re_space['p'].'*<img/'.$this->re_space['m'], '<li\\1><font size="1">&nbsp;</font><img', $html);
+		$html = preg_replace('/<([^\>\/]*)>[\s]/', '<\\1>&nbsp;', $html); // preserve some spaces
+		$html = preg_replace('/[\s]<\/([^\>]*)>/', '&nbsp;</\\1>', $html); // preserve some spaces
+		$html = preg_replace('/'.$this->re_space['p'].'+/'.$this->re_space['m'], chr(32), $html); // replace multiple spaces with a single space
 		// trim string
 		$html = $this->stringTrim($html);
 		// fix first image tag alignment
-		$html = preg_replace_callback('/^<img/', function ($matches) { return '<span style="font-size:0"><br /></span> <img'; }, $html, 1);
-		
+		$html = preg_replace('/^<img/', '<span style="font-size:0"><br /></span> <img', $html, 1);
 		// pattern for generic tag
 		$tagpattern = '/(<[^>]+>)/';
 		// explodes the string
@@ -22101,9 +22042,8 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							$ns = 0; // number of spaces
 							$pmidtemp = $pmid;
 							// escape special characters
-							$pmidtemp = preg_replace_callback('/[\\\][\(]/x', function ($matches) { return '\\#!#OP#!#'; }, $pmidtemp);
-							$pmidtemp = preg_replace_callback('/[\\\][\)]/x', function ($matches) { return '\\#!#CP#!#'; }, $pmidtemp);
-							
+							$pmidtemp = preg_replace('/[\\\][\(]/x', '\\#!#OP#!#', $pmidtemp);
+							$pmidtemp = preg_replace('/[\\\][\)]/x', '\\#!#CP#!#', $pmidtemp);
 							// search spaces
 							if (preg_match_all('/\[\(([^\)]*)\)\]/x', $pmidtemp, $lnstring, PREG_PATTERN_ORDER)) {
 								$spacestr = $this->getSpaceString();
@@ -22299,8 +22239,8 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 									}
 									$pmidtemp = $pmid;
 									// escape special characters
-									$pmidtemp = preg_replace_callback('/[\\\][\(]/x', function ($matches) { return '\\#!#OP#!#'; }, $pmidtemp);						
-									$pmidtemp = preg_replace_callback('/[\\\][\)]/x', function ($matches) { return '\\#!#CP#!#'; }, $pmidtemp);						
+									$pmidtemp = preg_replace('/[\\\][\(]/x', '\\#!#OP#!#', $pmidtemp);
+									$pmidtemp = preg_replace('/[\\\][\)]/x', '\\#!#CP#!#', $pmidtemp);
 									$pmid = preg_replace_callback("/\[\(([^\)]*)\)\]/x",
 												create_function('$matches', 'global $spacew;
 												$matches[1] = str_replace("#!#OP#!#", "(", $matches[1]);
@@ -22320,8 +22260,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 										$spacewidth /= ($this->font_stretching / 100);
 									}
 									$rs = sprintf('%.3F Tw', $spacewidth);
-									$pmid = preg_replace_callback("/\[\(/x", function ($matches) use($rs) { return $rs.' [('; }, $pmid);
-									
+									$pmid = preg_replace("/\[\(/x", $rs.' [(', $pmid);
 									if ($this->inxobj) {
 										// we are inside an XObject template
 										$this->xobjects[$this->xobjid]['outdata'] = $pstart."\n".$pmid."\nBT 0 Tw ET\n".$pend;
@@ -22750,8 +22689,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				} else {
 					$firstblock = false;
 					// replace empty multiple spaces string with a single space
-					
-					$dom[$key]['value'] = preg_replace_callback('/^'.$this->re_space['p'].'+$/'.$this->re_space['m'], function ($matches) { return chr(32); }, $dom[$key]['value']);
+					$dom[$key]['value'] = preg_replace('/^'.$this->re_space['p'].'+$/'.$this->re_space['m'], chr(32), $dom[$key]['value']);
 				}
 				$strrest = '';
 				if ($this->rtl) {
@@ -23663,7 +23601,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$tcpdf_method = $tag['attribute']['method'];
 						if (method_exists($this, $tcpdf_method)) {
 							if (isset($tag['attribute']['params']) AND (!empty($tag['attribute']['params']))) {
-								$params = $this->unserializeData(urldecode($tag['attribute']['params']));
+								$params = unserialize(urldecode($tag['attribute']['params']));
 								call_user_func_array(array($this, $tcpdf_method), $params);
 							} else {
 								$this->$tcpdf_method();
@@ -25280,7 +25218,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 */
 	protected function getImageBuffer($image) {
 		if ($this->diskcache AND isset($this->images[$image])) {
-			return $this->unserializeData($this->readDiskCache($this->images[$image]));
+			return unserialize($this->readDiskCache($this->images[$image]));
 		} elseif (isset($this->images[$image])) {
 			return $this->images[$image];
 		}
@@ -25342,7 +25280,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 */
 	protected function getFontBuffer($font) {
 		if ($this->diskcache AND isset($this->fonts[$font])) {
-			return $this->unserializeData($this->readDiskCache($this->fonts[$font]));
+			return unserialize($this->readDiskCache($this->fonts[$font]));
 		} elseif (isset($this->fonts[$font])) {
 			return $this->fonts[$font];
 		}
@@ -26462,8 +26400,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$data = file_get_contents($file);
 		$patterns = array();
 		// remove comments
-		$data = preg_replace_callback('/\%[^\n]*/', function ($matches) { return ''; }, $data);
-		
+		$data = preg_replace('/\%[^\n]*/', '', $data);
 		// extract the patterns part
 		preg_match('/\\\\patterns\{([^\}]*)\}/i', $data, $matches);
 		$data = trim(substr($matches[0], 10, -1));
@@ -26475,8 +26412,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			if (!$this->empty_string($val)) {
 				$val = trim($val);
 				$val = str_replace('\'', '\\\'', $val);
-				$key = preg_replace_callback('/[0-9]+/', function ($matches) { return ''; }, $val);
-				
+				$key = preg_replace('/[0-9]+/', '', $val);
 				$patterns[$key] = $val;
 			}
 		}
@@ -26674,7 +26610,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 * @since 5.8.000 (2010-08-11)
 	 */
 	public function stringLeftTrim($str, $replace='') {
-		return preg_replace_callback('/^'.$this->re_space['p'].'+/'.$this->re_space['m'], function ($matches) use($replace) { return $replace; }, $str);
+		return preg_replace('/^'.$this->re_space['p'].'+/'.$this->re_space['m'], $replace, $str);
 	}
 
 	/**
@@ -26687,7 +26623,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 * @since 5.8.000 (2010-08-11)
 	 */
 	public function stringRightTrim($str, $replace='') {
-		return preg_replace_callback('/'.$this->re_space['p'].'+$/'.$this->re_space['m'], function ($matches) use($replace) { return $replace; }, $str);
+		return preg_replace('/'.$this->re_space['p'].'+$/'.$this->re_space['m'], $replace, $str);
 	}
 
 	/**
@@ -26726,17 +26662,15 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 */
 	public function getFontFamilyName($fontfamily) {
 		// remove spaces and symbols
-		$fontfamily = preg_replace_callback('/[^a-z0-9\,]/', function ($matches) { return ''; }, strtolower($fontfamily));
-		
+		$fontfamily = preg_replace('/[^a-z0-9\,]/', '', strtolower($fontfamily));
 		// extract all font names
 		$fontslist = preg_split('/[,]/', $fontfamily);
 		// find first valid font name
 		foreach ($fontslist as $font) {
 			// replace font variations
-			$font = preg_replace_callback('/italic$/', function ($matches) { return 'I'; }, $font);
-			$font = preg_replace_callback('/oblique$/', function ($matches) { return 'I'; }, $font);
-			$font = preg_replace_callback('/bold([I]?)$/', function ($matches) { return 'B\\1'; }, $font);
-			
+			$font = preg_replace('/italic$/', 'I', $font);
+			$font = preg_replace('/oblique$/', 'I', $font);
+			$font = preg_replace('/bold([I]?)$/', 'B\\1', $font);
 			// replace common family names and core fonts
 			$pattern = array();
 			$replacement = array();
@@ -26746,8 +26680,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			$replacement[] = 'helvetica';
 			$pattern[] = '/^monospace/';
 			$replacement[] = 'courier';
-			$font = preg_replace_callback($pattern, function ($matches) use($replacement) { return $replacement; }, $font);
-
+			$font = preg_replace($pattern, $replacement, $font);
 			if (in_array(strtolower($font), $this->fontlist) OR in_array($font, $this->fontkeys)) {
 				return $font;
 			}
@@ -27951,8 +27884,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			return;
 		}
 		$paths = array();
-		$d = preg_replace_callback('/([0-9ACHLMQSTVZ])([\-\+])/si', function ($matches) { return '\\1 \\2'; }, $d);
-		
+		$d = preg_replace('/([0-9ACHLMQSTVZ])([\-\+])/si', '\\1 \\2', $d);
 		preg_match_all('/([ACHLMQSTVZ])[\s]*([^ACHLMQSTVZ\"]*)/si', $d, $paths, PREG_SET_ORDER);
 		$x = 0;
 		$y = 0;
