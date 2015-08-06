@@ -68,13 +68,11 @@ if($_POST) {
             $check_card_data_Qry = dbAbstract::ExecuteObject("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
             
 
-            echo("AAAAA<br />");
+            
             if(!empty($chargify_customer_id))
             {
-                echo("BBBBB<br />");
                 if(!empty($chargify_subscription_id->subscription))
                 {
-                    echo("CCCCC<br />");
                     $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address)
                         values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($email))."','$phone','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',
@@ -85,7 +83,7 @@ if($_POST) {
 
                         $reseller_id = dbAbstract::Insert($sql, 1, 2);
                         if($reseller_id > 0)  {
-echo("DDDDD<br />");
+
                             dbAbstract::Insert(
                                         "INSERT INTO chargify_products
                                         SET user_id= '".addslashes($reseller_id)."'
