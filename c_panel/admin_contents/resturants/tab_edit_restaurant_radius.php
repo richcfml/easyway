@@ -254,8 +254,6 @@ if (!empty($_GET)) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (isset($_POST['submit'])) {
-    echo("123");
-        exit;
 	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
     $restQry = dbAbstract::Execute("SELECT name from resturants where name='$catname' AND id!='$catid'",1);
     $restRs = dbAbstract::returnRowsCount($restQry,1);
