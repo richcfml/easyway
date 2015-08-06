@@ -1019,20 +1019,21 @@ class testmail  {
 						  
 						  }
 						  
-				  public function sendTo($message,$subject,$to,$html=true) {
-							$this->customermail->ClearAllRecipients();
-							$this->customermail->AddAddress($to);
-						//	$this->customermail->AddBCC("irfan@qualityclix.com");
-							$this->customermail->IsHTML($html);
-							$this->customermail->Subject = $subject;
-							$this->customermail->Body = $message;
-							if($this->from!="")
-								$this->customermail->From = $this->from;
-							 
-							 $this->customermail->Send();
-						 
-						  
-						  }
+		public function sendTo($message,$subject,$to,$html=true) 
+                {
+                    Log::write("Email SendTo Function Line 1024", "Message: ".$message.", \nSubject: ".$subject.", \nTo: ".$to.", \nFrom: ".$this->from, 'Mails');
+                    $this->customermail->ClearAllRecipients();
+                    $this->customermail->AddAddress($to);
+                    $this->customermail->IsHTML($html);
+                    $this->customermail->Subject = $subject;
+                    $this->customermail->Body = $message;
+                    if($this->from!="")
+                    {
+                        $this->customermail->From = $this->from;
+                    }
+
+                    $this->customermail->Send();
+              }
 						  
 						  public function addattachment($attachment){
 							
