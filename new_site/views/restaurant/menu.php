@@ -189,6 +189,7 @@ $loop_index_check = FALSE;
                 },
                 success: function(data)
                 {
+                    console.log(data);
                     data = JSON.parse(data);
                     attributes_array = data.attr;
                     association_array = data.assoc;
@@ -320,7 +321,6 @@ $loop_index_check = FALSE;
 
                         attributes.push(tempfirstatt);
 
-                        console.log(attribute.attributes);
                         $.each(attribute.attributes, function(i, attribute1) {
                             var attributes1 = [];
                             var tempfirstatt1 = {};
