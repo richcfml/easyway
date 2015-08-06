@@ -1336,7 +1336,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 </li>
                 <?}}?>
               </ul>
-              <div class="noRelatedItems"   <? if(dbAbstract::returnRowsCount($product_query,1)>0){?>style="display:none;" <?}else{?> style="display:block;"<?}?>> <span style="display:block;margin-top: 125px;">No Complementary Items</span> <span>Add Some?</span> </div>
+              <div class="noRelatedItems"   <?php if(dbAbstract::returnRowsCount($product_query, 1, true)>0){?>style="display:none;" <?}else{?> style="display:block;"<?}?>> <span style="display:block;margin-top: 125px;">No Complementary Items</span> <span>Add Some?</span> </div>
             </div>
             <input type="button" value="Save order" name="btnSortComplimentry" id="btnSortComplimentry" style="width: 125px;margin-left: 33px;margin-top: 12px;margin-bottom: 5px;" class="cancel">
             <input type="hidden" value="" id="associations_ids" name="sortComplimentryItems"/>
