@@ -13,6 +13,8 @@ function GetFileExt($fileName){
 	
 if($_POST) {
 	extract($_POST);
+        print_r($_FILES);
+        exit;
 	
 	// to avoid duplicate insertion...
 	$sqlResult = dbAbstract::Execute("SELECT username FROM users WHERE username ='" .$user_name. "'",1);
