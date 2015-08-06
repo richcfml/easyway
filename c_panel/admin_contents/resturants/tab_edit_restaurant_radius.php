@@ -31,7 +31,6 @@
     .draggable-popup{background-color:white; border:1px solid black}
 </style>
 <!--Start script for dependent list-->
-<!--<script src="../js/deliveryzones.js" type="text/javascript"></script>-->
 <script src="../js/checkdeliveryzones.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript">
 // Roshan's Ajax dropdown code with php
@@ -305,6 +304,8 @@ if (isset($_POST['submit'])) {
     } else if ($restRs1 > 0) {
         $errMessage = "Chargify Subscription ID not available";
     } else {
+        echo("123");
+        exit;
         if (!empty($credit) & !empty($cash)) {
             $payment_method = "both";
         } else if (!empty($credit)) {
