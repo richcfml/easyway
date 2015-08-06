@@ -177,6 +177,7 @@ $loop_index_check = FALSE;
             {
                 mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&showpopup=1&ajax=1";
             }
+            console.log(mUrl);
             $.ajax
             ({
                 url: mUrl,
@@ -189,7 +190,6 @@ $loop_index_check = FALSE;
                 },
                 success: function(data)
                 {
-                    console.log(data);
                     data = JSON.parse(data);
                     attributes_array = data.attr;
                     association_array = data.assoc;
