@@ -195,7 +195,8 @@ $loop_index_check = FALSE;
                     var totalattributes = data.totalAttribute;
                     $('#totalAttributes').val(totalattributes);
                     
-                    if(data.hasOwnProperty('productDetails')){
+                    if(data.hasOwnProperty('productDetails'))
+                    {
                         //Means Edit Item function called from cart
                         // So, call setProductDetailsToPopup function to set extra details of product to popup
                         productDetails = data.productDetails;
@@ -225,14 +226,12 @@ $loop_index_check = FALSE;
                         $('#requestnote').val('');
                         $('#requestnote').text('');
                     }
-/*------------------------------Naveed Start---------------------------------------------------*/
+
                     var requiredIndex = 0;
-/*------------------------------Naveed End-----------------------------------------------------*/                    
-                    $.each(attributes_array, function(i, attribute) {
+                    $.each(attributes_array, function(i, attribute) 
+                    {
                         mAttReq = '';
-/*------------------------------Naveed Start---------------------------------------------------*/
                         mAttrReqHtml = '';
-/*------------------------------Naveed End---------------------------------------------------*/                        
                         mStrRe = '<tr><td colspan="3" style="width: 100%; font-size: 11px !important; color: red;">&nbsp;<i>';
 
                         var mAttrName = attribute.attr_name;
@@ -248,21 +247,18 @@ $loop_index_check = FALSE;
 						
                         attribute_index = attribute_index + 1;
                         attribute_name = "attr" + attribute_index + "[]";
-                        if (attribute.Type == 1 || attribute.Type == 3) {
+                        if (attribute.Type == 1 || attribute.Type == 3) 
+                        {
                             attribute_name = "attr" + attribute_index;
                         }
                         attribute_parent_name = "attrname" + attribute_index;
 						
                         if (attribute.Required == 1)
                         {
-/*------------------------------Naveed Start---------------------------------------------------*/
                             attributeRequired[requiredIndex] = attribute.id;
                             requiredIndex++;
-/*------------------------------Naveed End---------------------------------------------------*/
                             mStrRe = mStrRe + 'Choose at least one';
-/*------------------------------Naveed Start---------------------------------------------------*/                            
                             mAttrReqHtml = '<span id="attrRequired-'+attribute.id+'" class="red" style="display:none;">*</span>';
-/*------------------------------Naveed End---------------------------------------------------*/                            
                         }
 						
                         if (($.trim(mLimit)!="") && ($.trim(mLimitPrice)!=""))
@@ -281,33 +277,28 @@ $loop_index_check = FALSE;
                         }
 
                         mStrRe = mStrRe + '</i></td></tr>';
-/*------------------------------Naveed Start---------------------------------------------------*/
-						if (attribute.display_Name!=null)
-						{
-							if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
-							{
-                        		html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-							}
-							else
-							{
-		                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-							}
-						}
-						else
-						{
-	                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
-						}
-/*------------------------------Naveed End---------------------------------------------------*/
-                        if (attribute.Type == 1) {
+                        if (attribute.display_Name!=null)
+                        {
+                            if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
+                            {
+                                html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.display_Name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+                            }
+                            else
+                            {
+                                html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+                            }
+                        }
+                        else
+                        {
+                            html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
+                        }
+                        if (attribute.Type == 1) 
+                        {
                             html = html + '  <tr><td><select id="ddlAttr" attributeid="'+attribute.id+'" textboxid="txtDD'+attribute.id+'" type="select" name="' + attribute_name + '" class="inputAttrDD">';
-                            
-                                html = html + '<option price="" value="" selected>-	Select -</option>';
+                            html = html + '<option price="" value="" selected>-	Select -</option>';
                         }
 
                         var attribute_option_index = 0;
-                        var option_name = "option";
-
-
                         var attributes = [];
                         var tempfirstatt = {};
 
@@ -329,6 +320,7 @@ $loop_index_check = FALSE;
 
                         attributes.push(tempfirstatt);
 
+                        console.log(attribute.attributes);
                         $.each(attribute.attributes, function(i, attribute1) {
                             var attributes1 = [];
                             var tempfirstatt1 = {};
