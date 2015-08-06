@@ -1,4 +1,4 @@
-<?
+<?php
 $resellerId = 0;
 $and='';
 $search_by=0;
@@ -48,7 +48,6 @@ if (isset($_REQUEST['del_user_id'])) {
 	dbAbstract::Update("UPDATE analytics SET  status='0' WHERE resturant_id in (SELECT id as resturant_id from resturants WHERE owner_id = '".$id."') ",1);
 
 } 
-//==========================================================================================
 
 if( $resellerId == 0 ) 
 	$resellerId	=   @$_REQUEST['resellerId'];
@@ -70,9 +69,8 @@ if($_SESSION['admin_type'] == 'admin') {
 	$clientQry	=	"select * from users WHERE type = 'store owner' AND id IN ( $ids ) ";
 }
 
- 
-$clientQry1 = dbAbstract::Insert("$clientQry $and",1);
-$clientRows = dbAbstract::returnRowsCount($clientQry1,1);			
+$clientQry1 = dbAbstract::Execute("$clientQry $and",1);
+$clientRows = dbAbstract::returnRowsCount($clientQry1,1);
 $counter = 0;
 ?>
 
