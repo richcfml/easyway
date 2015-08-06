@@ -1021,7 +1021,7 @@ class testmail  {
 						  
 		public function sendTo($message,$subject,$to,$html=true) 
                 {
-                    Log::write("Email SendTo Function Line 1024", "Message: ".$message.", \nSubject: ".$subject.", \nTo: ".$to.", \nFrom: ".$this->from, 'Mails');
+                    Log::write("Function = sendTo, Line # = 1024, File = includes/function.php", "Message: ".$message.", \nSubject: ".$subject.", \nTo: ".$to.", \nFrom: ".$this->from, 'Mails');
                     $this->customermail->ClearAllRecipients();
                     $this->customermail->AddAddress($to);
                     $this->customermail->IsHTML($html);

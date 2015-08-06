@@ -454,7 +454,7 @@ class users
         $mail_body=$mail_body."Phone: ". $objRestaurant->phone ."<br>";
         $mail_body=$mail_body."Fax: ". $objRestaurant->fax ."<br>";
 
-        $objMail->from = "info@". $objRestaurant->name  .".com";
+        $objMail->from = "info@easywayordering.com";
         $objMail->sendTo($mail_body,"Thank you for register at ". $objRestaurant->name ."",$this->cust_email);
     }
 		 
