@@ -297,10 +297,10 @@ if (isset($_POST['submit'])) {
     {
         $errMessage = "Pleaser Enter Valid Logo";
     } 
-    else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) 
+    /*else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) 
     {
         $errMessage = "Pleaser Enter Valid Logo Thumbnail";
-    } 
+    }*/ 
     else if ($rest_zip == '') 
     {
         $errMessage = "Please enter resturant zip code";
