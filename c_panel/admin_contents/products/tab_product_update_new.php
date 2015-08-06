@@ -1325,7 +1325,9 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <?php
                         $product_assoc_qry = dbAbstract::Execute("SELECT association_id FROM product_association WHERE product_id ='".$prd_id."' order by sortOrder asc",1);
                              while ($assocRs = dbAbstract::returnArray($product_assoc_qry,1)) {
-                                $product_query = dbAbstract::Execute("SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'",1);
+                                    Log::write("Query", "SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'", 'debug');
+                                 
+                                 $product_query = dbAbstract::Execute("SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'",1);
                     
                                     while ($productRS = dbAbstract::returnObject($product_query,1)) {
                                           ?>
