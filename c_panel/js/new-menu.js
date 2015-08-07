@@ -1186,7 +1186,7 @@ $(function() {
                 //type:"post",
                                 url: "admin_contents/menus/menu_ajax.php?prd_id="+id+"&item_deactivate=1&status="+status+"&"+milliseconds,
                                 success: function(data) {
-                                    if(data=='Activate')
+                                    if(data=='1')
                                     {
                                         //el.parents('.item_data').find('.price-class').addClass("enable-menu");
                                         el.parents('.item_data').find('.disable-menu').removeClass( "disable-menu").addClass("enable-menu");
@@ -1195,7 +1195,7 @@ $(function() {
                                         el.attr("src","../c_panel/img/enable.png");
                                         el.attr("status","1");
                                     }
-                                    else if(data=='Deactivate')
+                                    else if(data=='0')
                                     {
                                         //var data = el.closest('.item_data');
                                         //el.parents('.item_data').find('.price-class').addClass("disable-menu");

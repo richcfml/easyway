@@ -727,7 +727,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                   <input type="hidden" id="y" name="y" />
                   <input type="hidden" id="w" name="w" />
                   <input type="hidden" id="h" name="h" />
-                  <span id="cropimg" name="cropimg" class="deleteimg" style=" <?=(($imgSource == '')? 'display:none;':'margin-left: 10px;')?>"
+                  <span id="cropimg" name="cropimg" class="deleteimg" style=" <?=(($imgSource == '')? 'display:none;':'margin-left: 10px;')?>">
                   	Crop Image
                   </span>
                 </td>
@@ -1278,9 +1278,9 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                             if($optionName!=$attr_array->option_name){
                                 if($attributeStr!=""){
                                     ?>
-                  <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute"><a href="#dvAddAttribute" class="option_Name" style="margin-top:2px">
-                    <?=$optionName;?>
-                    </a> <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
+                  <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute">
+                      <a href="#dvAddAttribute" class="option_Name" style="margin-top:2px"><?=$optionName;?></a> 
+                      <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
                     <div style="clear:both"></div>
                   </li>
                   <?php
@@ -1294,9 +1294,9 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                         if($optionName!=""){
                             if($attributeStr!=""){
                                 ?>
-                  <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute"><a href="#dvAddAttribute" class="option_Name" style="margin-top:2px">
-                    <?=$optionName;?>
-                    </a> <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
+                  <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute">
+                      <a href="#dvAddAttribute" class="option_Name" style="margin-top:2px"><?=$optionName;?></a> 
+                      <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
                     <div style="clear:both"></div>
                   </li>
                   <?php
@@ -1323,9 +1323,8 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
             <div class="ulProductdiv">
               <ul id="related-list_product">
                 <?php
-                        Log::write("Query", "SELECT association_id FROM product_association WHERE product_id ='".$prd_id."' order by sortOrder asc", 'debug');
                         $product_assoc_qry = dbAbstract::Execute("SELECT association_id FROM product_association WHERE product_id ='".$prd_id."' order by sortOrder asc",1);
-                             while ($assocRs = dbAbstract::returnArray($product_assoc_qry, 1, true)) {
+                             while ($assocRs = dbAbstract::returnArray($product_assoc_qry, 1)) {
                                  
                                  $product_query = dbAbstract::Execute("SELECT prd_id,item_title FROM product WHERE prd_id='" . $assocRs['association_id'] . "'",1);
                     

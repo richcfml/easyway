@@ -584,14 +584,14 @@ else if (isset($_GET['item_deactivate']) && $_GET['item_deactivate'] == 1 && !em
     {
         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product SET  status='1' WHERE prd_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE product SET  status='1' WHERE prd_id=$id", 1);
-        echo 'Activate';
+        echo '1';
     } 
     
     else if ($_GET['status'] == "1")
     {
         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product SET  status='0' WHERE prd_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE product SET  status='0' WHERE prd_id=$id", 1);
-        echo 'Deactivate';
+        echo '0';
     }
 }
 else if (isset($_GET['submenu_deactivate']) && $_GET['submenu_deactivate'] == 1 && !empty($_GET['cat_id'])) //cat_id = Sub MenuID
