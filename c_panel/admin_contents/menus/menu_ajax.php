@@ -547,7 +547,7 @@ else if (isset($_GET['prd_copy']) && $_GET['prd_copy'] == 1 && !empty($_GET['prd
 else if (isset($_GET['delete_submenu']) && $_GET['delete_submenu'] == 1 && !empty($_GET['cat_id']))
 {
     Log::write("Delete category - menu_ajax.php", "QUERY -- Delete from categories where cat_id = ".$_GET['cat_id']."", 'menu', 1 , 'cpanel');
-    $result = dbAbstract::Delete("DELETE from categories where cat_id = ".$_GET['cat_id']."", 1);
+    $result = dbAbstract::Delete("DELETE from categories where cat_id = ".$_GET['cat_id']."", 1, 1);
     $prdQry = dbAbstract::Execute("SELECT prd_id from product where sub_cat_id = ".$_GET['cat_id']."", 1);
       
     while($prd = dbAbstract::returnObject($prdQry))
