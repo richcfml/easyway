@@ -42,13 +42,14 @@ if(isset($_POST['submit']))
 			} else if($mail_body == '') {
 				$errMessage = "Please enter email message";
 			} else {
-			
+			$objMailML = new testmail();
+                        $objMailML->from="info@easywayordering.com";
 			 // $MAIL_HOST_NAME="smtpout.secureserver.net";
 			  for ($i=0;$i<count($email_id);$i++)
 				  {
 					  @$mailQry	=	dbAbstract::Execute("select email from mailing_list where id= ".$email_id[$i]."", 1);
 					  while(@$mailRs	=	dbAbstract::returnObject($mailQry, 1)){						
-						  $subject = $email_subject;
+						  /*$subject = $email_subject;
 						  $mail = new PHPMailer();
 						  $mail->IsSMTP(); // telling the class to use SMTP
 						  $mail->Host = "smtpout.secureserver.net";// SMTP server
@@ -62,7 +63,8 @@ if(isset($_POST['submit']))
 						  $mail->Subject = $subject;
 						  $mail->Body = $mail_body;
 						  $mail->IsHTML(true);
-						  $mail->Send();
+						  $mail->Send();*/
+                                                  $objMailML->sendTo($mail_body, $subject, $mailRs->email, true);
 						 
 					  } 
 			  }// end for
