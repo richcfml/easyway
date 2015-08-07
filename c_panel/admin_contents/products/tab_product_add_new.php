@@ -292,7 +292,7 @@ if($_POST['cropimg'])
                             <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="" class="textAreaClass" placeholder="Item Name"  maxlength="40">
                         </td>
                         <td>
-                            <input type="text" id="price" maxlength="6" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;" class="textAreaClass" placeholder ="Price(ex:<?=$currency?>4.50)" onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" >
+                            <input type="text" id="price" maxlength="7" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;" class="textAreaClass" placeholder ="Price(ex:<?=$currency?>4.50)" onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" >
                         </td>
                     </tr>
                     <tr>
