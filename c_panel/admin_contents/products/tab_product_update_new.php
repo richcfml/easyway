@@ -475,7 +475,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
             <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td><input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40"></td>
-                <td><input onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:<?=$currency?>4.50)"></td>
+                <td><input onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" maxlength="6" type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:<?=$currency?>4.50)"></td>
               </tr>
               
               <tr>
