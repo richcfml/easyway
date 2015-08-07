@@ -49,8 +49,8 @@ if(isset($_POST['submit']))
 				  {
 					  @$mailQry	=	dbAbstract::Execute("select email from mailing_list where id= ".$email_id[$i]."", 1);
 					  while(@$mailRs	=	dbAbstract::returnObject($mailQry, 1)){						
-						  /*$subject = $email_subject;
-						  $mail = new PHPMailer();
+						  $subject = $email_subject;
+						  /*$mail = new PHPMailer();
 						  $mail->IsSMTP(); // telling the class to use SMTP
 						  $mail->Host = "smtpout.secureserver.net";// SMTP server
 						  $mail->SMTPAuth = true;
