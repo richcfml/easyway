@@ -46,7 +46,7 @@ if (isset($_GET['prd_delete']) && $_GET['prd_delete'] == 1 && isset($_GET['prd_i
     $prd_id = $_GET['prd_id'];
     Log::write("Delete product - menu_ajax.php", "QUERY -- Delete from product where prd_id = " . $prd_id . "", 'menu', 1 , 'cpanel');
     dbAbstract::Delete("Delete from attribute where ProductID = " . $prd_id . "", 1);
-    $result = dbAbstract::Delete("Delete from product where prd_id = " . $prd_id . "", 1);
+    $result = dbAbstract::Delete("Delete from product where prd_id = " . $prd_id . "", 1,1);
     dbAbstract::Delete("Delete from product_association where association_id = " . $prd_id . " or product_id = ". $prd_id."", 1);
     Log::write("Delete product_association - menu_ajax.php", "QUERY -- Delete from product_association where association_id = " . $prd_id . "or product_id = ". $prd_id."", 'menu', 1 , 'cpanel');
     echo $result;
@@ -584,14 +584,14 @@ else if (isset($_GET['item_deactivate']) && $_GET['item_deactivate'] == 1 && !em
     {
         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product SET  status='1' WHERE prd_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE product SET  status='1' WHERE prd_id=$id", 1);
-        echo '1';
+        echo 1;
     } 
     
     else if ($_GET['status'] == "1")
     {
         Log::write("Update Product Status - menu_ajax.php", "QUERY -- UPDATE product SET  status='0' WHERE prd_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE product SET  status='0' WHERE prd_id=$id", 1);
-        echo '0';
+        echo 0;
     }
 }
 else if (isset($_GET['submenu_deactivate']) && $_GET['submenu_deactivate'] == 1 && !empty($_GET['cat_id'])) //cat_id = Sub MenuID
@@ -602,14 +602,14 @@ else if (isset($_GET['submenu_deactivate']) && $_GET['submenu_deactivate'] == 1 
     {
         Log::write("Update Categories Status - menu_ajax.php", "QUERY -- UPDATE categories SET  status='1' WHERE cat_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE categories SET  status='1' WHERE cat_id=$id", 1);
-        echo 'Activate';
+        echo 1;
     } 
     
     else if ($_GET['status'] == "1")
     {
         Log::write("Update Categories Status - menu_ajax.php", "QUERY -- UPDATE categories SET  status='0' WHERE cat_id=$id", 'menu', 1 , 'cpanel'); 
         $result = dbAbstract::Update("UPDATE categories SET  status='0' WHERE cat_id=$id", 1);
-        echo 'Deactivate';
+        echo 0;
     }
 }
 
