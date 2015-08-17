@@ -1116,7 +1116,6 @@ $.each(attributeRequired, function(index, value) {
     <?php
     				$loop_index_check = TRUE;
            		}
-                //            print_r($menulist);
            		if ((($current_cat1 != $menulist->sub_cat_id || $firstindex1 == 0)) || ($menulist->sub_cat_id==""))
 				{
 					$index++;
@@ -1130,44 +1129,23 @@ $.each(attributeRequired, function(index, value) {
 				}
 ?>
                 <?php 
-                
-                //////$menulist->sub_cat_id
-
                 $mcheckStaus="";
-                
-//                $menu = new menu();
+
                 $submenu_OpenHour = $objMenu->submenu_isAvailable($menulist->sub_cat_id);
                 
                 $sTime= $objMenu->submenu_openTime;
                 $eTime=$objMenu->submenu_closeTime;
 
                 ?>        
-                    
-                <?php
-                    
-                if($submenu_OpenHour==1)
-                {
-               
-                ?>   
                     <div class="listing_area">           
                         <div class="product" <?php echo($menulist->display); ?>>
                             <?= stripslashes($menulist->cat_name) ?> <br /><span style="font-size:12px; font-weight:normal;"><?= stripslashes($menulist->cat_des) ?></span></div>
     <?php
-                }else{
-                ?>    
-                    
-                    <div class="listing_area">      
-                            <div class="product" style="color: #C0BCC5;" <?php echo($menulist->display); ?>>
-                            <?= stripslashes($menulist->cat_name) ?><br /> <span> <?= "[" . wordwrap($sTime, 2, ":", true) . "-" . "to" . "-" . wordwrap($eTime, 2, ":", true) . "]";?> </span> <br /><span style="font-size:12px; font-weight:normal;"><?= stripslashes($menulist->cat_des) ?></span></div>    
-                    
-                <?php } 
+                
     			}
 
 				if ($current_cat == $menulist->sub_cat_id || $firstindex == 0) 
 				{
-                    
-                if($submenu_OpenHour==1)
-                { 
                     
    ?>
                         <div class="products_area" style="height: 40px;  <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ")) { echo("display: none;"); }?>">
@@ -1196,38 +1174,8 @@ $.each(attributeRequired, function(index, value) {
                                 </tr>
                             </table>	
                         </div>
-                <?php
-                }else{ $mcheckStaus=1;
-                ?>   
-                        <div class="products_area" style="height: 40px;  <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ")) { echo("display: none;"); }?>">
-                            <table style="margin: 0px; width: 100%;" cellpadding="0" cellspacing="0" border="0">
-                                <tr style="height: 40px;">
-                                    <td style="width: 2%;">
-                                    </td>
-                                    <td align="left" style="width: 88%; font-size:12px;" valign="top">
-                                        <script type="text/javascript" language="javascript">
-                                            function submenuNotAvailable()
-                                            {
-                                                swal({
-                                                    title: "",
-                                                    text: "<span style='font-size: 17px; color: #575757; font-weight: 500 !important;'>Sub-menu is not available at this time.</span>", 
-                                                    confirmButtonColor: "#11b1b3", 
-                                                    html: true
-                                                });
-                                            }
-                                        </script>
-                                        <div class="product_name"><a id='showProductPopup' style='color:#C0BCC5;' <? if ($mcheckStaus == 1) { ?>  href="javascript:submenuNotAvailable()" <? } else { } ?> ><?= stripslashes($menulist->item_title) ?></a></div>
-                                        
-                                    </td>
-                                    <td align="right" valign="top" style="width: 10%; font-size:12px; color: #C0BCC5;">
-                                        <div class="product_price"><?= $menulist->retail_price ?>&nbsp;&nbsp;</div>
-                                    </td>
-                                </tr>
-                            </table>	
-                        </div>
-                <?php        
-                }
-                ?>
+                
+                
 	<?php
     				$current_cat = $menulist->sub_cat_id;
 				} 
