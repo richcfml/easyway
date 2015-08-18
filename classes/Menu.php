@@ -15,14 +15,13 @@ class Menu
      * Get the all enable menus of specific restaurant
      * @return type array list of menus
      */
-    public function getEnableMenu()
-    {
+    public function getMenusByRestaurantId() {
         $qry = "SELECT * FROM menus WHERE rest_id = " . $this->restaurant_id . " AND `status` = '1' ORDER BY menu_ordering";
         $menu_qry = dbAbstract::Execute($qry);
         
         $arr_menu_list = array();
         while ($menu = dbAbstract::returnObject($menu_qry, 0, "menu")) {
-            $menu->getMenuHours();
+            $menu->getMenuHoursByMenuId();
             $arr_menu_list[] = $menu;
         }
         return $arr_menu_list;
@@ -31,8 +30,7 @@ class Menu
     /**
      * get menu hours and Set menus buisness hours in arr_hours_list
      */
-    public function getMenuHours()
-    {
+    public function getMenuHoursByMenuId() {
         $qry = "SELECT * FROM menu_hours WHERE menu_id=" . $this->id . " ORDER BY day ASC";
         $menu_hours = dbAbstract::Execute($qry);
         
@@ -41,15 +39,13 @@ class Menu
         while ($menu_hour = dbAbstract::returnObject($menu_hours)) {
             $this->arr_hours_list[$menu_hour->day] = $menu_hour;
         }
-        
     }
     
     /**
      * 
      * @return int 1 if menu hours is open else return 0
      */
-    public function isMenuOpen()
-    {
+    public function isMenuOpen() {
         $OpenHour    = 1;
         $day_of_week = $this->getDayOfWeek();
         
@@ -68,8 +64,7 @@ class Menu
         return $OpenHour;
     }
     
-    public function getDayOfWeek()
-    {
+    public function getDayOfWeek() {
         $day_name = date('l');
         if ($day_name == 'Monday') {
             $day_of_week = 0;
@@ -88,6 +83,8 @@ class Menu
         }
         return $day_of_week;
     }
+    
+    /*	End of class Menu	*/
 }
 
 ?>

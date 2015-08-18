@@ -7,7 +7,7 @@
 						$objCategory->menu_id = $menuid;
 						 // used in header
 	$categoryid = (isset($_GET['category']) ? $_GET['category']:"");
-						$categories = $objCategory->getcategories();
+						$categories = $objCategory->getCategoryByMenuId();
 					 
 						for($i = 0; $i < count($categories); $i++) {
 							$class = '';

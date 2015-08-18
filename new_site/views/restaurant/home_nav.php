@@ -152,7 +152,7 @@ if( isset($_REQUEST['addtolist']) && $_REQUEST['addtolist'] == "yes" )
 	$objMenu->restaurant_id = $objRestaurant->id;
 	$menuid = (isset($_GET['menuid']) ? $_GET['menuid']:"");
 	$menuname='';
-	$menus = $objMenu->getEnableMenu();
+	$menus = $objMenu->getMenusByRestaurantId();
 	$isOpen=true;
 	$iscurrentMenuAvaible=1;
 	$currentMenuTimings="";
