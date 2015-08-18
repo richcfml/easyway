@@ -13,7 +13,7 @@
 						
 						$menuid = (isset($_GET['menuid']) ? $_GET['menuid']:"");
 						 $iscurrentMenuAvaible=1;
-						$menus = $objMenu->getEnableMenu();
+						$menus = $objMenu->getMenusByRestaurantId();
 						for($i = 0; $i < count($menus); $i++) {
 							$class='';
 							$menu=$menus[$i];

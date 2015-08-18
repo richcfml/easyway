@@ -26,7 +26,7 @@ else if(isset($_POST['x_sid']))
 	require	"includes/class.phpmailer.php";
 	require_once('classes/valutec.php'); 
 	require_once('classes/Menu.php');
-	require_once('classes/category.php');
+	require_once('classes/Category.php');
 	require_once('classes/product.php');
 	require_once('classes/cart.php');
 	require_once('classes/GO3.php');
@@ -40,7 +40,7 @@ else if(isset($_POST['x_sid']))
 	$objRestaurant = new restaurant();
 	$objMail = new testmail();
 	$objMenu = new Menu();
-	$objCategory = new category();
+	$objCategory = new Category();
 	$product = new product();
  	$cart = new cart();
  	$objGO3 = new GO3();

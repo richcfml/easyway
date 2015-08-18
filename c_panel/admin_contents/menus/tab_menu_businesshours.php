@@ -39,7 +39,7 @@ if(isset($_POST['update'])) {
 	}
 }
 
- $menu->getMenuHours();
+ $menu->getMenuHoursByMenuId();
  $arrhours=$menu->arr_hours_list;
  
 ?>

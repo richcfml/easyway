@@ -10,7 +10,7 @@ require_once("../classes/trackers.php");
 require "../includes/class.phpmailer.php";
 require_once('../classes/valutec.php');
 require_once('../classes/Menu.php');
-require_once('../classes/category.php');
+require_once('../classes/Category.php');
 require_once('../classes/product.php');
 require_once('../classes/cart.php');
 require_once('../lib/cdyne/cdyne.php');
@@ -22,7 +22,7 @@ $geo = new GoogleGeocode($google_api_key);
 $validater = new validate();
 $objRestaurant = new restaurant();
 $objMenu = new Menu();
-$objCategory = new category();
+$objCategory = new Category();
 $product = new product();
 $cart = new cart();
 $objcdyne = new cydne();
@@ -50,7 +50,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) &
     $restaurant_info = $objRestaurant->getDetail($myRestId);
     $menuname = '';
     $menuid = (isset($_GET['menuid']) ? $_GET['menuid'] : "");
-    $menus = $objMenu->getEnableMenu();
+    $menus = $objMenu->getMenusByRestaurantId();
     $isOpen = true;
     $iscurrentMenuAvaible = 1;
     $currentMenuTimings = "";
@@ -71,7 +71,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) &
         if ($iscurrentMenuAvaible != 0) {
 
             $objCategory->menu_id = $menuid;
-            $categories = $objCategory->getcategories();
+            $categories = $objCategory->getCategoryByMenuId();
             $total_cats = count($categories);
             $half = round($total_cats / 2);
             $index = 0;
