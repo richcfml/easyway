@@ -25,6 +25,7 @@ else if(isset($_POST['x_sid']))
 	require_once("classes/trackers.php"); 
 	require	"includes/class.phpmailer.php";
 	require_once('classes/valutec.php'); 
+        echo "here";
 	require_once('classes/Menu.php');
         echo "here";
 	require_once('classes/category.php');
