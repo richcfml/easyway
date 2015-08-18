@@ -220,7 +220,7 @@ if($objRestaurant->useValutec==false)
 	$objMenu->restaurant_id = $objRestaurant->id;
 	$menuid = (isset($_GET['menuid']) ? $_GET['menuid']:"");
 	$menuname='';
-	$menus = $objMenu->getmenu(1);
+	$menus = $objMenu->getEnableMenu();
 	$isOpen=true;
 	$iscurrentMenuAvaible=1;
 	$currentMenuTimings="";
@@ -228,7 +228,7 @@ if($objRestaurant->useValutec==false)
 	{	
 		$class='';
 		$menu=$menus[$i];
-		$isOpen=$menu->isAvailable();
+		$isOpen=$menu->isMenuOpen();
 		
 		if($isOpen==1 && $i == 0 && $menuid == "") 
 		{

@@ -1,8 +1,8 @@
 <?php
 require_once("../includes/config.php");
-require_once ("../classes/menu.php");
+require_once ("../classes/Menu.php");
  
- $menu=new menu();
+ $menu=new Menu();
  $menu->id=$_GET['menuid'];
  $updateMessage="";
  
@@ -39,7 +39,7 @@ if(isset($_POST['update'])) {
 	}
 }
 
- $menu->getBusinessHours();
+ $menu->getMenuHours();
  $arrhours=$menu->arr_hours_list;
  
 ?>

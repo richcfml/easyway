@@ -1128,15 +1128,6 @@ $.each(attributeRequired, function(index, value) {
 <?php
 				}
 ?>
-                <?php 
-                $mcheckStaus="";
-
-                $submenu_OpenHour = $objMenu->submenu_isAvailable($menulist->sub_cat_id);
-                
-                $sTime= $objMenu->submenu_openTime;
-                $eTime=$objMenu->submenu_closeTime;
-
-                ?>        
                     <div class="listing_area">           
                         <div class="product" <?php echo($menulist->display); ?>>
                             <?= stripslashes($menulist->cat_name) ?> <br /><span style="font-size:12px; font-weight:normal;"><?= stripslashes($menulist->cat_des) ?></span></div>

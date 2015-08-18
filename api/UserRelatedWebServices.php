@@ -9,7 +9,7 @@ include "../classes/validater.php";
 require_once("../classes/trackers.php");
 require "../includes/class.phpmailer.php";
 require_once('../classes/valutec.php');
-require_once('../classes/menu.php');
+require_once('../classes/Menu.php');
 require_once('../classes/category.php');
 require_once('../classes/product.php');
 require_once('../classes/cart.php');
@@ -21,7 +21,7 @@ require('GoogleGeocode.php');
 $geo = new GoogleGeocode($google_api_key);
 $validater = new validate();
 $objRestaurant = new restaurant();
-$objMenu = new menu();
+$objMenu = new Menu();
 $objCategory = new category();
 $product = new product();
 $cart = new cart();
@@ -44,13 +44,13 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) &
     $restaurant_info = $objRestaurant->getDetail($myRestId);
     $menuname = '';
     $menuid = (isset($_GET['menuid']) ? $_GET['menuid'] : "");
-    $menus = $objMenu->getmenu(1);
+    $menus = $objMenu->getEnableMenu();
     $isOpen = true;
     $iscurrentMenuAvaible = 1;
     $currentMenuTimings = "";
     for ($i = 0; $i < count($menus); $i++) {
         $menu = $menus[$i];
-        $isOpen = $menu->isAvailable();
+        $isOpen = $menu->isMenuOpen();
 
         if ($isOpen == 1 && $i == 0 && $menuid == "") {
             $menuid = $menu->id;
