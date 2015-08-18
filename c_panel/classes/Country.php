@@ -59,21 +59,6 @@ class Country{
 		} 
 	}
 	
-	/*
-	*	Get Users Dropdown List
-	*/
-	function getUsersDropDownList($value){ 
-		$drop_qry_exec = dbAbstract::Execute("SELECT * FROM users",1);
-		while($drop_qry_rs = dbAbstract::returnObject($drop_qry_exec,1)){
-			if($drop_qry_rs->id==$value){ 
-				echo "<option value=".$drop_qry_rs->id." selected>".$drop_qry_rs->firstname." ".$drop_qry_rs->lastname."</option>";
-			}
-			else{ 
-				echo "<option value=".$drop_qry_rs->id.">".$drop_qry_rs->firstname." ".$drop_qry_rs->lastname."</option>";
-			}
-		} 
-	}
-	
 	/*	End of class country	*/
 }
  ?>
