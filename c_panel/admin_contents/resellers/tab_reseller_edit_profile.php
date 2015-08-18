@@ -1,5 +1,5 @@
 <?php
-        $country_obj				=	new clscountry();
+        $country_obj				=	new Country();
 	$myimage				= new ImageSnapshot; //new instance
 	$myimage->ImageField	= $_FILES['company_logo']; //uploaded file array
 	function GetFileExt($fileName){
@@ -153,7 +153,7 @@
         <td width="160"><strong>Country:</strong></td>
 <td width="400"><select name="country" id="country" style="width:270px;" >
                       <option value="-1">Select Country</option>
-                       <?=$country_obj->get_country_drop_down($reseller_qryRs->country) ?>
+                       <?=$country_obj->getDropDownList($reseller_qryRs->country) ?>
                     </select></td>
       </tr>
       <tr align="left" valign="top">

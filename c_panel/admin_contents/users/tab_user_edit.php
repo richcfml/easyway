@@ -1,4 +1,4 @@
-<?	$country_obj				=	new clscountry();
+<?	$country_obj				=	new Country();
 $errMessage='';
 	//////////////////////////////////////////////////////////////////
 	$resellerId  = 	$_REQUEST['resellerId'];
@@ -130,7 +130,7 @@ $errMessage='';
 		<td width="574">
         	<select name="country" id="country" style="width:270px;" >
               <option value="-1">Select Country</option>
-               <?=$country_obj->get_country_drop_down($user_qryRs->country) ?>
+               <?=$country_obj->getDropDownList($user_qryRs->country) ?>
             </select>
         </td>
       </tr>

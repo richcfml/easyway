@@ -1,7 +1,7 @@
 <?php
 $errMessage="";
 $current_time 	= time();
-$country_obj	=	new clscountry();
+$country_obj	=	new Country();
 
 $myimage		= new ImageSnapshot; //new instance
 $myimage->ImageField	 = $_FILES['company_logo']; //uploaded file array
@@ -220,7 +220,7 @@ setTimeout("leave()", 2000);
         <td width="160">Country:</td>
         <td><select name="country" id="country" style="width:270px;" >
             <option value="-1">Select Country</option>
-            <?=$country_obj->get_country_drop_down(@$country) ?>
+            <?=$country_obj->getDropDownList(@$country) ?>
           </select></td>
       </tr>
       <tr align="left" valign="top">

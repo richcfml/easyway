@@ -1,6 +1,6 @@
 <?php include('nav.php'); ?>
 <?php $srid = $Objrestaurant->srid; ?>
-<?php $country_obj = new clscountry(); ?>
+<?php $country_obj = new Country(); ?>
 <script>
     $(document).ready(function() {
         //when Alert Tab Save Settings button is press
@@ -264,7 +264,7 @@ $service = trim($service, ",");
                     <div class="inputEmailTxt">
                         <!--<input type="text" class="emailInput" name="country" id="country" value="<?= $country ?>">-->
                         <select name="country" id="country" class="emailInput" style="margin-right:30px;width:230px" >
-<?= $country_obj->get_country_drop_down(@$country) ?>
+<?= $country_obj->getDropDownList(@$country) ?>
                         </select>
                         <input type="text" class="emailInput" placeholder="Enter street address" name="address" id="address" value="<?= $address ?>">
                         <input type="text" class="emailInput" placeholder="Enter city" name="city" id="city" value="<?= $city ?>">

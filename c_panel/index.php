@@ -3,7 +3,7 @@ require_once("../includes/config.php");
 require("includes/SimpleImage.php");
 require("includes/snapshot.class.php");
 include("admin_includes/function.php");
-require("classes/clscountry.php");
+require("classes/Country.php");
 require("classes/chargifyApi.php");
 include("../includes/class.phpmailer.php"); 
 include("../includes/class.smtp.php");
