@@ -121,7 +121,7 @@ if($_POST) {
         <td width="160">Country:</td>
         <td><select name="country" id="country" style="width:270px;" >
             <option value="-1">Select Country</option>
-            <?=$country_obj->getDropDownList(@$country) ?>
+            <?=$country_obj->getCountyDropDownList(@$country) ?>
           </select>
         </td>
       </tr>

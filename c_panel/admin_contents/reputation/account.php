@@ -264,7 +264,7 @@ $service = trim($service, ",");
                     <div class="inputEmailTxt">
                         <!--<input type="text" class="emailInput" name="country" id="country" value="<?= $country ?>">-->
                         <select name="country" id="country" class="emailInput" style="margin-right:30px;width:230px" >
-<?= $country_obj->getDropDownList(@$country) ?>
+<?= $country_obj->getCountyDropDownList(@$country) ?>
                         </select>
                         <input type="text" class="emailInput" placeholder="Enter street address" name="address" id="address" value="<?= $address ?>">
                         <input type="text" class="emailInput" placeholder="Enter city" name="city" id="city" value="<?= $city ?>">

@@ -130,7 +130,7 @@ $errMessage='';
 		<td width="574">
         	<select name="country" id="country" style="width:270px;" >
               <option value="-1">Select Country</option>
-               <?=$country_obj->getDropDownList($user_qryRs->country) ?>
+               <?=$country_obj->getCountyDropDownList($user_qryRs->country) ?>
             </select>
         </td>
       </tr>
