@@ -59,7 +59,7 @@ class product
         $cat_qry1 = dbAbstract::Execute($mSQL);
         $this->attributes = array();
         $this->distinct_attributes = array();
-        while ($row = dbAbstract::returnObject($cat_qry1))
+        while ($attribute = dbAbstract::returnObject($cat_qry1))
         {
             if(!isset($this->distinct_attributes[$attribute->option_name])) 
             {
