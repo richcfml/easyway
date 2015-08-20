@@ -1,7 +1,7 @@
 <?php 
 require_once("includes/config.php");
 include_once("includes/class.phpmailer.php");
-include_once("c_panel/classes/Chargify_Api.php");
+include_once("c_panel/classes/ChargifyApi.php");
 require("c_panel/includes/SimpleImage.php");
 
 
@@ -74,7 +74,7 @@ if ($_GET["call"]=="saveuser")
                                 $mLastName = $txtFullName;
                         }
 
-                        $mObjCAPI = new Chargify_Api;
+                        $mObjCAPI = new ChargifyApi();
 
                         $mCustomerID = $mObjCAPI->createCustomer($mFirstName, $mLastName, $txtEmailAddress, $txtRestaurantName, $txtCity, $txtState, $txtZip, $ddlCountry1);
                         

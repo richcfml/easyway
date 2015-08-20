@@ -1,6 +1,6 @@
 <?php
 require_once("includes/config.php");
-include_once("c_panel/classes/Chargify_Api.php");
+include_once("c_panel/classes/ChargifyApi.php");
 
 $mResultDiv = " style='display: none;' ";
 $mdvTwenty = " style='display: block;' ";
@@ -1496,7 +1496,7 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 							$mResPr = dbAbstract::Execute($mSQLPr);
 							if (dbAbstract::returnRowsCount($mResPr)>0)
 							{
-								$mObjCAPI = new Chargify_Api;
+								$mObjCAPI = new ChargifyApi();
 							?>
 							<script type="text/javascript" language="javascript">
 								$(document).ready(function($) 

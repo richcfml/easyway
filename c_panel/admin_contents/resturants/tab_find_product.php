@@ -1,8 +1,8 @@
 <?
 require_once("../../../includes/config.php");
-require("../../classes/Chargify_Api.php");
+require("../../classes/ChargifyApi.php");
 
-$chargify = new Chargify_Api();
+$chargify = new ChargifyApi();
 $resellerId=intval($_GET['resellerId']);
 if(isset($_GET['product_id']))
 {

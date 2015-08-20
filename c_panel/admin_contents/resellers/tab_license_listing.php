@@ -59,9 +59,9 @@ function getXMLHTTP() { //fuction to return the xml http object
 <?
 	if($_SESSION['admin_type'] != 'admin'  && $_SESSION['admin_type'] != 'reseller') {die("Invalid access");}
 	
-require("../../classes/Chargify_Api.php");
+require("../../classes/ChargifyApi.php");
 require("../../../includes/class.phpmailer.php");
-$chargify = new Chargify_Api();
+$chargify = new ChargifyApi();
 $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']);
 	 
   
