@@ -5,7 +5,7 @@ require_once 'function.php';
 
 include "../classes/restaurant.php";
 include "../classes/users.php";
-include "../classes/validater.php";
+include "../classes/Validater.php";
 require_once("../classes/trackers.php");
 require "../includes/class.phpmailer.php";
 require_once('../classes/valutec.php');
@@ -19,7 +19,7 @@ require_once('../classes/chargify.php');
 require('GoogleGeocode.php');
 
 $geo = new GoogleGeocode($google_api_key);
-$validater = new validate();
+$validater = new Validater();
 $objRestaurant = new restaurant();
 $objMenu = new Menu();
 $objCategory = new Category();

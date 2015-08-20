@@ -21,7 +21,7 @@ else if(isset($_POST['x_sid']))
 	
 	include "classes/restaurant.php";
 	include "classes/users.php";
-	include "classes/validater.php";
+	include "classes/Validater.php";
 	require_once("classes/trackers.php"); 
 	require	"includes/class.phpmailer.php";
 	require_once('classes/valutec.php'); 
@@ -36,7 +36,7 @@ else if(isset($_POST['x_sid']))
 	
 	require_once('lib/device_detection/Mobile_Detect.php');
 	$function_obj = new clsFunctions();
-	$validater = new validate(); 
+	$validater = new Validater(); 
 	$objRestaurant = new restaurant();
 	$objMail = new testmail();
 	$objMenu = new Menu();
