@@ -81,7 +81,6 @@ if($_POST) {
                         '$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','reseller','".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."','$number_of_licences','".$chargify_customer_id."','".$chargify_subscription_id->subscription->id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."', '".$ePassword."', '".$mSalt."')";
-                        )";
 
                         $reseller_id = dbAbstract::Insert($sql, 1, 2);
                         if($reseller_id > 0)  {
