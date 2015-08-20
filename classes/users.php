@@ -151,7 +151,7 @@ class users
             $email=prepareStringForMySQL($email);
             $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
         
-            $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND password ='$password' AND resturant_id= '". $restaurant_id ."'";
+            $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND epassword ='$password' AND resturant_id= '". $restaurant_id ."'";
             $user_qry  = dbAbstract::Execute($mSQL);
         
             if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0) 
