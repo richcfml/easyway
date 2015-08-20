@@ -4,13 +4,13 @@ require("includes/SimpleImage.php");
 require("includes/snapshot.class.php");
 include("admin_includes/function.php");
 require("classes/Country.php");
-require("classes/chargifyApi.php");
+require("classes/Chargify_Api.php");
 include("../includes/class.phpmailer.php"); 
 include("../includes/class.smtp.php");
 require_once('../classes/abandoned_carts.php');
 $jsParameter = "?v3";
 $function_obj = new clsFunctions();
-$chargify = new chargifyApi();
+$chargify = new Chargify_Api();
 
 $ajax=0;
 

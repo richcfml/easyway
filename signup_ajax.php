@@ -1,7 +1,7 @@
 <?php 
 require_once("includes/config.php");
 include_once("includes/class.phpmailer.php");
-include_once("c_panel/classes/chargifyApi.php");
+include_once("c_panel/classes/Chargify_Api.php");
 require("c_panel/includes/SimpleImage.php");
 
 
@@ -74,7 +74,7 @@ if ($_GET["call"]=="saveuser")
                                 $mLastName = $txtFullName;
                         }
 
-                        $mObjCAPI = new chargifyApi;
+                        $mObjCAPI = new Chargify_Api;
 
                         $mCustomerID = $mObjCAPI->createCustomer($mFirstName, $mLastName, $txtEmailAddress, $txtRestaurantName, $txtCity, $txtState, $txtZip, $ddlCountry1);
                         
@@ -100,7 +100,7 @@ if ($_GET["call"]=="saveuser")
                                                         $mRestSubscriptionID = $mResultSubRes->subscription->id;
                                                         if($rbOrders == 4)
                                                         {
-                                                            $mResultChargeExtra = $mObjCAPI->chargeExtraAmpunt($mRestSubscriptionID);
+                                                            $mResultChargeExtra = $mObjCAPI->chargeExtraAmount($mRestSubscriptionID);
                                                         }
                                                         $mSRID ="";
                                                         if ((trim($mPremiumAccount)==0) || (trim($mPremiumAccount)=="0") || (trim($mPremiumAccount)==""))

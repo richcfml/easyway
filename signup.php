@@ -1,6 +1,6 @@
 <?php
 require_once("includes/config.php");
-include_once("c_panel/classes/chargifyApi.php");
+include_once("c_panel/classes/Chargify_Api.php");
 
 $mResultDiv = " style='display: none;' ";
 $mdvTwenty = " style='display: block;' ";
@@ -1496,7 +1496,7 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 							$mResPr = dbAbstract::Execute($mSQLPr);
 							if (dbAbstract::returnRowsCount($mResPr)>0)
 							{
-								$mObjCAPI = new chargifyApi;
+								$mObjCAPI = new Chargify_Api;
 							?>
 							<script type="text/javascript" language="javascript">
 								$(document).ready(function($) 
@@ -1532,7 +1532,7 @@ Don’t have a digital copy? <span style="color:#25aae1;">Print our fax cover sh
 								while($mRowPr = dbAbstract::returnObject($mResPr))
 								{
 									$mPrdID = $mRowPr->product_id;
-									$mProduct = $mObjCAPI->getProduct($mPrdID);
+									$mProduct = $mObjCAPI->getProductById($mPrdID);
 									if ($mCount == 0)
 									{
 										$mSetup = $mProduct->initial_charge_in_cents;

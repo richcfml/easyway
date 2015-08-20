@@ -1,7 +1,7 @@
 <?php
 require_once("includes/config.php");
 include_once("includes/class.phpmailer.php");
-include_once("c_panel/classes/chargifyApi.php");
+include_once("c_panel/classes/Chargify_Api.php");
 
 function prepareStringForMySQL($string){
     $string=str_replace ( "\r" , "<br/>",$string);
@@ -96,7 +96,7 @@ if (isset($_GET["call"]))
 					}
 	
 					$mProductID = $ddlProducts;
-					$mObjCAPI = new chargifyApi;
+					$mObjCAPI = new Chargify_Api;
 	
 					$mCustomerID = $mObjCAPI->createCustomer($mFirstName, $mLastName, $txtEmailAddress, $txtRestaurantName, $txtCity, $txtState, $txtZip, $ddlCountry1);
 					if (isset($mCustomerID))
@@ -899,7 +899,7 @@ if (isset($_GET["call"]))
 						$mLastName = $txtFullName;
 					}
 	
-					$mObjCAPI = new chargifyApi;
+					$mObjCAPI = new Chargify_Api;
 	
 					$mCustomerID = $mObjCAPI->createCustomer($mFirstName, $mLastName, $txtEmailAddress, $txtRestaurantName, $txtCity, $txtState, $txtZip, $ddlCountry1);
 					if (isset($mCustomerID))

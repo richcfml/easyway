@@ -1,8 +1,8 @@
 <?
 require_once("../../../includes/config.php");
-require("../../classes/chargifyApi.php");
+require("../../classes/Chargify_Api.php");
 
-$chargify = new chargifyApi();
+$chargify = new Chargify_Api();
 $resellerId=intval($_GET['resellerId']);
 if(isset($_GET['product_id']))
 {
@@ -18,7 +18,7 @@ $product_qry = dbAbstract::Execute( $product_sqlStr,1 );
 <option value="-1">Select Product</option>
 <? while($result=dbAbstract::returnArray($product_qry,1)) {
 
-$product = $chargify->getProduct($result['product_id']);
+$product = $chargify->getProductById($result['product_id']);
 $price = number_format(round($product->price_in_cents/100,2),2);
 $price = "$".$price;
 if($result['product_id']==$value){
