@@ -111,7 +111,7 @@ function getXMLHTTP() { //fuction to return the xml http object
         if(isset($_POST['change']))
         {   extract($_POST);
             $chargify_subscription_id = dbAbstract::ExecuteObject("Select chargify_subscription_id from resturants where id = (select  resturant_id from licenses where license_key ='$licenseid' limit 0,1)",1);
-            $Objsubcription = $chargify->getSubcription($chargify_subscription_id->chargify_subscription_id);
+            $Objsubcription = $chargify->getSubscriptionByCustomerId($chargify_subscription_id->chargify_subscription_id);
             $oldProduct = $Objsubcription->product;
             Log::write('My Account - tab_changepass.php', 'Calling Create Migration:subscriptionID:'.$chargify_subscription_id->chargify_subscription_id.' Product ID:'.$product_details, 'MyAccount', 1);
             $chargify->createMigration($chargify_subscription_id->chargify_subscription_id,$product_details);
@@ -509,7 +509,7 @@ if($_SESSION['admin_type']!="admin")
                     $product_sqlStr =  "SELECT product_id FROM chargify_products WHERE user_id  = (Select reseller_id from reseller_client where client_id = ".$_SESSION['owner_id'].")";
                     $product_qry = dbAbstract::Execute( $product_sqlStr,1 );
                     while($result=dbAbstract::returnArray($product_qry,1)) {
-                    $product = $chargify->getProduct($result['product_id']);
+                    $product = $chargify->getProductById($result['product_id']);
 	 	    $price = number_format(round($product->price_in_cents/100,2),2);
 		    $price = "$".$price;
                     ?>

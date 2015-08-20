@@ -59,9 +59,9 @@ function getXMLHTTP() { //fuction to return the xml http object
 <?
 	if($_SESSION['admin_type'] != 'admin'  && $_SESSION['admin_type'] != 'reseller') {die("Invalid access");}
 	
-require("../../classes/chargifyApi.php");
+require("../../classes/Chargify_Api.php");
 require("../../../includes/class.phpmailer.php");
-$chargify = new chargifyApi();
+$chargify = new Chargify_Api();
 $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']);
 	 
   
@@ -201,7 +201,6 @@ $reseller_id = (isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SES
 			dbAbstract::Delete("DELETE FROM licenses WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 		
 		} else if ($_REQUEST['action'] == 'suspend'){
-		 
 			dbAbstract::Update("UPDATE licenses SET  status='suspended' WHERE license_key ='$license_id' and reseller_id=$reseller_id",1);
 			dbAbstract::Update("UPDATE resturants SET  status='2' WHERE id = (select  resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);
 			dbAbstract::Update("UPDATE analytics SET  status='2' WHERE resturant_id = (select resturant_id from licenses where license_key ='$license_id' and reseller_id=$reseller_id limit 0,1)",1);

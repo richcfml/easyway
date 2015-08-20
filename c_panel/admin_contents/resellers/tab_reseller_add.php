@@ -164,7 +164,7 @@ setTimeout("leave()", 2000);
                 }
                 else
                 {
-                    $errorMsg = $chargify_subscription_id['errors'];
+					$errorMsg = $chargify_subscription_id->errors;
                     $errMessage =  $errorMsg[0];
                 }
         } 

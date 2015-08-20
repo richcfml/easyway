@@ -1,6 +1,6 @@
 <?php
  require_once("../includes/config.php");
- require_once 'classes/chargifyApi.php';
+ require_once 'classes/Chargify_Api.php';
  
 // for Customer Subscription
 
