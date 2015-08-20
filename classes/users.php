@@ -144,7 +144,7 @@ class users
 
     public function login($email,$password,$restaurant_id) 
     {
-        $mRow = mysql_fetch_object(mysql_query("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''"));
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''");
         if ($mRow)
         {
             $mSalt = $mRow->salt;
@@ -152,6 +152,7 @@ class users
             $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
         
             $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND epassword ='$password' AND resturant_id= '". $restaurant_id ."'";
+            
             $user_qry  = dbAbstract::Execute($mSQL);
         
             if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0) 
