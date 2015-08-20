@@ -3,7 +3,7 @@
     set_time_limit(2000);
     ini_set('max_execution_time', 2000);
     //require_once('includes/config.php');
-    $mysql_conn = mysql_connect("localhost","root","") or die( mysql_error()."  cannot connect...");
+    $mysql_conn = mysql_connect("23.253.249.73","dbUser","PR3st!2014") or die( mysql_error()."  cannot connect...");
     mysql_select_db("easywayordering",$mysql_conn);
     require_once('c_panel/includes/SimpleImage.php');
     require_once('c_panel/includes/snapshot.class.php');    
