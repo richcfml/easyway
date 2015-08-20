@@ -1,9 +1,13 @@
 <?php
+    error_reporting(E_ALL);
     set_time_limit(1000);
     ini_set('max_execution_time', 1000);
     
-    require_once('includes/config.php');
+    //require_once('includes/config.php');
     
+    $mysql_conn = mysql_connect("localhost","root","") or die( mysql_error()."  cannot connect...");
+    mysql_select_db("easywayordering",$mysql_conn);
+        
     $mSQL  = "SELECT id, IFNULL(password, '') AS password FROM customer_registration";
     $mRes = mysql_query($mSQL);
     
