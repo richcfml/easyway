@@ -31,6 +31,7 @@
     .draggable-popup{background-color:white; border:1px solid black}
 </style>
 <!--Start script for dependent list-->
+
 <script src="../js/checkdeliveryzones.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript">
 // Roshan's Ajax dropdown code with php
@@ -350,7 +351,6 @@ if (isset($_POST['submit'])) {
         if (!empty($_FILES['userfile']['name'])) {
             $path = '../images/resturant_logos/';
             $exe = GetFileExt($_FILES['userfile']['name']);
-            //$name = $_FILES['userfile']['name'];
             $name = "img_" . $catid . "_cat_logos." . $exe;
             $uploadfile = $path . $name;
             move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
@@ -374,7 +374,6 @@ if (isset($_POST['submit'])) {
         if (!empty($_FILES['userfile2']['name'])) {
             $path1 = '../images/logos_thumbnail/';
             $exe1 = GetFileExt($_FILES['userfile2']['name']);
-            //$name1 = $_FILES['userfile2']['name'];
             $name1 = "img_" . $catid . "_cat_thumbnail." . $exe1;
             $uploadfile1 = $path1 . $name1;
             move_uploaded_file($_FILES['userfile2']['tmp_name'], $uploadfile1);
@@ -382,12 +381,12 @@ if (isset($_POST['submit'])) {
             if ($height > $width) {
                 $image = new SimpleImage();
                 $image->load($uploadfile1);
-                $image->resizeToHeight(500);
+                $image->resizeToHeight(330);
                 $image->save($uploadfile1);
             } else {
                 $image = new SimpleImage();
                 $image->load($uploadfile1);
-                $image->resizeToWidth(600);
+                $image->resizeToWidth(300);
                 $image->save($uploadfile1);
             }
         } else {
@@ -395,8 +394,7 @@ if (isset($_POST['submit'])) {
         }
         ////////////////////////////////////////////////////////////
 
-        if (!empty($_FILES['userfile3']['name'])) 
-        {
+        if (!empty($_FILES['userfile3']['name'])) {
             $path3 = '../images/resturant_headers/';
             $exe3 = GetFileExt($_FILES['userfile3']['name']);
             $name3 = "img_" . $catid . "_cat_header." . $exe3;
@@ -564,9 +562,13 @@ if (isset($_POST['submit'])) {
 						,facebookLink='$facebookLink'
 						,meta_keywords='" . addslashes(trim($meta_keywords)) . "'
 						,meta_description='" . addslashes(trim($meta_description)) . "'
-						,region='" . addslashes(trim($region)) . "'
-					where id = $catid";
-            dbAbstract::Update($queryUpdate,1);
+						,region='" . addslashes(trim($region)) . "'";
+                        if($_SESSION['admin_type'] == 'reseller')
+                        {
+                            $queryUpdate .= ",payment_method= '$payment_method'";
+                        }
+                        $queryUpdate .= " where id = $catid";
+                        dbAbstract::Update($queryUpdate,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant - Reseller:'.$queryUpdate, 'restaurant', 1);
 			$queryAnalytics="UPDATE analytics 
 					SET name= '" . prepareStringForMySQL($catname) . "'
@@ -692,6 +694,7 @@ else if (isset($_POST["btnRemoveVIP"]))
         unlink(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>"));
     }
     $errMessage = "VIP list image removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveBhBanner"]))
 {
@@ -720,7 +723,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     <textarea name="catname" cols="35" id="catname" style="font-size:18px; font-family:Arial;"><?= stripslashes(stripcslashes($Objrestaurant->name)) ?>
                     </textarea></td>
             </tr>
-            <?
+            <?php
             if ($_SESSION['admin_type'] == 'admin') {
                 $client_id = $Objrestaurant->owner_id;
                 $reseller_sql = "SELECT reseller_id FROM reseller_client WHERE client_id = '" . $client_id . "' ";
@@ -757,11 +760,11 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                         </div>
                     </td>
                 </tr>
-            <? } ?>
+            <?php } ?>
             <tr align="left" valign="top"> 
                 <td width="76"></td>
                 <td ><strong>Resturant Licenses Key:</strong><br />
-                    <?
+                    <?php
                     $rest_license_key_sql_str = "SELECT license_key FROM licenses WHERE id = $Objrestaurant->license_id";
                     $rest_license_key_qry = dbAbstract::Execute($rest_license_key_sql_str,1);
                     $rest_license_key_rs = dbAbstract::returnArray($rest_license_key_qry,1);
@@ -771,23 +774,11 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 
                 </td>
             </tr>
-
-
-
-
-
             <tr align="left" valign="top"> 
                 <td width="76"></td>
                 <td><strong>Email:</strong><br />
                     <input name="email" type="text" size="40" value="<?= stripslashes(stripcslashes($Objrestaurant->email)) ?>" id="email" /> </td>
             </tr>
-            <!--<tr align="left" valign="top"> 
-              <td width="76"></td>
-              <td><strong>Enable PDF attachment with email:</strong><br />
-              <input name="pdf_attachment" type="checkbox" size="40" value="1" id="pdf_attachment" <? if ($Objrestaurant->pdf_attachment_status == 1) {
-                        echo "checked";
-                    } ?> /> </td>
-            </tr>-->
              <tr align="left" valign="top">
                 <td></td>
                 <td><strong>Regional Settings:</strong><br />					
@@ -827,10 +818,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                 <td><strong>Fax:</strong><br />
                     <input name="fax" type="text" size="40" value="<?= stripslashes(stripcslashes($Objrestaurant->fax)) ?>" id="fax" /> </td>
             </tr>
-
-
-
- <tr align="left" valign="top">
+            <tr align="left" valign="top">
                 <td></td>
                 <td><strong>Resturant Address:</strong><br />
                     <input name="rest_address" type="text" size="40" id="rest_address" value="<?= $Objrestaurant->rest_address ?>">            
@@ -838,19 +826,19 @@ else if (isset($_POST["btnRemoveBhBanner"]))
             </tr>
             <tr align="left" valign="top"> 
                 <td></td>
-                <td><strong>Resturant City:</strong><br />
+                <td><strong>Restaurant City:</strong><br />
                     <input name="rest_city" type="text" size="40" id="rest_city" value="<?= $Objrestaurant->rest_city ?>">            
                 </td>
             </tr>
             <tr align="left" valign="top"> 
                 <td></td>
-                <td><strong><span id="spnSP">Resturant State:</span></strong><br />
+                <td><strong><span id="spnSP">Restaurant State:</span></strong><br />
                     <input name="rest_state" type="text" size="40" id="rest_state" value="<?= $Objrestaurant->rest_state ?>">            
                 </td>
             </tr>
             <tr align="left" valign="top"> 
                 <td></td>
-                <td><strong><span id="spnZP">Resturant Zip Code:</span></strong><br />
+                <td><strong><span id="spnZP">Restaurant Zip Code:</span></strong><br />
                     <input name="rest_zip" type="text" size="40" id="rest_zip" value="<?= $Objrestaurant->rest_zip ?>">            
                 </td>
             </tr>
@@ -864,7 +852,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 
             <tr align="left" valign="top" id="delivery_radius" <?= $Objrestaurant->delivery_option == 'delivery_zones' ? 'class="hidden"' : '' ?>> 
                 <td></td>
-                <td><strong>Delivery Radius for Resturant:</strong><br />
+                <td><strong>Delivery Radius for Restaurant:</strong><br />
                     <input name="delivery_radius" type="text" size="40" id="delivery_radius" value="<?= $Objrestaurant->delivery_radius ?>">&nbsp;(miles)            </td>
             </tr>
             <tr align="left" valign="top" id="delivery_zone" <?= $Objrestaurant->delivery_option == 'radius' ? 'class="hidden"' : '' ?>> 
@@ -968,14 +956,14 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                 <td><strong>Announcements:</strong><br />
                     <input name="rest_announcements" type="text" size="40" id="rest_announcements" value="<?= $Objrestaurant->announcement ?>">            </td>
             </tr>
-<? if ($_SESSION['admin_type'] == 'admin') { ?>
+<?php if ($_SESSION['admin_type'] == 'admin' || $_SESSION['admin_type'] == 'reseller') { ?>
                 <tr align="left" valign="top"> 
                     <td></td>
                     <td><strong>Payment Mathod:</strong><br />
-                        <input name="credit" type="checkbox" value="credit"  id="payment_method" <? if ($Objrestaurant->payment_method == "credit" || $Objrestaurant->payment_method == "both") {
+                        <input name="credit" type="checkbox" value="credit"  id="payment_method" <?php if ($Objrestaurant->payment_method == "credit" || $Objrestaurant->payment_method == "both") {
         echo "checked";
     } ?>>Credit Card            &nbsp;&nbsp;
-                        <input name="cash" type="checkbox" value="cash"  id="payment_method" <? if ($Objrestaurant->payment_method == "cash" || $Objrestaurant->payment_method == "both") {
+                        <input name="cash" type="checkbox" value="cash"  id="payment_method" <?php if ($Objrestaurant->payment_method == "cash" || $Objrestaurant->payment_method == "both") {
         echo "checked";
     } ?>>Cash
                     </td>
@@ -984,10 +972,10 @@ else if (isset($_POST["btnRemoveBhBanner"]))
             <tr align="left" valign="top"> 
                 <td></td>
                 <td><strong>Announcement status:</strong><br />
-                    <input name="announce_status" type="radio" value="1"  id="announce_status" <? if ($Objrestaurant->announce_status == "1") {
+                    <input name="announce_status" type="radio" value="1"  id="announce_status" <?php if ($Objrestaurant->announce_status == "1") {
     echo "checked";
 } ?>>Activate            &nbsp;&nbsp;
-                    <input name="announce_status" type="radio" value="0"  id="announce_status" <? if ($Objrestaurant->announce_status == "0") {
+                    <input name="announce_status" type="radio" value="0"  id="announce_status" <?php if ($Objrestaurant->announce_status == "0") {
     echo "checked";
 } ?>>Deactivate
                 </td>
@@ -995,10 +983,10 @@ else if (isset($_POST["btnRemoveBhBanner"]))
             <tr align="left" valign="top"> 
                 <td></td>
                 <td><strong>Allow Delivery Option:</strong><br />
-                    <input name="delivery_offer" type="radio" value="1"  id="delivery_offer" <? if ($Objrestaurant->delivery_offer == "1") {
+                    <input name="delivery_offer" type="radio" value="1"  id="delivery_offer" <?php if ($Objrestaurant->delivery_offer == "1") {
     echo "checked";
 } ?>>Yes            &nbsp;&nbsp;
-                    <input name="delivery_offer" type="radio" value="0"  id="delivery_offer" <? if ($Objrestaurant->delivery_offer == "0") {
+                    <input name="delivery_offer" type="radio" value="0"  id="delivery_offer" <?php if ($Objrestaurant->delivery_offer == "0") {
     echo "checked";
 } ?>>No
                 </td>
@@ -1006,15 +994,15 @@ else if (isset($_POST["btnRemoveBhBanner"]))
             <tr align="left" valign="top"> 
                 <td></td>
                 <td><strong>Resturant Status:</strong><br />
-                    <input name="rest_open_close" type="radio" value="1"  id="rest_open_close" <? if ($Objrestaurant->rest_open_close == "1") {
+                    <input name="rest_open_close" type="radio" value="1"  id="rest_open_close" <?php if ($Objrestaurant->rest_open_close == "1") {
     echo "checked";
 } ?>>Open            &nbsp;&nbsp;
-                    <input name="rest_open_close" type="radio" value="0"  id="rest_open_close" <? if ($Objrestaurant->rest_open_close == "0") {
+                    <input name="rest_open_close" type="radio" value="0"  id="rest_open_close" <?php if ($Objrestaurant->rest_open_close == "0") {
     echo "checked";
 } ?>>Close
                 </td>
             </tr>
-<? if ($_SESSION['admin_type'] == 'admin') { ?>
+<?php if ($_SESSION['admin_type'] == 'admin') { ?>
                 <tr align="left" valign="top" style="display: none;"> 
                     <td width="76"></td>
                     <td><strong>Voice Confirmation Phone:</strong><br />
@@ -1025,10 +1013,10 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     <td></td>
                     <td>
                         <strong>Voice Confirmation Status:</strong><br />
-                        <input name="phone_notification_status" type="radio" value="1"  id="phone_notification_status" <? if ($Objrestaurant->phone_notification == "1") {
+                        <input name="phone_notification_status" type="radio" value="1"  id="phone_notification_status" <?php if ($Objrestaurant->phone_notification == "1") {
         echo "checked";
     } ?>>On            &nbsp;&nbsp;
-                        <input name="phone_notification_status" type="radio" value="0"  id="phone_notification_status" <? if ($Objrestaurant->phone_notification == "0") {
+                        <input name="phone_notification_status" type="radio" value="0"  id="phone_notification_status" <?php if ($Objrestaurant->phone_notification == "0") {
         echo "checked";
     } ?>>Off
                     </td>
@@ -1037,14 +1025,14 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     <td></td>
                     <td>
                         <strong>Chargify Subscription Status:</strong><br />
-                        <input name="chargify_subscription_status" type="radio" value="1"  id="chargify_subscription_status1" <? if ($Objrestaurant->chargify_subscription_status == "1") {
+                        <input name="chargify_subscription_status" type="radio" value="1"  id="chargify_subscription_status1" <?php if ($Objrestaurant->chargify_subscription_status == "1") {
         echo "checked";
     } ?>>On            &nbsp;&nbsp;
-                        <input name="chargify_subscription_status" type="radio" value="0"  id="chargify_subscription_status2" <? if ($Objrestaurant->chargify_subscription_status == "0") {
+                        <input name="chargify_subscription_status" type="radio" value="0"  id="chargify_subscription_status2" <?php if ($Objrestaurant->chargify_subscription_status == "0") {
         echo "checked";
     } ?>>Off
 
-                        <div id="chargify_id_container" style="display: <? if ($Objrestaurant->chargify_subscription_status == "1") {
+                        <div id="chargify_id_container" style="display: <?php if ($Objrestaurant->chargify_subscription_status == "1") {
         echo "block";
     } else {
         echo "none";
@@ -1070,27 +1058,27 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     <td></td>
                     <td colspan="2" style="font-size: 12px;">
                         <strong>Premium Account Status:</strong><br />
-                        <input name="premium_account" type="radio" value="1"  id="premium_account1" <? if ($Objrestaurant->premium_account == "1") {
+                        <input name="premium_account" type="radio" value="1"  id="premium_account1" <?php if ($Objrestaurant->premium_account == "1") {
         echo "checked";
     } ?>>On            &nbsp;&nbsp;
-                        <input name="premium_account" type="radio" value="0"  id="premium_account2" <? if ($Objrestaurant->premium_account == "0") {
+                        <input name="premium_account" type="radio" value="0"  id="premium_account2" <?php if ($Objrestaurant->premium_account == "0") {
         echo "checked";
     } ?>>Off
 
-                        <div id="yelp_settings" style="display: <? if ($Objrestaurant->premium_account == "1") {
+                        <div id="yelp_settings" style="display: <?php if ($Objrestaurant->premium_account == "1") {
         echo "block";
     } else {
         echo "none";
     } ?>;">
                             <strong>Yelp Review Status:</strong><br />
-                            <input name="yelp_review_request" type="radio" value="1"  id="yelp_review_request1" <? if ($Objrestaurant->yelp_review_request == "1") {
+                            <input name="yelp_review_request" type="radio" value="1"  id="yelp_review_request1" <?php if ($Objrestaurant->yelp_review_request == "1") {
         echo "checked";
     } ?>>On            &nbsp;&nbsp;
-                            <input name="yelp_review_request" type="radio" value="0"  id="yelp_review_request2" <? if ($Objrestaurant->yelp_review_request == "0") {
+                            <input name="yelp_review_request" type="radio" value="0"  id="yelp_review_request2" <?php if ($Objrestaurant->yelp_review_request == "0") {
         echo "checked";
     } ?>>Off
 
-                            <div id="yelp_restaurant_url_container" style="display: <? if ($Objrestaurant->yelp_review_request == "1") {
+                            <div id="yelp_restaurant_url_container" style="display: <?php if ($Objrestaurant->yelp_review_request == "1") {
         echo "block";
     } else {
         echo "none";
@@ -1121,7 +1109,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                         </div>
                     </td>
                 </tr>
-<? } ?>
+<?php } ?>
 <?php
     if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
     {
@@ -1202,9 +1190,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
     }
 //-->
 </script>
-<!--Saad Change 12-Sept-2014-->
 <div id="AdminRightConlum" style="padding:5px; min-height:560px;background-image:url('images/bg.jpg')">
-<!--    <iframe src="admin_contents/resturants/tab_resturant_businesshours.php?catid=<= catid ?>&<=ime()?>" frameborder="0"  width="100%" scrolling="no" id="iframe1" onload="calcHeight('iframe1')"></iframe>-->
 </div>
 <br class="clearfloat" />
 
@@ -1301,19 +1287,9 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                 alert("Sorry, we were unable to recognize the resturant address");
                 return false;
             }
-
-            else
-            {
-                //location1 = {lat: response.Placemark[0].Point.coordinates[1], lon: response.Placemark[0].Point.coordinates[0], address: response.Placemark[0].address};
-                //$("#lnkdelivery_zones").attr('href','ajax.php?mod=resturant&item=delivery_zone&latitude='+location1.lat +'&longitude='+location1.lon)
-            }
         });
-
-        //Saad Change 12-Sept-2014
         fillBusinessHours("GetBusinessHours",<?= $catid ?>, 0, 0);
     });
-
-    //Saad Change 12-Sept-2014
     function fillBusinessHours(action, restId, dayId, bHId){
         if (typeof action !== 'undefined') {
             var url = "admin_contents/resturants/tab_resturant_businesshours.php?&action="+action+"&catid="+restId+"&dayid="+dayId+"&deleteid="+bHId;
@@ -1352,7 +1328,6 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 
 </script>
 <script type="text/javascript">
-    /* Developed by: Abhinay Rathore [web3o.blogspot.com] */
 //Global variables 
     var global = this;
     var map;
@@ -1364,14 +1339,8 @@ else if (isset($_POST["btnRemoveBhBanner"]))
     var polygon_resizing = false; //To track Polygon Resizing 
 
 //Polygon Marker/Node icons 
-//var redpin = new google.maps.Icon(); //Red Pushpin Icon
     image = "http://maps.google.com/mapfiles/ms/icons/red-pushpin.png";
-//redpin.iconSize = new google.maps.Size(32, 32);
-//redpin.iconAnchor = new google.maps.Point(10, 32);
-//var bluepin = new google.maps.Icon(); //Blue Pushpin Icon
     image = "http://maps.google.com/mapfiles/ms/icons/blue-pushpin.png";
-//bluepin.iconSize = new google.maps.Size(32, 32);
-//bluepin.iconAnchor = new google.maps.Point(10, 32);
 
     function initializeMap(latitude, longitude) { //Initialize google.maps.oogle Map
         if (google.maps.BrowserIsCompatible()) {

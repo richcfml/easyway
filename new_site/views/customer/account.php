@@ -1,27 +1,40 @@
 <?php 
-	if(!is_numeric($loggedinuser->id)) {
-		 /*echo "<script type='text/javascript'>window.location='?item=login'</script>";*/
-		 header("location: ". $SiteUrl .$objRestaurant1->url ."/?item=login" );exit;
+	if(!is_numeric($loggedinuser->id)) 
+        {
+            header("location: ". $SiteUrl .$objRestaurant1->url ."/?item=login" );exit;
 	}
-if(isset($_POST['btnupdate'])) {
-	extract($_POST);
-	$loggedinuser->	cust_email= trim($email)=='' ? $loggedinuser->	cust_email : $email;
- 	$loggedinuser->	password= trim($password)=='' ? $loggedinuser->	password : $password;
- 	$loggedinuser->	cust_your_name= trim($first_name)=='' ? $loggedinuser->	cust_your_name : $first_name;
-	$loggedinuser->	LastName= trim($last_name)=='' ? $loggedinuser->	LastName : $last_name;
-	$loggedinuser->	street1= trim($address1)=='' ? $loggedinuser->	street1 : $address1;
-	$loggedinuser->	street2= trim($address2)=='' ? $loggedinuser->	street2 : $address2;
-	$loggedinuser->	cust_ord_city= trim($city)=='' ? $loggedinuser->	cust_ord_city : $city;
-	$loggedinuser->	cust_ord_state= trim($state)=='' ? $loggedinuser->	cust_ord_state : $state;
-	$loggedinuser->	cust_ord_zip= trim($zip)=='' ? $loggedinuser->	cust_ord_zip : $zip;
-	$loggedinuser->	cust_phone1= trim($phone1)=='' ? $loggedinuser->	cust_phone1 : $phone1;
-	$loggedinuser->	delivery_street1= $saddress1;
-	$loggedinuser->	delivery_street2= $saddress2;
-	$loggedinuser->	delivery_city1= $scity;
-	$loggedinuser->	delivery_state1= $cstate;
-	$loggedinuser->	deivery1_zip= $czip;
-	$loggedinuser->update();
-}
+    
+        if(isset($_POST['btnupdate'])) 
+        {
+            $mSalt = "";
+            $ePassword= "";
+            extract($_POST);            
+            
+            if (trim($user_password)!='')
+            {
+                $mSalt = hash('sha256', mt_rand(10,1000000));    
+                $ePassword= hash('sha256', $user_password.$mSalt);
+            }
+
+            $loggedinuser->cust_email= trim($email)=='' ? $loggedinuser->	cust_email : $email;
+            $loggedinuser->password= trim($user_password)=='' ? $loggedinuser->password : $user_password;
+            $loggedinuser->ePassword= trim($user_password)=='' ? $loggedinuser->ePassword : $ePassword;
+            $loggedinuser->salt= trim($user_password)=='' ? $loggedinuser->salt : $mSalt;
+            $loggedinuser->cust_your_name= trim($first_name)=='' ? $loggedinuser->	cust_your_name : $first_name;
+            $loggedinuser->LastName= trim($last_name)=='' ? $loggedinuser->	LastName : $last_name;
+            $loggedinuser->street1= trim($address1)=='' ? $loggedinuser->	street1 : $address1;
+            $loggedinuser->street2= trim($address2)=='' ? $loggedinuser->	street2 : $address2;
+            $loggedinuser->cust_ord_city= trim($city)=='' ? $loggedinuser->	cust_ord_city : $city;
+            $loggedinuser->cust_ord_state= trim($state)=='' ? $loggedinuser->	cust_ord_state : $state;
+            $loggedinuser->cust_ord_zip= trim($zip)=='' ? $loggedinuser->	cust_ord_zip : $zip;
+            $loggedinuser->cust_phone1= trim($phone1)=='' ? $loggedinuser->	cust_phone1 : $phone1;
+            $loggedinuser->delivery_street1= $saddress1;
+            $loggedinuser->delivery_street2= $saddress2;
+            $loggedinuser->delivery_city1= $scity;
+            $loggedinuser->delivery_state1= $cstate;
+            $loggedinuser->deivery1_zip= $czip;
+            $loggedinuser->update();
+        }
 
  
 

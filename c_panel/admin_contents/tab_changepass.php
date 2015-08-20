@@ -60,34 +60,41 @@ function getXMLHTTP() { //fuction to return the xml http object
 
 
 </script>
-<? 
+<?php 
 	$old_username_pass_qry = dbAbstract::Execute("select * from users WHERE username = '".$_SESSION['admin_session_user_name']."'",1);
 	$old_username_pass_qry_rs = dbAbstract::returnArray($old_username_pass_qry,1);
-	$oldpass_db = $old_username_pass_qry_rs['password'];
-	$name 		= $old_username_pass_qry_rs['username'];
-	$errMessage="";
+	$oldpass_db = $old_username_pass_qry_rs['epassword'];
+        $oldpass_salt = $old_username_pass_qry_rs['salt'];
         
-        //$subcription_id = $old_username_pass_qry_rs['chargify_subcription_id'];
-        //$Objsubcription = $chargify->getSubcription($subcription_id);
+	$name = $old_username_pass_qry_rs['username'];
+	$errMessage="";
 
         $counter = 0;
-	if (isset($_REQUEST['submit'])) {
-	
-	$oldpass 	=$_REQUEST['oldpass']; 
-	$pass 		=@$_REQUEST['pass']; 
-	$confirm1 	=$_REQUEST['confirm1']; 
-		if ($oldpass_db!=$oldpass) {
-	 $errMessage="Your old password is not correct.";
-	} else if ($pass!=$confirm1) {
-	 $errMessage="New and Confirm Password should match ecah other.";
+	if (isset($_REQUEST['submit'])) 
+        {
+            $oldpass = $_REQUEST['oldpass'];
+            $mOldPassword = hash('sha256', $oldpass.$oldpass_salt);
+            $pass = $_REQUEST['pass']; 
+            $confirm1 = $_REQUEST['confirm1']; 
+        if ($oldpass_db!=$mOldPassword) 
+        {
+            $errMessage="Your old password is not correct.";
+	} 
+        else if ($pass!=$confirm1) 
+        {
+            $errMessage="New and Confirm Password should match ecah other.";
 	}
-		if($errMessage==""){	 
-	dbAbstract::Update("UPDATE users set password = '".$pass."' where username ='".$name."'",1);
+	
+        if($errMessage=="")
+        {	
+            $ePassword = hash('sha256', $pass.$oldpass_salt);
+	dbAbstract::Update("UPDATE users set password = '".$pass."', ePassword = '".$ePassword."' where username ='".$name."'",1);
 	?>
     <script language="javascript">
 		window.location="./?mod=resturant";
 	</script>
-		<? }
+		<?php 
+        }
 	}
         if(isset($_REQUEST['saveCard']))
         {
@@ -284,11 +291,8 @@ function getXMLHTTP() { //fuction to return the xml http object
                         $quantity = $quantity-1;
                         Log::write('My Account - tab_changepass.php', 'Calling Allocation Quantity:'.$reseller_chargify_id->chargify_subcription_id.'Quantity;'.$quantity.'Account Type:'.$chargify_subscription_id->premium_account.'suspend:suspend', 'MyAccount', 1);
                         $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$chargify_subscription_id->premium_account,'suspend');
-                        //if($chargify_subscription_id->premium_account==1)
-                        //{
                         Log::write('My Account - tab_changepass.php', 'cancelSubcriptionByRestowner Subscription ID:'.$chargify_subscription_id->chargify_subscription_id, 'MyAccount', 1);
                         $chargify->cancelSubcriptionByRestowner($chargify_subscription_id->chargify_subscription_id);
-                        //}
 
                         if(!empty($sridSql->srid))
                         {
@@ -298,7 +302,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                         }
                         ?>
                           <script type='text/javascript'>window.location='?mod=changepass'</script>
-                        <?
+                        <?php
                         
 		} else if ($_REQUEST['action'] == 'activate'){
 
@@ -329,8 +333,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 if($_SESSION['admin_type']!="admin")
 {?>
      <div id="LoginContainer" style="width:700px"><br />
-         <? if ($errMessage != "" ) { ?><div class="msg_done" style="margin-bottom: 15px;"><?=$errMessage?></div>
-<? }?>
+         <?php if ($errMessage != "" ) { ?><div class="msg_done" style="margin-bottom: 15px; color: red;"><?=$errMessage?></div>
+<?php }?>
 <table class="listig_table" width="100%" border="0" align="center" cellspacing="1">
 
     <tr>
@@ -505,7 +509,7 @@ if($_SESSION['admin_type']!="admin")
                 <td id="product_div">
                     <select name="product_details" id="product_details" style="width:270px;">
                     <option value="-1">Select Product</option>
-                    <?
+                    <?php
                     $product_sqlStr =  "SELECT product_id FROM chargify_products WHERE user_id  = (Select reseller_id from reseller_client where client_id = ".$_SESSION['owner_id'].")";
                     $product_qry = dbAbstract::Execute( $product_sqlStr,1 );
                     while($result=dbAbstract::returnArray($product_qry,1)) {
@@ -545,7 +549,7 @@ if($_SESSION['admin_type']!="admin")
     <? if(@$errMessage!="") {?>
     <tr>
       <td align="right" valign="middle">&nbsp;</td>
-      <td align="left" valign="middle" class="ErrorMsg"><? echo @$errMessage?></td>
+      <td align="left" valign="middle" class="ErrorMsg" style="color: red;"><?php echo @$errMessage?></td>
     </tr>
     <? }?>
     <tr>
@@ -819,3 +823,4 @@ if($_SESSION['admin_type']!="admin")
         }
     }
 </script>
+

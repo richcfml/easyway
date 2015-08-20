@@ -27,7 +27,6 @@
            }
 
             $desiredname='';
-//<!----------------------------------Start------------------------------------>            
                             $password		=	$_POST['password'];
                             $firstname		=	$_POST['f_name'];
                             $lastname    		=   $_POST['l_name'];
@@ -45,9 +44,7 @@
                             
                             $errMessage='';
             
-                            if($password == ''){
-					$errMessage="Please Enter Password";
-                            }elseif($firstname == ''){
+                            if($firstname == ''){
 					$errMessage="Please Enter First Name";
                             }elseif($lastname == ''){
                                             $errMessage="Please Enter Last Name";
@@ -63,29 +60,27 @@
                                             $errMessage="Please Enter Zip Code";	
                             }elseif($phonenumber == '' ){
                                             $errMessage="Please Enter Phone Number";	
-                            }elseif($altphonenumber == '' ){
-                                            $errMessage="Please Enter Alternate Phone Number";	
-                            }elseif($altdeliveryadd == '' ){
-                                            $errMessage="Please Enter Alternate Delivery Address";		
-                            }elseif($altaddcity == '' ){
-                                            $errMessage="Please Enter City Name";	
-                            }elseif($altaddstate == '' ){
-                                            $errMessage="Please Enter State Name";	
-                            }elseif($altaddzipcode == '' ){
-                                            $errMessage="Please Enter Zip Code";
                             }else{
                                 print_r("Update Data Process");
-                            
-//<!----------------------------------End--------------------------------------->                            
-            //Query changed by Saad in order to not to store email address again.
-            dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id", 1);
+                    if (trim($_POST['password'])!="")
+                    {
+                        $mSalt = hash('sha256', mt_rand(10,1000000));    
+                        $ePassword	= hash('sha256', $password.$mSalt);                
+                        dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', ePassword= '$ePassword', salt= '$mSalt', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id", 1);
+                    }
+                    else
+                    {
+                        dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id"); 
+                    }
             ?>
 
             <script language="javascript">
 		window.location="./?mod=customer&cid=<?=$mRestaurantIDCP?>";
             </script>
-<? } ?>            
-<?	}// end submit ?>
+<?php 
+    } 
+} 
+?>
    <script language="javascript">     
     function DeleteUserProfile(uid){
 	abc= confirm('You Are About To Completely Delete Your Account Which Will Remove All Orders, Against Your Account. Are You Sure? YES/NO');
@@ -105,14 +100,13 @@
     <table width="750" border="0" cellpadding="4" cellspacing="0">
       <tr align="left" valign="top">
         <td><strong>Email:</strong></td>
-        <td><!--<input name="email" type="text" value="<?=$user_qryRs->cust_email?>" size="40" />&nbsp;&nbsp;&nbsp;&nbsp;<strong><a href="" onclick="DeleteUserProfile(<? echo $user_id;?>);" style="text-decoration:underline;">Delete</a></strong>-->
-            <!-- disabled added by Saad on 12-Aug-2014 to disallow customer email change -->
+        <td>
         <input name="email" type="text" value="<?=$user_qryRs->cust_email?>" disabled="disabled" size="40" />&nbsp;&nbsp;&nbsp;&nbsp;<strong><a href="?mod=<?=$mod?>&item=deleteuser&userid=<?=$user_id?>" onclick="return confirm('You Are About To Completely Delete Your Account Which Will Remove All Orders, Against Your Account. Are You Sure? YES/NO')" style="text-decoration:underline;">Delete</a></strong>
         </td>
       </tr>
       <tr align="left" valign="top">
         <td><strong>Password:</strong></td>
-        <td><input name="password" type="text" value="<?=$user_qryRs->password?>" size="40" /></td>
+        <td><input name="password" type="password" size="40" /></td>
       </tr>
       <tr align="left" valign="top">
         <td width="200"><strong>First Name:</strong></td>

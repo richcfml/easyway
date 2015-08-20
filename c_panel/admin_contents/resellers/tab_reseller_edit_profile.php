@@ -46,8 +46,6 @@
 					 $errMessage = "Please enter user name";
 				} else if(dbAbstract::returnRowsCount($reseller_qry1,1) > 0) {
 					 $errMessage = "User name already exists. Please select another.";
-				} else if($_SESSION['admin_type'] == 'admin' && $password == '') {
-					 $errMessage = "Please enter password";
 				} else if($country < 0) {
 					 $errMessage = "Please select country";
 				} else if($state == '') {
@@ -69,22 +67,8 @@
 						$path = '../images/logos_thumbnail/';
 						$exe = GetFileExt($_FILES['company_logo']['name']);	
 						$image_name = "img_".$reseller_id."_reseller_thumbnail.".$exe;
-						//die("IMAGE NAME: ".$image_name);
 						$uploadfile = $path . $image_name;					
 						move_uploaded_file( $_FILES['company_logo']['tmp_name'] , $uploadfile );
-						/*list($width, $height, $type, $attr) = getimagesize("$uploadfile");
-							if($height>$width){
-							$image = new SimpleImage();
-							$image->load($uploadfile);
-							$image->resizeToHeight(100);
-							$image->save($uploadfile);
-							}else {
-							$image = new SimpleImage();
-							$image->load($uploadfile);
-							$image->resizeToWidth(100);
-							$image->save($uploadfile);
-							}	*/			
-							
 					}else {
 						$image_name = $reseller_qryRs->company_logo;
 					}
@@ -129,26 +113,22 @@
         <td><strong>Last Name:</strong></td>
         <td><input name="last_name" type="text" value="<?=$reseller_qryRs->lastname?>" size="40" id="last_name" /></td>
       </tr>
-      <? if($_SESSION['admin_type'] == 'admin') {?>
+      <?php if($_SESSION['admin_type'] == 'admin') {?>
       <tr align="left" valign="top">
         <td width="160"><strong>Email:</strong></td>
         <td width="400"><input name="email" id="email" type="text" size="40"  value="<?=$reseller_qryRs->email?>"  /></td>
       </tr>
-      <? }?>
+      <?php }?>
       <tr align="left" valign="top">
         <td width="160"><strong>Phone:</strong></td>
         <td width="400"><input name="phone" id="phone" type="text" size="40"  value="<?=$reseller_qryRs->phone?>"  /></td>
       </tr>
-      <? if($_SESSION['admin_type'] == 'admin') {?>
+      <?php if($_SESSION['admin_type'] == 'admin') {?>
       <tr align="left" valign="top">
         <td width="160"><strong>User Name:</strong></td>
         <td width="400"><input name="user_name" type="text" size="40" value="<?=$reseller_qryRs->username?>" id="user_name" /></td>
       </tr>
-      <tr align="left" valign="top">
-        <td><strong>Password: </strong></td>
-        <td><input name="password" type="password" value="<?=$reseller_qryRs->password?>" size="40" id="password" /></td>
-      </tr>
-      <? }?>
+      <?php }?>
       <tr align="left" valign="top">
         <td width="160"><strong>Country:</strong></td>
 <td width="400"><select name="country" id="country" style="width:270px;" >

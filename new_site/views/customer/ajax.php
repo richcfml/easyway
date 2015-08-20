@@ -256,11 +256,10 @@ function DeleteNMIToken($pTokenID, $pUserName, $pPassword)
 		$mDefaultCard = $mRow->data_3;
 		
 		
-		$mCustomerProfileID = $mRow->profile_id;
 					
 		$gw = new gwapi;
 		$gw->setLogin($pUserName, $pPassword);
-		$response = $gw->doDelete($pTokenID);
+		$response = $gw->doDelete($mCardToken);
 		if ($response==APPROVED) 
 		{
 			if ($mDefaultCard==1)

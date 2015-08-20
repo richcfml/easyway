@@ -1,12 +1,44 @@
 <?php 
 	if($_GET['mod'])
 	{
-		$mod	=	$_GET['mod']; 
+		$mod = $_GET['mod']; 
 	}
 	else 
 	{
-		$mod	=	'resturant';
+		$mod = 'resturant';
 	}
+        
+        /* Access Management For Admins/Resellers/Store Owners and BH admins Starts Here */
+        if ($_SESSION['admin_type'] == 'admin')
+        {
+            if (($mod=='resellers') && (isset($_GET['item'])) && ($_GET['item']=='profile'))
+            {
+                redirect($AdminSiteUrl.'?mod=resturant');
+            }
+        }
+        else if ($_SESSION['admin_type'] == 'reseller')
+        {
+            if ((($mod=='resellers') && (!isset($_GET['item']) || ($_GET['item']!='profile' && $_GET['item']!='edit'))) || ($mod=='feedback'))
+            {
+                redirect($AdminSiteUrl.'?mod=resturant');
+            }
+        }
+        else if ($_SESSION['admin_type'] == 'store owner')
+        {
+            if (($mod=='resellers') || ($mod=='feedback') || ($mod=='clients') || (($mod=='resturant') && (isset($_GET['item']) && $_GET['item']=='add')))
+            {
+                redirect($AdminSiteUrl.'?mod=resturant');
+            }
+        }
+        else if ($_SESSION['admin_type'] == 'bh')
+        {
+            if (($mod=='resellers') || ($mod=='clients') || (($mod=='resturant') && (isset($_GET['item']) && $_GET['item']=='add')))
+            {
+                redirect($AdminSiteUrl.'?mod=resturant');
+            }
+        }
+        
+        /* Access Management For Admins/Resellers/Store Owners and BH admins Ends Here */
 
 	if($mod == 'clients')	
 	{ 
@@ -144,7 +176,6 @@
 			} 
 			?> 
 			<div class="links <?=$mod=='apikey' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=apikey" >API Key</a></div> 	
-<!--                        <div class="links <?=$mod=='ssoaccount' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=ssoaccount" >SSO Accounts</a></div> -->
                         <?php 
 			if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
 			{ 
@@ -159,6 +190,3 @@
 <?php 
 	} 
 ?>
-
-
-      

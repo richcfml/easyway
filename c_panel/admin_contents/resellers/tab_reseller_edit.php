@@ -1,4 +1,4 @@
-<?	
+<?php
 
 $country_obj				=	new Country();
 	$errMessage='';
@@ -49,8 +49,6 @@ $country_obj				=	new Country();
 					 $errMessage = "Please enter user name";
 				} else if(dbAbstract::returnRowsCount($reseller_qry1,1) > 0) {
 					 $errMessage = "User name already exists. Please select another.";
-				} else if($_SESSION['admin_type'] == 'admin' && $password == '') {
-					 $errMessage = "Please enter password";
 				} else if($country < 0) {
 					 $errMessage = "Please select country";
 				} else if($address == '') {
@@ -74,7 +72,6 @@ $country_obj				=	new Country();
 						$path = '../images/logos_thumbnail/';
 						$exe = GetFileExt($_FILES['company_logo']['name']);	
 						$image_name = "img_".$reseller_id."_reseller_thumbnail.".$exe;
-						//die("IMAGE NAME: ".$image_name);
 						$uploadfile = $path . $image_name;					
 						move_uploaded_file( $_FILES['company_logo']['tmp_name'] , $uploadfile );
 					 
@@ -109,11 +106,15 @@ $country_obj				=	new Country();
 								}
 			
 					
-					if( $_SESSION['admin_type'] == 'admin' ) {
-					
+					if( $_SESSION['admin_type'] == 'admin' ) 
+                                        {
+                                            if (trim($password)!="")
+                                            {
+                                                $mSalt = hash('sha256', mt_rand(10,1000000));    
+                                                $ePassword = hash('sha256', $password.$mSalt);
 						$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', 
 						lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."', 
-						phone ='$phone', username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', 
+						phone ='$phone', username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', ePassword= '$ePassword', salt= '$mSalt',
 						country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', 
 						city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',
 						company_name= '".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
@@ -122,6 +123,21 @@ $country_obj				=	new Country();
 						pdf_image_header= '". $name ."',
 						plain_text_header= '".dbAbstract::returnRealEscapedString(stripslashes($plain_text_header))."',
 						aDotNet_access= '".$aDotNet_access."',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$reseller_id";
+                                            }
+                                            else
+                                            {
+						$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', 
+						lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."', 
+						phone ='$phone', username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',
+						country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', 
+						city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',
+						company_name= '".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
+						company_logo= '".dbAbstract::returnRealEscapedString(stripslashes($image_name))."',
+						company_logo_link= '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."',
+						pdf_image_header= '". $name ."',
+						plain_text_header= '".dbAbstract::returnRealEscapedString(stripslashes($plain_text_header))."',
+						aDotNet_access= '".$aDotNet_access."',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$reseller_id";
+                                            }
 					
 					} else if( $_SESSION['admin_type'] == 'reseller' ) { 
 						
@@ -145,7 +161,7 @@ $country_obj				=	new Country();
 						<script language="javascript">
 							window.location="./?mod=resellers";
 						</script> 
-                 <? } else if( $_SESSION['admin_type'] == 'reseller' && $result = dbAbstract::Update($sql,1) ) {
+                 <?php } else if( $_SESSION['admin_type'] == 'reseller' && $result = dbAbstract::Update($sql,1) ) {
 				 		 $message="Your profile information has been updated successfully.";
 					
 					} 
@@ -204,7 +220,7 @@ $country_obj				=	new Country();
       </tr>
       <tr align="left" valign="top">
         <td><strong>Password: </strong></td>
-        <td><input name="password" type="password" value="<?=$reseller_qryRs->password?>" size="40" id="password" /></td>
+        <td><input name="password" type="password" size="40" id="password" /></td>
       </tr>
       <? }?>
       <tr align="left" valign="top">

@@ -19,7 +19,7 @@ $(".commentsblock").validate({
 });
 });
 </script>
-<?
+<?php
 $result=-1;
 if (isset($_POST['forgotpassword'])){
 	$result=$loggedinuser->remindPassword($_POST['email'],$objRestaurant,$objMail);
@@ -35,7 +35,7 @@ if (isset($_POST['forgotpassword'])){
   <div class="error_message">Sorry, that email address is currently not registered at easywayordering.com</div>
   <? } ?>
   <? if ($result===true){?>
-  <div class="success">Your account password has been sent to your email address.&nbsp;&nbsp;<a href="<?=$SiteUrl . $objRestaurant->url ."/"?>">Back to Home</a></font></div>
+  <div class="success">We sent you an email. Please follow instructions.&nbsp;&nbsp;<a href="<?=$SiteUrl . $objRestaurant->url ."/"?>">Back to Home</a></font></div>
   <?  } ?>
   
   <div class="username">Email:<font color="#FF0000">*</font></div>

@@ -10,74 +10,78 @@ if ($objRestaurant->region == "2") //Canada
 	
 $result = -1;
 $register_result = -1;
-if (isset($_POST['login'])) {
+if (isset($_POST['login'])) 
+{
     $user_email = $_POST['email'];
-    $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+    if($_POST['login']=='sso')
+    {
+        $user = $loggedinuser->sso_login($_POST['email'], $_POST['password'], $objRestaurant->id);
+    }
+    else
+    {
+        $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+    }
 
- 	if(is_null($user))
- 	{
-		 $result=false;
-	 }
-	 
-	 else{
-
+    if(is_null($user))
+    {
+        $result=false;
+    }
+    else
+    {
         $loggedinuser->destroysession();
         $loggedinuser = $user;
 
         require($site_root_path . "includes/abandoned_cart_config.php");
 
         if ($objRestaurant->useValutec == 1)  //ValuTec
-		{
+                {
             if ($loggedinuser->valuetec_card_number > 0) 
-			{
+                        {
                 $Balance = CardBalance($loggedinuser->valuetec_card_number);
                 $loggedinuser->valuetec_points = $Balance['PointBalance'];
                 $loggedinuser->valuetec_reward = $Balance['Balance'];
             }
         } 
-		else if ($objRestaurant->useValutec == 2)  //GO3
-		{
+        else if ($objRestaurant->useValutec == 2)  //GO3
+        {
             if ($loggedinuser->valuetec_card_number > 0) 
-			{
+            {
                 $loggedinuser->valuetec_points = $objGO3->go3RewardPoints($loggedinuser->valuetec_card_number);
                 $loggedinuser->valuetec_reward = $objGO3->go3CardBalance($loggedinuser->valuetec_card_number);
             }
         } 
-		else 
-		{
+        else 
+        {
             $loggedinuser->valuetec_card_number = 0;
         }
 
         $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
-
         $loggedinuser->street1 = $address1[0];
         $loggedinuser->street2 = '';
         if (count($address1) >= 1)
+        {
             $loggedinuser->street2 = $address1[1];
+        }
 
         $address1 = explode('~', trim($loggedinuser->delivery_address1, '~'));
-
         $loggedinuser->delivery_street1 = $address1[0];
         $loggedinuser->delivery_street2 = '';
         if (count($address1) >= 1)
+        {
             $loggedinuser->delivery_street2 = $address1[1];
+        }
 
         $loggedinuser->savetosession();
-
-
-
         $result = true;
-         //------Added by Asher--------//
         $itemcount= $cart->totalItems();
-		
-        if($itemcount>0){
+
+        if($itemcount>0)
+        {
             redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");exit;
-			//header("location: ". $SiteUrl .$objRestaurant->url ."/?item=checkout" );exit;
         }
-        //----------------/////
-			 redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );exit;
-        //header("location: ". $SiteUrl .$objRestaurant->url ."/" );exit;	
-        /* echo "<script type='text/javascript'>window.location=''</script>"; */
+
+        redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
+        exit;
     }
 }
 else if (isset($_POST['btnregister'])) 
@@ -90,6 +94,9 @@ else if (isset($_POST['btnregister']))
 	}
     $loggedinuser->cust_email = $email;
     $loggedinuser->password = trim($user_password);
+    $mSalt = hash('sha256', mt_rand(10,1000000));    
+    $loggedinuser->salt= $mSalt;
+    $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
     $loggedinuser->cust_your_name = trim($first_name);
     $loggedinuser->LastName = trim($last_name);
     $loggedinuser->street1 = trim($address1);
@@ -108,38 +115,43 @@ else if (isset($_POST['btnregister']))
     $register_result = $loggedinuser->register($objRestaurant, $objMail);
     if ($register_result === true) 
 	{
-		//------Added by Asher--------//
 		$itemcount = $cart->totalItems();
 		if ($itemcount > 0) 
 		{
 			redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");
 			exit;
 		}
-	    //----------------///// 
-        //header("location: ". $SiteUrl .$objRestaurant->url ."/?item=account" );
         redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
         exit;
     }
 } 
 else if (is_numeric($loggedinuser->id)) 
 {
-    //------Added by Asher--------//
     $itemcount = $cart->totalItems();
     if ($itemcount > 0) 
 	{
         redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");
         exit;
     }
-    //----------------///// 
     redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
-//    header("location: " . $SiteUrl . $objRestaurant->url . "/?item=account");
     exit;
 }
 ?>
 <script src="../js/mask.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function(){ 		   
-    $('#phone1').mask("(999) 999-9999? x99999");
+    var region = <?php echo $objRestaurant->region ?>;
+	if (region==0) //UK
+	{
+		$('#phone1').unmask();
+		$('#phone1').mask('(9999) 999-9999');
+	}
+	else //US, Canada
+	{
+		$('#phone1').unmask();
+		$('#phone1').mask('(999) 999-9999');
+	}
+	
     $("#loginForm").validate({
         rules: {
             email: {required: true, email:1 },

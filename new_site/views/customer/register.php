@@ -1,39 +1,45 @@
-<?
-$result=-1;
-if(isset($_POST['btnsave'])) {
+<?php
+    $result=-1;
+    if(isset($_POST['btnsave'])) 
+    {
 	extract($_POST);
-	 	$loggedinuser->	cust_email=  $email;
-		$loggedinuser->	password= trim($user_password) ;
-		$loggedinuser->	cust_your_name= trim($first_name) ;
-		$loggedinuser->	LastName= trim($last_name) ;
-		$loggedinuser->	street1= trim($address1) ;
-		$loggedinuser->	street2= trim($address2) ;
-		$loggedinuser->	cust_ord_city= trim($city) ;
-		$loggedinuser->	cust_ord_state= trim($state) ;
-		$loggedinuser->	cust_ord_zip= trim($zip) ;
-		$loggedinuser->	cust_phone1= trim($phone1) ;
-		$loggedinuser->	delivery_street1= trim($saddress1) ;
-		$loggedinuser->	delivery_street2= trim($saddress2) ;
-		$loggedinuser->	delivery_city1= trim($scity) ;
-		$loggedinuser->	delivery_state1= trim($cstate) ;
-			$loggedinuser->	deivery1_zip= trim($czip) ;
-		$loggedinuser->resturant_id =$objRestaurant->id;
-		$result=$loggedinuser->register($objRestaurant,$objMail);
-		if($result===true){
-			 header("location: ". $SiteUrl .$objRestaurant->url ."/?item=account" );
-			 exit;	
-			}
-	}
+        $loggedinuser->cust_email=  $email;
+        $loggedinuser->password= trim($user_password) ;
+        $mSalt = hash('sha256', mt_rand(10,1000000));    
+        $loggedinuser->salt= $mSalt;
+        $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
+        $loggedinuser->cust_your_name= trim($first_name) ;
+        $loggedinuser->LastName= trim($last_name) ;
+        $loggedinuser->street1= trim($address1) ;
+        $loggedinuser->street2= trim($address2) ;
+        $loggedinuser->cust_ord_city= trim($city) ;
+        $loggedinuser->cust_ord_state= trim($state) ;
+        $loggedinuser->cust_ord_zip= trim($zip) ;
+        $loggedinuser->cust_phone1= trim($phone1) ;
+        $loggedinuser->delivery_street1= trim($saddress1) ;
+        $loggedinuser->delivery_street2= trim($saddress2) ;
+        $loggedinuser->delivery_city1= trim($scity) ;
+        $loggedinuser->delivery_state1= trim($cstate) ;
+        $loggedinuser->deivery1_zip= trim($czip) ;
+        $loggedinuser->resturant_id =$objRestaurant->id;
+        $result=$loggedinuser->register($objRestaurant,$objMail);
+        
+        if($result===true)
+        {
+            header("location: ". $SiteUrl .$objRestaurant->url ."/?item=account" );
+            exit;	
+        }
+    }
 ?>
 <section class='menu_list_wrapper'>
-  <h1>Registeration detail</h1>
+  <h1>Registration detail</h1>
   <form action="" id="registerationform" method="post" class="commentsblock">
    <? if ($result===false){?>
-   <div class="alert-blue"> Sorry, registeration failed please try again.</div>
+   <div class="alert-blue"> Sorry, registration failed please try again.</div>
    
       <? } ?>
        <? if ($result===0){?>
-   <div class="alert-blue"> This email is already registerd with easywayordering.com/<?= $objRestaurant->url ?>. Please <a href="<?=$SiteUrl?><?= $objRestaurant->url ."/"?>?item=forgotpassword">Click Here</a> if you forgot your passowrd.</div>
+   <div class="alert-blue"> This email is already registered with easywayordering.com/<?= $objRestaurant->url ?>. Please <a href="<?=$SiteUrl?><?= $objRestaurant->url ."/"?>?item=forgotpassword">Click Here</a> if you forgot your passowrd.</div>
    
       <? } ?>
     <div class="margintop normal">

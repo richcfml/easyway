@@ -1,9 +1,5 @@
 <?php
-//isset($_GET['mod']) ? $mod=$_GET['mod'] : $mod='resturants';
 	isset($_GET['item']) ? $mod=$_GET['item'] : $mod='resturants';
-	//print_r($_GET);
-	//print_r($_POST);
-	//print_r($_REQUEST);
 	$wp_api = false;
 	$ifrm = false;
 	if(isset($_REQUEST["wp_api"])) 
@@ -415,27 +411,27 @@
 			{
 				$include=$site_root_path. "views/main/refundpolicy.php";
 		    }
-			else if($mod=='favindex') 
-			{
+                    else if($mod=='favindex') 
+                    {
 				$include=$site_root_path. "views/restaurant/ajax.php";
 		    }
-			else if (($mod=='checkfbid') || ($mod=='delsavedtoken'))
-			{
+                    else if (($mod=='checkfbid') || ($mod=='delsavedtoken'))
+                    {
 				$include=$site_root_path. "views/customer/ajax.php";
 		    }
-			else if($mod=='savedtokens') //For Main website, WordPress and Facebook - Gulfam //01 April 2014
-			{
+                    else if($mod=='savedtokens') //For Main website, WordPress and Facebook - Gulfam //01 April 2014
+                    {
 				$include=$site_root_path. "views/customer/savedtokens.php";
 		    }
-			else if($mod=='gultest') 
-			{
-				$include=$site_root_path. "views/customer/test.php";
+                    else if($mod=='resetpassword') 
+                    {
+                        $include=$site_root_path. "views/customer/resetpassword.php";
 		    }
-			else
-			{
-				$include=$site_root_path. "views/restaurant/menu.php";
-				$mod='resturants';
-			}
+                    else
+                    {
+                            $include=$site_root_path. "views/restaurant/menu.php";
+                            $mod='resturants';
+                    }
 		}//ELSE REST
 	}
 ?>

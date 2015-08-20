@@ -26,6 +26,8 @@ class users
     public $delivery_street1;
     public $delivery_street2;
     public $password;
+    public $ePassword;
+    public $salt;
 
     public $valuetec_card_number;
     public $approval_code;
@@ -104,6 +106,7 @@ class users
         
     public function remindPassword($email,$objRestaurant,$objMail)
     {
+            global $SiteUrl;
         $mSQL = "SELECT id,cust_email, password,cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' and resturant_id=". $objRestaurant->id  ."   AND LENGTH(password)>0";
         $userQuery = dbAbstract::Execute($mSQL);
         $numrow=dbAbstract::returnRowsCount($userQuery);		
@@ -114,23 +117,23 @@ class users
         else 
         {
             $user = dbAbstract::returnObject($userQuery);
-            $subject = "easywayordering.com Account Password Reminder";
-            $body="Greetings, ". $user->cust_your_name . " ". $user->LastName ."! <br/><br/>".
-            $body .="Thank you for visiting www.easywayordering.com/".$objRestaurant->url  ."/. We hope that you will find our easywayordering system helpful for
-                                                        your work and home food delivery needs.<br/><br/>
-
-                               Following are your required login information:<br/>
-
-                               Your login: ". $user->cust_email ."<br/>
-                               Your password: ". $user->password ."<br/><br/>
-
-                               We thank you for your business and look forward to serving you!<br/><br/>
-
-                               Kind regards,<br/><br/>
-
-                               www.easywayordering.com/".$objRestaurant->url  ."/<br/>
-                               Phone: ". $objRestaurant->phone ."<br/>
-                               Fax:  ". $objRestaurant->fax ;
+                $mObjFun=new clsFunctions();
+                $mEncryptedID = $mObjFun->encrypt($user->id, "53cr3t9455w0rd");
+                $mLink = $SiteUrl.$objRestaurant->url_name."/?item=resetpassword&id=".$mEncryptedID;
+                $subject = "easywayordering.com Account Password Reminder";
+                $body="Greetings, ". $user->cust_your_name . " ". $user->LastName ."! <br/><br/>".			
+                $body .="Thank you for visiting www.easywayordering.com/".$objRestaurant->url  ."/. We hope that you will find our easywayordering system helpful for
+								 your work and home food delivery needs.<br/><br/>
+					
+					Click following link to reset your password:<br/>".$mLink."<br/><br/>
+				 					
+					We thank you for your business and look forward to serving you!<br/><br/>
+					
+					Kind regards,<br/><br/>
+					
+					www.easywayordering.com/".$objRestaurant->url  ."/<br/>
+					Phone: ". $objRestaurant->phone ."<br/>
+					Fax:  ". $objRestaurant->fax ;
 
 
             $objMail->from="info@easywayordering.com";
@@ -141,23 +144,62 @@ class users
 
     public function login($email,$password,$restaurant_id) 
     {
-        $email=prepareStringForMySQL($email);
-        $password=prepareStringForMySQL($password);
+        $mRow = mysql_fetch_object(mysql_query("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''"));
+        if ($mRow)
+        {
+            $mSalt = $mRow->salt;
+            $email=prepareStringForMySQL($email);
+            $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
         
-        $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND password ='$password' AND resturant_id= '". $restaurant_id ."'";
-        $user_qry  = dbAbstract::Execute($mSQL);
+            $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND password ='$password' AND resturant_id= '". $restaurant_id ."'";
+            $user_qry  = dbAbstract::Execute($mSQL);
         
-        if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0) 
+            if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0) 
+            {
+            return NULL;
+            }
+        
+            $user=dbAbstract::returnObject($user_qry, 0, "users");
+            $user->delivery_address_choice=1;
+
+            $user->getTokens();
+            $user->loadfavorites();
+            return $user;
+        }
+        else
         {
             return NULL;
         }
-        
-        $user=dbAbstract::returnObject($user_qry, 0, "users");
-        $user->delivery_address_choice=1;
+    }
+    
+    public function sso_login($email,$password,$restaurant_id) 
+    {
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''", 1);
+        if ($mRow)
+        {
+            $mSalt = $mRow->salt;
 
-        $user->getTokens();
-        $user->loadfavorites();
-        return $user;	
+            $email=prepareStringForMySQL($email);
+            $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
+
+            $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and ePassword ='$password' and resturant_id= '". $restaurant_id ."'", 1);
+
+            if(dbAbstract::returnRowsCount($user_qry, 1)>1 || dbAbstract::returnRowsCount($user_qry, 1)==0) 
+            {
+                return NULL;
+            }
+
+            $user=dbAbstract::returnObject($user_qry, 1, "users");
+            $user->delivery_address_choice=1;
+
+            $user->getTokens();
+            $user->loadfavorites();
+            return $user;
+        }
+        else
+        {
+            return NULL;
+        }
     }
 		
     public function loginbyid($id) 
@@ -260,9 +302,10 @@ class users
         $mSQL = "SELECT * FROM general_detail WHERE id_2=". $this->id ." ORDER BY data_3 DESC LIMIT 0 ,1";
         return dbAbstract::ExecuteObject($mSQL);
     } 	
-				
-		
-		 	
+		 //data_type=card type
+		 //data_1=last 4 digits
+		 //data_2=card token
+		 //data_3=3 default
     public function saveToken($secure_data,$token,$default)
     {
         $type=  substr($secure_data, 0,1);
@@ -314,6 +357,8 @@ class users
                , delivery_city1='". prepareStringForMySQL($this->delivery_city1 ) ."'
                , delivery_state1='". prepareStringForMySQL($this->delivery_state1 ) ."'
                , deivery1_zip='". prepareStringForMySQL($this->deivery1_zip ) ."'
+               , ePassword='". prepareStringForMySQL($this->ePassword) ."'
+               , salt='". prepareStringForMySQL($this->salt ) ."'
                  where id=". $this->id ."";
         
         dbAbstract::Update($qry);
@@ -371,7 +416,9 @@ class users
                 , delivery_city1='". prepareStringForMySQL($this->delivery_city1 ) ."'
                 , delivery_state1='". prepareStringForMySQL($this->delivery_state1 ) ."'
                 , deivery1_zip='". prepareStringForMySQL($this->deivery1_zip) ."'".$mFBID."
-                ,resturant_id=". $this->resturant_id ."";
+                ,resturant_id=". $this->resturant_id."
+                ,ePassword='". $this->ePassword ."'
+                ,salt='". $this->salt ."'";
 
         $this->arrTokens=array();
         $this->id=dbAbstract::Insert($qry, 0, 2);
@@ -446,7 +493,7 @@ class users
         $mail_body=$mail_body."Thank you for visiting <a href='http://www.easywayordering.com/". $objRestaurant->url ."/'>www.easywayordering.com/". $objRestaurant->url ."/</a>. We hope that you will find our easywayordering system helpful for your work and home food delivery needs."."<br><br>";
         $mail_body=$mail_body."For your convenience, please store the following information:"."<br><br>";
         $mail_body=$mail_body."Your login: ".$this->cust_email."<br>";
-        $mail_body=$mail_body."Your password: ".$this->password."<br><br>";
+        $mail_body=$mail_body."Your password: [The password you set while creating account]<br><br>";
         $mail_body=$mail_body."Your account makes it very easy for you to place orders in the future; simply enter in your Username and Password on the main order page, and you're on your way to receiving your favorite restaurant food, delivered right to your door. With our easywayordering system you will be able to plan ahead and relax."."<br><br>";
         $mail_body=$mail_body."We thank you for your business and look forward to serving you!"."<br><br>";
         $mail_body=$mail_body."Kind regards,"."<br><br>";

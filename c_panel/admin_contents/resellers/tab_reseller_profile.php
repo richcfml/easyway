@@ -1,4 +1,4 @@
-<?	$reseller_id	=	(isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']); 
+<?php	$reseller_id	=	(isset($_REQUEST['reseller_id']) ?$_REQUEST['reseller_id'] :$_SESSION['owner_id']); 
 	$reseller_qry	=	dbAbstract::Execute("select * from users where id = $reseller_id",1);
 	$reseller_qryRs	=	dbAbstract::returnObject($reseller_qry,1);		   
 	 ?>

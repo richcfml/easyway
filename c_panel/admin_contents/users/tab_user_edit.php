@@ -1,5 +1,34 @@
-<?	$country_obj				=	new Country();
-$errMessage='';
+<?php	
+
+if ($_SESSION['admin_type'] != 'admin')
+{
+    $mAdminID = $_SESSION['owner_id'];
+    if ($_SESSION['admin_type'] == 'reseller')
+    {
+        $mRow = dbAbstract::ExecuteObject("SELECT COUNT(*) As Cnt FROM reseller_client WHERE reseller_id=".$mAdminID." AND client_id=".$_REQUEST['userid'], 1);
+        if ($mRow)
+        {
+            if ($mRow->Cnt<=0)
+            {
+                redirect($AdminSiteUrl.'?mod=resturant');
+            }
+        }
+        else
+        {
+            redirect($AdminSiteUrl.'?mod=resturant');    
+        }
+    }
+    else if ($_SESSION['admin_type'] == 'store owner')
+    {
+        redirect($AdminSiteUrl.'?mod=resturant');
+    }
+    else if ($_SESSION['admin_type'] == 'bh')
+    {
+        redirect($AdminSiteUrl.'?mod=resturant');
+    }
+}
+	$country_obj = new Country();
+        $errMessage='';
 	//////////////////////////////////////////////////////////////////
 	$resellerId  = 	$_REQUEST['resellerId'];
 	$user_id	=	$_REQUEST['userid'];
@@ -39,8 +68,6 @@ $errMessage='';
 					 $errMessage = "Please enter user name";
 				} else if(dbAbstract::returnRowsCount($user_qry1,1) > 0) {
 					 $errMessage = "User name already exists. Please select another.";
-				} else if($password == '') {
-					 $errMessage = "Please enter password";
 				} else if($country < 0) {
 					 $errMessage = "Please select country";
 				} else if($state == '') {
@@ -50,9 +77,17 @@ $errMessage='';
 				} else if($zip == '') {
 					 $errMessage = "Please enter zip/postal";
 				} else {
-					
-					$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."',username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$user_id";
-				 dbAbstract::Update($sql,1);
+                                        if (trim($password)!="")
+                                        {
+                                            $mSalt = hash('sha256', mt_rand(10,1000000));    
+                                            $ePassword = hash('sha256', $password.$mSalt);
+                                            $sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."',username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', ePassword='".$ePassword."', salt='".$mSalt."', country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$user_id";
+                                        }
+                                        else
+                                        {
+                                            $sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."',username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."', country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',address='".dbAbstract::returnRealEscapedString(stripslashes($address))."' WHERE id=$user_id";
+                                        }
+				 dbAbstract::Update($sql, 1);
 				 
 				 $reseller_client_sql = "UPDATE reseller_client SET reseller_id = '".$reseller."' WHERE  client_id = '".$user_id."' ";
 				 if(!empty($user_qryRs->chargify_customer_id))
@@ -108,13 +143,13 @@ $errMessage='';
       </tr>
       <tr align="left" valign="top">
         <td><strong>Password: </strong></td>
-        <td><input name="password" type="password" value="<?=$user_qryRs->password?>" size="40" id="password" /></td>
+        <td><input name="password" type="password" size="40" id="password" /></td>
       </tr>
       
       <tr align="left" valign="top">
         <td width="160"><strong>Reseller:</strong></td>
 		<td width="574">
-        	<?
+        	<?php
 			$reseller_sql = "SELECT reseller_id from reseller_client WHERE client_id = '".$user_id."'";
 			$reseller_qry = dbAbstract::Execute( $reseller_sql,1 );
 			$reseller_rs = dbAbstract::returnArray( $reseller_qry,1);			

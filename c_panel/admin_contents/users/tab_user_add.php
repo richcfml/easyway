@@ -43,7 +43,9 @@ if($_POST) {
 		
                 if(!empty($chargify_customer_id))
                 {   
-                    $sql="INSERT INTO users(firstname,lastname,email,username,password,country,state,city,zip,status,type,chargify_customer_id,address) values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."','".dbAbstract::returnRealEscapedString(stripslashes($email))."','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."','$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."','".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','".dbAbstract::returnRealEscapedString(stripslashes("store owner"))."','".$chargify_customer_id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."')";
+                    $mSalt = hash('sha256', mt_rand(10,1000000));    
+                    $ePassword= hash('sha256', $password.$mSalt);
+                    $sql="INSERT INTO users(firstname,lastname,email,username,password,country,state,city,zip,status,type,chargify_customer_id,address,ePassword,salt) values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."','".dbAbstract::returnRealEscapedString(stripslashes($email))."','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."','$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."','".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','".dbAbstract::returnRealEscapedString(stripslashes("store owner"))."','".$chargify_customer_id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."', '".$ePassword."', '".$mSalt."')";
                     $client_id = dbAbstract::Insert($sql, 1, 2);
                     
                     $resllerID=0;
@@ -99,7 +101,7 @@ if($_POST) {
       </tr>
       <tr align="left" valign="top">
         <td width="160">Password:</td>
-        <td><input name="password" type="password" size="40" value="<?=@$password?>" id="password" />
+        <td><input name="password" type="password" size="40" id="password" />
         </td>
       </tr>
       <tr align="left" valign="top">

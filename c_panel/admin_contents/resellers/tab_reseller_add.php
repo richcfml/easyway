@@ -54,6 +54,9 @@ if($_POST) {
 	} else if($number_of_licences < 0) {
 		 $errMessage = "Please select number of licenses";
 	} else {
+            $mSalt = hash('sha256', mt_rand(10,1000000));    
+            $ePassword= hash('sha256', $password.$mSalt);
+            
             $payment_profile_id ='';
             $product_id = $ChargifyResellerProduct;
             
@@ -62,7 +65,6 @@ if($_POST) {
                         
             $chargify_subscription_id = $chargify->createResellerSubcription($product_id,$chargify_customer_id,$subcription_method,$payment_profile_id,$card_no,$exp_date,$exp_year,$number_of_licences);
            	
-            //echo "<pre>";print_r($chargify_subscription_id);exit;
             $credit_card_info = $chargify_subscription_id->subscription;
             
             $check_card_data_Qry = dbAbstract::ExecuteObject("Select * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
@@ -73,12 +75,12 @@ if($_POST) {
             {
                 if(!empty($chargify_subscription_id->subscription))
                 {
-                    $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address)
+                    $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address, ePassword, salt)
                         values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($email))."','$phone','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',
                         '$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($city))."','$zip','1','reseller','".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
-                        '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."','$number_of_licences','".$chargify_customer_id."','".$chargify_subscription_id->subscription->id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."'
+                        '".dbAbstract::returnRealEscapedString(stripslashes($company_logo_link))."','$number_of_licences','".$chargify_customer_id."','".$chargify_subscription_id->subscription->id."','".dbAbstract::returnRealEscapedString(stripslashes($address))."', '".$ePassword."', '".$mSalt."')";
                         )";
 
                         $reseller_id = dbAbstract::Insert($sql, 1, 2);
@@ -125,18 +127,6 @@ if($_POST) {
 				$image_name = "img_".$reseller_id."_reseller_thumbnail.".$exe;
 				$uploadfile = $path . $image_name;					
 				move_uploaded_file( $_FILES['company_logo']['tmp_name'] , $uploadfile );
-				/*list($width, $height, $type, $attr) = getimagesize("$uploadfile");
-					if($height>$width){
-					$image = new SimpleImage();
-					$image->load($uploadfile);
-					$image->resizeToHeight(80);
-					$image->save($uploadfile);
-					}else {
-					$image = new SimpleImage();
-					$image->load($uploadfile);
-					$image->resizeToWidth(100);
-					$image->save($uploadfile);
-					}*/
 		dbAbstract::Update("UPDATE users SET company_logo='$image_name' where id =".$reseller_id,1);						
 			}
 			
@@ -151,16 +141,13 @@ if($_POST) {
                         $errMessage="Reseller Added Successfully";
 		}	
 		?>
-<!--------------------------------Start------------------------------------------------->
 <script type="text/javascript">
 function leave() {
   window.location="./?mod=resellers&item=main";
 }
 setTimeout("leave()", 2000);
 </script>
-<!--------------------------------End---------------------------------------------------->
-
-		<? 
+		<?php 
                 }
                 else
                 {
@@ -209,12 +196,12 @@ setTimeout("leave()", 2000);
       </tr>
       <tr align="left" valign="top">
         <td width="160">Password:</td>
-        <td><input name="password" type="password" size="40" value="<?=@$password?>" id="password" />
+        <td><input name="password" type="password" size="40" id="password" />
         </td>
       </tr>
       <tr align="left" valign="top">
         <td width="160">Confirm Password:</td>
-        <td><input name="confirm_password" type="password" size="40" value="<?=@$confirm_password?>" id="confirm_password" /></td>
+        <td><input name="confirm_password" type="password" size="40" id="confirm_password" /></td>
       </tr>
       <tr align="left" valign="top">
         <td width="160">Country:</td>
@@ -264,11 +251,11 @@ setTimeout("leave()", 2000);
         <td width="160">Number of licenses :</td>
         <td><select name="number_of_licences" id="number_of_licences" style="width:270px;" >
             <option value="-1">Select Licenses</option>
-			<?
+			<?php
 			for($i= 1; $i<= 20 ; $i++) {
 			?>
              <option value="<?=$i?>"> <?=$i?> </option>
-			<?
+			<?php
 				}
 			?>
           </select></td>
