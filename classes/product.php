@@ -44,7 +44,7 @@ class product
     
     public function getassociations() 
     {
-        $mSQL = "SELECT  p.* FROM product_association pa INNER JOIN product p ON pa.association_id = p.prd_id WHERE product_id =" . $this->prd_id;
+        $mSQL = "SELECT  p.*,pa.sortOrder FROM product_association pa INNER JOIN product p ON pa.association_id = p.prd_id WHERE product_id = ". $this->prd_id ." order by pa.sortOrder";
         $cat_qry = dbAbstract::Execute($mSQL);
         $this->associations = array();
         while ($product = dbAbstract::returnObject($cat_qry, 0, "product")) 

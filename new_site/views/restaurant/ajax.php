@@ -1,7 +1,7 @@
 <?php
 $mOutPut='';
 $mTestStr='';
-include "classes/productDetails.php";
+include "classes/ProductDetails.php";
 
 if (isset($_GET['favoriteindex']))
 {
@@ -301,13 +301,13 @@ else if (isset($_GET['showpopup']))
     $attributes_result = "";
     if($hasAssociates == 1)
     {
-        $association_result = productDetails::getproductdetails($product_id);
+        $association_result = ProductDetails::getProductAssocByProductId($product_id);
         Log::write("Show Popup - associations: ",print_r($association_result,true) , 'menu', 1 , 'user');
     }
     
     if($hasAttribute == 1)
     {
-        $attributes_result = productDetails::getattributes($product_id);
+        $attributes_result = ProductDetails::getAttributesByProductId($product_id);
         Log::write("Show Popup - attributes: ",print_r($attributes_result,true) , 'menu', 1 , 'user');
     }
     $result = array('assoc' => $association_result, 'attr' => $attributes_result , 'totalAttribute' => count($attributes_result));
@@ -324,7 +324,7 @@ else if (isset($_GET['showEditPopup']))
     $productDetails = $productClass->getProductDetailsForEditCartItem($product_id);
     $cartItem = $cart->showCartItem($product_id,$cartItemIndex);
     if($hasAssociates == 1){
-        $association_result = productDetails::getproductdetails($product_id);
+        $association_result = ProductDetails::getProductAssocByProductId($product_id);
     }
     
     foreach($association_result as &$productAssociations)
@@ -337,7 +337,7 @@ else if (isset($_GET['showEditPopup']))
     
     if($hasAttribute == 1)
     {
-        $attributes_result = productDetails::getattributes($product_id);
+        $attributes_result = ProductDetails::getAttributesByProductId($product_id);
     }
 	
     foreach($attributes_result as &$attributeArray)

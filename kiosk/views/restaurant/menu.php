@@ -26,7 +26,7 @@
 <script src="<? echo $js_root; ?>dhtmltip.js" type="text/javascript"></script>
 
 <?php
-include "classes/productDetails.php";
+include "classes/ProductDetails.php";
 if (isset($_GET['faverr'])) {
     echo("<script>jQuery.facebox({div: '?item=addtofavorite&kiosk=1&id=" . $_GET["id"] . "&ajax=1&err=1'});</script>");
 }

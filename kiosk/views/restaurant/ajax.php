@@ -1,7 +1,7 @@
 <?php
 $mOutPut='';
 $mTestStr='';
-include "classes/productDetails.php";
+include "classes/ProductDetails.php";
 
 if (isset($_GET['favoriteindex']))
 {
@@ -322,11 +322,11 @@ else if (isset($_GET['showpopup']))
     $association_result = "";
     $attributes_result = "";
     if($hasAssociates == 1){
-        $association_result = productDetails::getproductdetails($product_id);
+        $association_result = productDetails::getProductAssocByProductId($product_id);
         Log::write("Show Popup - associations: ",print_r($association_result,true) , 'menu', 1 , 'user');
     }
     if($hasAttribute == 1){
-        $attributes_result = productDetails::getattributes($product_id);
+        $attributes_result = productDetails::getAttributesByProductId($product_id);
         Log::write("Show Popup - attributes: ",print_r($attributes_result,true) , 'menu', 1 , 'user');
     }
     $result = array('assoc' => $association_result, 'attr' => $attributes_result , 'totalAttribute' => count($attributes_result));
@@ -344,7 +344,7 @@ else if (isset($_GET['showEditPopup']))
     //$totalPrice=0;
     $cartItem = $cart->showCartItem($product_id,$cartItemIndex);
     if($hasAssociates == 1){
-        $association_result = productDetails::getproductdetails($product_id);
+        $association_result = productDetails::getProductAssocByProductId($product_id);
     }
     //echo '<pre>'.print_r($association_result,true).'</pre>';
     foreach($association_result as &$productAssociations){
@@ -356,7 +356,7 @@ else if (isset($_GET['showEditPopup']))
     //echo '<pre>'.print_r($association_result,true).'</pre>';
 
     if($hasAttribute == 1){
-        $attributes_result = productDetails::getattributes($product_id);
+        $attributes_result = productDetails::getAttributesByProductId($product_id);
     }
 	
     foreach($attributes_result as &$attributeArray){

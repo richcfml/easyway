@@ -634,7 +634,7 @@ else if (isset($_GET['remove_attributes']) && $_GET['remove_attributes'] == 1 &&
     
     $mQuery = "Delete from attribute where id in (".$attrributeid.") and ProductID = ".$_GET['prd_id']."";
     Log::write("Delete attribute - menu_ajax.php - LINE 589", "QUERY --".$mQuery, 'menu', 1 , 'cpanel');
-    $result =dbAbstract::Delete($mQuery, 1);
+    $result =dbAbstract::Delete($mQuery, 1,1);
     
     $mDisplayQryChk = dbAbstract::ExecuteArray("Select 1 as count from attribute where option_name = '".$_GET['option_name']."' and ProductID in (".$productIDs.") limit 1", 1);
 
@@ -659,7 +659,7 @@ else if (isset($_GET['remove_attributes']) && $_GET['remove_attributes'] == 1 &&
 else if (isset($_GET['remove_relatedItems']) && $_GET['remove_relatedItems'] == 1 && !empty($_GET['relatedItemid']))
 {
     Log::write("Delete product association - menu_ajax.php", "QUERY -- Delete from product_association where product_id = ".$_GET['prd_id']." and association_id= ".$_GET['relatedItemid']."", 'menu', 1 , 'cpanel');
-    $result =dbAbstract::Delete("DELETE from product_association where product_id = ".$_GET['prd_id']." and association_id= ".$_GET['relatedItemid']."", 1);
+    $result =dbAbstract::Delete("DELETE from product_association where product_id = ".$_GET['prd_id']." and association_id= ".$_GET['relatedItemid']."", 1,1);
     Log::write("Select product association - menu_ajax.php", "QUERY -- Select count(association_id) from product_association where product_id = ".$_GET['prd_id']."", 'menu', 1 , 'cpanel');
     $moreAssociateCount = dbAbstract::ExecuteArray("Select count(association_id) as Total from product_association where product_id = ".$_GET['prd_id']."", 1);
 
