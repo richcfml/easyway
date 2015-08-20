@@ -6,7 +6,7 @@ if (isset($_GET["id"]))
     {
         $mObjFun=new clsFunctions();
         $mDecryptedID = $mObjFun->decrypt($_GET["id"], "53cr3t9455w0rd");
-        $mRow = mysql_fetch_object(mysql_query("SELECT * FROM customer_registration WHERE id=".$mDecryptedID));
+        $mRow = dbAbstract::ExecuteObject("SELECT * FROM customer_registration WHERE id=".$mDecryptedID);
         if ($mRow)
         {
             if ($mRow->id<=0)
@@ -30,7 +30,7 @@ if (isset($_POST["btnSubmit"]))
     {
         $mSalt = hash('sha256', mt_rand(10,1000000));    
         $ePassword= hash('sha256', $_POST["txtPassword"].$mSalt);
-        if (mysql_query("UPDATE customer_registration SET salt='".$mSalt."', epassword='".$ePassword."', password='".$_POST["txtPassword"]."' WHERE id=".$mDecryptedID))
+        if (dbAbstract::Update("UPDATE customer_registration SET salt='".$mSalt."', epassword='".$ePassword."', password='".$_POST["txtPassword"]."' WHERE id=".$mDecryptedID))
         {
             $mStyle = "green";
             $mErrorMessage = "Password changed successfully.";
