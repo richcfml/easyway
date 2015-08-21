@@ -576,9 +576,9 @@ function DeleteAutherizeNetToken($pTokenID, $pUserName, $pPassword)
 function DeleteNMIToken($pTokenID, $pUserName, $pPassword)
 {
 	$mResult = dbAbstract::Execute("SELECT id_2, data_2, data_3 FROM general_detail WHERE id=".$pTokenID);
-	if (mysql_num_rows($mResult)>0)
+	if (dbAbstract::returnRowsCount($mResult)>0)
 	{
-		$mRow = dbAbstract::returnRowsCount($mResult);
+		$mRow = dbAbstract::returnObject($mResult);
 		$mPaymentProfileID = $mRow->data_2; //Token
 		$mUserID = $mRow->id_2;
 		$mDefaultCard = $mRow->data_3;
