@@ -250,9 +250,6 @@ if ($mVerifyRequest==1) //Valid Session
 						  }
 						}
 						elseif(isset($_GET['cc_action']) && !empty($_GET['slug'])){
-						  /*$qry = "select u.email from bh_sso_user u inner join bh_sso_session s on s.sso_user_id = u.id WHERE s.session_id = '". $_GET['sso'] ."'";
-						  $rs = mysql_query($qry);
-						  $userResult = mysql_fetch_object($rs);*/
 						  $email = $userResult->email;
 						  include_once ("../classes/restaurant.php");
 						  $objRestaurant = new restaurant();
@@ -313,7 +310,11 @@ if ($mVerifyRequest==1) //Valid Session
 										where c.cust_email='$email' and c.resturant_id=r.id and r.url_name='$slug'";
 								
 								$rs = dbAbstract::Execute($stmt);
-								if(dbAbstract::returnRowsCount($rs) > 0){
+								$rowsCount = dbAbstract::returnRowsCount($rs);
+								if($rowsCount==0){
+									$mReturn = errorFunction("18","Invalid call, SSO user is not registered in ".$objRestaurant->name." restaurant.","Invalid call.!","Attribute Error");
+								}
+								elseif($rowsCount > 0){
 								  $userResult = dbAbstract::returnObject($rs);
 								  $response = saveTokenWithExpiry($userResult->id, $objRestaurant, $_GET['secure_data'], $_GET['default'], $_GET['pcardexpiry'],$email);
 								  
@@ -324,6 +325,7 @@ if ($mVerifyRequest==1) //Valid Session
 								  }
 								}
 							  }
+							  
 							  else
 							  {
 								  if(empty($_GET['secure_data'])){
