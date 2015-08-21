@@ -313,11 +313,8 @@ if ($mVerifyRequest==1) //Valid Session
 										where c.cust_email='$email' and c.resturant_id=r.id and r.url_name='$slug'";
 								
 								$rs = dbAbstract::Execute($stmt);
-								echo "<pre>"; print_r($rs); echo "</pre>";
-								echo dbAbstract::returnRowsCount($rs);
 								if(dbAbstract::returnRowsCount($rs) > 0){
 								  $userResult = dbAbstract::returnObject($rs);
-								  echo "<pre>"; print_r($userResult); echo "</pre>";
 								  $response = saveTokenWithExpiry($userResult->id, $objRestaurant, $_GET['secure_data'], $_GET['default'], $_GET['pcardexpiry'],$email);
 								  
 								  if($response == true){
@@ -664,7 +661,7 @@ function DeleteGGe4Token($pTokenID, $pUserName, $pPassword) //Have to implement 
 
 function saveTokenWithExpiry($cust_id, $objRestaurant, $secure_data,$default,$pCardExpiry,$email)
 {
-	//error_reporting(0);
+	error_reporting(0);
 	$x_card_num=$secure_data;
 	$x_exp_date=$pCardExpiry;
 	$token='0';
@@ -684,17 +681,13 @@ function saveTokenWithExpiry($cust_id, $objRestaurant, $secure_data,$default,$pC
 		echo json_encode(array("css"=>"alert-error","message"=>$error_message));
 	}
 	else{
-		echo "select * from bh_sso_user WHERE email = '". $email ."'";
 		$rs = dbAbstract::Execute("select * from bh_sso_user WHERE email = '". $email ."'");
 		$userResult = dbAbstract::returnObject($rs);
-		echo "<pre>"; print_r($userResult); echo "</pre>";
 		$type=  substr($secure_data, 0,1);
 		$cc=  substr($secure_data, -4, 4);
 		$default = ($default==0)? 0:1;
 		
-		echo "select count(*) as total from general_detail  where id_2=". $cust_id ." and data_type=$type and data_1=$cc";
 		$result=dbAbstract::ExecuteObject("select count(*) as total from general_detail  where id_2=". $cust_id ." and data_type=$type and data_1=$cc");
-		echo "<pre>"; print_r($result); echo "</pre>";	 
 		if (($result->total==0) && ($type!=0) && ($cc!=0))
 		{
 			if(dbAbstract::Insert("insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2,data_3,card_expiry) 
