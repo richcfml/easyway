@@ -125,7 +125,7 @@ class users
                 $body .="Thank you for visiting www.easywayordering.com/".$objRestaurant->url  ."/. We hope that you will find our easywayordering system helpful for
 								 your work and home food delivery needs.<br/><br/>
 					
-					Click following link to reset your password:<br/>".$mLink."<br/><br/>
+					Click following link to reset your password:<br/><a href='".$mLink."' target='_blank'>".$mLink."</a><br/><br/>
 				 					
 					We thank you for your business and look forward to serving you!<br/><br/>
 					
