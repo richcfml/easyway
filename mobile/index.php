@@ -57,21 +57,22 @@ if(isset($_POST['rememberme'])){
 
 if(isset($_GET['sso']) && $_GET['sso']!=''){
 	$mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";
-		
+	
 	Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
-	$sso_rs = mysql_query($mSQL);
-	if(mysql_num_rows($sso_rs) > 0){
-		$sso_row = mysql_fetch_object($sso_rs);
+	
+	$sso_rs = dbAbstract::Execute($mSQL);
+	if(dbAbstract::returnRowsCount($sso_rs) > 0){
+		$sso_row = dbAbstract::returnObject($sso_rs);
 		
 		$mSQL = "select * from customer_registration where cust_email='".$sso_row->email."' and resturant_id='".$objRestaurant->id."'";
 		Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
-		$cust_rs = mysql_query($mSQL);
-	
+		$cust_rs = dbAbstract::Execute($mSQL);
+		
 		// if customer record exist than login
-		if(mysql_num_rows($cust_rs) > 0){
-			$cust_row = mysql_fetch_object($cust_rs);
+		if(dbAbstract::returnRowsCount($cust_rs) > 0){
+			$cust_row = dbAbstract::returnObject($cust_rs);
 			if($cust_row->cust_email != '' && $cust_row->password != ''){
-				mysql_query("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
+				dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
 ?>
 			<form method="post" name="sso_login" action="<?=$SiteUrl.$objRestaurant->url.'/?item=login'?>">
 				<input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
@@ -109,7 +110,7 @@ if(isset($_GET['sso']) && $_GET['sso']!=''){
 		  $loggedinuser->resturant_id =$objRestaurant->id;
 		  $result=$loggedinuser->register($objRestaurant,$objMail);
 		  if($result===true){
-			header("location: ". $SiteUrl .$objRestaurant->url);
+			header("location: ". $SiteUrl .$objRestaurant->url."/");
 			exit;	
 		  }
 		}
