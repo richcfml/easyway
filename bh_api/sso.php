@@ -311,8 +311,10 @@ if ($mVerifyRequest==1) //Valid Session
 								@extract($_GET);
 								echo $stmt = "select c.id from customer_registration c, resturants r
 										where c.cust_email='$email' and c.resturant_id=r.id and r.url_name='$slug'";
-										
+								
 								$rs = dbAbstract::Execute($stmt);
+								echo "<pre>"; print_r($rs); echo "</pre>";
+								echo dbAbstract::returnRowsCount($rs);
 								if(dbAbstract::returnRowsCount($rs) > 0){
 								  $userResult = dbAbstract::returnObject($rs);
 								  echo "<pre>"; print_r($userResult); echo "</pre>";
