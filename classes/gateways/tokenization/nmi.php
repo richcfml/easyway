@@ -1,5 +1,5 @@
 <?
-  require_once 'lib/nmi_api/gwapi.php';
+require_once dirname(dirname(dirname(dirname(__FILE__)))).'/lib/nmi_api/gwapi.php';
 		 
 $gw = new gwapi;
 $gw->setLogin($objRestaurant->authoriseLoginID, $objRestaurant->transKey);
