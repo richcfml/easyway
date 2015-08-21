@@ -65,28 +65,22 @@ if (isset($_POST['login'])) {
         $itemcount = $cart->totalItems();
         if ($itemcount > 0) {
             redirect($SiteUrl . $objRestaurant->url . "/?item=cart");
-//            header("location: " . $SiteUrl . $objRestaurant->url . "/?item=cart");
             exit;
         }
-        //----------------/////
-        redirect($SiteUrl . $objRestaurant->url . "/?item=account");
-//        header("location: " . $SiteUrl . $objRestaurant->url . "/?item=account");
+        //redirect($SiteUrl . $objRestaurant->url . "/?item=account");
+		redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
         exit;
-        /* echo "<script type='text/javascript'>window.location=''</script>"; */
     }
 } else if (is_numeric($loggedinuser->id)) {
     //------Added by Asher--------//
     $itemcount = $cart->totalItems();
     if ($itemcount > 0) {
         redirect($SiteUrl . $objRestaurant->url . "/?item=cart");
-//                             header("location: ". $SiteUrl .$objRestaurant->url ."/?item=cart" );
         exit;
     }
-    //----------------/////
-    redirect($SiteUrl . $objRestaurant->url . "/?item=account");
-//	header("location: ". $SiteUrl .$objRestaurant->url ."/?item=account" );
+    //redirect($SiteUrl . $objRestaurant->url . "/?item=account");
+	redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
     exit;
-    /* echo "<script type='text/javascript'>window.location='?item=account'</script>"; */
 }
 ?>
 <script type="text/javascript">
