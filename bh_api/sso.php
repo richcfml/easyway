@@ -315,6 +315,7 @@ if ($mVerifyRequest==1) //Valid Session
 								$rs = dbAbstract::Execute($stmt);
 								if(dbAbstract::returnRowsCount($rs) > 0){
 								  $userResult = dbAbstract::returnObject($rs);
+								  
 								  $response = saveTokenWithExpiry($userResult->id, $objRestaurant, $_GET['secure_data'], $_GET['default'], $_GET['pcardexpiry'],$email);
 								  
 								  if($response == true){
@@ -661,7 +662,7 @@ function DeleteGGe4Token($pTokenID, $pUserName, $pPassword) //Have to implement 
 
 function saveTokenWithExpiry($cust_id, $objRestaurant, $secure_data,$default,$pCardExpiry,$email)
 {
-	error_reporting(0);
+	//error_reporting(0);
 	$x_card_num=$secure_data;
 	$x_exp_date=$pCardExpiry;
 	$token='0';
