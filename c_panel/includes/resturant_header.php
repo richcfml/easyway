@@ -87,7 +87,7 @@
 	
         if ($_SESSION['admin_type'] == 'bh') 
         {
-            $mSQLBH = dbAbstract::returnObject("SELECT bh_restaurant FROM resturants WHERE id=".$mRestaurantIDCP);
+            $mSQLBH = dbAbstract::ExecuteObject("SELECT bh_restaurant FROM resturants WHERE id=".$mRestaurantIDCP);
             if ($mSQLBH)
             {
                 if ($mSQLBH->bh_restaurant<=0)
