@@ -328,27 +328,34 @@ class dbAbstract
     
     public static function returnObject($pResult, $pC_Panel = 0, $pClassName = "", $pLogResults = false) //$pResult is result(object) of mysqli_query
     {
-        if ($pClassName=="")
+        if ($pResult)
         {
-            $mObject =  $pResult->fetchObject();
-        }
-        else
-        {
-            $mObject =  $pResult->fetchObject($pClassName);
-        }
-     
-        if ($pLogResults)
-        {
-            if ($pC_Panel==0)
+            if ($pClassName=="")
             {
-                Log::write("DB Abstract returnObject Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 0);
+                $mObject =  $pResult->fetchObject();
             }
             else
             {
-                Log::write("DB Abstract returnObject Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 1, 'cpanel');
+                $mObject =  $pResult->fetchObject($pClassName);
             }
+
+            if ($pLogResults)
+            {
+                if ($pC_Panel==0)
+                {
+                    Log::write("DB Abstract returnObject Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 0);
+                }
+                else
+                {
+                    Log::write("DB Abstract returnObject Function - dbAbstract.php", "QUERY -- ".print_r($mObject), 'dbAbstract', 1, 'cpanel');
+                }
+            }
+            return $mObject;
         }
-        return $mObject;
+        else
+        {
+            return null;
+        }
     }
     
     public static function returnRow($pResult, $pC_Panel = 0, $pLogResults = false) //$pResult is result(object) of mysqli_query
