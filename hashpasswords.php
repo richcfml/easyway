@@ -18,7 +18,7 @@
             $mSalt = hash('sha256', mt_rand(10,1000000));    
             $ePassword= hash('sha256', $mRow->password.$mSalt);
             
-            mysql_query("UPDATE customer_registration SET salt='".$mSalt."', ePassword='".$ePassword."' WHERE id = ".$mRow->id);            
+            mysql_query("UPDATE customer_registration SET salt='".$mSalt."', epassword='".$ePassword."' WHERE id = ".$mRow->id);            
         }
     }
     
@@ -32,7 +32,7 @@
             $mSalt = hash('sha256', mt_rand(10,1000000));    
             $ePassword= hash('sha256', $mRow->password.$mSalt);
             
-            mysql_query("UPDATE users SET salt='".$mSalt."', ePassword='".$ePassword."' WHERE id = ".$mRow->id);            
+            mysql_query("UPDATE users SET salt='".$mSalt."', epassword='".$ePassword."' WHERE id = ".$mRow->id);            
         }
     }
     

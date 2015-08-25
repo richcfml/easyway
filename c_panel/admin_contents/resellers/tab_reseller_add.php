@@ -75,7 +75,7 @@ if($_POST) {
             {
                 if(!empty($chargify_subscription_id->subscription))
                 {
-                    $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address, ePassword, salt)
+                    $sql="INSERT INTO users (firstname,lastname,email,phone,username,password,country,state,city,zip,status,type,company_name,company_logo_link,number_of_licenses,chargify_customer_id,chargify_subcription_id,address, epassword, salt)
                         values ('".dbAbstract::returnRealEscapedString(stripslashes($first_name))."','".dbAbstract::returnRealEscapedString(stripslashes($last_name))."',
                         '".dbAbstract::returnRealEscapedString(stripslashes($email))."','$phone','".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',
                         '$password','".dbAbstract::returnRealEscapedString(stripslashes($country))."','".dbAbstract::returnRealEscapedString(stripslashes($state))."',

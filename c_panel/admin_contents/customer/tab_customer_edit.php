@@ -66,7 +66,7 @@
                     {
                         $mSalt = hash('sha256', mt_rand(10,1000000));    
                         $ePassword	= hash('sha256', $password.$mSalt);                
-                        dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', ePassword= '$ePassword', salt= '$mSalt', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id", 1);
+                        dbAbstract::Update("UPDATE customer_registration SET cust_desire_name= '".addslashes($desiredname)."', password= '$password', epassword= '$ePassword', salt= '$mSalt', cust_your_name= '".addslashes($f_name)."',LastName='".addslashes($l_name)."',cust_business_name= '".addslashes($business_name)."', cust_odr_address= '".addslashes($address)."', cust_ord_city= '".addslashes($city)."', cust_ord_state= '".addslashes($state)."', cust_ord_zip= '$zip', cust_phone1= '$phone_no', cust_phone2= '$alt_phone', delivery_address1= '".addslashes($ad_address)."', deivery1_zip= '$ad_zip',delivery_city1= '".addslashes($ad_city)."',delivery_state1= '".addslashes($ad_state)."' WHERE id=$user_id", 1);
                     }
                     else
                     {

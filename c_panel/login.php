@@ -13,7 +13,7 @@ if (isset($_POST['frm_submit']) && $_POST['frm_submit'] == 1)
     if ($mRow)
     {   
         $mSalt = $mRow->salt;
-        $qry_str = "SELECT id, type, status FROM users WHERE username='".prepareStringForMySQL($username)."' AND ePassword='".hash('sha256', prepareStringForMySQL($pass).$mSalt)."'";
+        $qry_str = "SELECT id, type, status FROM users WHERE username='".prepareStringForMySQL($username)."' AND epassword='".hash('sha256', prepareStringForMySQL($pass).$mSalt)."'";
         $user = dbAbstract::Execute($qry_str, 1);
         if(dbAbstract::returnRowsCount($user, 1) > 0) 
         {

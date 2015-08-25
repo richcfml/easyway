@@ -60,13 +60,11 @@
 	if($mod=="cdyne") 
 	{
 		require($site_root_path . "views/cdyne/index.php");
-		//@mysql_close($mysql_conn);
 		die();
 	}
 	
  	require($site_root_path . "includes/abandoned_cart_config.php");
  	require($site_root_path . "includes/controller.php");
-	
 	
 	if(isset($_GET['sso']) && $_GET['sso']!=''){
 		$mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";
@@ -84,7 +82,8 @@
 			// if customer record exist than login
 			if(dbAbstract::returnRowsCount($cust_rs) > 0){
 				$cust_row = dbAbstract::returnObject($cust_rs);
-				if($cust_row->cust_email != '' && $cust_row->password != ''){
+				if($cust_row->cust_email != '' && $cust_row->epassword != '')
+                                {
 					dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
 ?>
 				<form method="post" name="sso_login" action="<?=$SiteUrl.$objRestaurant->url.'/?item=login'?>">
@@ -97,7 +96,8 @@
                 </script>
 <?php					
 				}
-				else{
+				else
+                                {
 					echo '<div style="width=100%; text-align:center; color:#F00; height:20px; width:982px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid E-mail or Password.</div>';
 				}
 			}
@@ -105,6 +105,9 @@
 			  // if customer record not exist than register & login
 			  $loggedinuser->cust_email=  $sso_row->email;
 			  $loggedinuser->password= trim($sso_row->password);
+                          $mSalt = hash('sha256', mt_rand(10,1000000));    
+                          $loggedinuser->salt= $mSalt;
+                          $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
 			  $loggedinuser->cust_your_name= trim($sso_row->firstName);
 			  $loggedinuser->LastName= trim($sso_row->lastName);
 			  $loggedinuser->street1= trim($sso_row->address1) ;
@@ -136,7 +139,6 @@
 	{	
 		require($include);	
 		exit;
-		//@mysql_close($mysql_conn);
 	}
 	else
 	{
@@ -247,7 +249,6 @@
 		}
 		echo $visit_tracker_html 
 		?>
-		<?php // @mysql_close($mysql_conn);?>
 	<div id="footer-links">
 		<ul style="list-style:none;margin: 0 30%;">
 			<li style="float:left;margin:0px 10px;padding: 0px 10px;border-right:1px solid #d3d4d5;">

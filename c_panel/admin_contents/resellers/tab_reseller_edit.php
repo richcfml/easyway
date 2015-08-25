@@ -114,7 +114,7 @@ $country_obj				=	new Country();
                                                 $ePassword = hash('sha256', $password.$mSalt);
 						$sql = "UPDATE users SET firstname= '".dbAbstract::returnRealEscapedString(stripslashes($first_name))."', 
 						lastname= '".dbAbstract::returnRealEscapedString(stripslashes($last_name))."', email= '".dbAbstract::returnRealEscapedString(stripslashes($email))."', 
-						phone ='$phone', username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', ePassword= '$ePassword', salt= '$mSalt',
+						phone ='$phone', username='".dbAbstract::returnRealEscapedString(stripslashes($user_name))."',password= '$password', epassword= '$ePassword', salt= '$mSalt',
 						country= '".dbAbstract::returnRealEscapedString(stripslashes($country))."', state= '".dbAbstract::returnRealEscapedString(stripslashes($state))."', 
 						city= '".dbAbstract::returnRealEscapedString(stripslashes($city))."', zip= '$zip',
 						company_name= '".dbAbstract::returnRealEscapedString(stripslashes($company_name))."',
