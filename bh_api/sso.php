@@ -10,19 +10,19 @@ if ($mVerifyRequest==1) //Valid Session
 {
         if (isset($_GET["createUser"]) || isset($_GET["createuser"]))
         {    
-                if(empty($_GET['firstname']) && !isset($_GET['firstname']))
+                if(empty($_GET['firstname']) || !isset($_GET['firstname']))
                 {
                     $mReturn = errorFunction("1","Invalid call, First name is missing.","Invalid call.!","Attribute Error");
                 }
-                else if(empty($_GET['lastname']) && !isset($_GET['lastname']))
+                else if(empty($_GET['lastname']) || !isset($_GET['lastname']))
                 {
                     $mReturn = errorFunction("2","Invalid call, Last name is missing.","Invalid call.!","Attribute Error");
                 }
-                else if(empty($_GET['email']) && !isset($_GET['email']))
+                else if(empty($_GET['email']) || !isset($_GET['email']))
                 {
                     $mReturn = errorFunction("3","Invalid call, email is missing.","Invalid call.!","Attribute Error");
                 }
-                else if(empty($_GET['password']) && !isset($_GET['password']))
+                else if(empty($_GET['password']) || !isset($_GET['password']))
                 {
                     $mReturn = errorFunction("4","Invalid call, password is missing.","Invalid call.!","Attribute Error");
                 }
@@ -85,11 +85,11 @@ if ($mVerifyRequest==1) //Valid Session
         
         else if (isset($_GET["signIn"]) || isset($_GET["signin"]))
         {
-            if(empty($_GET['email']) && !isset($_GET['email']))
+            if(empty($_GET['email']) || !isset($_GET['email']))
             {
                 $mReturn = errorFunction("3","Invalid call, email is missing.","Invalid call.!","Attribute Error");
             }
-            else if((empty($_GET['sso']) && !isset($_GET['sso'])) && (empty($_GET['password']) && !isset($_GET['password'])))
+            else if((empty($_GET['sso']) || !isset($_GET['sso'])) || (empty($_GET['password']) || !isset($_GET['password'])))
             {
                 $mReturn = errorFunction("10","Invalid call, Provide session id or password.","Invalid call.!","Attribute Error");
             }
@@ -173,7 +173,6 @@ if ($mVerifyRequest==1) //Valid Session
 																	  'cc_endwith' => $row->data_1,
 																	  'cc_token' => $row->data_2);
                                         }
-                                        //echo "<pre>"; print_r($ccinfo_arr); echo "</pre>";
                                         // Getting CC Info End
 
                                         if(count($ccinfo_arr) > 0){
