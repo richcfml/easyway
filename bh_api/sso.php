@@ -89,7 +89,7 @@ if ($mVerifyRequest==1) //Valid Session
             {
                 $mReturn = errorFunction("3","Invalid call, email is missing.","Invalid call.!","Attribute Error");
             }
-            else if((empty($_GET['sso']) || !isset($_GET['sso'])) || (empty($_GET['password']) || !isset($_GET['password'])))
+            else if(((empty($_GET['sso']) || !isset($_GET['sso']))) && ((empty($_GET['password']) || !isset($_GET['password']))))
             {
                 $mReturn = errorFunction("10","Invalid call, Provide session id or password.","Invalid call.!","Attribute Error");
             }
