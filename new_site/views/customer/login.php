@@ -15,7 +15,7 @@ if (isset($_POST['login']))
     $user_email = $_POST['email'];
     if($_POST['login']=='sso')
     {
-        $user = $loggedinuser->sso_login($_POST['email'], $_POST['password'], $objRestaurant->id);
+        $user = $loggedinuser->sso_login($_POST['email'], $objRestaurant->id);
     }
     else
     {

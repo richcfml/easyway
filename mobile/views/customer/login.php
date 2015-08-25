@@ -1,85 +1,110 @@
-<?
-if (isset($_POST['btncheckout'])) {
-    if ($_POST['btncheckout'] == 'Pickup') {
+<?php
+if (isset($_POST['btncheckout'])) 
+{
+    if ($_POST['btncheckout'] == 'Pickup') 
+    {
         $cart->setdelivery_type(cart::Pickup);
-    } else {
+    } 
+    else 
+    {
         $cart->setdelivery_type(cart::Delivery);
     }
 }
+
 $user_email = '';
-if (isset($_COOKIE["user"])) {
+if (isset($_COOKIE["user"])) 
+{
     $user_email = $_COOKIE["user"];
 }
+
 $remeber_me = '';
-if (isset($_POST['rememberme'])) {
+if (isset($_POST['rememberme'])) 
+{
     $remeber_me = $_POST['rememberme'];
 }
 $result = -1;
-if (isset($_POST['login'])) {
+if (isset($_POST['login'])) 
+{
     $user_email = $_POST['email'];
-    $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+	
+    if($_POST['login']=='sso')
+    {
+            $user = $loggedinuser->sso_login($_POST['email'], $objRestaurant->id);
+    }
+    else
+    {
+        $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+    }
 
-    if (is_null($user)) {
+    if (is_null($user)) 
+    {   
         $result = false;
-    } else {
+    } 
+    else 
+    {
 
         $loggedinuser->destroysession();
         $loggedinuser = $user;
         require($mobile_root_path . "../new_site/includes/abandoned_cart_config.php");
 
-
-        if ($objRestaurant->useValutec == 1) {
-            if ($loggedinuser->valuetec_card_number > 0) {
+        if ($objRestaurant->useValutec == 1) 
+        {
+            if ($loggedinuser->valuetec_card_number > 0) 
+            {
                 $Balance = CardBalance($loggedinuser->valuetec_card_number);
                 $loggedinuser->valuetec_points = $Balance['PointBalance'];
                 $loggedinuser->valuetec_reward = $Balance['Balance'];
             }
-        } else {
+        } 
+        else 
+        {
             $loggedinuser->valuetec_card_number = 0;
         }
-
         $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
 
         $loggedinuser->street1 = $address1[0];
         $loggedinuser->street2 = '';
         if (count($address1) >= 1)
-            if(isset($address1[1])){
+        {
+            if(isset($address1[1]))
+            {
                 $loggedinuser->street2 = $address1[1];
             }
+        }
 
         $address1 = explode('~', trim($loggedinuser->delivery_address1, '~'));
 
         $loggedinuser->delivery_street1 = $address1[0];
         $loggedinuser->delivery_street2 = '';
         if (count($address1) >= 1)
-            if(isset($address1[1])){
+        {
+            if(isset($address1[1]))
+            {
                 $loggedinuser->delivery_street2 = $address1[1];
             }
+        }
 
         $loggedinuser->savetosession();
-
-
-
         $result = true;
-        //------Added by Asher--------//
         $itemcount = $cart->totalItems();
-        if ($itemcount > 0) {
+        if ($itemcount > 0) 
+        {
             redirect($SiteUrl . $objRestaurant->url . "/?item=cart");
             exit;
         }
-        //redirect($SiteUrl . $objRestaurant->url . "/?item=account");
-		redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
+        redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
         exit;
     }
-} else if (is_numeric($loggedinuser->id)) {
-    //------Added by Asher--------//
+} 
+else if (is_numeric($loggedinuser->id)) 
+{
     $itemcount = $cart->totalItems();
-    if ($itemcount > 0) {
+    if ($itemcount > 0) 
+    {
         redirect($SiteUrl . $objRestaurant->url . "/?item=cart");
         exit;
     }
-    //redirect($SiteUrl . $objRestaurant->url . "/?item=account");
-	redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
+    redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
     exit;
 }
 ?>

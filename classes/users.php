@@ -173,34 +173,23 @@ class users
         }
     }
     
-    public function sso_login($email,$password,$restaurant_id) 
+    public function sso_login($email,$restaurant_id) 
     {
-        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''", 1);
-        if ($mRow)
-        {
-            $mSalt = $mRow->salt;
+        $email=prepareStringForMySQL($email);
 
-            $email=prepareStringForMySQL($email);
-            $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
+        $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and epassword ='$password' and resturant_id= '". $restaurant_id ."'", 1);
 
-            $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and epassword ='$password' and resturant_id= '". $restaurant_id ."'", 1);
-
-            if(dbAbstract::returnRowsCount($user_qry, 1)>1 || dbAbstract::returnRowsCount($user_qry, 1)==0) 
-            {
-                return NULL;
-            }
-
-            $user=dbAbstract::returnObject($user_qry, 1, "users");
-            $user->delivery_address_choice=1;
-
-            $user->getTokens();
-            $user->loadfavorites();
-            return $user;
-        }
-        else
+        if(dbAbstract::returnRowsCount($user_qry, 1)>1 || dbAbstract::returnRowsCount($user_qry, 1)==0) 
         {
             return NULL;
         }
+
+        $user=dbAbstract::returnObject($user_qry, 1, "users");
+        $user->delivery_address_choice=1;
+
+        $user->getTokens();
+        $user->loadfavorites();
+        return $user;
     }
 		
     public function loginbyid($id) 

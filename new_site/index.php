@@ -88,7 +88,6 @@
 ?>
 				<form method="post" name="sso_login" action="<?=$SiteUrl.$objRestaurant->url.'/?item=login'?>">
                 	<input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
-                    <input type="hidden" name="password" value="<?=$cust_row->password?>"/>
                     <input type="hidden" name="login" value="sso"/>
                 </form>
                 <script language="javascript">
