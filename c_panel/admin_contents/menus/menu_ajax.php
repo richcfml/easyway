@@ -1656,8 +1656,8 @@ else if (isset($_GET["moveSubmenu"]))
 {
     $menu_id = $_GET['menuid'];
     $catid = $_GET['catid'];
-    dbAbstract::Update("update categories set menu_id = $menu_id where cat_id = $catid",1,1 );
-    if(dbAbstract::returnRowsCount()>0 )
+    $result = dbAbstract::Update("update categories set menu_id = $menu_id where cat_id = $catid",1,1 );
+    if($result >0 )
     {
         echo 1;
     }
