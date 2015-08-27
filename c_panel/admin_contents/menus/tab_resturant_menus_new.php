@@ -425,6 +425,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                       $boarsHeadBtm = '20px';
                       $boarsHeadlft = '88px';
                       $imgStyle='cursor:move;';
+		      $draggable = 'true';
                   ?>
                     <!--<img src="img/move.png" alt="Move" draggable="true" ondragstart="drag(event)" id="<?=$row->id?>" style="position:relative; bottom:130px; left:5px;"/>-->
                   <?php
