@@ -389,7 +389,7 @@ if ($mVerifyRequest==1) //Valid Session
                         $row = dbAbstract::returnObject($rs);
 
                         // Add expiry date time to bh_sso_user table
-                        dbAbstract::Update("update bh_sso_user set passwordupdate_expiry='".date("Y-m-d h:i:s", strtotime("+24 Hours"))."' where id='".$row->id."'");
+                        dbAbstract::Update("update bh_sso_user set passwordupdate_expiry='".date("Y-m-d H:i:s", strtotime("+12 Hours"))."' where id='".$row->id."'");
 
                         sendPasswordRecoveryEmail($row);
                         $mReturn = array("response" => "We have sent you an email with password reset instructions");
@@ -483,11 +483,11 @@ function errorFunction($errorCode,$errorDescription,$errorMessage,$errorTitile)
 function sendPasswordRecoveryEmail($row){
 	global $objMail;
 	global $SiteUrl;
-	//require_once('../classes/Encrypt.php');
-	//$encrypt = new Encrypt();
-	$funObj = new clsFunctions();
+	require_once('../classes/Encrypt.php');
+	$encrypt = new Encrypt();
+	
 	// Encrypt user id
-	$userId = $funObj->encrypt($row->id, '@e*w*o@');
+	$userId = $encrypt->encode($row->id);
 	
 	$subject = 'Reset Your Password';
 	$recovery_url = $SiteUrl ."bh_api/updatepassword.php?id=".$userId;

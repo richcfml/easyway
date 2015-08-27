@@ -1,15 +1,15 @@
 <?php
 require_once("../includes/config.php");
-//require_once('../classes/Encrypt.php');
-//$encrypt = new Encrypt();
-$funObj = new clsFunctions();
+require_once('../classes/Encrypt.php');
+$encrypt = new Encrypt();
+
 $result=-1;
 
 // Decode Id
-$id = $funObj->decrypt($_GET['id'], '@e*w*o@');
+$id = $encrypt->decode($_GET['id']);
 $row = dbAbstract::ExecuteObject("select * from bh_sso_user where id='$id'");
 
-if(strtotime($row->passwordupdate_expiry) < strtotime(date("Y-m-d h:i:s"))){
+if(strtotime($row->passwordupdate_expiry) < strtotime(date("Y-m-d H:i:s"))){
 	$result=-2;
 }
 
