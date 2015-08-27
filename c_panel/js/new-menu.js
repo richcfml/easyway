@@ -535,7 +535,37 @@ $.noty.defaults.template_menu_delete= '<div id="popup_box" class="popup_box" sty
             parseIDs();
         }
     });
+  
+    
+    $(".draggable").droppable({
+        tolerance: "pointer",
+         over: function(event, ui) {console.log('as');
+                $(this).css('background-color','#d97a14');  
+            },
 
+            out: function(event, ui) {
+                $(this).css('background-color',''); 
+            },
+            drop: function(event, ui) {
+                
+                
+                var dragable = ui.draggable;
+                $(this).css('background-color',''); 
+                var menuid = $(this).attr('id');
+                var catid = dragable.attr('catid');
+                
+                $.ajax({
+                url: "admin_contents/menus/menu_ajax.php?catid="+catid+"&menuid="+menuid+"&moveSubmenu=1",
+                success: function(data) {
+                    if(data>0)
+                    {
+                        dragable.remove();
+                    }
+                }
+            });
+        }
+    });
+    
     $( ".clsS" ).sortable({
         handle: '#imgMove',
         connectWith: ".clsS",
@@ -1163,8 +1193,15 @@ $(function() {
     $('.editItem').click(function(){
         var scid = $(this).parents('.lItem').find('.lblCat').attr('id');
         var id =  $(this).attr( "alt" );
-
-        window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid;
+        var isSignature = $(this).attr( "signature_sandwitch" )
+        if(isSignature == "1")
+        {
+            window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid+"&sandwichId=1";
+        }
+        else
+        {
+            window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid;
+        }
     });
 
     $('.rdb_status').click(function(){
@@ -1440,10 +1477,16 @@ $(function() {
         }
         if($("#prd_id").val()=="")
         {
+            var signature_sandwitch = GetURLParameter('sandwichId');
+            if(isNaN(signature_sandwitch)){
+                signature_sandwitch = 0;
+            }
+            var temp_product = $('#temp_product').val();
             $.ajax({
                 type:"POST",
-                url: "admin_contents/menus/menu_ajax.php?add_menu_item=1&ext="+ext+"&sub_cat="+scid+"&restid="+rest_id,
+                url: "admin_contents/menus/menu_ajax.php?add_menu_item=1&ext="+ext+"&sub_cat="+scid+"&restid="+rest_id+"&signature_sandwitch="+signature_sandwitch+"&temp_product="+temp_product,
                 data: $("#add_item_form").serialize(),
+                async: false,
                 success: function(data) {
 
                     if(data>0)

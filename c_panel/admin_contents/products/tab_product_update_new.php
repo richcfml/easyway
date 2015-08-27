@@ -320,141 +320,6 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
   <body>
 	<form method ="post" id="update_item_form"  action="" enctype="multipart/form-data">
   	  <div id ="main_div" class="main_div">
-      	<div style="position:relative;top: -43px;">
-      	  <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-open" id="cbp-spmenu-s1" style="position:absolute; display:none;">
-        	<div class="leftDivRest">
-              <span class="leftrestimg" >
-                <img src="img/restaurant.png" id="leftimgRest" style="width: 30px;"/>
-              </span>
-              <a href="<?=$AdminSiteUrl?>?mod=resturant&item=restedit&catid=<?= $Objrestaurant->id; ?>" class="leftheadingSpan">Restaurants</a>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-            
-        	<div class="leftDivOrder">
-              <span class="leftorderimg" >
-                <img src="img/orders.png" id="leftimgOrder" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Orders</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-            
-        	<div style="clear:both"></div>
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href ="<?=$AdminSiteUrl?>?mod=order&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Approved orders</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=order&item=approve&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >New Orders</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=order&item=refund&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Refund Orders</a> 
-            </div>
-            
-        	<div class="leftDivMenus">
-              <span class="leftmenusimg" >
-                <img src="img/Menus.png" id="leftimgMenus" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan" >Menus</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-            
-        	<div style="clear:both"></div>
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;">
-			  <?
-                    $menu_qry = dbAbstract::Execute("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name",1);
-                $menu_i = 0;
-                    while ($menuRs = dbAbstract::returnArray($menu_qry,1)) {
-              ?>
-                  <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
-                      ?> class="selected"  <? } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" class="menu_links"  <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>>
-              <?= $menuRs['menu_name'] ?>
-                  </a>
-              <? 	$menu_i++;
-                }
-              ?>
-              <a href ="#" id="add_mainmenu"  class="menu_links" >+</a> 
-              <a href ="<?=$SiteUrl.$Objrestaurant->url?>/" target="_blank" class="menu_links" >View Live</a>
-          	</div>
-            
-        	<div class="leftDivCustomers">
-              <span class="leftcustomersimg" >
-                <img src="img/ew_verticalnav_32-03.png" id="leftimgCustomers" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Customers</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-            <div style="clear:both"></div>
-        	
-            <div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href ="<?=$AdminSiteUrl?>?mod=customer&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >View/Edit Customer </a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=customer&item=search&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Search Existing</a> 
-            </div>
-            
-        	<div class="leftDivCoupans">
-              <span class="leftcoupansimg" >
-                <img src="img/ew_verticalnav_32-05.png" id="leftimgCoupans" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Coupons</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-        	<div style="clear:both"></div>
-            
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href="<?=$AdminSiteUrl?>?mod=coupon&catid=<?= $Objrestaurant->id; ?>" class="menu_links" >Edit Existing Coupons </a> 
-              <a href="<?=$AdminSiteUrl?>?mod=coupon&item=add&catid=<?= $Objrestaurant->id; ?>" class="menu_links" style="height: 19px;">
-                <span style="float: left;width: 28px;font-size: 25px;margin-left: 20px;">+</span>
-                <span style="float: left;margin-top: 5px;width: 90px;margin-left: -15px;">Add New </span>
-              </a> 
-            </div>
-            
-        	<div class="leftDivMailing">
-              <span class="leftmailingimg" >
-                <img src="img/mailing.png" id="leftimgMailing" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Mailing List</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-        	<div style="clear:both"></div>
-            
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href="<?=$AdminSiteUrl?>?mod=mailing_list&catid=<?= $Objrestaurant->id; ?>"  class="menu_links">View/Edit list </a> 
-              <a href="<?=$AdminSiteUrl?>?mod=mailing_list&item=mailadd&catid=<?= $Objrestaurant->id; ?>" class="menu_links" style="height: 19px;">
-                <span style="float: left;width: 28px;font-size: 25px;margin-left: 20px;">+</span>
-                <span style="float: left;margin-top: 5px;width: 90px;margin-left: -15px;">Add to list </span>
-              </a> 
-            </div>
-            
-        	<div class="leftDivAnalytics">
-              <span class="leftanalyticsimg" >
-                <img src="img/ew_verticalnav_32-07.png" id="leftimgAnalytics" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Analytics</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-        	<div style="clear:both"></div>
-        
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href="<?=$AdminSiteUrl?>?mod=analytics&cid=<?=$Objrestaurant->id?>" class="menu_links" >Restaurant Report </a> 
-              <a href="<?=$AdminSiteUrl?>?mod=analytics&item=abandoned_carts&cid=<?=$Objrestaurant->id?>" class="menu_links" >Abandoned Carts</a>
-              <a href ="<?=$AdminSiteUrl?>?mod=analytics&item=traffic&cid=<?=$Objrestaurant->id?>"  class="menu_links" >Traffic</a> 
-            </div>
-        	
-            <div class="leftDivReputation">
-              <span class="leftreputationimg" >
-                <img src="img/reputation_1.png" id="leftimgReputation" style="width: 30px;"/>
-              </span>
-              <span class="leftheadingSpan">Reputation</span>
-              <i class="fa leftMenuArrow"></i>
-            </div>
-        	<div style="clear:both"></div>
-            
-        	<div class="nestedMenu" style="display:none;margin-top: 20px;"> 
-              <a href ="<?=$AdminSiteUrl?>?mod=overview&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Overview </a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=visibility&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Visibility</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=reviews&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Reviews</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=mentions&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Mentions</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=social&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Social</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=competition&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Competition</a> 
-              <a href ="<?=$AdminSiteUrl?>?mod=account&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Account</a> 
-            </div>
-      	  </nav>
-      	</div>
-        
         <div id ="inner_div">
           <input type="hidden" value="<?=$Objrestaurant->id?>" id="restaurantid"/>
           <input type="hidden" value="<?=$_GET['prd_id']?>" id="prd_id"/>
@@ -474,7 +339,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
           <div class="add_area_div">
             <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td><input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40"></td>
+                <td><input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?> value="<?= $item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40"></td>
                 <td><input onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" maxlength="7" type="text" id="price" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;"  <? if (strpos($price, '.') !== false) { ?> value="<?= $currency . $price ?>" <? } else { ?> value="<?= $currency . $price . ".00" ?>" <? } ?> class="textAreaClass" placeholder="Price(ex:<?=$currency?>4.50)"></td>
               </tr>
               
@@ -660,7 +525,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                   <textarea id="product_description" name="product_description" style="display: none;"><?= trim($description1) ?></textarea>
                   <input type="hidden" id="hdnSearch" />
                   <div id="container">
-                    <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
+                    <div id="product_description1" name="product_description1" <?php if(isset($_GET['sandwichId'])){ ?> contenteditable="false" <?php }else{ ?> contenteditable="true" <?php }?> class="textAreaClass" style="overflow: auto; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
                       <?= trim($description) ?>
                     </div>
                     <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;"> </div>
@@ -668,7 +533,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <?php
 				}else{
 				?>
-                  <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= trim($description1) ?></textarea>
+                  <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?> class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= trim($description1) ?></textarea>
                 <?php
 				}
                 ?>
@@ -691,8 +556,9 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                       <input type="hidden" id="hdnScale" name="hdnScale" value="<?=$mScale?>" />
                     </div>
                   </div>
-                  
-                  <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
+                  <?php if(!isset($_GET['sandwichId'])){?>
+                    <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
+                 <?php } ?>
                 </td>
               </tr>
               
@@ -701,6 +567,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                   <input type="text" name="pos_id" id="pos_id" placeholder="POS ID" class="textAreaClass" style="margin-left: 13%;margin-top: 25px;padding: 5px;" value="<?= $pos_id ?>"/>
                 </td>
                 <td style="width:290px">
+                    <?php if(!isset($_GET['sandwichId'])){ ?>
                   <div id="sizeErrorMsg1" style="color: green;font-size: 13px;margin-left: 52px;">File Size must under 1MB</div>
                   <script type="text/javascript" language="javascript">
 					$("#upSocialMeida").fancybox
@@ -721,7 +588,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                       </table>
                     </a> 
                   </div>
-                  
+                 
                   <span class="deleteimg" <?=(($imgSource == '')? 'style="display:none;"':'')?> id="deleteimg">Delete Photo</span>
                   <input type="hidden" id="x" name="x" />
                   <input type="hidden" id="y" name="y" />
@@ -730,6 +597,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                   <span id="cropimg" name="cropimg" class="deleteimg" style=" <?=(($imgSource == '')? 'display:none;':'margin-left: 10px;')?>">
                   	Crop Image
                   </span>
+                   <?php } ?>
                 </td>
               </tr>
               
@@ -1266,7 +1134,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <ul id="attr-list_product">
                   <?php
                         
-                        $attrib_qry = dbAbstract::Execute("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$_GET['prd_id']."' order by OderingNO",1);
+                        $attrib_qry = dbAbstract::Execute("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$_GET['prd_id']."' order by OderingNO,id",1);
                         $optionName="";
                         $attributeStr="";
                         $displayName="";

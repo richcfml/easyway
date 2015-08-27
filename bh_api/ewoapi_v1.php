@@ -1418,26 +1418,22 @@ function returnDislikeCount($pRestaurantID)
     return $mDislikeCount;
 }
 
-function checkSignatureSandwich($pRestaurantID)
-{
-    global $mAPICallNumber;
-    //$mStartTime = strtotime(date("Y-m-d H:i:s"));
-    $mSignatureSandwich = "no";
-    $mSQLSigSan = "SELECT COUNT(*) AS SignatureSandwiches FROM product WHERE cat_id=".$pRestaurantID." AND LOWER(item_title)='signature sandwich'";
-    $mResSigSan = dbAbstract::ExecuteObject($mSQLSigSan);
-    if ($mResSigSan)
+function checkSignatureSandwich($rest_id)
+{ 
+    $qry = "Select signature_sandwitch_id from product p inner join bh_signature_sandwitch bh on bh.id = p.signature_sandwitch_id where p.signature_sandwitch_id !='' and p.status = 1 and bh.start_date <= '".strtotime(date('Y-m-d'))."' and bh.end_date >= '".strtotime(date('Y-m-d'))."' and p.cat_id = ".$rest_id."";
+    
+    $query = dbAbstract::Execute($qry);
+    $rowsCount = dbAbstract::returnRowsCount($query);
+    if($rowsCount > 0)
     {
-        if ($mResSigSan->SignatureSandwiches>0)
-        {
-            $mSignatureSandwich = "yes";
-        }
+        return "yes";
     }
-    /*$mEndTime = strtotime(date("Y-m-d H:i:s"));
-    $mExecutionTime = $mEndTime - $mStartTime;
-    Log::write("BH API: checkSignatureSandwich()", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');*/
-    return $mSignatureSandwich;
+    else
+    {
+        return "No";
+    }
+    
 }
-
 function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
 {
     //$mStartTime = strtotime(date("Y-m-d H:i:s"));
@@ -1445,7 +1441,6 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
     $mThumbnailURL = "";
     $mBannerURL = "";
     $mRandomNumber = mt_rand(10,1000000);    
-    
     if (trim($rest_url->optionl_logo)!="")
     {
         //if (file_exists(realpath("../images/logos_thumbnail/".$rest_url->optionl_logo)))
@@ -1461,7 +1456,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
             $mBannerURL = $SiteUrl."images/resturant_bh_banner/".$rest_url->bh_banner_image."?".$mRandomNumber;
         //}
     }
-    
+    $mSignatureSandwich = checkSignatureSandwich($rest_url->id);
     $mOpen = checkOpen($rest_url->id, $rest_url->time_zone_id);
     
     $mLikeCount = returnLikeCount($rest_url->id);
@@ -1501,7 +1496,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
         }
 
         $mLikeRating[] = array("like_count" => $mLikeCount, "dislike_count" => $mDislikeCount, "like_percentage" => $mLikePercentage);
-        $mSignatureSandwich = checkSignatureSandwich($rest_url->id);
+        
     
         if ($pUserID==0)
         {
@@ -1697,10 +1692,22 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
             }
         }
     }
+    if(isset($_GET['signature_sandwitch']) && strtolower($_GET['signature_sandwitch']) == "yes")
+    {
+        
+        if($mSignatureSandwich == "yes")
+        {
+             return $mRetArray;
+        }
+    }
+    else
+    {
+        return $mRetArray;
+    }
     /*$mEndTime = strtotime(date("Y-m-d H:i:s"));
     $mExecutionTime = $mEndTime - $mStartTime;
     Log::write("BH API: returmArray()", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');*/
-    return $mRetArray;
+    
 }
 
 function getorderdetails($OrderID)
@@ -1948,7 +1955,7 @@ function returnLocationArray($rest_url, $mLikePercentage = 0,$pUserID=0)
     $mLikeCount = returnLikeCount($rest_url->id);
     $mDislikeCount = returnDislikeCount($rest_url->id);
     $mLikePercentage = 0;
-
+    $mSignatureSandwich = checkSignatureSandwich($rest_url->id);
     if (($mLikeCount==0) && ($mDislikeCount==0))
     {
         $mLikePercentage = 0;
@@ -1970,7 +1977,8 @@ function returnLocationArray($rest_url, $mLikePercentage = 0,$pUserID=0)
             "latitude" => $getLatLong[0],
             "longitude" => $getLatLong[1],
             "satisfactionPercentage" => $mLikePercentage,
-            "likes" => $mLikeCount
+            "likes" => $mLikeCount,
+            "signature_sandwich" => $mSignatureSandwich,
         );
     }
     else
@@ -1988,12 +1996,25 @@ function returnLocationArray($rest_url, $mLikePercentage = 0,$pUserID=0)
         "longitude" => $getLatLong[1],
         "satisfactionPercentage" => $mLikePercentage,
         "likes" => $mLikeCount,
-        "favorite" => $mFavorite
+        "favorite" => $mFavorite,
+        "signature_sandwich" => $mSignatureSandwich,
         );
+    }
+    if(isset($_GET['signature_sandwitch']) && strtolower($_GET['signature_sandwitch']) == "yes")
+    {
+        
+        if($mSignatureSandwich == "yes")
+        {
+             return $mRetArray;
+        }
+    }
+    else
+    {
+        return $mRetArray;
     }
     /*$mEndTime = strtotime(date("Y-m-d H:i:s"));
     $mExecutionTime = $mEndTime - $mStartTime;
     Log::write("BH API: returnLocationArray()", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');*/
-    return $mRetArray;
+    
 }
 ?>

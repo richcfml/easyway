@@ -189,7 +189,79 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         }
         </script> 
 <!-----------------------------------End NK(2-10-2014)----------------------------------------------------->                
+	<script type="text/javascript">
+        var SlideWidth = 500;
+        var SlideSpeed = 500;
 
+        $(document).ready(function () {
+            // set the prev and next buttons display
+            SetNavigationDisplay();
+			$("#nextbtn").click(function(){
+				// get the current margin and subtract the slide width
+				var newMargin = CurrentMargin() - SlideWidth;
+				//alert(newMargin);
+				
+				modulus = newMargin % 500;
+				if(modulus != 0){
+					newMargin = newMargin - modulus;
+				}
+				// slide the wrapper to the left to show the next panel at the set speed. Then set the nav display on completion of animation.
+				$("#ss_slider").animate({ marginLeft: newMargin }, SlideSpeed, function () { SetNavigationDisplay() });
+			});
+			
+			$("#prevbtn").click(function(){
+				$(this).hide();
+				// get the current margin and subtract the slide width
+				var newMargin = CurrentMargin() + SlideWidth;
+				
+				modulus = newMargin % 500;
+				if(modulus != 0){
+					newMargin = newMargin - modulus;
+				}
+				
+				// slide the wrapper to the right to show the previous panel at the set speed. Then set the nav display on completion of animation.
+				$("#ss_slider").animate({ marginLeft: newMargin }, SlideSpeed, function () { SetNavigationDisplay() });
+				$(this).show();
+			});
+			
+        });
+
+        function CurrentMargin() {
+            // get current margin of slider
+            var currentMargin = $("#ss_slider").css("margin-left");
+
+            // first page load, margin will be auto, we need to change this to 0
+            if (currentMargin == "auto") {
+                currentMargin = 0;
+            }
+
+            // return the current margin to the function as an integer
+            return parseInt(currentMargin);
+        }
+
+        function SetNavigationDisplay() {
+            // get current margin
+            var currentMargin = CurrentMargin();
+            // if current margin is at 0, then we are at the beginning, hide previous
+            if (currentMargin == 0) {
+                $("#prevbtn").hide();
+            }
+            else {
+                $("#prevbtn").show();
+            }
+
+            // get wrapper width
+            var wrapperWidth = $("#ss_slider").width();
+
+            // turn current margin into postive number and calculate if we are at last slide, if so, hide next button
+            if ((currentMargin * -1) == (wrapperWidth - SlideWidth)) {
+                $("#nextbtn").hide();
+            }
+            else {
+                $("#nextbtn").show();
+            }
+        } 
+    </script>
     </head>
 
     <body style="cursor: auto; font-family: Arial;">
@@ -214,9 +286,9 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                     while ($menuRs = dbAbstract::returnArray($menu_qry, 1)) {
                     ?>
 
-                        <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
-                    ?> class="selected"  <? } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" class="menu_links" <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>  ><?= $menuRs['menu_name'] ?></a>
-                        <? $menu_i++;
+                        <a <?php if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
+                                ?> class="selected"  <?php } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" id="<?= $menuRs['id']?>" class="menu_links draggable" <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>  ><?= $menuRs['menu_name'] ?></a>
+                        <?php $menu_i++;
                     } ?>
 
                     <a href ="#" id="add_mainmenu"  class="menu_links" >+</a>
@@ -278,6 +350,115 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         </form>
     <div style="background-color: #FFFFFF;width: 763px;margin-left: 187px;margin-bottom: 10px;margin-top: -25px;">
             <div style="font-family: 'Droid Sans',Arial,Geneva,Helvetica,sans-serif; font-size: 26px; color: #5B5B5B; font-weight: bold; margin-left: 20px; margin-bottom: 15px;"><?=$menu_name?></div>
+            
+	  <?php
+	  if($Objrestaurant->bh_restaurant == 1){
+		$ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date > '".strtotime(date('Y-m-d'))."'");
+		$ss_rows = dbAbstract::returnRowsCount($ss_qry);
+		if($ss_rows > 0 ){
+		?>
+        <script>
+		function allowDrop(ev) {
+			ev.preventDefault();
+		}
+		
+		function drag(ev) {
+			ev.dataTransfer.setData("text", ev.target.id);
+		}
+		
+		function drop(ev) {
+			ev.preventDefault();
+			var sandwichId = ev.dataTransfer.getData("text");
+			
+			var subcatId = ev.target.getAttribute('sub_cat');
+                        console.log(subcatId);
+                        if(subcatId != null)
+                        {
+                            window.location.assign("<?=$SiteUrl?>c_panel/?mod=new_menu&item=addproduct_new&sub_cat="+subcatId+"&sandwichId="+sandwichId)
+                        }
+		}
+		</script>
+        <div style="position:fixed; top:60px; right:340px; width:500px; float:left; height:130px; overflow:hidden">
+          <div class="ss_container">
+            
+            <div id="ss_slider" style="width:<?=$ss_rows * 500?>px;">
+              <?php while($row = dbAbstract::returnObject($ss_qry)){ ?>
+              <div id="ss_slider_img1" class="ss_div">
+                <div class="ss_img">
+                  <?php
+                  $ssp_qry=dbAbstract::Execute("select status from product where cat_id='$Objrestaurant->id' AND signature_sandwitch_id='$row->id'");
+                  $ssp_rows=dbAbstract::returnRowsCount($ssp_qry);
+                  if($ssp_rows > 0){
+                      $boarsHeadBtm = '34px';
+                      $boarsHeadlft = '55px';
+                      $draggable = 'true';
+                      $imgStyle='';
+                      
+                      $prow = dbAbstract::returnObject($ssp_qry);
+                      if($prow->status==0){
+                          $draggable = 'false';
+                          $boarsHeadBtm = '55px';
+                          $boarsHeadlft = '90px';
+                          $imgStyle='position:relative; bottom: 35px; left: 0px;';
+                  ?>
+                          <img src="./images/signaturesandwich/BH_Pause.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+                  <?php	
+                      }
+                      elseif($row->start_date <= strtotime(date("Y-m-d")) && $row->end_date >= strtotime(date("Y-m-d"))){
+                          $draggable = 'false';
+                          $boarsHeadBtm = '55px';
+                          $boarsHeadlft = '90px';
+                          $imgStyle='position:relative; bottom: 35px; left: 0px;';
+                  ?>
+                          <img src="./images/signaturesandwich/BH_Check.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+                  <?php
+                      }elseif($row->start_date > strtotime(date("Y-m-d"))){
+                          $draggable = 'false';
+                          $boarsHeadBtm = '60px';
+                          $boarsHeadlft = '90px';
+                          $imgStyle='position:relative; bottom: 40px; left: 0px;';
+                  ?>
+                          <img src="./images/signaturesandwich/BH_Circle.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+                  <?php	
+                      }
+                  }else{
+                      $boarsHeadBtm = '20px';
+                      $boarsHeadlft = '88px';
+                      $imgStyle='cursor:move;';
+		      $draggable = 'true';
+                  ?>
+                    <!--<img src="img/move.png" alt="Move" draggable="true" ondragstart="drag(event)" id="<?=$row->id?>" style="position:relative; bottom:130px; left:5px;"/>-->
+                  <?php
+                  }
+                  ?>
+                  <img src="./images/signaturesandwich/<?=(($row->item_image !='')? $row->item_image:'no image.png')?>" alt="Photo <?=$row->item_name?>" 
+                  draggable="<?=$draggable?>" ondragstart="drag(event)" id="<?=$row->id?>" style="width:100%; height:130px !important; <?=$imgStyle?>">
+                  
+                  <img src="./images/signaturesandwich/boarsHead.png" draggable="false" style="position:relative; bottom:<?=$boarsHeadBtm?>; left:<?=$boarsHeadlft?>">
+                </div>
+                <div class="ss_wrap">
+                  <div class="ss_content">
+                    <div class="ss_prodTitle"><?=$row->item_name?></div>
+                    <div class="ss_prodDates">
+                      Featured Sandwich <?=date('d/m',$row->start_date).' - '.date('d/m',$row->end_date)?>
+                    </div>
+                    <div class="ss_prodDescription"><?=$row->item_desc?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </div>
+            
+            <div id="nextbtn"> <i class="fa fa-chevron-circle-left"></i> </div>
+            <div id="prevbtn"> <i class="fa fa-chevron-circle-right"></i> </div>
+          </div>
+        </div>
+      <?
+		}
+	  }
+	  ?>
+      
+            
             <div id ="add_new_submenu_link" class="submenu_btn"><span id="plus_span">+</span><span style="margin-left: 5px;float:left;font-size:14px">Add a New Submenu</span></div>
             <a class="fancyadd_submenu" href="#menu_form"></a>
             <form method="post" id="menu_form" action="" style="display:none">

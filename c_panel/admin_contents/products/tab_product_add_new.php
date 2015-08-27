@@ -52,6 +52,122 @@ if (isset($_GET['sub_cat'])) {
     $menuid=$menu_data->id;
     $menu_name = $menu_data->menu_name;
 }
+if (isset($_GET['sandwichId'])) {
+    $signature_sandwitch_id = $_GET['sandwichId'];
+    $sandwitch_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = " . $signature_sandwitch_id . "",1);
+    $item_name = $sandwitch_data->item_name;
+    $description = $sandwitch_data->item_desc;
+    $description1 = $sandwitch_data->item_desc;
+    $start_date = $sandwitch_data->start_date;
+    $end_date = $sandwitch_data->end_date;
+    $imgSource = $sandwitch_data->item_image;
+
+    //add attribute which has apply_sub_cat is 1
+    $category_id = $_GET['sub_cat'];
+    $query = dbAbstract::Execute("Select prd_id from product where sub_cat_id = ".$category_id."");
+    while ($products = dbAbstract::returnObject($query, 1))
+    {
+        $productIds .= $products->prd_id.',';
+    }
+    $productIds = substr($productIds,0,-1);
+    
+    $tempProduct = time();
+    $query1 = dbAbstract::Execute("Select * from attribute where ProductID in(".$productIds.") and apply_sub_cat = 1 and option_name != '' and ProductID != 0 and Title != '' group by option_name, Title order by option_name,ProductID ");
+    
+    while ($attr = dbAbstract::returnArray($query1, 1))
+    {
+        dbAbstract::Insert("INSERT INTO attribute SET ProductID = '.$tempProduct.', option_name = '" . $attr['option_name'] . "',Title = '" . $attr['Title'] . "',Price = '" . $attr['Price'] . "',option_display_preference = '" . $attr['option_display_preference'] . "',apply_sub_cat= ".$attr['apply_sub_cat'] ." ,Type = '" . $attr['Type'] . "',Required = '" . $attr['Required'] . "',OderingNO = '" . $attr['OderingNO'] . "',rest_price = '" . $attr['rest_price'] . "',display_Name='" . $attr['display_Name'] . "' ,`Default`='" . $attr['Default'] . "' ,add_to_price='" . $attr['add_to_price'] . "',attr_name ='" . $attr['attr_name'] . "',extra_charge ='" . $attr['extra_charge'] . "'", 1, 2);
+    }
+
+
+    if (strtolower(substr(php_uname('s'), 0, 3))=="win")
+    {
+        $description1 = str_replace("<br/>", "\r\n", $description1);
+        $description1 = str_replace("<br>", "\r\n", $description1);
+        $description1 = str_replace("<br />", "\r\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='linux')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='unix')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 6))=="darwin")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 3))=="mac")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else
+    {
+        $description1=str_replace ("<br/>", "\n", $description1);
+        $description1=str_replace ("<br>", "\n", $description1);
+        $description1=str_replace ("<br />", "\n", $description1);
+    }
+    
+        $size = getimagesize("images/signaturesandwich/". $imgSource);
+	
+	if (($size[0]>=450) || ($size[1]>=450))
+	{
+		$mWidth = round($size[0]/4.5);
+		$mHeight = round($size[1]/4.5);
+		$mScale = 4.5;
+	}
+	else if ((($size[0]<450) && ($size[0]>=400)) || (($size[1]<450) && ($size[1]>=400)))
+	{
+		$mWidth = round($size[0]/4);
+		$mHeight = round($size[1]/4);
+		$mScale = 4;
+	}
+	else if ((($size[0]<400) && ($size[0]>=300)) || (($size[1]<400) && ($size[1]>=300)))
+	{
+		$mWidth = round($size[0]/3.5);
+		$mHeight = round($size[1]/3.5);
+		$mScale = 3.5;
+	}
+	else if ((($size[0]<300) && ($size[0]>=250)) || (($size[1]<300) && ($size[1]>=250)))
+	{
+		$mWidth = round($size[0]/3);
+		$mHeight = round($size[1]/3);
+		$mScale = 3;
+	}
+	else if ((($size[0]<250) && ($size[0]>=220)) || (($size[1]<250) && ($size[1]>=220)))
+	{
+		$mWidth = round($size[0]/2.5);
+		$mHeight = round($size[1]/2.5);
+		$mScale = 2.5;
+	}																							
+	else if ((($size[0]<220) && ($size[0]>=190)) || (($size[1]<220) && ($size[1]>=190)))
+	{
+		$mWidth = round($size[0]/2);
+		$mHeight = round($size[1]/2);
+		$mScale = 2;
+	}
+	else if ((($size[0]<190) && ($size[0]>=120)) || (($size[1]<190) && ($size[1]>=105)))
+	{
+		$mWidth = round($size[0]/1.5);
+		$mHeight = round($size[1]/1.5);
+		$mScale = 1.5;
+	}
+	else
+	{
+		$mWidth = round($size[0]/1);
+		$mHeight = round($size[1]/1);
+		$mScale = 1;
+	}
+}
 if($_POST['cropimg'])
 {
     $targ_w = $targ_h = 150; $jpeg_quality = 90;
@@ -141,6 +257,19 @@ if($_POST['cropimg'])
                 $("#displayMessage").hide();
            }
          });
+         
+         $("#attr-list_product").click(function()
+         {
+            if($("#prd_id").val()=="")  
+            {
+                 $("#hdnflag").val('1');
+                 $( "#add_item_form" ).submit();
+                 if($("#item_name").val()=='' || $("#price").val() =='')
+                 {
+                     return false;
+                 }
+            }
+         });
 
     });
     $(function() {
@@ -211,77 +340,10 @@ if($_POST['cropimg'])
 <form method ="post" id="add_item_form"  enctype="multipart/form-data">
     
     <div id ="main_div" class="main_div">
-        <div style="position:relative;top: -43px;">
-            <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-open" id="cbp-spmenu-s1" style="position: absolute; display:none">
-                 <div class="leftDivRest"><span class="leftrestimg" ><img src="img/restaurant.png" id="leftimgRest" style="width: 30px;"/></span><a href="<?=$AdminSiteUrl?>?mod=resturant&item=restedit&catid=<?= $Objrestaurant->id; ?>" class="leftheadingSpan">Restaurants</a><i class="fa leftMenuArrow"></i></div>
-                 <div class="leftDivOrder"><span class="leftorderimg" ><img src="img/orders.png" id="leftimgOrder" style="width: 30px;"/></span><span class="leftheadingSpan">Orders</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=order&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Approved orders</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=order&item=approve&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >New Orders</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=order&item=refund&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Refund Orders</a>
-                 </div>
-                 <div class="leftDivMenus"><span class="leftmenusimg" ><img src="img/Menus.png" id="leftimgMenus" style="width: 30px;"/></span><span class="leftheadingSpan" >Menus</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                    <?
-                    $menu_qry = dbAbstract::Execute("select * from menus where rest_id = " . $Objrestaurant->id . " order by status, menu_name",1);
-                    $menu_i = 0;
-                    while ($menuRs = dbAbstract::returnArray($menu_qry,1)) {
-                    ?>
-
-                        <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
-                    ?> class="selected"  <? } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" class="menu_links"  <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>><?= $menuRs['menu_name'] ?></a>
-                        <? $menu_i++;
-                    } ?>
-
-                    <a href ="#" id="add_mainmenu"  class="menu_links" >+</a>
-                    <a href ="<?php echo $SiteUrl.$Objrestaurant->url; ?>/" target="_blank" class="menu_links" >View Live</a>
-                 </div>
-                 <div class="leftDivCustomers"><span class="leftcustomersimg" ><img src="img/ew_verticalnav_32-03.png" id="leftimgCustomers" style="width: 30px;"/></span><span class="leftheadingSpan">Customers</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=customer&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >View/Edit Customer </a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=customer&item=search&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Search Existing</a>
-                     
-                 </div>
-                 <div class="leftDivCoupans"><span class="leftcoupansimg" ><img src="img/ew_verticalnav_32-05.png" id="leftimgCoupans" style="width: 30px;"/></span><span class="leftheadingSpan">Coupons</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=coupon&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Edit Existing Coupons </a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=coupon&item=add&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" style="height: 19px;"><span style="float: left;width: 28px;font-size: 25px;margin-left: 20px;">+</span><span style="float: left;margin-top: 5px;width: 90px;margin-left: -15px;">Add New </span></a>
-                    
-                 </div>
-                 <div class="leftDivMailing"><span class="leftmailingimg" ><img src="img/mailing.png" id="leftimgMailing" style="width: 30px;"/></span><span class="leftheadingSpan">Mailing List</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=mailing_list&catid=<?= $Objrestaurant->id; ?>"  class="menu_links">View/Edit list </a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=mailing_list&item=mailadd&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" style="height: 19px;"><span style="float: left;width: 28px;font-size: 25px;margin-left: 20px;">+</span><span style="float: left;margin-top: 5px;width: 90px;margin-left: -15px;">Add to list </span></a>
-
-                 </div>
-                 <div class="leftDivAnalytics"><span class="leftanalyticsimg" ><img src="img/ew_verticalnav_32-07.png" id="leftimgAnalytics" style="width: 30px;"/></span><span class="leftheadingSpan">Analytics</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=analytics&cid=<?=$Objrestaurant->id?>"  class="menu_links" >Restaurant Report  </a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=analytics&item=abandoned_carts&cid=<?=$Objrestaurant->id?>"  class="menu_links" >Abandoned Carts</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=analytics&item=traffic&cid=<?=$Objrestaurant->id?>"  class="menu_links" >Traffic</a>
-                 </div>
-                 <div class="leftDivReputation"><span class="leftreputationimg" ><img src="img/reputation_1.png" id="leftimgReputation" style="width: 30px;"/></span><span class="leftheadingSpan">Reputation</span><i class="fa leftMenuArrow"></i></div>
-                 <div style="clear:both"></div>
-                 <div class="nestedMenu" style="display:none;margin-top: 20px;">
-                     <a href ="<?=$AdminSiteUrl?>?mod=overview&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Overview  </a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=visibility&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Visibility</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=reviews&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Reviews</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=mentions&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Mentions</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=social&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Social</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=competition&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Competition</a>
-                     <a href ="<?=$AdminSiteUrl?>?mod=account&cid=<?=$Objrestaurant->id?>&catid=<?= $Objrestaurant->id; ?>"  class="menu_links" >Account</a>
-                 </div>
-            </nav>
-             </div>
         <div id ="inner_div"> 
             <input type="hidden" value="<?=$Objrestaurant->id?>" id="restaurantid"/>
-            <input type="hidden" value="" id="prd_id"/>
+            <input type="hidden"  id="prd_id" value=""/>
+            <input type="hidden" id="temp_product" value="<?= $tempProduct ?>"/>
             <input type="hidden" value="<?=$_GET['sub_cat']?>" id="hdn_subcatid"/>
             <a href="?mod=new_menu&catid=<?=$Objrestaurant->id?>&menuid=<?=$menuid?>&menu_name=<?=$menu_name?>" style="margin-top: 3px;margin-left: 16px;cursor: pointer;width: 37px;float: left;" id="redirectMenuPage"> <img src="img/back.png" style="margin-top: 10px;"/></a>
             <div class="Submenu_Heading">Add New Item To <?=$cat_name?></div>
@@ -289,7 +351,7 @@ if($_POST['cropimg'])
                 <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td>
-                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="" class="textAreaClass" placeholder="Item Name"  maxlength="40">
+                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?> value="<?=$item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40">
                         </td>
                         <td>
                             <input type="text" id="price" maxlength="7" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;" class="textAreaClass" placeholder ="Price(ex:<?=$currency?>4.50)" onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" >
@@ -478,10 +540,11 @@ if($_POST['cropimg'])
                                 
                                 
                             </script>
-                                <textarea id="product_description" name="product_description" style="display: none;"></textarea>
+                                <textarea id="product_description" name="product_description" style="display: none;"><?= $description1 ?></textarea>
                                 <input type="hidden" id="hdnSearch" />
                                 <div id="container">
-                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
+                                    <div id="product_description1" name="product_description1" <?php if(isset($_GET['sandwichId'])){ ?> contenteditable="false" <?php }else{ ?> contenteditable="true" <?php }?> class="textAreaClass" style="overflow: auto;font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
+                                 <?= trim( $description) ?>
                                 </div>
                                 <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
                                 </div>
@@ -491,13 +554,14 @@ if($_POST['cropimg'])
                             else
                             {
                             ?>
-                                <textarea rows="4" cols="50" id="product_description" name="product_description" class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"></textarea>
+                                <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?>  class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= $description1 ?></textarea>
                             <?php
                             }
                             ?>
                         </td>
                         <td>
-                            <div class="photo_div_before" id="show_photo_before" ><div style="text-align: center;font-size: 16px;"> Photo of item? </div>
+                            <div class="photo_div_before" id="show_photo_before" <?=(($imgSource != '')? 'style="display:none;"':'')?>>
+                                <div style="text-align: center;font-size: 16px;"> Photo of item? </div>
 
                                     <div style="height: 75px;width: 28%;">
                                         <img src ="img/camera.png" id="item_img_camera" style="height: 79%;margin-left: 131%;margin-top: 8px;"/>
@@ -505,13 +569,27 @@ if($_POST['cropimg'])
                                 <div style="text-align: center;text-align: center;width: 150px;margin-left: 15%;margin-top: 0px"> (Click to upload or drag and drop file here) </div>
 
                             </div>
-                            <div class="photo_div" id="show_photo" ><div style="text-align: center;font-size: 16px;"> Photo of item </div>
+                            <div class="photo_div" id="show_photo" <?=(($imgSource != '')? 'style="display:block;"':'')?>>
+                                <div style="text-align: center;font-size: 16px;"> Photo of item </div>
                                 <div style="text-align:center;height: 160px;">
-                                     <img src ="" id="item_img" style="margin-top: 9px;"/>
+                                      <div style="text-align:center;height: 160px;">
+                                    <?php if(!isset($_GET['sandwichId']))
+                                    {
+                                        $imagesrc = '';
+                                    }
+                                    else
+                                    {
+                                        $imagesrc = 'images/signaturesandwich/'.$imgSource.'?time='.time();
+                                    }
+                                    ?> 
+                                        <img src ="<?= $imagesrc ?>" id="item_img" style="margin-top: 9px; width: <?=$mWidth?>px; height: <?=$mHeight?>px;"/>
+                                    
+                                </div>
                                 </div>
                             </div>
-                            <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
-                            
+                            <?php if(!isset($_GET['sandwichId'])){?>
+                                <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
+                            <? } ?>
                         </td>
                     </tr>
                     <tr>
@@ -519,6 +597,7 @@ if($_POST['cropimg'])
                             <input type="text" name="pos_id" id="pos_id" placeholder="POS ID" class="textAreaClass" style="margin-left: 13%;margin-top: 25px;padding: 5px;"/>
                         </td>
                         <td style="width:290px">
+                                                <?php if(!isset($_GET['sandwichId'])){ ?>
 							<div id="sizeErrorMsg1" style="color: green;font-size: 13px;margin-left: 52px;">File Size must under 1MB</div>
 							<script type="text/javascript" language="javascript">
 								$("#upSocialMeida").fancybox
@@ -529,6 +608,7 @@ if($_POST['cropimg'])
                                                                         }
                                                                  });
 							</script>
+                                                    
 							<div style="margin-left: 52px;">
 								<a href="#socialmedia" id="upSocialMeida" style="font-weight: bold; text-decoration: none; color: #06C;">
 									<table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
@@ -543,6 +623,7 @@ if($_POST['cropimg'])
 									</table>
 								</a>
 							</div>
+                                                    <?php } ?>
                              <span class="deleteimg" style="display:none;" id="deleteimg">Delete Photo</span>
                              <input type="hidden" id="x" name="x" />
                              <input type="hidden" id="y" name="y" />
@@ -1078,16 +1159,60 @@ if($_POST['cropimg'])
                         <div id="NewAttributeLi" style="cursor:pointer"><a href="#dvAddAttribute" id="btnAddAttribute" style="color: #A2A3A3;text-decoration: none"><span style="float:left"><img src="img/add_icon.png"></span><span style="margin-left: 12px;">Create new Attribute</span></a></div>
                         <div id="ExistingAttributeLi" style="margin-top: 12px;cursor:pointer"><span style="float:left"><img src="img/add_icon.png"></span><span style="margin-left: 12px;color: #A2A3A3;">Add Existing Attribute</span></div>
 
-                    <div class="ulProductdiv">
-                        <ul id="attr-list_product">
-
-                        </ul>
-                        <div class="noAttributesForProduct" id="dvNoAtt">
-                           <span style="display:block;margin-top: 125px;">No Attributes</span>
-                           <span>Add Some?</span>
+                        <div class="ulProductdiv">
+                            <ul id="attr-list_product">
+                              <?php
+                                if(isset($_GET['sandwichId'])){
+                                    $attrib_qry = dbAbstract::Execute("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$tempProduct."' order by id",1);
+                                    $optionName="";
+                                    $attributeStr="";
+                                    $displayName="";
+                                    while ($attr_array = dbAbstract::returnObject($attrib_qry,1)) {
+                                        if($optionName==""){//run only first time
+                                            $optionName=$attr_array->option_name;
+                                            $displayName=$attr_array->display_Name;
+                                        }
+                                        if($optionName!=$attr_array->option_name){
+                                            if($attributeStr!=""){
+                                                ?>
+                              <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute">
+                                  <a href="#dvAddAttribute" class="option_Name" style="margin-top:2px"><?=$optionName;?></a> 
+                                  <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
+                                <div style="clear:both"></div>
+                              </li>
+                              <?php
+                                                $attributeStr="";
+                                            }
+                                        }
+                                        $attributeStr.=$attr_array->id."-";
+                                        $optionName=$attr_array->option_name;
+                                        $displayName=$attr_array->display_Name;
+                                    }
+                                    if($optionName!=""){
+                                        if($attributeStr!=""){
+                                            ?>
+                              <li id="attr_<?=str_replace(" ", "", $optionName);?>" class="liAtribute">
+                                  <a href="#dvAddAttribute" class="option_Name" style="margin-top:2px"><?=$optionName;?></a> 
+                                  <span class="attr_delete" attributeIds="<?php echo substr($attributeStr, 0,-1);?>" option_name ="<?=$optionName?>" display_name="<?=$displayName?>">x</span>
+                                <div style="clear:both"></div>
+                              </li>
+                              <?php
+                                            $attributeStr="";
+                                        }
+                                    }
+                                }
+                                    ?>
+                            </ul>
+                            <script type="text/javascript" language="javascript">
+                                                     $('.option_Name').fancybox({
+                                                                        afterClose: function(){
+                                                                            emptyFancyBoxFields();
+                                                                        },
+                                                                       });
+                                       </script>
+                            <div class="noAttributesForProduct" <? if(dbAbstract::returnRowsCount($attrib_qry,1)>0){?> style="display:none;" <?}else{?> style="display:block;"<?}?>>
+                            <span style="display:block;margin-top: 125px;">No Attributes</span> <span>Add Some?</span> </div>
                         </div>
-
-                    </div>
                     <input type="button" value="Save attribute order" name="btnSortAttribute" id="btnSortAttribute" style="width: 130px;margin-left: 30px;display:none" class="cancel">
                     <input type="hidden" value="" id="hdnSortAttributes" name="hdnSortAttributes"/>
                            <div id="dvAttributes" style="display: none;">

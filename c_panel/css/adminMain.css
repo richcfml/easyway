@@ -751,3 +751,51 @@ margin-left: 37px;
      border-radius: 0px;
  }
  /*ACCOUNT TAB ENDS HERE -- Added by Raheel 4/7/2014 */
+ 
+  /*	Signature sandwich slider css start 	*/
+ .ss_container{ 
+	width: 500px;
+    overflow: hidden;
+	position:relative
+}
+#ss_slider{ 
+	height:175px; background:#000;
+	position:relative;
+	left:0px;
+	top:0px;
+}
+.ss_div{float:left; width:500px; }
+.ss_img {width:40%; float:left;}
+.ss_wrap{ width: 60%; padding: 5px 0px; background:#000; float:right }
+.ss_content{ padding: 5px 10px; background:#000; float:right; width:90%; }
+.ss_prodTitle{ 
+	background:#8D291E;
+	border-radius: 2px;
+	padding:5px;
+	color:#FFF;
+	text-align:center;
+	width:95%;
+}
+.ss_prodDates{ color:#FFF; padding: 5px 0px; }
+.ss_prodDescription{ color: #c3bcaf; }
+.clear{ clear:both; }
+#nextbtn{
+    position: absolute;
+    top: 53px;
+    left: 5px;
+    z-index: 100;
+    color: #FFF;
+    font-size: 22px;
+    width: 22px;
+}
+#prevbtn{
+    position: absolute;
+    top: 53px;
+    left: 475px;
+    z-index: 100;
+    color: #FFF;
+    font-size: 22px;
+    width: 22px;
+    
+}
+  /*	Signature sandwich slider css end 	*/
