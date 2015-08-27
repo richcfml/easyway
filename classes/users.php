@@ -177,7 +177,7 @@ class users
     {
         $email=prepareStringForMySQL($email);
 
-        $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and epassword ='$password' and resturant_id= '". $restaurant_id ."'", 1);
+        $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and resturant_id= '". $restaurant_id ."'", 1);
 
         if(dbAbstract::returnRowsCount($user_qry, 1)>1 || dbAbstract::returnRowsCount($user_qry, 1)==0) 
         {
