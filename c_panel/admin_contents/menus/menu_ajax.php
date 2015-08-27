@@ -1652,7 +1652,20 @@ else if (isset($_GET["menuonoff"]))
 		echo("Error");
 	}
 }
-
+else if (isset($_GET["moveSubmenu"]))
+{
+    $menu_id = $_GET['menuid'];
+    $catid = $_GET['catid'];
+    dbAbstract::Update("update categories set menu_id = $menu_id where cat_id = $catid",1 );
+    if(mysql_affected_rows()>0 )
+    {
+        echo 1;
+    }
+    else
+    {
+        echo 0;
+    }
+}
 function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);
     $ext = strtolower($ext);

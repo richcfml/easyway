@@ -81,7 +81,7 @@
                 <?php
                 }
                 ?>
-                <li id="item<?= $mLoopCount ?>" sub_cat="<?=$mRow["cat_id"]?>" class="lItem" style="margin-top: 10px;background: white;width: 300px;">
+                <li id="item<?= $mLoopCount ?>" class="lItem" style="margin-top: 10px;background: white;width: 300px;" catid="<?= $mRow["cat_id"] ?>">
                     <div class="menu_heading_top" sub_cat="<?=$mRow["cat_id"]?>">
                    <img src="img/move.png" sub_cat="<?=$mRow["cat_id"]?>" alt="Move" data-tooltip="Move" id="imgMove" class="MoveImg"/>
                    

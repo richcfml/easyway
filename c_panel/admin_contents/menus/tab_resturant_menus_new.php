@@ -286,9 +286,9 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
                     while ($menuRs = dbAbstract::returnArray($menu_qry, 1)) {
                     ?>
 
-                        <a <? if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
-                    ?> class="selected"  <? } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" class="menu_links" <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>  ><?= $menuRs['menu_name'] ?></a>
-                        <? $menu_i++;
+                        <a <?php if ($menuRs['id'] == $menu_id || ($menu_i == 0 && $menu_id == "")) {
+                                ?> class="selected"  <?php } ?>  href="?mod=new_menu&catid=<?= $Objrestaurant->id; ?>&menuid=<?= $menuRs['id'] ?>&menu_name=<?= $menuRs['menu_name'] ?>" id="<?= $menuRs['id']?>" class="menu_links draggable" <?php if ($menuRs['status']==0) { echo(" style='color: #CCCCCC !important;' "); } ?>  ><?= $menuRs['menu_name'] ?></a>
+                        <?php $menu_i++;
                     } ?>
 
                     <a href ="#" id="add_mainmenu"  class="menu_links" >+</a>

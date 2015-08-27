@@ -535,7 +535,37 @@ $.noty.defaults.template_menu_delete= '<div id="popup_box" class="popup_box" sty
             parseIDs();
         }
     });
+  
+    
+    $(".draggable").droppable({
+        tolerance: "pointer",
+         over: function(event, ui) {console.log('as');
+                $(this).css('background-color','#d97a14');  
+            },
 
+            out: function(event, ui) {
+                $(this).css('background-color',''); 
+            },
+            drop: function(event, ui) {
+                
+                
+                var dragable = ui.draggable;
+                $(this).css('background-color',''); 
+                var menuid = $(this).attr('id');
+                var catid = dragable.attr('catid');
+                
+                $.ajax({
+                url: "admin_contents/menus/menu_ajax.php?catid="+catid+"&menuid="+menuid+"&moveSubmenu=1",
+                success: function(data) {
+                    if(data>0)
+                    {
+                        dragable.remove();
+                    }
+                }
+            });
+        }
+    });
+    
     $( ".clsS" ).sortable({
         handle: '#imgMove',
         connectWith: ".clsS",
