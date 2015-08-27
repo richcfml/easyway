@@ -1163,8 +1163,15 @@ $(function() {
     $('.editItem').click(function(){
         var scid = $(this).parents('.lItem').find('.lblCat').attr('id');
         var id =  $(this).attr( "alt" );
-
-        window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid;
+        var isSignature = $(this).attr( "signature_sandwitch" )
+        if(isSignature == "1")
+        {
+            window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid+"&sandwichId=1";
+        }
+        else
+        {
+            window.location.href = "?mod=new_menu&item=updateproduct_new&prd_id="+id+"&sub_cat="+scid;
+        }
     });
 
     $('.rdb_status').click(function(){
@@ -1440,10 +1447,16 @@ $(function() {
         }
         if($("#prd_id").val()=="")
         {
+            var signature_sandwitch = GetURLParameter('sandwichId');
+            if(isNaN(signature_sandwitch)){
+                signature_sandwitch = 0;
+            }
+            var temp_product = $('#temp_product').val();
             $.ajax({
                 type:"POST",
-                url: "admin_contents/menus/menu_ajax.php?add_menu_item=1&ext="+ext+"&sub_cat="+scid+"&restid="+rest_id,
+                url: "admin_contents/menus/menu_ajax.php?add_menu_item=1&ext="+ext+"&sub_cat="+scid+"&restid="+rest_id+"&signature_sandwitch="+signature_sandwitch+"&temp_product="+temp_product,
                 data: $("#add_item_form").serialize(),
+                async: false,
                 success: function(data) {
 
                     if(data>0)

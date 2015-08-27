@@ -241,8 +241,12 @@ else if (isset($_GET['add_menu_item']))
         $maxOrderNo++;
     }
     Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 'menu', 1 , 'cpanel');
-        
-    $lastid = dbAbstract::Insert("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 1, 2);
+    
+    $lastid = dbAbstract::Insert("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . ",signature_sandwitch_id=".$_GET['signature_sandwitch']."", 1, 2);
+    if(isset($_GET['signature_sandwitch']))
+    {
+        dbAbstract::Update("update attribute set ProductID = ".$lastid." where ProductID = ".$_GET['temp_product']."");
+    }
     if (!empty($_GET['ext']))
     {
         $exe = array_pop(explode(".", $_GET['ext']));
@@ -250,7 +254,15 @@ else if (isset($_GET['add_menu_item']))
         Log::write("Update Product Image- menu_ajax.php", "QUERY -- UPDATE product set item_image = '$name' where prd_id = " . $lastid, 'menu', 1 , 'cpanel');
         dbAbstract::Update("UPDATE product set item_image = '$name' where prd_id = " . $lastid, 1);
         $destination_dir = "../../../images/item_images/"; //path of the destination directory
-        $source_dir = "../../tempimages";
+        if(!isset($_GET['signature_sandwitch']))
+        {
+            $source_dir = "../../tempimages";
+        }
+        else
+        {
+            $source_dir = "../../images/signaturesandwich";
+            
+        }
         $source_img_path = $source_dir . "/" . $_GET['ext'];
         $destination_img_path = $destination_dir . "/" . $name;
         copy($source_img_path, $destination_img_path);

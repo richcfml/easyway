@@ -145,7 +145,13 @@
 			$admin_include_content = "admin_contents/advanced_settings/tab_advanced_settings_main.php";
 		}
 	}
-	
+	if($_SESSION['admin_type'] == 'bh') 
+	{
+		if($mod == 'signaturesandwitch')	
+		{
+			$admin_include_content = "admin_contents/signature_sandwitch/tab_add_signature_sandwitch.php";
+		}
+	}
 	if($ajax==0) 
 	{
 ?>
@@ -184,7 +190,14 @@
 			<?php 
 			} 
 			?> 
-                        
+                        <?php 
+			if ($_SESSION['admin_type'] == 'bh')
+			{ 
+			?>
+                            <div class="links <?=$mod=='signaturesandwitch' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=signaturesandwitch" >Signature Sandwitch</a></div> 	
+			<?php 
+			} 
+			?> 
                         <br style="clear:both" />
 		</div>
 <?php 
