@@ -1162,7 +1162,7 @@ if($_POST['cropimg'])
                         <div class="ulProductdiv">
                             <ul id="attr-list_product">
                               <?php
-
+                                if(isset($_GET['sandwichId'])){
                                     $attrib_qry = dbAbstract::Execute("SELECT id,display_name,option_name,OderingNO FROM attribute WHERE ProductID ='".$tempProduct."' order by id",1);
                                     $optionName="";
                                     $attributeStr="";
@@ -1200,6 +1200,7 @@ if($_POST['cropimg'])
                                             $attributeStr="";
                                         }
                                     }
+                                }
                                     ?>
                             </ul>
                             <script type="text/javascript" language="javascript">
