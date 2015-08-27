@@ -111,7 +111,7 @@
                     url: "admin_contents/signature_sandwitch/ajax.php?add_item=1&ext="+ext,
                     data: $("#add_Signature_sandwitch").serialize(),
                     success: function(data) {
-                        if(data == 'overlap')
+                        if(isNaN(data))
                         {
                             $("#sucessMessage").text('Date can not be overlap').addClass('errorMessage').removeClass('sucessMessage');
                         }
