@@ -477,7 +477,13 @@ class users
     }
 				 
     private function sendRegisterationEmail(&$objRestaurant,&$objMail) 
-    {				
+    {		
+        /*Below Code (From Start Comment 27 Aug 2015 Till End Comment 27 Aug 2015 
+        is working fine but as there is no need for registration emails so we are 
+        commenting this. Gulfam - QualityClix 27 August 2015
+        */
+
+        /*Start Comment 27 Aug 2015 
         $mail_body="";
         $mail_body=$mail_body."Greetings, ".trim($this->cust_your_name ." ".$this->LastName)."!"."<br><br>";
         $mail_body=$mail_body."Thank you for visiting <a href='http://www.easywayordering.com/". $objRestaurant->url ."/'>www.easywayordering.com/". $objRestaurant->url ."/</a>. We hope that you will find our easywayordering system helpful for your work and home food delivery needs."."<br><br>";
@@ -493,6 +499,7 @@ class users
 
         $objMail->from = "info@easywayordering.com";
         $objMail->sendTo($mail_body,"Thank you for register at ". $objRestaurant->name ."",$this->cust_email);
+        * End Comment 27 Aug 2015 */
     }
 		 
     public function addtoMyFavorites($title,$food,$repidreodering,$order_receiving_method,$pTip) 
