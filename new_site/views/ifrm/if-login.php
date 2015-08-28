@@ -12,6 +12,13 @@ $register_result = -1;
 $errMessage = "";
 if (isset($_POST['login'])) 
 {
+        if($email == '') {
+             $result=false;
+        } else if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
+                 $result=false;
+        } else if($user_password == '') {
+                     $result=false;
+        }
 	$user_email = $_POST['email'];
 	$user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
 
@@ -85,8 +92,33 @@ else if(isset($_POST['btnregister']))
 	{
 		$mFBID=$_POST["txtFBID"];
 	}
-	$loggedinuser->	cust_email=  $email;
-	$loggedinuser->	password= trim($user_password) ;
+        if($email == '') {
+             $errMessage = "Please enter email address";
+        } else if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
+                 $errMessage = "Please enter email address in correct format";
+        } else if($user_password == '') {
+                 $errMessage = "Please enter password";
+        } else if(!preg_match("/^.*(?=.*\d)(?=.*[a-zA-Z]).*$/", $user_password) || strlen($user_password) < 5) {
+                 $errMessage = "password must be alphanumeric with minimum 5 characters and maximum 20 character";
+        } else if($first_name == '') {
+                 $errMessage = "Please enter first name";
+        } else if($last_name == '') {
+                 $errMessage = "Please enter last name";
+        } else if($address1 == '') {
+                 $errMessage = "Please enter address";
+        } else if($city == '') {
+                 $errMessage = "Please enter city";
+        } else if($state == '') {
+                 $errMessage = "Please enter state";
+        } else if($zip == '') {
+                 $errMessage = "Please enter zip";
+        } else if($phone1 == '') {
+                 $errMessage = "Please enter phone";
+        } else{
+            $loggedinuser->	cust_email=  $email;
+	$mSalt = hash('sha256', mt_rand(10,1000000));    
+        $loggedinuser->salt= $mSalt;
+        $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
 	$loggedinuser->	cust_your_name= trim($first_name) ;
 	$loggedinuser->	LastName= trim($last_name) ;
 	$loggedinuser->	street1= trim($address1) ;
@@ -115,6 +147,7 @@ else if(isset($_POST['btnregister']))
 			exit;
 		}
 	}
+	}
 } 
 else if(is_numeric($loggedinuser->id)) 
 {
@@ -133,11 +166,22 @@ else if(is_numeric($loggedinuser->id))
 <script src="../js/mask.js" type="text/javascript"></script>
 <script type="text/javascript">
 	$(function(){
-		$('#phone1').mask("(999) 999-9999? x99999");
+		var region = <?php echo $objRestaurant->region ?>;
+		if (region==0) //UK
+		{
+			$('#phone1').unmask();
+			$('#phone1').mask('(9999) 999-9999');
+		}
+		else //US, Canada
+		{
+			$('#phone1').unmask();
+			$('#phone1').mask('(999) 999-9999');
+		}
+		
 		$("#loginForm").validate({
 				   rules: {
 						email: {required: true, email:1 },
-						password: {required: true,minlength: 3},
+						password: {required: true,minlength: 3}
 						 
 				   },
 				   messages: {
@@ -152,22 +196,22 @@ else if(is_numeric($loggedinuser->id))
 			  },
 				   errorElement: "br",
 			   
-				  errorClass: "alert-error",
+				  errorClass: "alert-error"
 		});
 		
 		$("#registerationform").validate({
            rules: {
 				email: {required: true, email:1 },
 				email1: {required: true, email:1 },
-				user_password: {required: true,minlength: 5},
-				user_password_confirm: {equalTo: "#user_password",required: true,minlength: 5},
+				user_password: {required: true,minlength: 5,maxlength: 20},
+				user_password_confirm: {equalTo: "#user_password",required: true,minlength: 5,maxlength: 20},
 				first_name: {required: true,minlength: 3},
 				last_name: {required: true,minlength: 3},
 				address1: {required: true,minlength: 3},
 				city: {required: true,minlength: 2},
 				state: {required: true,minlength: 2},
 				zip: {required: true,minlength: 3},
-				phone1: {required: true,minlength: 3},
+				phone1: {required: true,minlength: 3}
            },
            messages: {
                    email: {
@@ -186,7 +230,7 @@ else if(is_numeric($loggedinuser->id))
 				   user_password_confirm : {
 										  equalTo : "password mismatched, please confirm your password",
 										  required: "please enter your password",
-										  minlength: "your password should contain at leat 5 characters",
+										  minlength: "your password should contain at leat 5 characters"
 					  			 			},
 				  first_name: {
 					   			required: "please enter your first namess",
@@ -222,12 +266,12 @@ else if(is_numeric($loggedinuser->id))
 					   required: "please enter your phone1",
 					   minlength: "please enter a valid phone1"
                         
-                   },
+                   }
 					   
            },
 		   errorElement: "br",
        
-          errorClass: "alert-error",
+          errorClass: "alert-error"
 			
 			});
 	});
@@ -624,27 +668,27 @@ else if(is_numeric($loggedinuser->id))
 							  <? } ?>
 			  <input type="hidden" id="txtFBID" name="txtFBID"/>
 					 <div class="username_text_bar">
-						 <input name="email" id="email1" type="text" value="<?=stripslashes($cust_email)?>" placeholder="Email Address"/>
+						 <input name="email" id="email1" type="text" value="<?=stripslashes($email)?>" placeholder="Email Address"/>
 					 </div>
 					 <div style="clear:both"></div>
 					 <div class="username_text_bar">
-					   <input name="user_password" id="user_password" type="password" value="<?=stripslashes($password)?>" placeholder="Password"/>
+					   <input name="user_password" id="user_password" type="password" value="<?=stripslashes($user_password)?>" placeholder="Password"/>
 					 </div><div style="clear:both"></div>
 					 <div class="username_text_bar">
 					   <input name="user_password_confirm" id="user_password_confirm" type="password" value="" placeholder="Confirm Password"/>
 					 </div><div style="clear:both"></div>
 					 <div class="username_text_bar">
-					   <input id="first_name" name="first_name" type="text" value="<?=stripslashes($cust_your_name)?>" placeholder="First Name"/>
+					   <input id="first_name" name="first_name" type="text" value="<?=stripslashes($first_name)?>" placeholder="First Name"/>
 					 </div><div style="clear:both"></div>
 					 <div class="username_text_bar">
-						 <input name="last_name" id="last_name" type="text" value="<?=stripslashes($LastName)?>" placeholder="Last Name"/>
+						 <input name="last_name" id="last_name" type="text" value="<?=stripslashes($last_name)?>" placeholder="Last Name"/>
 					 </div><div style="clear:both"></div>
-					 <div class="username_text_bar"><input name="address1" id="address1" type="text" value="<?=stripslashes($cust_odr_address)?>"  placeholder="Street1"/></div><div style="clear:both"></div>  
-					 <div class="username_text_bar"><input name="address2" id="address2" type="text" value="<?=stripslashes($cust_odr_address2)?>" placeholder="Street2"/></div><div style="clear:both"></div>            
-					 <div class="username_text_bar"><input name="city" id="city" type="text" value="<?=stripslashes($cust_ord_city)?>"  placeholder="City"/></div><div style="clear:both"></div>
-					 <div class="username_text_bar"><input name="state" id="state" type="text" value="<?=stripslashes($cust_ord_state)?>"  placeholder="<?=$mStateProvince?>"/></div><div style="clear:both"></div>
-					 <div class="username_text_bar"><input name="zip" id="zip" type="text" value="<?=stripslashes($cust_ord_zip)?>"  placeholder="<?=$mZipPostal?>"/></div><div style="clear:both"></div>
-					 <div class="username_text_bar"><input type="text" name="phone1" id="phone1" value="<?=stripslashes($cust_phone1)?>"  placeholder="Phone"/></div><div style="clear:both"></div>
+					 <div class="username_text_bar"><input name="address1" id="address1" type="text" value="<?=stripslashes($address1)?>"  placeholder="Street1"/></div><div style="clear:both"></div>
+					 <div class="username_text_bar"><input name="address2" id="address2" type="text" value="<?=stripslashes($address2)?>" placeholder="Street2"/></div><div style="clear:both"></div>            
+					 <div class="username_text_bar"><input name="city" id="city" type="text" value="<?=stripslashes($city)?>"  placeholder="City"/></div><div style="clear:both"></div>
+					 <div class="username_text_bar"><input name="state" id="state" type="text" value="<?=stripslashes($state)?>"  placeholder="<?=$mStateProvince?>"/></div><div style="clear:both"></div>
+					 <div class="username_text_bar"><input name="zip" id="zip" type="text" value="<?=stripslashes($zip)?>"  placeholder="<?=$mZipPostal?>"/></div><div style="clear:both"></div>
+					 <div class="username_text_bar"><input type="text" name="phone1" id="phone1" value="<?=stripslashes($phone1)?>"  placeholder="Phone"/></div><div style="clear:both"></div>
 					 <div style="display: none;"> <!-- Alternate Delivery Address no longer needed -->
 						 <span style="font-size:12px; padding-left:10px;" ><font color="#FF0000">Alternate Delivery Address optional:</font></span><div style="clear:both"></div>
 						 <div class="username">Street1</div>

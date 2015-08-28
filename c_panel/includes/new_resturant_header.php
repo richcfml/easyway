@@ -39,13 +39,11 @@
  
     
   <? if($Objrestaurant) { ?>
-<!--  <div style="padding-bottom:10px;text-align:center">
-      <img style="width:1085px; height:90px;" src="../images/resturant_headers/<?=$Objrestaurant->header_image?>" border="0" />
-  </div>-->
+
   <? } ?>
  	
   <? 
-	@$customerQry		=	dbAbstract::Execute("select count(*) as total from customer_registration where password != '' AND resturant_id= " .$Objrestaurant->id,1);
+	@$customerQry		=	dbAbstract::Execute("select count(*) as total from customer_registration where epassword != '' AND resturant_id= " .$Objrestaurant->id,1);
 	@$totalCustomers_rs	=	dbAbstract::returnObject($customerQry,1);
 	$totalCustomers=$totalCustomers_rs->total;
 	

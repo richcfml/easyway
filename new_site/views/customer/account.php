@@ -17,8 +17,7 @@
             }
 
             $loggedinuser->cust_email= trim($email)=='' ? $loggedinuser->	cust_email : $email;
-            $loggedinuser->password= trim($user_password)=='' ? $loggedinuser->password : $user_password;
-            $loggedinuser->ePassword= trim($user_password)=='' ? $loggedinuser->ePassword : $ePassword;
+            $loggedinuser->epassword= trim($user_password)=='' ? $loggedinuser->epassword : $ePassword;
             $loggedinuser->salt= trim($user_password)=='' ? $loggedinuser->salt : $mSalt;
             $loggedinuser->cust_your_name= trim($first_name)=='' ? $loggedinuser->	cust_your_name : $first_name;
             $loggedinuser->LastName= trim($last_name)=='' ? $loggedinuser->	LastName : $last_name;

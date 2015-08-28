@@ -1,8 +1,8 @@
 <script src="../js/mask.js" type="text/javascript"></script>
 
-<?php
+<?php 
 
-	$qry="select id, cust_your_name as firstname,LastName from customer_registration where password != '' and resturant_id=". $Objrestaurant->id ." ";
+	$qry="select id, cust_your_name as firstname,LastName from customer_registration where epassword != '' and resturant_id=". $Objrestaurant->id ." ";
 	$search=0;
 if(isset($_POST['findbylastname'])) {
 	$qry .=" and LOWER(LastName) like '". strtolower($_POST['last_name']) ."%'";

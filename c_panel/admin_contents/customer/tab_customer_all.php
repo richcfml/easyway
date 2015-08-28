@@ -1,6 +1,6 @@
 <?php
 
-	$custQry = dbAbstract::Execute("select * from customer_registration where password != '' AND resturant_id=".$Objrestaurant->id, 1);
+	$custQry = dbAbstract::Execute("select * from customer_registration where epassword != '' AND resturant_id=".$Objrestaurant->id, 1);
  	$counter = 0;
 
 	$mZipPostal = "Zip Code";

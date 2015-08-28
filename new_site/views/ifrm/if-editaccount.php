@@ -31,11 +31,7 @@
 </div><div style="clear:both"></div>
              <div class="username">Password<font color="#FF0000">*</font></div>
              <div class="username_text_bar">
-               <input name="user_password" id="user_password" type="password" value="<?=stripslashes($loggedinuser->password)?>" />
-             </div><div style="clear:both"></div>
-              <div class="username">Confirm Password<font color="#FF0000">*</font></div>
-             <div class="username_text_bar">
-               <input name="user_password_confirm" id="user_password_confirm" type="password" value="" />
+               <input name="user_password" id="user_password" type="password"  />
              </div><div style="clear:both"></div>
              <div class="username">First Name<font color="#FF0000">*</font></div>
              <div class="username_text_bar">
@@ -89,70 +85,64 @@ $("#registerationform").validate({
            rules: {
 				email: {required: true, email:1 },
 				user_password: {required: true,minlength: 5},
-				user_password_confirm: {equalTo: "#user_password",required: true,minlength: 5},
 				first_name: {required: true,minlength: 3},
 				last_name: {required: true,minlength: 3},
 				address1: {required: true,minlength: 3},
 				city: {required: true,minlength: 2},
 				state: {required: true,minlength: 2},
 				zip: {required: true,minlength: 3},
-				phone1: {required: true,minlength: 3},
+				phone1: {required: true,minlength: 3}
            },
            messages: {
                    email: {
-							   required: "please enter your email address",
-							   email: "please enter a valid email address"
+							   required: "Please enter your email address",
+							   email: "Please enter a valid email address"
                                },
 							   user_password: {
-								   required: "please enter your password",
-								   minlength: "your password should contain at leat 5 characters"
+								   required: "Please enter your password",
+								   minlength: "Your password should contain at leat 5 characters"
  								 },
-				 user_password_confirm : {
-										  equalTo : "password mismatched, please confirm your password",
-										  required: "please enter your password",
-										  minlength: "your password should contain at leat 5 characters",
-					  			 			},
-											
+
 				  first_name: {
-					   			required: "please enter your first namess",
-							   minlength: "please enter a valid first namess"
+					   			required: "Please enter your first name",
+							   minlength: "Please enter at leat 3 characters"
 						   },
 				   last_name: {
-					   required: "please enter your last namess",
-					   minlength: "please enter a valid last name"
-                        
+					   required: "Please enter your last name",
+					   minlength: "Please enter at leat 3 characters"
+
                    },
-				   
+
 				  address1: {
-					   required: "please enter your street 1",
-					   minlength: "please enter a valid street 1"
-                        
+					   required: "Please enter your street",
+					   minlength: "Please enter a valid street"
+
                    },
 				 city: {
-					   required: "please enter your city",
-					   minlength: "please enter a valid city"
-                        
+					   required: "Please enter your city",
+					   minlength: "Please enter a valid city"
+
                    },
 				 state: {
-					   required: "please enter your <?=$mStateProvince?>",
-					   minlength: "please enter a valid <?=$mStateProvince?>"
-                        
+					   required: "Please enter your <?=$mStateProvince?>",
+					   minlength: "Please enter a valid <?=$mStateProvince?>"
+
                    },
 				zip: {
-					   required: "please enter your <?=$mZipPostal?>",
-					   minlength: "please enter a valid <?=$mZipPostal?>"
-                        
+					   required: "Please enter your <?=$mZipPostal?>",
+					   minlength: "Please enter a valid <?=$mZipPostal?>"
+
                    },
 				 phone1: {
-					   required: "please enter your phone1",
-					   minlength: "please enter a valid phone1"
-                        
-                   },
-					   
+					   required: "Please enter your phone",
+					   minlength: "Please enter a valid phone"
+
+                   }
+
            },
 		   errorElement: "br",
        
-          errorClass: "alert-error",
+          errorClass: "alert-error"
 });
 });
 </script>

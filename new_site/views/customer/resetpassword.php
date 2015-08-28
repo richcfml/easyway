@@ -30,7 +30,7 @@ if (isset($_POST["btnSubmit"]))
     {
         $mSalt = hash('sha256', mt_rand(10,1000000));    
         $ePassword= hash('sha256', $_POST["txtPassword"].$mSalt);
-        if (dbAbstract::Update("UPDATE customer_registration SET salt='".$mSalt."', epassword='".$ePassword."', password='".$_POST["txtPassword"]."' WHERE id=".$mDecryptedID))
+        if (dbAbstract::Update("UPDATE customer_registration SET salt='".$mSalt."', epassword='".$ePassword."' WHERE id=".$mDecryptedID))
         {
             $mStyle = "green";
             $mErrorMessage = "Password changed successfully.";

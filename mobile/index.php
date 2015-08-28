@@ -69,7 +69,7 @@ if(isset($_GET['sso']) && $_GET['sso']!=''){
 		// if customer record exist than login
 		if(dbAbstract::returnRowsCount($cust_rs) > 0){
 			$cust_row = dbAbstract::returnObject($cust_rs);
-			if($cust_row->cust_email != '' && $cust_row->password != ''){
+			if($cust_row->cust_email != '' && $cust_row->epassword != ''){
                             dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
 ?>
 			<form method="post" name="sso_login" action="<?=$SiteUrl.$objRestaurant->url.'/?item=login'?>">
@@ -88,10 +88,9 @@ if(isset($_GET['sso']) && $_GET['sso']!=''){
 		else{
 		  // if customer record not exist than register & login
 		  $loggedinuser->cust_email=  $sso_row->email;
-		  $loggedinuser->password= trim($sso_row->password);
                   $mSalt = hash('sha256', mt_rand(10,1000000));    
                   $loggedinuser->salt= $mSalt;
-                  $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
+                  $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
 		  $loggedinuser->cust_your_name= trim($sso_row->firstName);
 		  $loggedinuser->LastName= trim($sso_row->lastName);
 		  $loggedinuser->street1= trim($sso_row->address1) ;

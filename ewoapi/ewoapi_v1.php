@@ -435,8 +435,11 @@ function login()
     $loggedinuser = new users();
     $objRestaurant = new restaurant();
     error_reporting(E_ALL);
+    $mSalt = hash('sha256', mt_rand(10,1000000));    
+    $ePassword = hash('sha256', '12345'.$mSalt);
     $loggedinuser->cust_email=  $_GET['email'];
-    $loggedinuser->password= '12345' ;
+    $loggedinuser->epassword= $ePassword;
+    $loggedinuser->salt= $mSalt ;
     $loggedinuser->cust_your_name= trim($_GET['Fname']);
     $loggedinuser->LastName= trim($_GET['Lname']) ;
     $loggedinuser->street1= trim($_GET['street1']) ;
@@ -456,7 +459,7 @@ function login()
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
-            $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
+            $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(epassword)>0 LIMIT 1");
             if(dbAbstract::returnRowsCount($user_qry)>1)
             { 
                 return NULL;

@@ -1,5 +1,4 @@
 <?php
-
 	require_once("../includes/config.php");
 	include("../includes/class.phpmailer.php");
 	if(empty($_REQUEST["action"])) exit(0);
@@ -36,12 +35,18 @@
 		if(!empty($_REQUEST["username"]) && !empty($_REQUEST["password"])) {
 			$username = dbAbstract::returnRealEscapedString($username);
 			$password = dbAbstract::returnRealEscapedString($password);
-			$user = dbAbstract::Execute("SELECT id FROM users WHERE username LIKE '$username' AND password LIKE '$password'");
+                        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'"));
+                        if ($mRow)
+                        {
+                            $mSalt = $mRow->salt;
+                            $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);
+			$user = dbAbstract::Execute("SELECT id FROM users WHERE username LIKE '$username' AND epassword LIKE '$password'");
 			if(dbAbstract::returnRowsCount($user) > 0) {
 				$user = dbAbstract::returnAssoc($user);
 				echo $user["id"];
 			} else {
 				echo 0;
+                            }
 			}
 		} else {
 			echo 0;

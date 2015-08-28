@@ -12,7 +12,11 @@ if(isset($_GET['op'])){
         $username = $_POST['user'];
         $password = $_POST['pass'];
         
-        $result = dbAbstract::Execute('SELECT * FROM users WHERE username = "'.  dbAbstract::returnRealEscapedString($username).'" AND md5(password) ="'.  dbAbstract::returnRealEscapedString($password).'"');
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'"));
+        if ($mRow)
+        {
+            $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);        
+        $result = dbAbstract::Execute('SELECT * FROM users WHERE username = "'.  dbAbstract::returnRealEscapedString($username).'" AND epassword='".$epassword."'");
 
         $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
 
@@ -33,7 +37,7 @@ if(isset($_GET['op'])){
         }else{
             $message['message'] = 'authentication failed';
         }
-
+        }
     }elseif($op == 'confirmOrder'){
         $rest_id = $_POST['rest_id'];
         $order_id = $_POST['order_id'];

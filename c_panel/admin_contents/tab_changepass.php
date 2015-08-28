@@ -88,7 +88,7 @@ function getXMLHTTP() { //fuction to return the xml http object
         if($errMessage=="")
         {	
             $ePassword = hash('sha256', $pass.$oldpass_salt);
-	dbAbstract::Update("UPDATE users set password = '".$pass."', epassword = '".$ePassword."' where username ='".$name."'",1);
+	dbAbstract::Update("UPDATE users set epassword = '".$ePassword."' where username ='".$name."'",1);
 	?>
     <script language="javascript">
 		window.location="./?mod=resturant";

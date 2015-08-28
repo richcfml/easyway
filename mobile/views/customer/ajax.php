@@ -18,7 +18,6 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 					else
 					{							
 						$mUserID = $mRow->UserID;
-						$mPassword = $mRow->Password;
 						$mEmail = $mRow->Email;
 						if ($mUserID==0) //Error, because UserID cannot be 0 if there is a row
 						{
@@ -27,7 +26,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 						else if ($mUserID>0) //EWO account associated
 						{
 							$loggedinuser->UpdateFaceBookID($mUserID, $_GET['fbid']);
-							$mUser = $loggedinuser->login($mEmail,$mPassword, $objRestaurant->id);
+							$mUser = $loggedinuser->sso_login($mEmail, $objRestaurant->id);
 							if(is_null($mUser))
 							{
 								echo("<ewo_result>-2</ewo_result>");
@@ -78,7 +77,6 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 		else
 		{
 			$mUserID = $mRow->UserID;
-			$mPassword = $mRow->Password;
 			$mEmail = $mRow->Email;
 			if ($mUserID==0) //Error, because UserID cannot be 0 if there is a row
 			{
@@ -86,7 +84,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 			}
 			else if ($mUserID>0) //EWO account associated
 			{
-				$mUser = $loggedinuser->login($mEmail,$mPassword, $objRestaurant->id);
+				$mUser = $loggedinuser->sso_login($mEmail, $objRestaurant->id);
 				if(is_null($mUser))
 				{
 					echo("<ewo_result>-2</ewo_result>");

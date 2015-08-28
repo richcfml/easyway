@@ -1,25 +1,27 @@
-<? 
+<?php 
 	if(!is_numeric($loggedinuser->id)) {
 		 /*echo "<script type='text/javascript'>window.location='?item=login'</script>";*/
 		 header("location: ". $SiteUrl .$objRestaurant->url ."/?item=login&ifrm=login" );exit;
 	}
 if(isset($_POST['btnupdate'])) {
 	extract($_POST);
-	$loggedinuser->	cust_email= trim($email)=='' ? $loggedinuser->	cust_email : $email;
- 	$loggedinuser->	password= trim($password)=='' ? $loggedinuser->	password : $password;
- 	$loggedinuser->	cust_your_name= trim($first_name)=='' ? $loggedinuser->	cust_your_name : $first_name;
-	$loggedinuser->	LastName= trim($last_name)=='' ? $loggedinuser->	LastName : $last_name;
-	$loggedinuser->	street1= trim($address1)=='' ? $loggedinuser->	street1 : $address1;
-	$loggedinuser->	street2= trim($address2)=='' ? $loggedinuser->	street2 : $address2;
-	$loggedinuser->	cust_ord_city= trim($city)=='' ? $loggedinuser->	cust_ord_city : $city;
-	$loggedinuser->	cust_ord_state= trim($state)=='' ? $loggedinuser->	cust_ord_state : $state;
-	$loggedinuser->	cust_ord_zip= trim($zip)=='' ? $loggedinuser->	cust_ord_zip : $zip;
-	$loggedinuser->	cust_phone1= trim($phone1)=='' ? $loggedinuser->	cust_phone1 : $phone1;
-	$loggedinuser->	delivery_street1= trim($saddress1)=='' ? $loggedinuser->	delivery_street1 : $saddress1;
-	$loggedinuser->	delivery_street2= trim($saddress2)=='' ? $loggedinuser->	delivery_street2 : $saddress2;
-	$loggedinuser->	delivery_city1= trim($scity)=='' ? $loggedinuser->	delivery_city1 : $scity;
-	$loggedinuser->	delivery_state1= trim($cstate)=='' ? $loggedinuser->	delivery_state1 : $cstate;
-	$loggedinuser->	deivery1_zip= trim($cczipe)=='' ? $loggedinuser->	deivery1_zip : $czip;
+        $mSalt = $loggedinuser->salt;
+        $ePassword= hash('sha256', trim($user_password).$mSalt);
+	$loggedinuser->cust_email= trim($email)=='' ? $loggedinuser->	cust_email : $email;
+        $loggedinuser->epassword= trim($user_password)=='' ? $loggedinuser->epassword : $ePassword;
+ 	$loggedinuser->cust_your_name= trim($first_name)=='' ? $loggedinuser->	cust_your_name : $first_name;
+	$loggedinuser->LastName= trim($last_name)=='' ? $loggedinuser->	LastName : $last_name;
+	$loggedinuser->street1= trim($address1)=='' ? $loggedinuser->	street1 : $address1;
+	$loggedinuser->street2= trim($address2)=='' ? $loggedinuser->	street2 : $address2;
+	$loggedinuser->cust_ord_city= trim($city)=='' ? $loggedinuser->	cust_ord_city : $city;
+	$loggedinuser->cust_ord_state= trim($state)=='' ? $loggedinuser->	cust_ord_state : $state;
+	$loggedinuser->cust_ord_zip= trim($zip)=='' ? $loggedinuser->	cust_ord_zip : $zip;
+	$loggedinuser->cust_phone1= trim($phone1)=='' ? $loggedinuser->	cust_phone1 : $phone1;
+	$loggedinuser->delivery_street1= trim($saddress1)=='' ? $loggedinuser->	delivery_street1 : $saddress1;
+	$loggedinuser->delivery_street2= trim($saddress2)=='' ? $loggedinuser->	delivery_street2 : $saddress2;
+	$loggedinuser->delivery_city1= trim($scity)=='' ? $loggedinuser->	delivery_city1 : $scity;
+	$loggedinuser->delivery_state1= trim($cstate)=='' ? $loggedinuser->	delivery_state1 : $cstate;
+	$loggedinuser->deivery1_zip= trim($czip)=='' ? $loggedinuser->	deivery1_zip : $czip;
 	$loggedinuser->update();
 }
 
@@ -92,7 +94,7 @@ $mainOrdingAddress=$streets." ".$loggedinuser->cust_ord_city." ".$loggedinuser->
             <td colspan="2"><hr /></td>
         
           </tr>
-         <?
+         <?php
 		 $userOrderQry	=	dbAbstract::Execute("select OrderID,DesiredDeliveryDate from ordertbl where UserID=".$loggedinuser->id);
 		 
 	$i=0;

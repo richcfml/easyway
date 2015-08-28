@@ -2,11 +2,17 @@
 
 class Easy_Way_Api {
 
-    public static function getToken($email, $password, $restaurant_id) {
-
+    public static function getToken($email, $password, $restaurant_id) 
+    {
         //generate token.
-        $token = md5($password . '' . time());
-        $user_info = dbAbstract::ExecuteArray("SELECT * from customer_registration where cust_email='$email' and password ='$password' and resturant_id= '". $restaurant_id ."'");
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(epassword)<>''"));
+        if ($mRow)
+        {
+            $mSalt = $mRow->salt;
+            $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
+
+            $token = md5($password . '' . time());
+        $user_info = dbAbstract::ExecuteArray("SELECT * from customer_registration where cust_email='$email' and epassword ='$password' and resturant_id= '". $restaurant_id ."'");
 
         if (!$user_info) {
             echo json_encode(array('success' => '0', 'msg' => "Invalid user!"));
@@ -18,7 +24,12 @@ class Easy_Way_Api {
                                                         ,restaurant_id  = '".$restaurant_id."'"
                    );
 
-        return $token;
+            return $token;
+        }
+        else
+        {
+            return NULL;
+        }
     }
 
     public static function sendToDatabase($parameterNameArray, $parameterValueArray, $useIdName, $useIdValue, $oldPassword, $tableName) {

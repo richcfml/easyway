@@ -1,14 +1,17 @@
-<?
+<?php
 if (!is_numeric($loggedinuser->id)) {
-    /* echo "<script type='text/javascript'>window.location='?item=login'</script>"; */
     redirect($SiteUrl . $objRestaurant->url . "/?item=login");
-//    header("location: " . $SiteUrl . $objRestaurant->url . "/?item=login");
     exit;
 }
-if (isset($_POST['btnsave'])) {
+if (isset($_POST['btnsave'])) 
+{
     extract($_POST);
+    
+    $mSalt = $loggedinuser->salt;    
+    $ePassword = hash('sha256', $password.$mSalt);
+    
     $loggedinuser->cust_email = trim($email) == '' ? $loggedinuser->cust_email : $email;
-    $loggedinuser->password = trim($password) == '' ? $loggedinuser->password : $password;
+    $loggedinuser->epassword = trim($password) == '' ? $loggedinuser->epassword : $ePassword;
     $loggedinuser->cust_your_name = trim($first_name) == '' ? $loggedinuser->cust_your_name : $first_name;
     $loggedinuser->LastName = trim($last_name) == '' ? $loggedinuser->LastName : $last_name;
     $loggedinuser->street1 = trim($address1) == '' ? $loggedinuser->street1 : $address1;

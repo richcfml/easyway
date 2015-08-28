@@ -106,6 +106,9 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'create')) && (isset($_GET['type']) &
     }
     if (isset($_POST['password']) && !empty($_POST['password'])) {
         $loggedinuser->password = trim($_POST['password']);
+        $mSalt = hash('sha256', mt_rand(10,1000000));    
+        $ePassword = hash('sha256', trim($_POST['password']).$mSalt);
+        $loggedinuser->epassword = $ePassword;
     } else {
         echo json_encode(array('success' => '0', 'msg' => 'Password not entered!'));
         exit;
@@ -210,6 +213,8 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                 echo json_encode(array('success' => '0', 'msg' => 'User does not exist!'));
                 exit;
             } else {
+                $mSalt = $user->salt;
+                $ePassword = hash('sha256', trim($_POST['password']).$mSalt);
                 $loggedinuser->destroysession();
                 $loggedinuser = $user;
                 $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
@@ -226,7 +231,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                     $loggedinuser->delivery_street2 = $address1[1];
                 }
                 if (isset($_POST['password']) && !empty($_POST['password'])) {
-                    $loggedinuser->password = trim($_POST['password']) == '' ? $loggedinuser->password : $_POST['password'];
+                    $loggedinuser->epassword = $_POST['password'] == '' ? $loggedinuser->epassword : $ePassword;
                 } else {
                     echo json_encode(array('success' => '0', 'msg' => 'Password not entered!'));
                     exit;

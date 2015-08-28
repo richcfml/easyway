@@ -140,7 +140,7 @@ if($Objrestaurant)
 ?>
  	
 <?php 
-	@$customerQry		=	dbAbstract::Execute("SELECT count(*) as total from customer_registration where password != '' AND resturant_id= ".$mRestaurantIDCP,1);
+	@$customerQry		=	dbAbstract::Execute("SELECT count(*) as total from customer_registration where epassword != '' AND resturant_id= ".$mRestaurantIDCP,1);
 	@$totalCustomers_rs	=	dbAbstract::returnObject($customerQry,1);
 	$totalCustomers=$totalCustomers_rs->total;
 	

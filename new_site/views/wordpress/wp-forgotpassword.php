@@ -15,9 +15,8 @@ $(function(){
 	});
 });
 </script>
-<?
+<?php
 $result=-1;
-//$userQuery = mysql_query("UPDATE customer_registration SET password='12345' WHERE cust_email='aliraza@qualityclix.com'");
 if (isset($_POST['forgotpassword'])){
 	$result=$loggedinuser->remindPassword($_POST['email'],$objRestaurant,$objMail);
 }

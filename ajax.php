@@ -141,8 +141,10 @@ if (isset($_GET["call"]))
 										$mSQL = "UPDATE `signupdetails` SET CustomerID='".$mCustomerID."', SubscriptionID='".$mSubscriptionID."', SRID='".$mSRID."' WHERE ID=".$mSDID;
 										dbAbstract::Update($mSQL);
 										
-										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, password, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
-										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$txtPassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
+                                                                                $mSalt = hash('sha256', mt_rand(10,1000000));    
+                                                                                $ePassword = hash('sha256', trim($txtPassword).$mSalt);
+										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, salt, epassword, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
+										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$mSalt."', ".$ePassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
 										$mUserID = dbAbstract::Insert($mSQL, 0, 2);
 										
 										$mSQL = "INSERT INTO chargify_payment_method (user_id, chargify_customer_id, Payment_profile_id, card_number, billing_address, billing_address_2, billing_city, billing_country, billing_state, billing_zip, first_name, last_name, expiration_month, expiration_year) VALUES ";
@@ -943,8 +945,10 @@ if (isset($_GET["call"]))
 										$mSQL = "UPDATE `signupdetails` SET CustomerID='".$mCustomerID."', SubscriptionID='".$mSubscriptionID."', SRID='".$mSRID."' WHERE ID=".$txtRestaurantID;
 										dbAbstract::Update($mSQL);
 															
-										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, password, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
-										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$txtPassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
+                                                                                $mSalt = hash('sha256', mt_rand(10,1000000));    
+                                                                                $ePassword = hash('sha256', trim($txtPassword).$mSalt);
+										$mSQL = "INSERT INTO `users` (firstname, lastname, email, username, salt, epassword, country, state, city, zip, status, type, phone, company_name, parent_id, chargify_subcription_id, chargify_customer_id) VALUES ";
+										$mSQL .= " ('".$mFirstName."', '".$mLastName."', '".$txtEmailAddress."', '".$txtUserName."', '".$mSalt."', ".$ePassword."', '".$ddlCountry1."', '".$txtState."', '".$txtCity."', '".$txtZip."', '1', 'store owner', '".$txtPhone."', '".$txtRestaurantName."', '".$mParentID."', '".$mCustomerID."', '".$mSubscriptionID."')";
 										$mUserID = dbAbstract::Insert($mSQL, 0 , 2);
 										
 										$mSQL = "INSERT INTO chargify_payment_method (user_id, chargify_customer_id, Payment_profile_id, card_number, billing_address, billing_address_2, billing_city, billing_country, billing_state, billing_zip, first_name, last_name, expiration_month, expiration_year) VALUES ";

@@ -26,7 +26,7 @@ class users
     public $delivery_street1;
     public $delivery_street2;
     public $password;
-    public $ePassword;
+    public $epassword;
     public $salt;
 
     public $valuetec_card_number;
@@ -92,7 +92,7 @@ class users
 
     public function getDetailbyPhone($phone,$restaurantId)
     { 
-        $mSQL = "SELECT * FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($phone)."' and resturant_id=". $this->resturant_id  ." and password!=''";								
+        $mSQL = "SELECT * FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($phone)."' and resturant_id=". $this->resturant_id  ." and epassword!=''";								
         $user = dbAbstract::ExecuteObject($mSQL, 0, "users");
         return $user;						
     }
@@ -106,8 +106,8 @@ class users
         
     public function remindPassword($email,$objRestaurant,$objMail)
     {
-            global $SiteUrl;
-        $mSQL = "SELECT id,cust_email, password,cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' and resturant_id=". $objRestaurant->id  ."   AND LENGTH(password)>0";
+        global $SiteUrl;
+        $mSQL = "SELECT id,cust_email, cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' and resturant_id=". $objRestaurant->id  ."   AND LENGTH(epassword)>0";
         $userQuery = dbAbstract::Execute($mSQL);
         $numrow=dbAbstract::returnRowsCount($userQuery);		
         if ($numrow==0)
@@ -144,7 +144,7 @@ class users
 
     public function login($email,$password,$restaurant_id) 
     {
-        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''");
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(epassword)<>''");
         if ($mRow)
         {
             $mSalt = $mRow->salt;
@@ -335,7 +335,6 @@ class users
 
         $qry="update customer_registration set
                 cust_email='". prepareStringForMySQL($this->cust_email ) ."'
-               , password='". prepareStringForMySQL($this->password ) ."'
                , cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
                , LastName='". prepareStringForMySQL($this->LastName ) ."'
                , cust_odr_address='". prepareStringForMySQL($this->street1 .'~'.$this->street2 ) ."'
@@ -347,7 +346,7 @@ class users
                , delivery_city1='". prepareStringForMySQL($this->delivery_city1 ) ."'
                , delivery_state1='". prepareStringForMySQL($this->delivery_state1 ) ."'
                , deivery1_zip='". prepareStringForMySQL($this->deivery1_zip ) ."'
-               , ePassword='". prepareStringForMySQL($this->ePassword) ."'
+               , epassword='". prepareStringForMySQL($this->epassword) ."'
                , salt='". prepareStringForMySQL($this->salt ) ."'
                  where id=". $this->id ."";
         
@@ -360,7 +359,7 @@ class users
     public function register(&$objRestaurant,&$objMail)  
     {
         $this->resturant_id= $objRestaurant->id;
-	$mSQL = "SELECT cust_email FROM customer_registration WHERE cust_email='".prepareStringForMySQL($this->cust_email )."' AND resturant_id='".$objRestaurant->id."' AND password !='NULL'";
+	$mSQL = "SELECT cust_email FROM customer_registration WHERE cust_email='".prepareStringForMySQL($this->cust_email )."' AND resturant_id='".$objRestaurant->id."' AND epassword !='NULL'";
         $user_qry  = dbAbstract::Execute($mSQL);
 
         if(dbAbstract::returnRowsCount($user_qry)>0 ) 
@@ -394,7 +393,6 @@ class users
 
         $qry="insert into customer_registration set
                  cust_email='". prepareStringForMySQL($this->cust_email ) ."'
-                , password='". prepareStringForMySQL($this->password ) ."'
                 , cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
                 , LastName='". prepareStringForMySQL($this->LastName ) ."'
                 , cust_odr_address='". prepareStringForMySQL($this->street1 .'~'.$this->street2 ) ."'
@@ -407,7 +405,7 @@ class users
                 , delivery_state1='". prepareStringForMySQL($this->delivery_state1 ) ."'
                 , deivery1_zip='". prepareStringForMySQL($this->deivery1_zip) ."'".$mFBID."
                 ,resturant_id=". $this->resturant_id."
-                ,ePassword='". $this->ePassword ."'
+                ,epassword='". $this->epassword ."'
                 ,salt='". $this->salt ."'";
 
         $this->arrTokens=array();
@@ -645,7 +643,7 @@ class users
 
     public function SelectUserIDByFBIDRestaurantID($pFBID, $pRID)
     {
-        $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(password, '') AS Password, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE facebook_id='".$pFBID."' AND resturant_id=".$pRID;
+        $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE facebook_id='".$pFBID."' AND resturant_id=".$pRID;
         $mQuery = dbAbstract::Execute($mSQL);
         if (dbAbstract::returnRowsCount($mQuery)>0)
         {
@@ -659,7 +657,7 @@ class users
 
     public function SelectUserIDByEmailRestaurantID($pEmail, $pRID)
     {
-        $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(password, '') AS Password, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE cust_email='".$pEmail."' AND resturant_id=".$pRID;
+        $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE cust_email='".$pEmail."' AND resturant_id=".$pRID;
         $mQuery = dbAbstract::Execute($mSQL);
         if (dbAbstract::returnRowsCount($mQuery)>0)
         {
