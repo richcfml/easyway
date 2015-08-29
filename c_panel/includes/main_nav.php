@@ -194,7 +194,7 @@
 			if ($_SESSION['admin_type'] == 'bh')
 			{ 
 			?>
-                            <div class="links <?=$mod=='signaturesandwitch' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=signaturesandwitch" >Signature Sandwitch</a></div> 	
+                                <div class="links <?=$mod=='signaturesandwitch' ? 'selected' : 'not'?>"><a href="<?=$AdminSiteUrl?>?mod=signaturesandwitch" >Signature Sandwich</a></div> 	
 			<?php 
 			} 
 			?> 
