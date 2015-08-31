@@ -237,7 +237,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                     exit;
                 }
 
-                if ($loggedinuser->update()) {
+                if ($loggedinuser->updateCustomerRegistration()) {
                     echo json_encode(array('success' => '1'));
                     exit;
                 } else {
