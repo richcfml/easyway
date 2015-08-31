@@ -61,7 +61,7 @@
 			$loggedinuser->cust_ord_zip=$_POST['customer_zip'];
 			$loggedinuser->cust_phone1=$_POST['customer_phone'];
 			$loggedinuser->cust_email=$_POST['customer_email'];
-		 	$loggedinuser->savetosession();
+		 	$loggedinuser->saveToSession();
 		}
 		
 		

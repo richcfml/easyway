@@ -23,7 +23,7 @@ if($objRestaurant->useValutec ==  2) //GO3
 		{
 			$objGO3->go3ActivateReward($InputCardNumber, $InputExpDate, $InputCvv, $loggedinuser->id);
 			$objGO3->go3AddValue($InputCardNumber,($objRestaurant->rewardPoints * $objRestaurant->numberofPoints));
-			$loggedinuser->saveCard($InputCardNumber, $objGO3->go3RewardPoints($InputCardNumber), $objGO3->go3CardBalance($InputCardNumber));
+			$loggedinuser->saveUserValutecCard($InputCardNumber, $objGO3->go3RewardPoints($InputCardNumber), $objGO3->go3CardBalance($InputCardNumber));
 			
 			echo json_encode(array("success"=>"1","message"=>"Thank you for registering your card, you now have <u style='font-size:16px;'>". $objGO3->go3RewardPoints($InputCardNumber) ."</u> Point(s) and <u style='font-size:16px;'>$". $objGO3->go3CardBalance($InputCardNumber) ."</u> balance"));
 		}
@@ -48,7 +48,7 @@ else if($objRestaurant->useValutec ==  1) //ValuTec
 		if($Authorized=="true") 
 		{
 			$Balance=AddValue($InputCardNumber,$objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
-			$loggedinuser->saveCard($InputCardNumber,$Balance['PointBalance'],$Balance['Balance']);
+			$loggedinuser->saveUserValutecCard($InputCardNumber,$Balance['PointBalance'],$Balance['Balance']);
 			echo json_encode(array("success"=>"1","message"=>"Thank you for registering your card, you now have <u style='font-size:16px;'>". $Balance['PointBalance'] ."</u> Point(s) and <u style='font-size:16px;'>$". $Balance['Balance'] ."</u> balance"));
 		}
 		else 
@@ -73,7 +73,7 @@ else if($objRestaurant->useValutec ==  1) //ValuTec
 				}
 				else 
 				{
-					$loggedinuser->saveCard($InputCardNumber,$Balance['PointBalance'],$Balance['Balance']);
+					$loggedinuser->saveUserValutecCard($InputCardNumber,$Balance['PointBalance'],$Balance['Balance']);
 					echo json_encode(array("success"=>"1","message"=>"Thank you for registering your card, you now have <u style='font-size:16px;'>". $ResultData['PointBalance'] ."</u> Point(s)  and <u style='font-size:16px;'>$". $Balance['Balance'] ."</u> balance"));				 
 				} 
 			}

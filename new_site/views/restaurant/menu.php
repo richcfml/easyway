@@ -1111,14 +1111,25 @@ $.each(attributeRequired, function(index, value) {
 
 				if ($current_cat == $menulist->sub_cat_id || $firstindex == 0) 
 				{
+					$display = 'block';
+					if($menulist->signature_sandwitch_id > 0){
+						$ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$menulist->signature_sandwitch_id."'");
+						if($ss_obj->start_date > strtotime(date("Y-m-d")) || $ss_obj->end_date < strtotime(date("Y-m-d"))){
+							$display = 'none';
+						}
+					}
    ?>
-                        <div class="products_area" style="height: 40px;  <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ")) { echo("display: none;"); }?>">
+                        <div class="products_area" style="height: 40px;  <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ") || ($display=='none')) { echo("display: none;"); }?>">
                             <table style="margin: 0px; width: 100%;" cellpadding="0" cellspacing="0" border="0">
                                 <tr style="height: 40px;">
-                                    <td style="width: 2%;">
-                                    </td>
+                                    <td style="width: 2%;"></td>
                                     <td align="left" style="width: 88%; font-size:12px;" valign="top">
-                                        <div class="product_name"><a id='showProductPopup'  myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "®", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> ><?= stripslashes($menulist->item_title) ?></a></div>
+                                        <div class="product_name">
+                                          <a id='showProductPopup' myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "®", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> >
+											
+											<?= stripslashes($menulist->item_title)?>
+                                        </a>
+                                      </div>
                                     </td>
                                     <td align="right" valign="top" style="width: 10%; font-size:12px;">
                                         <div class="product_price"><?= $menulist->retail_price ?>&nbsp;&nbsp;</div>

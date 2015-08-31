@@ -18,7 +18,7 @@ class Log {
         }
 
         if($c_panel == 0 && class_exists('users')){
-            $user = users::loggedinUserEmail();
+            $user = users::getLoggedinUserEmailID();
         } else {
             if(isset($_SESSION['admin_session_pass']) && isset($_SESSION['admin_session_user_name'])){
                 $user = $_SESSION['admin_session_user_name'];

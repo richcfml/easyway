@@ -83,7 +83,7 @@ else
 		$loggedinuser->cust_phone1=$_POST['customer_phone'];
 		$loggedinuser->cust_email=$_POST['customer_email'];
 		$loggedinuser->delivery_address_choice=1;
-		$loggedinuser->savetosession();
+		$loggedinuser->saveToSession();
 	}
 			
 	$x_first_name=$loggedinuser->cust_your_name;

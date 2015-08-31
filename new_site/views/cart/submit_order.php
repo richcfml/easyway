@@ -74,7 +74,7 @@
 		$loggedinuser->delivery_address=$loggedinuser->street1 .", ". $loggedinuser->cust_ord_city .", ". $loggedinuser->cust_ord_state;
 			 
 		$loggedinuser->createNewUser();
-		$loggedinuser->savetosession();	
+		$loggedinuser->saveToSession();	
 		Log::write("Customer name is:".$_POST['customer_name'],"LoggedinUser Data After shipping info:".print_r($loggedinuser,true),'order', 0 , 'user');
 		$is_guest = 1;		
 	}
@@ -130,7 +130,7 @@
 		}
 	}
 		
-	$address=$loggedinuser->get_delivery_address(0) .", ".$loggedinuser->get_delivery_zip();
+	$address=$loggedinuser->getUserDeliveryAddress(0) .", ".$loggedinuser->getUserDeliveryZipCode();
 	$invoice_number='';
 	if(isset($_POST['invoice_number']))
 	{
@@ -180,14 +180,14 @@
 	{
     	if(isset($default_card) && $card_token > 0)
 		{
-        	$loggedinuser->setDefaultCard($card_token);
+        	$loggedinuser->setUserDefaultCard($card_token);
         }
         else if(isset($default_card) && $gateway_token > 0)
 		{
-        	$loggedinuser->setDefaultCard($gateway_token);
+        	$loggedinuser->setUserDefaultCard($gateway_token);
         }
    }
-   $loggedinuser->savetosession();
+   $loggedinuser->saveToSession();
 
 	if($auth_defined)
 	{//uses auth.net
@@ -236,7 +236,7 @@
 	$arrCustomer['PHONENUMBER']=$loggedinuser->cust_phone1;
 	$arrCustomer['ADDRESS']= str_replace('~','',$loggedinuser->cust_odr_address) .', '. $loggedinuser->cust_ord_city.', '.$loggedinuser->cust_ord_state.', '.$loggedinuser->cust_ord_zip;
 	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->get_delivery_address(0);
-	$arrCustomer['ZIPCODE']=$loggedinuser->get_delivery_zip();
+	$arrCustomer['ZIPCODE']=$loggedinuser->getUserDeliveryZipCode();
 	
 	$arrRestaurant['RESTAURANTNAME']=$objRestaurant->name;
 	$arrRestaurant['DELIVERYMETHOD']= $cart->delivery_type==cart::Pickup ?  "Pickup": "Delivery";

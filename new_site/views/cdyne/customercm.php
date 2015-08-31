@@ -44,11 +44,11 @@ if(isset($_POST['cc']))
         {
 			if($success==1)
 			{
-				$loggedinuser->saveTokenWithExpiry($x_card_num,$gateway_token,1,$exd);
+				$loggedinuser->saveCCTokenWithExpiry($x_card_num,$gateway_token,1,$exd);
 				if ($loggedinuser->cust_phone1!=$mPhoneNumber)
 				{
 					$loggedinuser->cust_phone1=$mPhoneNumber;
-					$loggedinuser->savePhone();
+					$loggedinuser->saveUserPhone();
 					echo json_encode(array("css"=>"success","message"=>"Credit card/Phone updated successfully","card"=>$x_card_num));
 				}
 				else
@@ -61,7 +61,7 @@ if(isset($_POST['cc']))
 				if ($loggedinuser->cust_phone1!=$mPhoneNumber)
 				{
 					$loggedinuser->cust_phone1=$mPhoneNumber;
-					$loggedinuser->savePhone();
+					$loggedinuser->saveUserPhone();
 					echo json_encode(array("css"=>"alert-error","message"=>"Credit card not accepted by gateway. Mobile updated successfully.","card"=>$x_card_num));
 				}
 				else
@@ -73,11 +73,11 @@ if(isset($_POST['cc']))
 	}
 	else
 	{	
-		$loggedinuser->setDefaultCard($token);
+		$loggedinuser->setUserDefaultCard($token);
 		if ($loggedinuser->cust_phone1!=$mPhoneNumber)
 		{
 			$loggedinuser->cust_phone1=$mPhoneNumber;
-			$loggedinuser->savePhone();
+			$loggedinuser->saveUserPhone();
 			echo json_encode(array("css"=>"success","message"=>"Credit card/Phone updated successfully","token"=>$_POST));
 		}
 		else

@@ -4,7 +4,7 @@ require_once 'function.php';
 
 
 include "../classes/restaurant.php";
-include "../classes/users.php";
+include "../classes/Users.php";
 include "../classes/Validater.php";
 require_once("../classes/trackers.php");
 require "../includes/class.phpmailer.php";
@@ -26,7 +26,7 @@ $objCategory = new Category();
 $product = new product();
 $cart = new cart();
 $objcdyne = new cydne();
-$loggedinuser = new users();
+$loggedinuser = new Users();
 $abandoned_carts = new abandoned_carts();
 $fun = new clsFunctions();
 $objMail = new testmail();
@@ -106,7 +106,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'create')) && (isset($_GET['type']) &
     }
     if (isset($_POST['password']) && !empty($_POST['password'])) {
         $loggedinuser->password = trim($_POST['password']);
-        $mSalt = hash('sha256', mt_rand(10,1000000));    
+	$mSalt = hash('sha256', mt_rand(10,1000000));    
         $ePassword = hash('sha256', trim($_POST['password']).$mSalt);
         $loggedinuser->epassword = $ePassword;
     } else {
@@ -191,7 +191,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'create')) && (isset($_GET['type']) &
         exit;
     }
 
-    $register_result = $loggedinuser->register($objRestaurant, $objMail);
+    $register_result = $loggedinuser->customerRegistration($objRestaurant, $objMail);
 
     if ($register_result == true) {
         echo json_encode(array('success' => '1'));
@@ -205,7 +205,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
     if (isset($_SESSION['token']) && isset($_POST['authToken']) && $_POST['authToken'] == $_SESSION['token']) {
 
         $user_info = Easy_Way_Api::getIdFromAuthToken($_POST['authToken']);
-        $user = $loggedinuser->loginbyid($user_info['user_id']);
+        $user = $loggedinuser->loginByUserId($user_info['user_id']);
 
         if (isset($_GET['field']) && ($_GET['field'] == 'password')) {
 
@@ -213,9 +213,9 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                 echo json_encode(array('success' => '0', 'msg' => 'User does not exist!'));
                 exit;
             } else {
-                $mSalt = $user->salt;
+		$mSalt = $user->salt;
                 $ePassword = hash('sha256', trim($_POST['password']).$mSalt);
-                $loggedinuser->destroysession();
+                $loggedinuser->destroyUserSession();
                 $loggedinuser = $user;
                 $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
                 $loggedinuser->street1 = $address1[0];
@@ -251,7 +251,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                 echo json_encode(array('success' => '0', 'msg' => 'User does not exist!'));
                 exit;
             } else {
-                $loggedinuser->destroysession();
+                $loggedinuser->destroyUserSession();
                 $loggedinuser = $user;
                 extract($_POST);
                 if (isset($first_name)) {
@@ -295,7 +295,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'update')) && (isset($_GET['type']) &
                     } 
                 }
 
-                if ($loggedinuser->update()) {
+                if ($loggedinuser->updateCustomerRegistration()) {
                     echo json_encode(array('success' => '1'));
                     exit;
                 } else {
@@ -335,8 +335,8 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'new')) && (isset($_GET['type']) && (
                 $objRestaurant->order_minimum = $objRestaurant->zone1_min_total;
             }
 
-            $user = $loggedinuser->loginbyid($userId);
-            $loggedinuser->destroysession();
+            $user = $loggedinuser->loginByUserId($userId);
+            $loggedinuser->destroyUserSession();
             $loggedinuser = $user;
 
             $loggedinuser->resturant_id = $objRestaurant->id;
@@ -546,7 +546,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'new')) && (isset($_GET['type']) && (
             }
             $serving_date = $serving_date . " " . $serving_time;
             $payment_method = ($_POST['payment_method'] == "1" ? "Credit Card" : "Cash");
-            $address = $loggedinuser->get_delivery_address(0) . ", " . $loggedinuser->get_delivery_zip();
+            $address = $loggedinuser->getUserDeliveryAddress(0) . ", " . $loggedinuser->getUserDeliveryZipCode();
             $invoice_number = '';
             if (isset($_POST['invoice_number'])) {
                 $invoice_number = $_POST['invoice_number'];
@@ -737,7 +737,7 @@ if (isset($_GET['op']) && ($_GET['op'] == 'getToken')) {
         exit;
     }
     $user_email = $_REQUEST['email'];
-    $user = $loggedinuser->login($_REQUEST['email'], $_REQUEST['password'], $objRestaurant->id);
+    $user = $loggedinuser->loginUser($_REQUEST['email'], $_REQUEST['password'], $objRestaurant->id);
 
     if (is_null($user)) {
         echo json_encode(array('success' => '0', 'msg' => 'User does not exist!'));

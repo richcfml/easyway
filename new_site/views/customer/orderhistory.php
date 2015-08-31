@@ -200,7 +200,7 @@
 			}
 		}
 		
-		$loggedinuser->addtoMyFavorites($_POST['txtCode'],serialize($products),1,$_POST['rbPDFav'], $mTip);
+		$loggedinuser->addMenuToCustomerFavorites($_POST['txtCode'],serialize($products),1,$_POST['rbPDFav'], $mTip);
 		
 		redirect($SiteUrl .$objRestaurant->url ."/?item=menu");
 		exit;

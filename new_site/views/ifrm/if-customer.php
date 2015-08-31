@@ -14,8 +14,8 @@
         <div class="second_body_heading">Delivery Address/Contact</div>
         <div class="second_body_text">
      	<?= $loggedinuser->cust_your_name . " ". $loggedinuser->LastName?><br/>
-    	 Delivery Address:    <?= $loggedinuser->get_delivery_address(0)?><br/>
-          <?=$mZipPostal?>:    <?= $loggedinuser->get_delivery_zip()?><br/>
+    	 Delivery Address:    <?= $loggedinuser->getUserDeliveryAddress(0)?><br/>
+          <?=$mZipPostal?>:    <?= $loggedinuser->getUserDeliveryZipCode()?><br/>
          
 
           <a href="?item=account&chooseaddress=1&ifrm=account">Select another address from account</a> </div>

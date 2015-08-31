@@ -78,7 +78,7 @@ window.verifylocation = function() {
 
     var restaurant_location = '<?= $objRestaurant->rest_address . ", " . $objRestaurant->rest_city . ", " . $objRestaurant->rest_state; ?>';
 <? if (is_numeric($loggedinuser->id)) { ?>
-        var customer_location = '<?= $loggedinuser->get_delivery_address(0); ?>';
+        var customer_location = '<?= $loggedinuser->getUserDeliveryAddress(0); ?>';
 <? } else { ?>
         var customer_location = $("#customer_address").val() + " , " + $("#customer_city").val() + " , " + $("#customer_state").val();
 <? } ?>

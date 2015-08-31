@@ -44,7 +44,7 @@
     $loggedinuser->delivery_address="";
 
     $loggedinuser->createNewUser();
-    $loggedinuser->savetosession();	
+    $loggedinuser->saveToSession();	
     Log::write("Customer name is:".$_POST['customer_name'],"LoggedinUser Data After shipping info:".print_r($loggedinuser,true),'order', 0 , 'user');
     $is_guest = 1;		
 
@@ -71,7 +71,7 @@
     $cart->order_created=1;
     $cart->save();
 
-    $loggedinuser->savetosession();
+    $loggedinuser->saveToSession();
 
 	
     if(isset($_SESSION["abandoned_cart_id"]) && $_SESSION["abandoned_cart_id"] > 0) 
@@ -97,8 +97,8 @@
 	$arrCustomer['EMAIL']=$loggedinuser->cust_email;
 	$arrCustomer['PHONENUMBER']=$loggedinuser->cust_phone1;
 	$arrCustomer['ADDRESS']= str_replace('~','',$loggedinuser->cust_odr_address) .', '. $loggedinuser->cust_ord_city.', '.$loggedinuser->cust_ord_state.', '.$loggedinuser->cust_ord_zip;
-	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->get_delivery_address(0);
-	$arrCustomer['ZIPCODE']=$loggedinuser->get_delivery_zip();
+	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->getUserDeliveryAddress(0);
+	$arrCustomer['ZIPCODE']=$loggedinuser->getUserDeliveryZipCode();
 	
 	$arrRestaurant['RESTAURANTNAME']=$objRestaurant->name;
 	$arrRestaurant['DELIVERYMETHOD']= $cart->delivery_type==cart::Pickup ?  "Pickup": "Delivery";

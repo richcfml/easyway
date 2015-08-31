@@ -25,7 +25,7 @@
 	if(!is_numeric($loggedinuser->id))
 	{
 		$loggedinuser->createNewUser();
-		$loggedinuser->savetosession();
+		$loggedinuser->saveToSession();
 		$is_guest = 1;
 	}
 	
@@ -42,7 +42,7 @@
 	
 	$serving_date=$serving_date ." ".$serving_time;
 	$payment_method=($_POST['payment_method'] == "1" ? "Credit Card" : "Cash");
-	$address=$loggedinuser->get_delivery_address(0) .", ".$loggedinuser->get_delivery_zip();
+	$address=$loggedinuser->getUserDeliveryAddress(0) .", ".$loggedinuser->getUserDeliveryZipCode();
 	$invoice_number='';
 	
 	if(isset($_POST['invoice_number']))
@@ -131,8 +131,8 @@
 	$arrCustomer['EMAIL']=$loggedinuser->cust_email;
 	$arrCustomer['PHONENUMBER']=$loggedinuser->cust_phone1;
 	$arrCustomer['ADDRESS']= str_replace('~','',$loggedinuser->cust_odr_address) .', '. $loggedinuser->cust_ord_city.', '.$loggedinuser->cust_ord_state.', '.$loggedinuser->cust_ord_zip;
-	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->get_delivery_address(0);
-	$arrCustomer['ZIPCODE']=$loggedinuser->get_delivery_zip();
+	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->getUserDeliveryAddress(0);
+	$arrCustomer['ZIPCODE']=$loggedinuser->getUserDeliveryZipCode();
 	
 	
 	$arrRestaurant['RESTAURANTNAME']=$objRestaurant->name;
@@ -428,7 +428,7 @@
 		$Balance=CardBalance($loggedinuser->valuetec_card_number);
 		$loggedinuser->valuetec_points=$Balance['PointBalance'];
 		$loggedinuser->valuetec_reward=$Balance['Balance'];
-		$loggedinuser->savetosession();
+		$loggedinuser->saveToSession();
 	}
 	else if($objRestaurant->useValutec=="2" && $loggedinuser->valuetec_card_number>0)  
 	{
@@ -445,7 +445,7 @@
 		$Balance = $objGO3->go3CardBalance($loggedinuser->valuetec_card_number);
 		$loggedinuser->valuetec_points = $rewardPoints;
 		$loggedinuser->valuetec_reward = $Balance;
-		$loggedinuser->savetosession();
+		$loggedinuser->saveToSession();
 	}
 	
 	$cart->order_created=1;
@@ -453,7 +453,7 @@
 	
 	//-------Eddited by Asher------------//
 	$cart->destroysession();
-	$loggedinuser->destroysession();
+	$loggedinuser->destroyUserSession();
 	$_SESSION['total'] = $total=$cart->grand_total();
 	$_SESSION['cart'] = $cart->order_created;
 	//-------------------------------------//

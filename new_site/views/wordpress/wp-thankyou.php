@@ -36,7 +36,7 @@ if( isset($clone))
 	if(isset($_POST['addfavourites']))
 	{
 		$repidreodering=1;
-		$loggedinuser->addtoMyFavorites($_POST['foodtitle'],serialize($clone->products),$repidreodering,$clone->delivery_type, $clone->driver_tip);
+		$loggedinuser->addMenuToCustomerFavorites($_POST['foodtitle'],serialize($clone->products),$repidreodering,$clone->delivery_type, $clone->driver_tip);
 			
 		if($repidreodering==1 &&  $objRestaurant->did_number!='0' && trim($objRestaurant->did_number)!='') 
 		{

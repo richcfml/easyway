@@ -23,19 +23,19 @@ if (isset($_GET['ajax']))
 	{
 		if (isset($loggedinuser->arrFavorites[$removefavoritesindex]))
 		{
-			$loggedinuser->removefavoriteOrder($removefavoritesindex);
+			$loggedinuser->removeUserFavoriteOrder($removefavoritesindex);
 		}
 	}
 	else if (isset($rapidreorder))
 	{
-		$loggedinuser->changerepidreorderingstatus($rapidreorder, ($status == 1 ? 0 : 1));
+		$loggedinuser->changeRepidReorderingStatus($rapidreorder, ($status == 1 ? 0 : 1));
 	}
 	else if (isset($findex)) 
 	{
 		$mFavoriteID=$loggedinuser->arrFavorites[$findex]->id;
 		$mTip= $tip;
 		$mDM =$DM;
-		$loggedinuser->UpdateFavoriteTipDelMethod($mFavoriteID, $mTip, $mDM); 
+		$loggedinuser->updateFavorite_TipAmount_DeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
 }
 ?>

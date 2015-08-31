@@ -20,7 +20,7 @@ else if(isset($_POST['x_sid']))
  	require_once('lib/nusoap.php');
 	
 	include "classes/restaurant.php";
-	include "classes/users.php";
+	include "classes/Users.php";
 	include "classes/Validater.php";
 	require_once("classes/trackers.php"); 
 	require	"includes/class.phpmailer.php";
@@ -45,14 +45,14 @@ else if(isset($_POST['x_sid']))
  	$cart = new cart();
  	$objGO3 = new GO3();
 	$objcdyne=new cydne();
-	$loggedinuser=new users();
+	$loggedinuser=new Users();
 	$abandoned_carts = new abandoned_carts();
 
 	$objRestaurant = $objRestaurant->getDetailbyUrl($_GET["name"]);
 
-	if($loggedinuser->loadfromsession())
+	if($loggedinuser->loadFromSession())
 	{
-            $loggedinuser=$loggedinuser->loadfromsession();
+            $loggedinuser=$loggedinuser->loadFromSession();
             if ($loggedinuser->resturant_id != $objRestaurant->id)
             {
                 $loggedinuser = new users();

@@ -1,5 +1,5 @@
 <?php 
-class users 
+class Users
 {
     public $id;
     public $cust_desire_name;
@@ -52,25 +52,19 @@ class users
     {
         $this->arrTokens=array();
     }
-    public function savetosession() 
+	
+    public function saveToSession() 
     {
-        $this->destroysession();
+        $this->destroyUserSession();
         $_SESSION['loggedinuser']=serialize($this);
     }
 
-    public function loadfromsession() 
+    public function loadFromSession() 
     {
-        if(isset($_SESSION['loggedinuser']))
-        {
-		 	return unserializeData($_SESSION['loggedinuser']); 
-        }
-        else 
-        {
-            return NULL;
-        }
+		return (isset($_SESSION['loggedinuser']))? unserializeData($_SESSION['loggedinuser']):NULL;
     }
 
-    public function destroysession() 
+    public function destroyUserSession() 
     {
         if(isset($_SESSION['loggedinuser']))
         {
@@ -79,72 +73,72 @@ class users
     }
 
 
-    public function saveCard($InputCardNumber,$points,$balance) 
+    public function saveUserValutecCard($InputCardNumber,$points,$balance) 
     {
-        $mSQL = "update customer_registration set valuetec_card_number=". $InputCardNumber .",valutec_registeration_date='".  date("Y-m-d") . "' where id=". $this->id  .""; 
-        dbAbstract::Update($mSQL); 
+        dbAbstract::Update("update customer_registration set valuetec_card_number=". $InputCardNumber .",valutec_registeration_date='".  date("Y-m-d") . "' where id=". $this->id); 
         $this->valuetec_card_number=$InputCardNumber;
         $this->valuetec_points=$points;
         $this->valuetec_reward=$balance;	
-        $this->savetosession();
-
+        $this->saveToSession();
      }
 
-    public function getDetailbyPhone($phone,$restaurantId)
+    public function getUserDetailByPhone($phone,$restaurantId)
     { 
-        $mSQL = "SELECT * FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($phone)."' and resturant_id=". $this->resturant_id  ." and epassword!=''";								
+        $mSQL = "SELECT * FROM customer_registration WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cust_phone1,'(',''),')',''),'-',''),'',''),' ','')='". trim($phone)."' and resturant_id=". $this->resturant_id  ." and password!=''";								
         $user = dbAbstract::ExecuteObject($mSQL, 0, "users");
-        return $user;						
+        return $user;
     }
 
-    public function savePhone() 
+    public function saveUserPhone()
     {
         $qry="update customer_registration set cust_phone1='". prepareStringForMySQL($this->cust_phone1 ) ."' where id=". $this->id ."";
         dbAbstract::Update($qry);        
-        $this->savetosession();
+        $this->saveToSession();
     }
         
-    public function remindPassword($email,$objRestaurant,$objMail)
+    public function remindUserPassword($email,$objRestaurant,$objMail)
     {
-        global $SiteUrl;
-        $mSQL = "SELECT id,cust_email, cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' and resturant_id=". $objRestaurant->id  ."   AND LENGTH(epassword)>0";
-        $userQuery = dbAbstract::Execute($mSQL);
+		$mSQL = "SELECT id,cust_email, password,cust_your_name,LastName FROM customer_registration WHERE cust_email='".prepareStringForMySQL($email)."' and resturant_id=". $objRestaurant->id  ."   AND LENGTH(password)>0";
+        
+		$userQuery = dbAbstract::Execute($mSQL);
         $numrow=dbAbstract::returnRowsCount($userQuery);		
-        if ($numrow==0)
+        
+		if ($numrow==0)
         { 
             return false;
         } 
         else 
         {
             $user = dbAbstract::returnObject($userQuery);
-                $mObjFun=new clsFunctions();
-                $mEncryptedID = $mObjFun->encrypt($user->id, "53cr3t9455w0rd");
-                $mLink = $SiteUrl.$objRestaurant->url_name."/?item=resetpassword&id=".$mEncryptedID;
-                $subject = "easywayordering.com Account Password Reminder";
-                $body="Greetings, ". $user->cust_your_name . " ". $user->LastName ."! <br/><br/>".			
-                $body .="Thank you for visiting www.easywayordering.com/".$objRestaurant->url  ."/. We hope that you will find our easywayordering system helpful for
-								 your work and home food delivery needs.<br/><br/>
-					
-					Click following link to reset your password:<br/><a href='".$mLink."' target='_blank'>".$mLink."</a><br/><br/>
-				 					
-					We thank you for your business and look forward to serving you!<br/><br/>
-					
-					Kind regards,<br/><br/>
-					
-					www.easywayordering.com/".$objRestaurant->url  ."/<br/>
-					Phone: ". $objRestaurant->phone ."<br/>
-					Fax:  ". $objRestaurant->fax ;
-
-
-            $objMail->from="info@easywayordering.com";
-            $objMail->sendTo($body,$subject,$email);
-            return true;
+			return $this->sendPasswordReminderEmail($user,$objRestaurant,$objMail);
         }
     }
+	
+	private function sendPasswordReminderEmail($user,$objRestaurant,$objMail){
+		global $SiteUrl;
+		$mObjFun=new clsFunctions();
+		$mEncryptedID = $mObjFun->encrypt($user->id, "53cr3t9455w0rd");
+		$mLink = $SiteUrl.$objRestaurant->url_name."/?item=resetpassword&id=".$mEncryptedID;
+		$subject = 	"easywayordering.com Account Password Reminder";
+		$body	=	"Greetings, ". $user->cust_your_name . " ". $user->LastName ."! <br/><br/>".			
+		$body 	.=	"Thank you for visiting www.easywayordering.com/".$objRestaurant->url  ."/. 
+					 We hope that you will find our easywayordering system helpful for your work and home food delivery needs.<br/><br/>
+					 Click following link to reset your password:<br/><a href='".$mLink."' target='_blank'>".$mLink."</a><br/><br/>
+					 We thank you for your business and look forward to serving you!<br/><br/>
+					 Kind regards,<br/><br/>
+					 
+					 www.easywayordering.com/".$objRestaurant->url  ."/<br/>
+					 Phone: ". $objRestaurant->phone ."<br/>
+					 Fax:  ". $objRestaurant->fax ;
+		
+		$objMail->from="info@easywayordering.com";
+		$objMail->sendTo($body,$subject,$email);
+		return true;
+	}
 
-    public function login($email,$password,$restaurant_id) 
+    public function loginUser($email,$password,$restaurant_id) 
     {
-        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(epassword)<>''");
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='".prepareStringForMySQL($email)."' AND resturant_id=".$restaurant_id." AND TRIM(password)<>''");
         if ($mRow)
         {
             $mSalt = $mRow->salt;
@@ -152,20 +146,8 @@ class users
             $password=hash('sha256', prepareStringForMySQL($password).$mSalt);
         
             $mSQL = "SELECT * FROM customer_registration WHERE cust_email='$email' AND epassword ='$password' AND resturant_id= '". $restaurant_id ."'";
-            
             $user_qry  = dbAbstract::Execute($mSQL);
-        
-            if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0) 
-            {
-            return NULL;
-            }
-        
-            $user=dbAbstract::returnObject($user_qry, 0, "users");
-            $user->delivery_address_choice=1;
-
-            $user->getTokens();
-            $user->loadfavorites();
-            return $user;
+			return $this->login($user_qry, 0);
         }
         else
         {
@@ -173,87 +155,74 @@ class users
         }
     }
     
-    public function sso_login($email,$restaurant_id) 
+    public function ssoUserLogin($email,$restaurant_id) 
     {
         $email=prepareStringForMySQL($email);
-
         $user_qry  = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and resturant_id= '". $restaurant_id ."'", 1);
-
-        if(dbAbstract::returnRowsCount($user_qry, 1)>1 || dbAbstract::returnRowsCount($user_qry, 1)==0) 
+		return $this->login($user_qry, 1);
+    }
+	
+	private function login($user_qry, $pC_Panel, $loginById=0){
+		if(dbAbstract::returnRowsCount($user_qry) > 1 || dbAbstract::returnRowsCount($user_qry) == 0) 
         {
             return NULL;
         }
 
-        $user=dbAbstract::returnObject($user_qry, 1, "users");
-        $user->delivery_address_choice=1;
-
-        $user->getTokens();
-        $user->loadfavorites();
+        $user=dbAbstract::returnObject($user_qry, $pC_Panel, "users");
+        if($loginById==0){
+		  $user->delivery_address_choice=1;
+		  $user->getUserCCTokens();
+		  $user->loadUserFavorites();
+		}
         return $user;
-    }
+	}
 		
-    public function loginbyid($id) 
+    public function loginByUserId($id) 
     {
-	$mSQL = "SELECT * FROM customer_registration WHERE id='$id'";
-        $user_qry  = dbAbstract::Execute($mSQL);
-        if(dbAbstract::returnRowsCount($user_qry)>1 || dbAbstract::returnRowsCount($user_qry)==0)
-        {
-            return NULL;
-        }	
-
-        $user=dbAbstract::returnObject($user_qry, 0, "users");
-	return $user;	 	
+        $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id='$id'");
+		return $this->login($user_qry, 0, 1);	 	
     }
-		
-    public function loadfavorites() 
-    {
-        $this->arrFavorites=array();
-        $mSQL = "SELECT * FROM customer_favorites WHERE customer_id=". $this->id;
-        $favorites  = dbAbstract::Execute($mSQL);
+	
+	public function loadUserFavorites($whereStmt='', $orderby='', $limit='')
+	{
+		$where = "customer_id=".$this->id;
+		$where .= ($whereStmt!='')? ' AND '.$whereStmt : '';
+		$orderby = ($orderby!='')? 'ORDER BY '.$orderby : '';
+		$limit = ($limit!='')? 'LIMIT '.$limit : '';
+        
+		$this->arrFavorites=array();
+        $favorites  = dbAbstract::Execute("SELECT * FROM customer_favorites WHERE $where $orderby $limit");
         while($favorite = dbAbstract::returnObject($favorites)) 
         {
-					$favorite->food=unserializeData($favorite->food);
+			$favorite->food=unserializeData($favorite->food);
             $this->arrFavorites[]=$favorite;
         }
     }
 			
-    public function getfavoritesTitles()
+    public function getFavoritesTitles()
     {
-           $this->arrFavorites=array();
-            $mSQL = "SELECT title FROM customer_favorites WHERE customer_id=". $this->id ." AND rapidreorder=1";
-            $favorites  = dbAbstract::Execute($mSQL);
-            while($favorite = dbAbstract::returnObject($favorites)) 
-            {
-                $this->arrFavorites[]=$favorite->title;
-            }      
+	   $this->arrFavorites=array();
+		$mSQL = "SELECT title FROM customer_favorites WHERE customer_id=". $this->id ." AND rapidreorder=1";
+		$favorites  = dbAbstract::Execute($mSQL);
+		while($favorite = dbAbstract::returnObject($favorites)) 
+		{
+			$this->arrFavorites[]=$favorite->title;
+		}      
     }
 			
-    public function getfavoritesbyTitle($title) 
+    public function getFavoritesByTitle($title) 
     {
-        $this->arrFavorites=array();
-        $mSQL = "SELECT * FROM customer_favorites WHERE customer_id=". $this->id ." AND title='". addslashes($title) ."' AND rapidreorder=1 ORDER BY id DESC LIMIT 0,1";
-        $favorites  = dbAbstract::Execute($mSQL);
-        while($favorite = dbAbstract::returnObject($favorites)) 
-        {
-					$favorite->food=unserializeData($favorite->food);
-            $this->arrFavorites[]=$favorite;
-        }
-        return $this->arrFavorites;
+		$this->loadUserFavorites("title='".addslashes($title)."' AND rapidreorder=1", 'id DESC', '0,1');
+		return $this->arrFavorites;
     }
 			
-    public function getfavoritesbyId($id) 
+    public function getFavoritesById($id) 
     {
-        $this->arrFavorites=array();
-        $mSQL = "SELECT * FROM customer_favorites WHERE customer_id=". $this->id ." AND id=". $id ." ORDER BY id DESC LIMIT 0,1";
-        $favorites  = dbAbstract::Execute($mSQL);
-        while($favorite = dbAbstract::returnObject($favorites)) 
-        {
-            $favorite->food=unserialize($favorite->food);
-            $this->arrFavorites[]=$favorite;
-        }
-        return $this->arrFavorites;
+		$this->loadUserFavorites("id='$id'", 'id DESC', '0,1');
+		return $this->arrFavorites;
     }
-    public function removefavoriteOrder($index) 
+	
+    public function removeUserFavoriteOrder($index) 
     {
         $favorit_id=$this->arrFavorites[$index]->id;
         $mSQL = "DELETE FROM customer_favorites WHERE id=".$favorit_id;
@@ -261,21 +230,21 @@ class users
         dbAbstract::Delete($mSQL);
         unset($this->arrFavorites[$index]);
         $this->arrFavorites=array_values($this->arrFavorites);
-        $this->loadfavorites();
-        $this->savetosession();
+        $this->loadUserFavorites();
+        $this->saveToSession();
     }
 			
-	public function changerepidreorderingstatus($index,$status) 
+	public function changeRepidReorderingStatus($index,$status) 
     {
-        $favorit_id=$this->arrFavorites[$index]->id;
-                                Log::write("Delete customer favorites - users.php", "QUERY -- update customer_favorites  set rapidreorder=$status where  id=". $favorit_id ."", 'order', 1 , 'user');
+        $favorit_id = $this->arrFavorites[$index]->id;
+		Log::write("Delete customer favorites - users.php", "QUERY -- update customer_favorites  set rapidreorder=$status where  id=". $favorit_id ."", 'order', 1 , 'user');
         $mSQL = "UPDATE customer_favorites SET rapidreorder=$status WHERE id=". $favorit_id;
         dbAbstract::Update($mSQL);
         $this->arrFavorites[$index]->rapidreorder=$status;
-        $this->savetosession();
+        $this->saveToSession();
     }
 
-    public function getTokens() 
+    public function getUserCCTokens() 
     {
         $this->arrTokens=array();
         $mSQL = "SELECT * FROM general_detail WHERE id_2=". $this->id ." ORDER BY data_3 DESC";
@@ -286,56 +255,32 @@ class users
         }
     }
 
-    public function getDefaultToken() 
+    public function getUserDefaultCCToken() 
     {
         $this->arrTokens=array();
         $mSQL = "SELECT * FROM general_detail WHERE id_2=". $this->id ." ORDER BY data_3 DESC LIMIT 0 ,1";
         return dbAbstract::ExecuteObject($mSQL);
     } 	
-		 //data_type=card type
-		 //data_1=last 4 digits
-		 //data_2=card token
-		 //data_3=3 default
-    public function saveToken($secure_data,$token,$default)
-    {
-        $type=  substr($secure_data, 0,1);
-        $cc=  substr($secure_data, -4, 4);
-        $mSQL = "SELECT COUNT(*) AS total FROM general_detail WHERE id_2=". $this->id ." AND data_type=$type AND data_1=$cc";
-        $result = dbAbstract::ExecuteObject($mSQL);
-        if (($result->total==0) && ($type!=0) && ($cc!=0))
-        {
-            $mSQL = "INSERT INTO general_detail(id_2,data_type,data_1,data_2) VALUES(". $this->id  ." ,'$type' ,'$cc','$token')";
-            dbAbstract::Insert($mSQL);
-            if($default==1) 
-            {
-                $this->setDefaultCard($token);
-            }
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }	 
 		
-    public function setDefaultCard($token) 
+    public function setUserDefaultCard($token) 
     {
         $mSQL = "UPDATE general_detail SET data_3=0 WHERE id_2=".$this->id;
         dbAbstract::Update($mSQL);
         $mSQL = "UPDATE general_detail SET data_3=1 WHERE id_2=".$this->id ." AND data_2='". $token ."'";
         dbAbstract::Update($mSQL);
-        $this->getTokens();
-        $this->savetosession();	
+        $this->getUserCCTokens();
+        $this->saveToSession();	
     }
     
-    public function update()  
+    public function updateCustomerRegistration()  
     {
         $this->cust_odr_address=$this->street1.'~'.$this->street2 ;
         $this->delivery_address1=$this->delivery_street1.'~'.$this->delivery_street2 ;
 
         $qry="update customer_registration set
                 cust_email='". prepareStringForMySQL($this->cust_email ) ."'
-               , cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
+               
+	       , cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
                , LastName='". prepareStringForMySQL($this->LastName ) ."'
                , cust_odr_address='". prepareStringForMySQL($this->street1 .'~'.$this->street2 ) ."'
                , cust_ord_city='". prepareStringForMySQL($this->cust_ord_city ) ."'
@@ -351,15 +296,16 @@ class users
                  where id=". $this->id ."";
         
         dbAbstract::Update($qry);
-        $this->savetosession();
+        $this->saveToSession();
         return true;
 
     }
 			
-    public function register(&$objRestaurant,&$objMail)  
+    public function customerRegistration(&$objRestaurant,&$objMail)  
     {
         $this->resturant_id= $objRestaurant->id;
-	$mSQL = "SELECT cust_email FROM customer_registration WHERE cust_email='".prepareStringForMySQL($this->cust_email )."' AND resturant_id='".$objRestaurant->id."' AND epassword !='NULL'";
+		
+		$mSQL = "SELECT cust_email FROM customer_registration WHERE cust_email='".prepareStringForMySQL($this->cust_email )."' AND resturant_id='".$objRestaurant->id."' AND epassword !='NULL'";
         $user_qry  = dbAbstract::Execute($mSQL);
 
         if(dbAbstract::returnRowsCount($user_qry)>0 ) 
@@ -370,14 +316,14 @@ class users
         $this->createNewUser();
         if(is_numeric ($this->id))
         {
-                $this->delivery_address_choice=1;
-                $this->savetosession();
-                $this->sendRegisterationEmail($objRestaurant,$objMail);
-                return true;
+			$this->delivery_address_choice=1;
+			$this->saveToSession();
+			$this->sendUserRegisterationEmail($objRestaurant,$objMail);
+			return true;
         }
         else
         {
-                return false;
+			return false;
         }
     }
 			
@@ -393,7 +339,8 @@ class users
 
         $qry="insert into customer_registration set
                  cust_email='". prepareStringForMySQL($this->cust_email ) ."'
-                , cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
+                
+		, cust_your_name='". prepareStringForMySQL($this->cust_your_name ) ."'
                 , LastName='". prepareStringForMySQL($this->LastName ) ."'
                 , cust_odr_address='". prepareStringForMySQL($this->street1 .'~'.$this->street2 ) ."'
                 , cust_ord_city='". prepareStringForMySQL($this->cust_ord_city ) ."'
@@ -410,57 +357,49 @@ class users
 
         $this->arrTokens=array();
         $this->id=dbAbstract::Insert($qry, 0, 2);
-        $this->savetosession();
+        $this->saveToSession();
     }
 		
 		
-    public function logout() 
+    public function logoutUser() 
     { 
-        $this->destroysession();
+        $this->destroyUserSession();
     }
 		
-    public function set_delivery_address($option) 
+    public function setUserDeliveryAddress($option) 
     {
         $this->delivery_address_choice=$option;
-        $this->savetosession();
+        $this->saveToSession();
     }
 			 
-    public function get_delivery_address($formated=1)
+    public function getUserDeliveryAddress($formated=1)
     {
-	if($formated==1)
-	{
-		$char='<br/>'; 
-	}
-	else 
-	{
-		$char=', ';
-	}
-
-	if($this->delivery_address_choice==1)
-	{
-		$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
-	}
-	else if($this->delivery_address_choice>1)
-	{
-		$this->delivery_address=trim(trim(trim($this->delivery_street1) ." ". trim($this->delivery_street2)) .$char. $this->delivery_city1.$char.$this->delivery_state1 .(($formated ==1)? $char.$this->deivery1_zip : ""));
-	}
-	else if(!is_numeric($this->id))
-	{
-		$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
-	}
-	else
-	{
-		$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
-	}
-	
-	return 	$this->delivery_address;
+		$char = ($formated==1)? '<br/>':', ';
+		
+		if($this->delivery_address_choice==1)
+		{
+			$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
+		}
+		else if($this->delivery_address_choice>1)
+		{
+			$this->delivery_address=trim(trim(trim($this->delivery_street1) ." ". trim($this->delivery_street2)) .$char. $this->delivery_city1.$char.$this->delivery_state1 .(($formated ==1)? $char.$this->deivery1_zip : ""));
+		}
+		else if(!is_numeric($this->id))
+		{
+			$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
+		}
+		else
+		{
+			$this->delivery_address=trim(trim(trim($this->street1) ." ". trim($this->street2)) .$char. $this->cust_ord_city .$char. $this->cust_ord_state.(($formated == 1)? $char.$this->cust_ord_zip : ""));
+		}
+		return 	$this->delivery_address;
     }
 			
-    public function get_delivery_zip()
+    public function getUserDeliveryZipCode()
     {
         if($this->delivery_address_choice==1)
         {
-                return $this->cust_ord_zip;
+			return $this->cust_ord_zip;
         }
         else if(!is_numeric($this->id))
         {
@@ -474,7 +413,7 @@ class users
 
     }
 				 
-    private function sendRegisterationEmail(&$objRestaurant,&$objMail) 
+    private function sendUserRegisterationEmail(&$objRestaurant,&$objMail) 
     {		
         /*Below Code (From Start Comment 27 Aug 2015 Till End Comment 27 Aug 2015 
         is working fine but as there is no need for registration emails so we are 
@@ -500,119 +439,72 @@ class users
         * End Comment 27 Aug 2015 */
     }
 		 
-    public function addtoMyFavorites($title,$food,$repidreodering,$order_receiving_method,$pTip) 
+    public function addMenuToCustomerFavorites($title,$food,$repidreodering,$order_receiving_method,$pTip) 
     {
         $mSQL = "insert into customer_favorites(restaurant_id,customer_id,title,food,rapidreorder,order_receiving_method,driver_tip) values(". $this->resturant_id.",". $this->id .",'". prepareStringForMySQL($title) ."','". prepareStringForMySQL($food) ."',$repidreodering,$order_receiving_method,$pTip)";	
         dbAbstract::Insert($mSQL);
-        $this->loadfavorites();
-        $this->savetosession();
+        $this->loadUserFavorites();
+        $this->saveToSession();
 
-    }	
-				
-    public function createclone()
-    {
-        if(isset($_SESSION['loggedinuser']))
-        {
-            $_SESSION['loggedinuserCLONE']=$this;
-        }
     }
-    
-    public function myclone()
-    {
-        return $_SESSION['loggedinuserCLONE'] ;
-    }
-
-    public function destroyclone()
-    {
-        if(isset($_SESSION['loggedinuserCLONE']))
-        {
-            unset($_SESSION['loggedinuserCLONE']);
-        }
-    }
-	
 	
     //Following function updates the Favorite Item of Customer 
-    public function UpdateFavorite($pFavoriteID, $pFood, $pTip, $pDeliveryMethod) 
+    public function updateCustomerFavoriteMenu($pFavoriteID, $pFood, $pTip, $pDeliveryMethod) 
     {
-            if ($pTip==-1)
-            {
-                    if ($pDeliveryMethod==-1)
-                    {
-                                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET food='".addslashes($pFood)."' WHERE id=".$pFavoriteID, 'order', 0 , 'user');
-                        $mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."' WHERE id=".$pFavoriteID;
-                        dbAbstract::Update($mSQL);
-                    }
-                    else
-                    {
-                                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET food='".addslashes($pFood)."', order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
-                        $mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;
-                        dbAbstract::Update($mSQL);
-                    }
-            }
-            else if ($pTip>=0)
-            {
-                    if ($pDeliveryMethod==-1)
-                    {
-                                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
-                        $mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip." WHERE id=".$pFavoriteID;
-                        dbAbstract::Update($mSQL);
-                    }
-                    else
-                    {
-                                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
-                        $mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;
-                        dbAbstract::Update($mSQL);
-                    }
-            }
-            $this->loadfavorites();
-            $this->savetosession();
+		if ($pTip==-1)
+		{
+			if ($pDeliveryMethod==-1)
+			{
+				$mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."' WHERE id=".$pFavoriteID;
+			}
+			else
+			{
+				$mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;
+			}
+		}
+		else if ($pTip>=0)
+		{
+			if ($pDeliveryMethod==-1)
+			{
+				$mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip." WHERE id=".$pFavoriteID;
+			}
+			else
+			{
+				$mSQL = "UPDATE customer_favorites SET food='".addslashes($pFood)."', driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;
+				
+			}
+		}
+		Log::write("Update customer favorites - users.php", "QUERY -- $mSQL", 'order', 0 , 'user');
+		dbAbstract::Update($mSQL);
+			
+		$this->loadUserFavorites();
+		$this->saveToSession();
     }
 
-    public function UpdateFavoriteTipDelMethod($pFavoriteID, $pTip, $pDeliveryMethod) 
+    public function updateFavorite_TipAmount_DeliveryMethod($pFavoriteID, $pTip, $pDeliveryMethod)
     {
-                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
-        $mSQL = "UPDATE customer_favorites SET driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;	
+		$mSQL = "UPDATE customer_favorites SET driver_tip=".$pTip.", order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;	
+		Log::write("Update customer favorites - users.php", "QUERY -- $mSQL", 'order', 0 , 'user');
         dbAbstract::Update($mSQL);
-        $this->loadfavorites();
-        $this->savetosession();
+        $this->loadUserFavorites();
+        $this->saveToSession();
     }
 
-    public function SelectCountFavorite($pFavoriteTitle, $pUserID) 
-    {
-        $mSQL = "SELECT COUNT(*) AS favCount from customer_favorites WHERE TRIM(LOWER(title))='".strtolower(trim($pFavoriteTitle))."' AND customer_id=".$pUserID;
-        $row = dbAbstract::ExecuteObject($mSQL);
-        return $row->favCount;
-    }
-
-    public function SelectPaymentMethodByFavoriteID($pFavoriteID) 
+    public function selectPaymentMethodByFavoriteID($pFavoriteID) 
     {
         $mSQL = "SELECT IFNULL(order_receiving_method, 1) AS PM from customer_favorites WHERE id=".$pFavoriteID;
         $row = dbAbstract::ExecuteObject($mSQL);
         return $row->PM;
     }
 
-    public function UpdateDeliveryMethod($pFavoriteID, $pDeliveryMethod) 
+    public function updateFavoritesDeliveryMethod($pFavoriteID, $pDeliveryMethod) 
     {
-                Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
+		Log::write("Update customer favorites - users.php", "QUERY -- UPDATE customer_favorites SET order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID, 'order', 0 , 'user');
         $mSQL = "UPDATE customer_favorites SET order_receiving_method=".$pDeliveryMethod." WHERE id=".$pFavoriteID;
         dbAbstract::Update($mSQL);		
     }
 
-    public function SelectDataTypeByTokenUserID($pUserID, $pToken) 
-    {
-        $mSQL = "SELECT IFNULL(data_type, 4) AS DataType from general_detail WHERE id_2=".$pUserID." AND data_2=".$pToken;
-        $row = dbAbstract::ExecuteObject($mSQL);
-        return $row->DataType;
-    }
-
-    public function SelectCardExpiryByTokenUserID($pUserID, $pToken) 
-    {
-        $mSQL = "SELECT IFNULL(card_expiry, 0) AS CardExpiry from general_detail WHERE id_2=".$pUserID." AND data_2=".$pToken;
-        $row = dbAbstract::ExecuteObject($mSQL);
-        return $row->CardExpiry;
-    }
-
-    public function saveTokenWithExpiry($secure_data,$token,$default,$pCardExpiry)
+    public function saveCCTokenWithExpiry($secure_data,$token,$default,$pCardExpiry)
     {
         $type=  substr($secure_data, 0,1);
         $cc=  substr($secure_data, -4, 4);
@@ -625,7 +517,7 @@ class users
             dbAbstract::Insert($mSQL);
             if($default==1) 
             {
-                $this->setDefaultCard($token);
+                $this->setUserDefaultCard($token);
             }
             return true;
         }
@@ -635,13 +527,13 @@ class users
         }
     }
 
-    public function SelectTokenDetailsByTokenUserID($pUserID, $pToken) 
+    public function selectCCTokenDetailsByUserID($pUserID, $pToken) 
     {
         $mSQL = "SELECT * from general_detail WHERE id_2=".$pUserID." AND data_2=".$pToken;
         return dbAbstract::ExecuteObject($mSQL);		 
     }
 
-    public function SelectUserIDByFBIDRestaurantID($pFBID, $pRID)
+    public function selectUserIDByFBID_RestaurantID($pFBID, $pRID)
     {
         $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE facebook_id='".$pFBID."' AND resturant_id=".$pRID;
         $mQuery = dbAbstract::Execute($mSQL);
@@ -655,7 +547,7 @@ class users
         }
     }
 
-    public function SelectUserIDByEmailRestaurantID($pEmail, $pRID)
+    public function selectUserIDByEmail_RestaurantID($pEmail, $pRID)
     {
         $mSQL = "SELECT IFNULL(id, 0) AS UserID, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE cust_email='".$pEmail."' AND resturant_id=".$pRID;
         $mQuery = dbAbstract::Execute($mSQL);
@@ -669,13 +561,13 @@ class users
         }
     }
 
-    public function UpdateFaceBookID($pUID, $pFBID) 
+    public function updateCustomerFacebookID($pUID, $pFBID) 
     {
         $mSQL = "UPDATE customer_registration SET facebook_id='".$pFBID."' WHERE id=".$pUID;
         dbAbstract::Update($mSQL);
     }
 
-    public static function loggedinUserEmail()
+    public static function getLoggedinUserEmailID()
     {
         if(isset($_SESSION['loggedinuser']))
         {

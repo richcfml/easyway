@@ -112,7 +112,7 @@ $("#close").die('click').live("click", function()
 <?php
 if (isset($_GET['favoriteindex']))
 {
-	$loggedinuser->loadfavorites();
+	$loggedinuser->loadUserFavorites();
 	
 	$favoritefood=$loggedinuser->arrFavorites[$_GET['favoriteindex']]->food;
 ?>

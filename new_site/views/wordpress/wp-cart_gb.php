@@ -15,10 +15,10 @@ if (isset($_GET['ajax'])) {
     } else if (isset($removefavoritesindex)) {
 
         if (isset($loggedinuser->arrFavorites[$removefavoritesindex])) {
-            $loggedinuser->removefavoriteOrder($removefavoritesindex);
+            $loggedinuser->removeUserFavoriteOrder($removefavoritesindex);
         }
     } else if (isset($rapidreorder)) {
-        $loggedinuser->changerepidreorderingstatus($rapidreorder, ($status == 1 ? 0 : 1));
+        $loggedinuser->changeRepidReorderingStatus($rapidreorder, ($status == 1 ? 0 : 1));
     }
 }
 ?>

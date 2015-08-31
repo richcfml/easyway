@@ -79,7 +79,7 @@ $index=-1;
 </div>
 
  <? if($cart->delivery_type==cart::Delivery) { ?>
-<div class="bold strip">Contact : <span class="normal" style="overflow:hidden;max-width:30px;"><?= $loggedinuser->get_delivery_address()?></span>
+<div class="bold strip">Contact : <span class="normal" style="overflow:hidden;max-width:30px;"><?= $loggedinuser->getUserDeliveryAddress()?></span>
 
 <span class="red"><br/><input type="submit" class="button orange" value="Change" name="btncheckout"></span></div>
 <? }?>
@@ -246,7 +246,7 @@ function verifylocation() {
 
     var restaurant_location = '<?= $objRestaurant->rest_address . ", " . $objRestaurant->rest_city . ", " . $objRestaurant->rest_state; ?>';
 <? if (is_numeric($loggedinuser->id)) { ?>
-        var customer_location = '<?= $loggedinuser->get_delivery_address(0); ?>';
+        var customer_location = '<?= $loggedinuser->getUserDeliveryAddress(0); ?>';
 <? } else { ?>
         var customer_location = $("#customer_address").val() + " , " + $("#customer_city").val() + " , " + $("#customer_state").val();
 <? } ?>

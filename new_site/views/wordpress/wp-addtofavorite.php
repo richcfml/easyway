@@ -76,7 +76,7 @@ if (isset($_POST["txtCode"]))
 		}
 	}
 	
-	$loggedinuser->addtoMyFavorites($_POST['txtCode'],serialize($products),1,$_POST['rbPDFav'], $mTip);
+	$loggedinuser->addMenuToCustomerFavorites($_POST['txtCode'],serialize($products),1,$_POST['rbPDFav'], $mTip);
 	header("location: ". $SiteUrl .$objRestaurant->url ."/?wp_api=load_resturant");
 	exit;
 }

@@ -31,7 +31,7 @@
     }
     	
     $cart->destroysession();
-    $loggedinuser->destroysession();
+    $loggedinuser->destroyUserSession();
 ?>
 	<div id="error_img"><img src="<?=$SiteUrl?>images/dialog_warning.png" width="64" /></div>
 	<div id="error_message" style="font-size:12px;">

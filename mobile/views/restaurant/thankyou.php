@@ -32,7 +32,7 @@
 </section>
 <?
 $cart->destroysession();
-$loggedinuser->destroysession();
+$loggedinuser->destroyUserSession();
 if(isset($_SESSION['total'])){
      unset($_SESSION['total']);
 }

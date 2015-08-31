@@ -16,7 +16,7 @@ if (isCardRegistered($InputCardNumber)) {
         $Balance = AddValue($InputCardNumber, $objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
 //	 	$Balance=CardBalance($InputCardNumber);
 
-        $loggedinuser->saveCard($InputCardNumber, $Balance['PointBalance'], $Balance['Balance']);
+        $loggedinuser->saveUserValutecCard($InputCardNumber, $Balance['PointBalance'], $Balance['Balance']);
         echo json_encode(array("success" => "1", "message" => "Thank you for registering your card, you now have <u style='font-size:16px;'>" . $Balance['PointBalance'] . "</u> Point(s) and <u style='font-size:16px;'>$" . $Balance['Balance'] . "</u> balance"));
     } else {
 
@@ -37,7 +37,7 @@ if (isCardRegistered($InputCardNumber)) {
             if ($Authorized == "false") {
                 echo json_encode(array("success" => "0", "message" => "Invalid card number", "result1" => $ResultData));
             } else {
-                $loggedinuser->saveCard($InputCardNumber, $Balance['PointBalance'], $Balance['Balance']);
+                $loggedinuser->saveUserValutecCard($InputCardNumber, $Balance['PointBalance'], $Balance['Balance']);
                 echo json_encode(array("success" => "1", "message" => "Thank you for registering your card, you now have <u style='font-size:16px;'>" . $ResultData['PointBalance'] . "</u> Point(s)  and <u style='font-size:16px;'>$" . $Balance['Balance'] . "</u> balance"));
             }
         }

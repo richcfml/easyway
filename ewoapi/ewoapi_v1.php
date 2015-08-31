@@ -1,6 +1,6 @@
 <?php
 include("../includes/config.php");
-require_once('../classes/users.php');
+require_once('../classes/Users.php');
 require	"../includes/class.phpmailer.php";
 include "../classes/restaurant.php";
 
@@ -432,14 +432,11 @@ function login()
     global $SiteUrl;
     $mAPIKey = $_GET['apikey'];
     $objMail = new testmail();
-    $loggedinuser = new users();
+    $loggedinuser = new Users();
     $objRestaurant = new restaurant();
     error_reporting(E_ALL);
-    $mSalt = hash('sha256', mt_rand(10,1000000));    
-    $ePassword = hash('sha256', '12345'.$mSalt);
     $loggedinuser->cust_email=  $_GET['email'];
-    $loggedinuser->epassword= $ePassword;
-    $loggedinuser->salt= $mSalt ;
+    $loggedinuser->password= '12345' ;
     $loggedinuser->cust_your_name= trim($_GET['Fname']);
     $loggedinuser->LastName= trim($_GET['Lname']) ;
     $loggedinuser->street1= trim($_GET['street1']) ;
@@ -459,7 +456,7 @@ function login()
     {
         if(!empty($_GET['email'])& !empty($_GET['rest_slug']))
         {
-            $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(epassword)>0 LIMIT 1");
+            $user_qry  = dbAbstract::Execute("SELECT * FROM customer_registration WHERE cust_email='".$_GET['email']."' AND resturant_id= ". $objRestaurant->id ."  AND LENGTH(password)>0 LIMIT 1");
             if(dbAbstract::returnRowsCount($user_qry)>1)
             { 
                 return NULL;
@@ -468,7 +465,7 @@ function login()
             if(dbAbstract::returnRowsCount($user_qry)==1)
             {
                 $user=dbAbstract::returnObject($user_qry,"users");
-                $loggedinuser->destroysession();
+                $loggedinuser->destroyUserSession();
                 $loggedinuser = $user;
                 $address1 = explode('~', trim($loggedinuser->cust_odr_address, '~'));
 
@@ -477,7 +474,7 @@ function login()
                 if (count($address1) >= 1)
                 $loggedinuser->street2 = $address1[1];
 
-                $loggedinuser->savetosession();
+                $loggedinuser->saveToSession();
                 redirect($SiteUrl.$_GET['rest_slug']."/?item=menu");
                 exit;
             }
@@ -486,7 +483,7 @@ function login()
             {
                 if(!empty( $_GET['Fname'] )& !empty( $_GET['Lname'] )& !empty( $_GET['street1'] )& !empty( $_GET['city'] ) & !empty( $_GET['state'] ) & !empty( $_GET['zip'] ) & !empty( $_GET['phone'] ))
                 {
-                    $result=$loggedinuser->register($objRestaurant,$objMail);
+                    $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
                 }
                 else
                 {
@@ -496,8 +493,8 @@ function login()
 
             if($result===true)
             {
-               $loggedinuser->destroysession();
-               $loggedinuser->savetosession();
+               $loggedinuser->destroyUserSession();
+               $loggedinuser->saveToSession();
                redirect($SiteUrl.$_GET['rest_slug']."/?item=menu");
                exit;
             }

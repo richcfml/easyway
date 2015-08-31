@@ -21,14 +21,14 @@
 
 	if($success==1)
 	{
- 	 $loggedinuser->saveTokenWithExpiry($x_card_num,$gateway_token,1,$exd);
+ 	 $loggedinuser->saveCCTokenWithExpiry($x_card_num,$gateway_token,1,$exd);
 		 echo json_encode(array("css"=>"success","message"=>"Credit card added successfully","card"=>$x_card_num));
 	}else {
 		echo json_encode(array("css"=>"alert-error","message"=>"Credit card not accepted by gateway","card"=>$x_card_num));
 		}
 	}else{
 		
-		$loggedinuser->setDefaultCard($token);
+		$loggedinuser->setUserDefaultCard($token);
 		echo json_encode(array("css"=>"success","message"=>"Credit card selected successfully","token"=>$_POST));
 		}
  //@mysql_close($mysql_conn);	

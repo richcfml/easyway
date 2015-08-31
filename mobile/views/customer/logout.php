@@ -1,7 +1,5 @@
 <?
-$loggedinuser->logout();
+$loggedinuser->logoutUser();
 redirect($SiteUrl .$objRestaurant->url ."/");
-//header("location: ". $SiteUrl .$objRestaurant->url ."/" );
 exit;
-
 ?>

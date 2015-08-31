@@ -7,6 +7,7 @@ if ($objRestaurant->region == "2") //Canada
 	$mZipPostal = "Postal Code";
 	$mStateProvince = "Province";
 }
+
 $result = -1;
 $register_result = -1;
 $errMessage = "";
@@ -20,7 +21,7 @@ if (isset($_POST['login']))
                      $result=false;
         }
 	$user_email = $_POST['email'];
-	$user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+	$user = $loggedinuser->loginUser($_POST['email'], $_POST['password'], $objRestaurant->id);
 
  	if(is_null($user)) 
 	{
@@ -28,7 +29,7 @@ if (isset($_POST['login']))
 	} 
 	else 
 	{
-		$loggedinuser->destroysession();
+		$loggedinuser->destroyUserSession();
 		$loggedinuser = $user;
 
 		
@@ -71,7 +72,7 @@ if (isset($_POST['login']))
 		{
 			$loggedinuser->delivery_street2=$address1[1];
 		}
-		$loggedinuser->savetosession();
+		$loggedinuser->saveToSession();
 
 		$result=true;
 		if($cart->isempty()) 
@@ -115,7 +116,7 @@ else if(isset($_POST['btnregister']))
         } else if($phone1 == '') {
                  $errMessage = "Please enter phone";
         } else{
-            $loggedinuser->	cust_email=  $email;
+		$loggedinuser->	cust_email=  $email;
 	$mSalt = hash('sha256', mt_rand(10,1000000));    
         $loggedinuser->salt= $mSalt;
         $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
@@ -133,7 +134,7 @@ else if(isset($_POST['btnregister']))
 	$loggedinuser->delivery_state1= trim($cstate) ;
 	$loggedinuser->deivery1_zip= trim($czip) ;
 	$loggedinuser->resturant_id =$objRestaurant->id;
-	$register_result=$loggedinuser->register($objRestaurant,$objMail);
+	$register_result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
 	if($register_result===true)
 	{
 		if($cart->isempty()) 
@@ -146,7 +147,6 @@ else if(isset($_POST['btnregister']))
 			redirect($SiteUrl .$objRestaurant->url ."/?item=menu&wp_api=checkout" );
 			exit;
 		}
-	}
 	}
 } 
 else if(is_numeric($loggedinuser->id)) 

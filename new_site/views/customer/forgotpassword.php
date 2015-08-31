@@ -22,7 +22,7 @@ $(".commentsblock").validate({
 <?php
 $result=-1;
 if (isset($_POST['forgotpassword'])){
-	$result=$loggedinuser->remindPassword($_POST['email'],$objRestaurant,$objMail);
+	$result=$loggedinuser->remindUserPassword($_POST['email'],$objRestaurant,$objMail);
 }
  
  

@@ -3,7 +3,7 @@
 	 echo "alert-error";
 	 }else{
 	$loggedinuser->cust_phone1=$_POST['phone1'];
-	$loggedinuser->savePhone();
+	$loggedinuser->saveUserPhone();
  
 	 echo "success";
 	//@mysql_close($mysql_conn);	

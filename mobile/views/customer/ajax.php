@@ -3,14 +3,14 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 {
 	if (isset($_GET['fbid']))
 	{
-		$mRow = $loggedinuser->SelectUserIDByFBIDRestaurantID($_GET['fbid'], $objRestaurant->id);
+		$mRow = $loggedinuser->selectUserIDByFBID_RestaurantID($_GET['fbid'], $objRestaurant->id);
 		if ($mRow==0) //No EWO account associated
 		{
 			if (isset($_GET['email']))
 			{
 				if (trim($_GET['email'])!="")
 				{
-					$mRow = $loggedinuser->SelectUserIDByEmailRestaurantID(urldecode($_GET['email']), $objRestaurant->id);
+					$mRow = $loggedinuser->selectUserIDByEmail_RestaurantID(urldecode($_GET['email']), $objRestaurant->id);
 					if ($mRow==0) //No EWO account associated
 					{
 						echo("<ewo_result>0</ewo_result>");
@@ -18,6 +18,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 					else
 					{							
 						$mUserID = $mRow->UserID;
+						
 						$mEmail = $mRow->Email;
 						if ($mUserID==0) //Error, because UserID cannot be 0 if there is a row
 						{
@@ -25,15 +26,15 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 						}
 						else if ($mUserID>0) //EWO account associated
 						{
-							$loggedinuser->UpdateFaceBookID($mUserID, $_GET['fbid']);
-							$mUser = $loggedinuser->sso_login($mEmail, $objRestaurant->id);
+							$loggedinuser->updateCustomerFacebookID($mUserID, $_GET['fbid']);
+							$mUser = $loggedinuser->ssoUserLogin($mEmail, $objRestaurant->id);
 							if(is_null($mUser))
 							{
 								echo("<ewo_result>-2</ewo_result>");
 							}
 							else
 							{
-								$loggedinuser->destroysession();
+								$loggedinuser->destroyUserSession();
 								$loggedinuser = $mUser;
 						
 								require($site_root_path . "includes/abandoned_cart_config.php");
@@ -66,7 +67,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 								if (count($mAddress1) >= 1)
 									$loggedinuser->delivery_street2 = $mAddress1[1];
 						
-								$loggedinuser->savetosession();
+								$loggedinuser->saveToSession();
 								echo("<ewo_result>".$mUserID."</ewo_result>");
 							}
 						}
@@ -77,6 +78,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 		else
 		{
 			$mUserID = $mRow->UserID;
+			
 			$mEmail = $mRow->Email;
 			if ($mUserID==0) //Error, because UserID cannot be 0 if there is a row
 			{
@@ -84,14 +86,14 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 			}
 			else if ($mUserID>0) //EWO account associated
 			{
-				$mUser = $loggedinuser->sso_login($mEmail, $objRestaurant->id);
+				$mUser = $loggedinuser->ssoUserLogin($mEmail, $objRestaurant->id);
 				if(is_null($mUser))
 				{
 					echo("<ewo_result>-2</ewo_result>");
 				}
 				else
 				{
-					$loggedinuser->destroysession();
+					$loggedinuser->destroyUserSession();
 					$loggedinuser = $mUser;
 			
 					require($mobile_root_path . "../new_site/includes/abandoned_cart_config.php");
@@ -124,7 +126,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 					if (count($mAddress1) >= 1)
 						$loggedinuser->delivery_street2 = $mAddress1[1];
 			
-					$loggedinuser->savetosession();
+					$loggedinuser->saveToSession();
 					echo("<ewo_result>".$mUserID."</ewo_result>");
 				}
 			}

@@ -13,12 +13,12 @@ if (isset($_GET['favoriteindex']))
             unset($loggedinuser->arrFavorites[$_GET['favoriteindex']]->food[$_GET['remindex']]);
             $loggedinuser->arrFavorites[$_GET['favoriteindex']]->food = array_values($loggedinuser->arrFavorites[$_GET['favoriteindex']]->food);
 
-            $loggedinuser->UpdateFavorite($mFavoriteID, serialize($loggedinuser->arrFavorites[$_GET['favoriteindex']]->food), -1, -1);
+            $loggedinuser->updateCustomerFavoriteMenu($mFavoriteID, serialize($loggedinuser->arrFavorites[$_GET['favoriteindex']]->food), -1, -1);
         }
     }
 
     $mTestStr='1';
-    $loggedinuser->loadfavorites();
+    $loggedinuser->loadUserFavorites();
 
     $favoritefood=$loggedinuser->arrFavorites[$_GET['favoriteindex']]->food;
     $mTestStr=$mTestStr.'2';

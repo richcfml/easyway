@@ -15,11 +15,11 @@ if (isset($_POST['login']))
     $user_email = $_POST['email'];
     if($_POST['login']=='sso')
     {
-        $user = $loggedinuser->sso_login($_POST['email'], $objRestaurant->id);
+        $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id);
     }
     else
     {
-        $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+        $user = $loggedinuser->loginUser($_POST['email'], $_POST['password'], $objRestaurant->id);
     }
 
     if(is_null($user))
@@ -28,7 +28,7 @@ if (isset($_POST['login']))
     }
     else
     {
-        $loggedinuser->destroysession();
+        $loggedinuser->destroyUserSession();
         $loggedinuser = $user;
 
         require($site_root_path . "includes/abandoned_cart_config.php");
@@ -71,7 +71,7 @@ if (isset($_POST['login']))
             $loggedinuser->delivery_street2 = $address1[1];
         }
 
-        $loggedinuser->savetosession();
+        $loggedinuser->saveToSession();
         $result = true;
         $itemcount= $cart->totalItems();
 
@@ -93,9 +93,10 @@ else if (isset($_POST['btnregister']))
 		$mFBID=$_POST["txtFBID"];
 	}
     $loggedinuser->cust_email = $email;
+    
     $mSalt = hash('sha256', mt_rand(10,1000000));    
     $loggedinuser->salt= $mSalt;
-    $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
+    $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
     $loggedinuser->cust_your_name = trim($first_name);
     $loggedinuser->LastName = trim($last_name);
     $loggedinuser->street1 = trim($address1);
@@ -111,7 +112,7 @@ else if (isset($_POST['btnregister']))
     $loggedinuser->deivery1_zip = trim($czip);
     $loggedinuser->resturant_id = $objRestaurant->id;
 	$loggedinuser->facebook_id = $mFBID;
-    $register_result = $loggedinuser->register($objRestaurant, $objMail);
+    $register_result = $loggedinuser->customerRegistration($objRestaurant, $objMail);
     if ($register_result === true) 
 	{
 		$itemcount = $cart->totalItems();

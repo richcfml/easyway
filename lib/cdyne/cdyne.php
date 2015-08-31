@@ -171,7 +171,7 @@ class SMSTrace
 						$this->ntries=$result->ntries;
 						$this->token_id=$result->token_id;
 						
-						$mToken = $loggedinuser->SelectTokenDetailsByTokenUserID($this->user_id, $this->token_id);
+						$mToken = $loggedinuser->selectCCTokenDetailsByUserID($this->user_id, $this->token_id);
 						if($mToken->data_type==AMEX)
 						{
 							$card_type="American Express";
@@ -196,7 +196,7 @@ class SMSTrace
 						if (strtoupper($this->sms)=="YES")
 						{
 							$cart->clear();
-							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+							$loggedinuser=$loggedinuser->loginByUserId($this->user_id);
 							$loggedinuser->delivery_address_choice = 1;
 							
 							$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
@@ -209,7 +209,7 @@ class SMSTrace
 							$loggedinuser->cust_ord_zip =trim($mRow->cust_ord_zip);
 							$loggedinuser->delivery_address=$loggedinuser->street1 .", ". $loggedinuser->cust_ord_city .", ". $loggedinuser->cust_ord_state;
 							
-							$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+							$arrfood= $loggedinuser->getFavoritesById($this->easyway_id);
 							$this->arrOrder=$arrfood[0];
 							$cart->addfavorites($this->arrOrder->food);
 							$cart->setdelivery_type($this->arrOrder->order_receiving_method);
@@ -323,9 +323,9 @@ class SMSTrace
 						}
 						else if (strtoupper($this->sms)=="PICKUP")
 						{
-							$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 2);
+							$loggedinuser->updateFavoritesDeliveryMethod($this->easyway_id, 2);
 							$cart->clear();
-							$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+							$loggedinuser=$loggedinuser->loginByUserId($this->user_id);
 							$loggedinuser->delivery_address_choice = 1;
 							
 							$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
@@ -338,7 +338,7 @@ class SMSTrace
 							$loggedinuser->cust_ord_zip =trim($mRow->cust_ord_zip);
 							$loggedinuser->delivery_address=$loggedinuser->street1 .", ". $loggedinuser->cust_ord_city .", ". $loggedinuser->cust_ord_state;
 							
-							$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+							$arrfood= $loggedinuser->getFavoritesById($this->easyway_id);
 							$this->arrOrder=$arrfood[0];
 							$cart->addfavorites($this->arrOrder->food);
 							//$cart->driver_tip = $this->arrOrder->driver_tip;
@@ -359,7 +359,7 @@ class SMSTrace
 							if ($objRestaurant->delivery_offer==1)
 							{
 								$cart->clear();
-								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+								$loggedinuser=$loggedinuser->loginByUserId($this->user_id);
 								$loggedinuser->delivery_address_choice = 1;
 								
 								$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
@@ -372,7 +372,7 @@ class SMSTrace
 								$loggedinuser->cust_ord_zip =trim($mRow->cust_ord_zip);
 								$loggedinuser->delivery_address=$loggedinuser->street1 .", ". $loggedinuser->cust_ord_city .", ". $loggedinuser->cust_ord_state;
 								
-								$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+								$arrfood= $loggedinuser->getFavoritesById($this->easyway_id);
 								$this->arrOrder=$arrfood[0];
 								$cart->addfavorites($this->arrOrder->food);
 								$cart->driver_tip = $this->arrOrder->driver_tip;
@@ -385,7 +385,7 @@ class SMSTrace
 								}
 								else
 								{
-									$loggedinuser->UpdateDeliveryMethod($this->easyway_id, 1);
+									$loggedinuser->updateFavoritesDeliveryMethod($this->easyway_id, 1);
 									$cart->setdelivery_type(1);
 									$mSMS="Delivery" .' '.$this->order_title .' $'. $cart->grand_total(0) .' pay with '.$card_type . ' - '.$mToken->data_1 . ' reply YES to confirm, or PICKUP to change to pickup.';
 									$this->cydne->sendSMS($this->reply_phone_number, $mSMS ,$this->order_title,'',cydne::SYSTEM_RESPONSE);
@@ -394,7 +394,7 @@ class SMSTrace
 							else
 							{
 								$cart->clear();
-								$loggedinuser=$loggedinuser->loginbyid($this->user_id);
+								$loggedinuser=$loggedinuser->loginByUserId($this->user_id);
 								$loggedinuser->delivery_address_choice = 1;
 								
 								$mRes = dbAbstract::Execute("SELECT * FROM customer_registration WHERE id = ".$this->user_id);
@@ -407,7 +407,7 @@ class SMSTrace
 								$loggedinuser->cust_ord_zip =trim($mRow->cust_ord_zip);
 								$loggedinuser->delivery_address=$loggedinuser->street1 .", ". $loggedinuser->cust_ord_city .", ". $loggedinuser->cust_ord_state;
 							
-								$arrfood= $loggedinuser->getfavoritesbyId($this->easyway_id);
+								$arrfood= $loggedinuser->getFavoritesById($this->easyway_id);
 								$this->arrOrder=$arrfood[0];
 								$cart->addfavorites($this->arrOrder->food);
 								$cart->driver_tip = $this->arrOrder->driver_tip;
@@ -468,7 +468,7 @@ class SMSTrace
 				$cart->addfavorites($this->arrOrder->food);
 				$cart->setdelivery_type($this->arrOrder->order_receiving_method);
 				
-				$token=$this->user->getDefaultToken();
+				$token=$this->user->getUserDefaultCCToken();
 				if(isset($token->data_2))
 				{
 					$mTraceID = dbAbstract::Insert("INSERT INTO repid_reordering_trace(phone_number,user_id,trace_date,trace_status,step,order_title,easyway_id,ntries ,token_id) VALUES(". $this->phone_number .",". $this->user->id .",". time() .",". SMSTrace::TRACEOPEN .",1,'". addslashes($this->sms) ."',".$this->easyway_id .",0,'". $token->data_2 ."')", 0, 2);
@@ -491,7 +491,7 @@ class SMSTrace
 					
 
 					
-					$mPaymentMethod = $loggedinuser->SelectPaymentMethodByFavoriteID($this->easyway_id);
+					$mPaymentMethod = $loggedinuser->selectPaymentMethodByFavoriteID($this->easyway_id);
 					
 					if ($mPaymentMethod==1) //Delivery
 					{
@@ -573,10 +573,10 @@ class SMSTrace
 
 	public function VerifyOrder() 
 	{
-		$arrfood=$this->user->getfavoritesbyTitle($this->sms);
+		$arrfood=$this->user->getFavoritesByTitle($this->sms);
 		if(count($arrfood) ==0)
 		{
-			$this->user->getfavoritesTitles();
+			$this->user->getFavoritesTitles();
 			if(count($this->user->arrFavorites)==0)
 			{
 				$this->cydne->sendSMS($this->reply_phone_number,"please make sure you have favorites added at ".$this->cydne->restaurant_name , $this->order_title,'',cydne::SYSTEM_RESPONSE);
@@ -600,7 +600,7 @@ class SMSTrace
 	public function VerifyUser() 
 	{
 		global $loggedinuser;
-		$this->user= $loggedinuser->getDetailbyPhone($this->phone_number,$this->resaurant_id);
+		$this->user= $loggedinuser->getUserDetailByPhone($this->phone_number,$this->resaurant_id);
 		if(!isset($this->user->id))
 		{
 			return false;

@@ -29,11 +29,11 @@ if (isset($_POST['login']))
 	
     if($_POST['login']=='sso')
     {
-            $user = $loggedinuser->sso_login($_POST['email'], $objRestaurant->id);
+            $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id);
     }
     else
     {
-        $user = $loggedinuser->login($_POST['email'], $_POST['password'], $objRestaurant->id);
+        $user = $loggedinuser->loginUser($_POST['email'], $_POST['password'], $objRestaurant->id);
     }
 
     if (is_null($user)) 
@@ -43,7 +43,7 @@ if (isset($_POST['login']))
     else 
     {
 
-        $loggedinuser->destroysession();
+        $loggedinuser->destroyUserSession();
         $loggedinuser = $user;
         require($mobile_root_path . "../new_site/includes/abandoned_cart_config.php");
 
@@ -84,7 +84,7 @@ if (isset($_POST['login']))
             }
         }
 
-        $loggedinuser->savetosession();
+        $loggedinuser->saveToSession();
         $result = true;
         $itemcount = $cart->totalItems();
         if ($itemcount > 0) 

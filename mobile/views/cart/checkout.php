@@ -26,7 +26,7 @@ if ($cart->delivery_type == cart::None) {
 isset($_POST['step']) ? $step = $_POST['step'] : $step = 1;
 
 if (isset($_POST['btnchoose'])) {
-    $loggedinuser->set_delivery_address($_POST['address_option']);
+    $loggedinuser->setUserDeliveryAddress($_POST['address_option']);
 } else if (isset($_POST['btntempcustomer'])) {
     extract($_POST);
 
@@ -43,7 +43,7 @@ if (isset($_POST['btnchoose'])) {
 	$loggedinuser->cust_ord_zip = trim($customer_zip);
 	$loggedinuser->delivery_address = $loggedinuser->street1 . ", " . $loggedinuser->cust_ord_city . ", " . $loggedinuser->cust_ord_state;
 
-    $loggedinuser->savetosession();
+    $loggedinuser->saveToSession();
 }
 ?>
 
