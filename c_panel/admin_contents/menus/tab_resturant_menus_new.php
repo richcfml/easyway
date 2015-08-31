@@ -265,7 +265,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
     </head>
 
     <body style="cursor: auto; font-family: Arial;">
-             <input type="hidden" value="<?=$Objrestaurant->id?>" id="restaurantid"/>
+        <input type="hidden" value="<?=$Objrestaurant->id?>" id="restaurantid"/>
         <?php include('../c_panel/admin_contents/products/attr_assoc_popup.php'); ?>
                <div style="position:relative;top: -25px;">
             <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-open" id="cbp-spmenu-s1" style="position: absolute;">
@@ -353,7 +353,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
             
 	  <?php
 	  if($Objrestaurant->bh_restaurant == 1){
-		$ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date > '".strtotime(date('Y-m-d'))."'");
+		$ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."'");
 		$ss_rows = dbAbstract::returnRowsCount($ss_qry);
 		if($ss_rows > 0 ){
 		?>
