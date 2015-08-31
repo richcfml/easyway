@@ -69,6 +69,8 @@
         $( "#end_date" ).datepicker({minDate: 0});
         $("#add_Signature_sandwitch").unbind("submit").bind('submit', function(e){
                 e.preventDefault();
+                var start_date = new Date($("#start_date").val());
+                var end_date = new Date($("#end_date").val());
                 if($("#item_name").val()=="")
                 {
                     $("#item_name").css('background-color','#F99');
@@ -103,6 +105,19 @@
                 {
                     $("#end_date").css('background-color','');
                     $("#end_date").css('border','');
+                }
+                if(start_date > end_date)
+                {   
+                    $("#end_date,#start_date").css('background-color','#F99');
+                    $("#end_date,#start_date").css('border','1px solid #D92353');
+                    $("#sucessMessage").text('Start date must be less than end date').addClass('errorMessage').removeClass('sucessMessage')
+                    return false;
+                }
+                else
+                {
+                    $("#end_date,#start_date").css('background-color','');
+                    $("#end_date,#start_date").css('border','');
+                    $("#sucessMessage").text('')
                 }
                 var ext = $("#item_img").attr('src').split("/").pop(-1);
                 ext = ext.split("?")[0];
