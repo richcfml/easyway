@@ -235,7 +235,7 @@
 	$arrCustomer['EMAIL']=$loggedinuser->cust_email;
 	$arrCustomer['PHONENUMBER']=$loggedinuser->cust_phone1;
 	$arrCustomer['ADDRESS']= str_replace('~','',$loggedinuser->cust_odr_address) .', '. $loggedinuser->cust_ord_city.', '.$loggedinuser->cust_ord_state.', '.$loggedinuser->cust_ord_zip;
-	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->get_delivery_address(0);
+	$arrCustomer['DELIVERYADDRESS']=$loggedinuser->getUserDeliveryAddress(0);
 	$arrCustomer['ZIPCODE']=$loggedinuser->getUserDeliveryZipCode();
 	
 	$arrRestaurant['RESTAURANTNAME']=$objRestaurant->name;
