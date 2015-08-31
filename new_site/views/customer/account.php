@@ -32,7 +32,7 @@
             $loggedinuser->delivery_city1= $scity;
             $loggedinuser->delivery_state1= $cstate;
             $loggedinuser->deivery1_zip= $czip;
-            $loggedinuser->update();
+            $loggedinuser->updateCustomerRegistration();
         }
 
  
