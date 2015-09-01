@@ -1399,7 +1399,6 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
         height: 100%;
         background-color: Black;
         color: White;
-        z-index: 1000;
     }
 </style>
 <div id="divOverlay" style="display:none"></div>
