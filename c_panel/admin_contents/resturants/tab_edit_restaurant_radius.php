@@ -253,7 +253,7 @@ if (!empty($_GET)) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+$Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 if (isset($_POST['submit'])) {
 	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
     $restQry = dbAbstract::Execute("SELECT name from resturants where name='$catname' AND id!='$catid'",1);
@@ -769,17 +769,11 @@ else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 else if (isset($_POST["btnRemoveHeaderImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
-    echo("1<br />");
-    echo("../images/resturant_headers/<?=$Objrestaurant->header_image?><br />");
     
     if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>")))
     {
-        echo("2<br />");
         unlink(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>"));
-        echo("3<br />");
     }
-    echo("4");
-    exit;
     $errMessage = "Header image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 }
