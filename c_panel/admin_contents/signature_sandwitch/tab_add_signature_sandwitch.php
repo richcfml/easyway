@@ -336,6 +336,115 @@
                 });
             }
         });
+        
+        $("#userfile").change(function(event){
+            $("#show_photo_before").css('opacity','0.5');
+            $("#show_photo").css('opacity','0.5');
+            $('.form-progress-wrapper').show();
+
+            var data = new FormData();
+            jQuery.each($('#userfile')[0].files, function(i, file) {
+                data.append('file-'+i, file);
+            });
+
+            var imageSize = document.getElementById('userfile').files[0].size;
+            if(imageSize > 1048576)
+            {
+
+                $("#sizeErrorMsg1").css('color','red');
+
+            }
+            else{
+                $.ajax({
+                    type:"post",
+                    url: "admin_contents/menus/menu_ajax.php?imgupload=1",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+
+                    success: function(data) {
+                        if(data!='')
+                        {
+                                                    mTmpArr = data.split("~");
+                                                    mImageSrc = mTmpArr[0];
+                                                    mWidth = mTmpArr[1];
+                                                    mHeight = mTmpArr[2];
+
+                            $("#show_photo").show();
+                            $("#show_photo_before").hide();
+                            $("#item_img").attr("src","../c_panel/tempimages/"+mImageSrc);
+                            $.fancybox.close();
+                            $("#deleteimg").show();
+                            $("#cropimg").show();
+                            $("#cropimg").css('margin-left','10px');
+                            $('.form-progress-wrapper').hide();
+                            $("#show_photo_before").css('opacity','1.5');
+                            $("#show_photo").css('opacity','1.5');
+                            $("#imgDiv").css('margin-left','75px');
+                            if ($('#item_img').data('Jcrop') != null) {
+                                    $('#item_img').data('Jcrop').destroy();
+                                }
+
+                                                    if ((mWidth>=450) || (mHeight>=450))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
+                                                            $('#hdnScale').val('4.5');
+                                                    }
+                                                    else if (((mWidth<450) && (mWidth>=400)) || ((mHeight<450) && (mHeight>=400)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/4)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/4)+"px");;
+                                                            $('#hdnScale').val('4');
+                                                    }
+                                                    else if (((mWidth<400) && (mWidth>=300)) || ((mHeight<400) && (mHeight>=300)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/3.5)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/3.5)+"px");;
+                                                            $('#hdnScale').val('3.5');
+                                                    }
+                                                    else if (((mWidth<300) && (mWidth>=250)) || ((mHeight<300) && (mHeight>=250)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/3)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/3)+"px");
+                                                            $('#hdnScale').val('3');
+                                                    }
+                                                    else if (((mWidth<250) && (mWidth>=220)) || ((mHeight<250) && (mHeight>=220)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/2.5)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/2.5)+"px");
+                                                            $('#hdnScale').val('2.5');
+                                                    }																							
+                                                    else if (((mWidth<220) && (mWidth>=190)) || ((mHeight<220) && (mHeight>=190)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/2)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/2)+"px");
+                                                            $('#hdnScale').val('2');
+                                                    }
+                                                    else if (((mWidth<190) && (mWidth>=120)) || ((mHeight<190) && (mHeight>=105)))
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth/1.5)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight/1.5)+"px");
+                                                            $('#hdnScale').val('1.5');
+                                                    }
+                                                    else
+                                                    {
+                                                            $('#item_img').css("width",Math.round(mWidth)+"px");
+                                                            $('#item_img').css("height",Math.round(mHeight)+"px");
+                                                            $('#hdnScale').val('1');
+                                                    }
+
+                            $('.jcrop-holder img').attr("src","../c_panel/tempimages/"+mImageSrc);
+                            $('#item_img').Jcrop({addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
+
+            });
+
+                        }
+                    }
+                });
+            }
+        });
     });
     
 </script>
