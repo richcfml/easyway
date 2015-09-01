@@ -729,9 +729,9 @@ if (isset($_POST['submit'])) {
 else if (isset($_POST["btnRemoveVIP"]))
 {
     dbAbstract::Update("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/resturant_vip_headers/<?=$Objrestaurant->VIP_List_Image?>")))
+    if (file_exists(realpath("../images/resturant_vip_headers/".$Objrestaurant->VIP_List_Image)))
     {
-        unlink(realpath("../images/resturant_vip_headers/<?=$Objrestaurant->VIP_List_Image?>"));
+        unlink(realpath("../images/resturant_vip_headers/".$Objrestaurant->VIP_List_Image));
     }
     $errMessage = "VIP list image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -739,9 +739,9 @@ else if (isset($_POST["btnRemoveVIP"]))
 else if (isset($_POST["btnRemoveBhBanner"]))
 {
     dbAbstract::Update("UPDATE resturants SET bh_banner_image='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/resturant_bh_banner/<?=$Objrestaurant->bh_banner_image?>")))
+    if (file_exists(realpath("../images/resturant_bh_banner/".$Objrestaurant->bh_banner_image)))
     {
-        unlink(realpath("../images/resturant_bh_banner/<?=$Objrestaurant->bh_banner_image?>"));
+        unlink(realpath("../images/resturant_bh_banner/".$Objrestaurant->bh_banner_image));
     }
     $errMessage = "BH banner image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -749,9 +749,9 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 else if (isset($_POST["btnRemoveOptionalLogo"]))
 {
     dbAbstract::Update("UPDATE resturants SET logo='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/resturant_logos/<?=$Objrestaurant->logo?>")))
+    if (file_exists(realpath("../images/resturant_logos/".$Objrestaurant->logo)))
     {
-        unlink(realpath("../images/resturant_logos/<?=$Objrestaurant->logo?>"));
+        unlink(realpath("../images/resturant_logos/".$Objrestaurant->logo));
     }
     $errMessage = "Optional logo removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -759,9 +759,9 @@ else if (isset($_POST["btnRemoveOptionalLogo"]))
 else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 {
     dbAbstract::Update("UPDATE resturants SET optionl_logo='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/logos_thumbnail/<?=$Objrestaurant->optionl_logo?>")))
+    if (file_exists(realpath("../images/logos_thumbnail/".$Objrestaurant->optionl_logo)))
     {
-        unlink(realpath("../images/logos_thumbnail/<?=$Objrestaurant->optionl_logo?>"));
+        unlink(realpath("../images/logos_thumbnail/".$Objrestaurant->optionl_logo));
     }
     $errMessage = "Optional logo thumbnail removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -769,13 +769,9 @@ else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 else if (isset($_POST["btnRemoveHeaderImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
-    echo("<pre>");
-    print_r($Objrestaurant);
-    echo("</pre>");
-    exit;
-    if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>")))
+    if (file_exists(realpath("../images/resturant_headers/".$Objrestaurant->header_image)))
     {
-        unlink(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>"));
+        unlink(realpath("../images/resturant_headers/".$Objrestaurant->header_image));
     }
     $errMessage = "Header image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -783,9 +779,9 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
 else if (isset($_POST["btnRemoveVIPRewardImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_vip_image='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_vip_image?>")))
+    if (file_exists(realpath("../images/resturant_headers/".$Objrestaurant->header_vip_image)))
     {
-        unlink(realpath("../images/resturant_headers/<?=$Objrestaurant->header_vip_image?>"));
+        unlink(realpath("../images/resturant_headers/".$Objrestaurant->header_vip_image));
     }
     $errMessage = "VIP reward image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
