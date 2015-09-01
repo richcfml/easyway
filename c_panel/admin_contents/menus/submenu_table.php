@@ -149,6 +149,11 @@
 					{
                    		foreach ($mRowPr1 as $mRowPr) 
 						{
+							if($mRowPr['signature_sandwitch_id'] > 0){
+							  $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$mRowPr['signature_sandwitch_id']."'");
+							  
+							}
+							if($mRowPr['signature_sandwitch_id']==0 || ($mRowPr['signature_sandwitch_id'] > 0 && $ss_obj->end_date > strtotime('Y-m-d'))){
                     ?>
                         <ul id="tblS" class="clsS" sub_cat="<?=$mRow["cat_id"]?>">
                             <li id="liPrd" class="liPrd" sub_cat="<?=$mRow["cat_id"]?>">
@@ -200,13 +205,15 @@
                                                             
                                                             <!--	Item Title -->
                                                             <div style="margin-left: 55px; font-weight: bold; <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'text-align:left;color:#FFF;width:100%':'')?>" sub_cat="<?=$mRow["cat_id"]?>" class="<?=(($mRowPr["status"] == 0)? 'disable-menu':'enable-menu')?> <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'ss_prodTitle':'')?>">
+                                                              <div style="width:150px">
 															  <?= wordwrap($mRowPr["item_title"], 10, "\n", true); ?>
+                                                              </div>
                                                             </div>
                                                             <span id="lblProductID" sub_cat="<?=$mRow["cat_id"]?>" style="display: none;"><?= $mRowPr["prd_id"] ?></span>
                                                         </td>
                                                         
                                                         <!--	Item Price -->
-                                                        <td style=" font-size: 12px;float:left;margin-left: 20px;" sub_cat="<?=$mRow["cat_id"]?>">
+                                                        <td style=" font-size: 12px;float:left;margin-left: 10px;" sub_cat="<?=$mRow["cat_id"]?>">
                                                           <div sub_cat="<?=$mRow["cat_id"]?>" class="<?=(($mRowPr["status"] == 0)? 'disable-menu':'enable-menu')?>" <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'style="color:#FFF;margin-top: 5px;"':'')?>>
 														  	<?= $currency . $mRowPr["retail_price"] ?>
                                                           </div>
@@ -219,9 +226,8 @@
                                                             <?php
 															// If Signature Sandwich Than Get start date and End Date
                                                             if($mRowPr['signature_sandwitch_id'] > 0){
-															  $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$mRowPr['signature_sandwitch_id']."'");
 															  echo '<div style="margin-left: 55px;" class="ss_prodDates">Featured Sandwich '.
-															  		date('d/m',$ss_obj->start_date).' - '.date('d/m',$ss_obj->end_date).
+															  		date('m/d',$ss_obj->start_date).' - '.date('m/d',$ss_obj->end_date).
 																	'</div>';
 															}
 															?>
@@ -297,7 +303,8 @@
                                     </ul>
 
                     <?php
-                    	}
+							}
+						}
 					}
 					else
 					{

@@ -236,14 +236,22 @@ else if (isset($_GET['add_menu_item']))
     $maxSortOrderNo = dbAbstract::ExecuteObject("Select max(SortOrder) as maxOrder from product where sub_cat_id = ".$sub_cat, 1);
 
     $maxOrderNo = 0;
-    if($maxSortOrderNo->maxOrder != null) {
-        $maxOrderNo = $maxSortOrderNo->maxOrder;
-        $maxOrderNo++;
+    if(isset($_GET['signature_sandwitch']) && $_GET['signature_sandwitch'] !=0)
+    {
+        $maxOrderNo = 1;
+        dbAbstract::Update("update product set SortOrder = SortOrder + 1 where sub_cat_id = ".$sub_cat."");
+    }
+    else
+    {
+        if($maxSortOrderNo->maxOrder != null) {
+            $maxOrderNo = $maxSortOrderNo->maxOrder;
+            $maxOrderNo++;
+        }
     }
     Log::write("Add new product - menu_ajax.php", "QUERY -- INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . addslashes($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,item_type='" . $type . "',SortOrder=" . $maxOrderNo . "", 'menu', 1 , 'cpanel');
     
     $lastid = dbAbstract::Insert("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . ",signature_sandwitch_id=".$_GET['signature_sandwitch']."", 1, 2);
-    if(isset($_GET['signature_sandwitch']))
+    if(isset($_GET['signature_sandwitch']) && $_GET['signature_sandwitch'] !=0)
     {
         dbAbstract::Update("update attribute set ProductID = ".$lastid." where ProductID = ".$_GET['temp_product']."");
     }
@@ -1656,7 +1664,17 @@ else if (isset($_GET["moveSubmenu"]))
 {
     $menu_id = $_GET['menuid'];
     $catid = $_GET['catid'];
-    $result = dbAbstract::Update("update categories set menu_id = $menu_id where cat_id = $catid",1,1 );
+    $maxSortOrderNo = dbAbstract::ExecuteObject("Select max(cat_ordering) as maxOrder from categories where menu_id = ".$menu_id, 1);
+
+    $maxOrderNo = 0;
+ 
+    if($maxSortOrderNo->maxOrder != null) {
+        $maxOrderNo = $maxSortOrderNo->maxOrder;
+        $maxOrderNo++;
+    }
+    
+    
+    $result = dbAbstract::Update("update categories set menu_id = '".$menu_id."', cat_ordering = '".$maxOrderNo."' where cat_id = $catid",1,1 );
     if($result >0 )
     {
         echo 1;

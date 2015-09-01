@@ -351,7 +351,7 @@ if($_POST['cropimg'])
                 <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td>
-                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?> value="<?=$item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40">
+                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" <?php if(isset($_GET['sandwichId'])){ ?> readonly <?php } ?> value="<?=$item_name ?>" class="textAreaClass" placeholder="Item Name"  maxlength="40">
                         </td>
                         <td>
                             <input type="text" id="price" maxlength="7" name="price" style="margin-left: 18%;margin-top: 30px;width: 90%;padding: 8px;" class="textAreaClass" placeholder ="Price(ex:<?=$currency?>4.50)" onblur="$('#price').attr('placeholder','Price(ex:<?=$currency?>4.50)');" >
@@ -554,7 +554,7 @@ if($_POST['cropimg'])
                             else
                             {
                             ?>
-                                <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly="true" <?php } ?>  class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= $description1 ?></textarea>
+                                <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly <?php } ?>  class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= $description1 ?></textarea>
                             <?php
                             }
                             ?>
@@ -1105,7 +1105,8 @@ if($_POST['cropimg'])
                             {
                         ?> 
                             <td class="padding_td">
-                                <input type="checkbox" name ="type[]" class="chk_style" id ="bh_item" value="B"/>
+                                <input type="checkbox" name ="type[]" class="chk_style" id ="bh_item" value="B"
+                                <?=((isset($_GET['sandwichId']) && $_GET['sandwichId'] > 0)? 'checked':'')?>/>
                                 <label for="bh_item"></label>
                                 <div style="margin-left: 27px;">
                                     <img src="img/bh_item.png" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;">
