@@ -770,6 +770,7 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
     echo("1<br />");
+    error_reporting(E_ALL & ~E_NOTICE);
     echo(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>"));
     if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>")))
     {
