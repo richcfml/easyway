@@ -349,117 +349,129 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
             </div>
         </form>
     <div style="background-color: #FFFFFF;width: 763px;margin-left: 187px;margin-bottom: 10px;margin-top: -25px;">
-            <div style="font-family: 'Droid Sans',Arial,Geneva,Helvetica,sans-serif; font-size: 26px; color: #5B5B5B; font-weight: bold; margin-left: 20px; margin-bottom: 15px;"><?=$menu_name?></div>
-            
-	  <?php
-	  if($Objrestaurant->bh_restaurant == 1){
-		$ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."' order by start_date asc");
-		$ss_rows = dbAbstract::returnRowsCount($ss_qry);
-		if($ss_rows > 0 ){
-		?>
-        <script>
-		function allowDrop(ev) {
-			ev.preventDefault();
-		}
-		
-		function drag(ev) {
-			ev.dataTransfer.setData("text", ev.target.id);
-		}
-		
-		function drop(ev) {
-			ev.preventDefault();
-			var sandwichId = ev.dataTransfer.getData("text");
-			
-			var subcatId = ev.target.getAttribute('sub_cat');
-                        console.log(subcatId);
-                        if(subcatId != null)
-                        {
-                            window.location.assign("<?=$SiteUrl?>c_panel/?mod=new_menu&item=addproduct_new&sub_cat="+subcatId+"&sandwichId="+sandwichId)
-                        }
-		}
-		</script>
-        <div style="position:fixed; top:60px; right:340px; width:500px; float:left; height:130px; overflow:hidden">
-          <div class="ss_container">
-            
-            <div id="ss_slider" style="width:<?=$ss_rows * 500?>px;">
-              <?php while($row = dbAbstract::returnObject($ss_qry)){ ?>
-              <div id="ss_slider_img1" class="ss_div">
-                <div class="ss_img">
-                  <?php
-                  $ssp_qry=dbAbstract::Execute("select status from product where cat_id='$Objrestaurant->id' AND signature_sandwitch_id='$row->id'");
-                  $ssp_rows=dbAbstract::returnRowsCount($ssp_qry);
-                  if($ssp_rows > 0){
-                      $boarsHeadBtm = '34px';
-                      $boarsHeadlft = '55px';
-                      $draggable = 'true';
-                      $imgStyle='';
-                      
-                      $prow = dbAbstract::returnObject($ssp_qry);
-                      if($prow->status==0){
-                          $draggable = 'false';
-                          $boarsHeadBtm = '55px';
-                          $boarsHeadlft = '90px';
-                          $imgStyle='position:relative; bottom: 35px; left: 0px;';
-                  ?>
-                          <img src="./images/signaturesandwich/BH_Pause.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
-                  <?php	
-                      }
-                      elseif($row->start_date <= strtotime(date("Y-m-d")) && $row->end_date >= strtotime(date("Y-m-d"))){
-                          $draggable = 'false';
-                          $boarsHeadBtm = '55px';
-                          $boarsHeadlft = '90px';
-                          $imgStyle='position:relative; bottom: 35px; left: 0px;';
-                  ?>
-                          <img src="./images/signaturesandwich/BH_Check.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
-                  <?php
-                      }elseif($row->start_date > strtotime(date("Y-m-d"))){
-                          $draggable = 'false';
-                          $boarsHeadBtm = '60px';
-                          $boarsHeadlft = '90px';
-                          $imgStyle='position:relative; bottom: 40px; left: 0px;';
-                  ?>
-                          <img src="./images/signaturesandwich/BH_Circle.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
-                  <?php	
-                      }
-                  }else{
-                      $boarsHeadBtm = '20px';
-                      $boarsHeadlft = '88px';
-                      $imgStyle='cursor:move;';
-		      $draggable = 'true';
-                  ?>
-                    <!--<img src="img/move.png" alt="Move" draggable="true" ondragstart="drag(event)" id="<?=$row->id?>" style="position:relative; bottom:130px; left:5px;"/>-->
-                  <?php
-                  }
-                  ?>
-                  <img src="./images/signaturesandwich/<?=(($row->item_image !='')? $row->item_image:'no image.png')?>" alt="Photo <?=$row->item_name?>" 
-                  draggable="<?=$draggable?>" ondragstart="drag(event)" id="<?=$row->id?>" style="width:100%; height:130px !important; <?=$imgStyle?>">
-                  
-                  <img src="./images/signaturesandwich/boarsHead.png" draggable="false" style="position:relative; bottom:<?=$boarsHeadBtm?>; left:<?=$boarsHeadlft?>">
-                </div>
-                <div class="ss_wrap">
-                  <div class="ss_content">
-                    <div class="ss_prodTitle"><?=$row->item_name?></div>
-                    <div class="ss_prodDates">
-                      Featured Sandwich <?=date('d/m',$row->start_date).' - '.date('d/m',$row->end_date)?>
-                    </div>
-                    <div class="ss_prodDescription"><?=$row->item_desc?></div>
-                  </div>
-                </div>
-              </div>
-              <?php } ?>
-            </div>
-            
-            <div id="nextbtn"> <i class="fa fa-chevron-circle-left"></i> </div>
-            <div id="prevbtn"> <i class="fa fa-chevron-circle-right"></i> </div>
-          </div>
-        </div>
-      <?
-		}
-	  }
-	  ?>
       
+      <div style="width:30%; float:left">
+        <div style="font-family: 'Droid Sans',Arial,Geneva,Helvetica,sans-serif; font-size: 26px; color: #5B5B5B; font-weight: bold; margin-left: 20px; margin-bottom: 15px;">
+		  <?=$menu_name?>
+        </div>
+        <div id ="add_new_submenu_link" class="submenu_btn" style="width:80%">
+          <span id="plus_span">+</span>
+          <span style="margin-left: 5px;float:left;font-size:14px">Add a New Submenu</span>
+        </div>
+      </div>
+      
+      <div style="width:60%; float:left">
+      	<?php
+		if($Objrestaurant->bh_restaurant == 1){
+		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."'");
+		  $ss_rows = dbAbstract::returnRowsCount($ss_qry);
+		  if($ss_rows > 0 ){
+		  ?>
+		  <script>
+		  function allowDrop(ev) {
+			  ev.preventDefault();
+		  }
+		  
+		  function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+		  }
+		  
+		  function drop(ev) {
+			  ev.preventDefault();
+			  var sandwichId = ev.dataTransfer.getData("text");
+			  
+			  var subcatId = ev.target.getAttribute('sub_cat');
+						  console.log(subcatId);
+						  if(subcatId != null)
+						  {
+							  window.location.assign("<?=$SiteUrl?>c_panel/?mod=new_menu&item=addproduct_new&sub_cat="+subcatId+"&sandwichId="+sandwichId)
+						  }
+		  }
+		  </script>
+		  <div style="position:relative; top:45px; left:5px; width:500px; float:left; height:130px; overflow:hidden">
+			<div class="ss_container">
+			  
+			  <div id="ss_slider" style="width:<?=$ss_rows * 500?>px;">
+				<?php while($row = dbAbstract::returnObject($ss_qry)){ ?>
+				<div id="ss_slider_img1" class="ss_div">
+				  <div class="ss_img">
+					<?php
+					$ssp_qry=dbAbstract::Execute("select status from product where cat_id='$Objrestaurant->id' AND signature_sandwitch_id='$row->id'");
+					$ssp_rows=dbAbstract::returnRowsCount($ssp_qry);
+					if($ssp_rows > 0){
+						$boarsHeadBtm = '34px';
+						$boarsHeadlft = '55px';
+						$draggable = 'true';
+						$imgStyle='';
+						
+						$prow = dbAbstract::returnObject($ssp_qry);
+						if($prow->status==0){
+							$draggable = 'false';
+							$boarsHeadBtm = '55px';
+							$boarsHeadlft = '90px';
+							$imgStyle='position:relative; bottom: 35px; left: 0px;';
+					?>
+							<img src="./images/signaturesandwich/BH_Pause.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+					<?php	
+						}
+						elseif($row->start_date <= strtotime(date("Y-m-d")) && $row->end_date >= strtotime(date("Y-m-d"))){
+							$draggable = 'false';
+							$boarsHeadBtm = '55px';
+							$boarsHeadlft = '90px';
+							$imgStyle='position:relative; bottom: 35px; left: 0px;';
+					?>
+							<img src="./images/signaturesandwich/BH_Check.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+					<?php
+						}elseif($row->start_date > strtotime(date("Y-m-d"))){
+							$draggable = 'false';
+							$boarsHeadBtm = '60px';
+							$boarsHeadlft = '90px';
+							$imgStyle='position:relative; bottom: 40px; left: 0px;';
+					?>
+							<img src="./images/signaturesandwich/BH_Circle.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
+					<?php	
+						}
+					}else{
+						$boarsHeadBtm = '20px';
+						$boarsHeadlft = '88px';
+						$imgStyle='cursor:move;';
+						$draggable = 'true';
+					?>
+					  <!--<img src="img/move.png" alt="Move" draggable="true" ondragstart="drag(event)" id="<?=$row->id?>" style="position:relative; bottom:130px; left:5px;"/>-->
+					<?php
+					}
+					?>
+					<img src="./images/signaturesandwich/<?=(($row->item_image !='')? $row->item_image:'no image.png')?>" alt="Photo <?=$row->item_name?>" 
+					draggable="<?=$draggable?>" ondragstart="drag(event)" id="<?=$row->id?>" style="width:100%; height:130px !important; <?=$imgStyle?>">
+					
+					<img src="./images/signaturesandwich/boarsHead.png" draggable="false" style="position:relative; bottom:<?=$boarsHeadBtm?>; left:<?=$boarsHeadlft?>">
+				  </div>
+				  <div class="ss_wrap">
+					<div class="ss_content">
+					  <div class="ss_prodTitle"><?=$row->item_name?></div>
+					  <div class="ss_prodDates">
+						Featured Sandwich <?=date('d/m',$row->start_date).' - '.date('d/m',$row->end_date)?>
+					  </div>
+					  <div class="ss_prodDescription"><?=$row->item_desc?></div>
+					</div>
+				  </div>
+				</div>
+				<?php } ?>
+			  </div>
+			  
+			  <div id="nextbtn"> <i class="fa fa-chevron-circle-left"></i> </div>
+			  <div id="prevbtn"> <i class="fa fa-chevron-circle-right"></i> </div>
+			</div>
+		  </div>
+		<?
+		  }
+		}
+		?>
+      </div>
+	  <div style="clear:both"></div>
             
-            <div id ="add_new_submenu_link" class="submenu_btn"><span id="plus_span">+</span><span style="margin-left: 5px;float:left;font-size:14px">Add a New Submenu</span></div>
+            
+            
             <a class="fancyadd_submenu" href="#menu_form"></a>
             <form method="post" id="menu_form" action="" style="display:none">
             <div id ="add_new_submenu" class ="add_submenu" style="width:500px;height:400px;">
