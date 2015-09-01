@@ -4,7 +4,7 @@ class restaurant
     public $id;
     public $name;
     public $url;
-    public  $owner_id;
+    public $owner_id;
     public $license_id;
     public $status;
     public $phone;
@@ -41,7 +41,11 @@ class restaurant
     public $bh_restaurant;
     public $bh_featured;
     public $URL;
-        public $bh_banner_image;
+    public $bh_banner_image;
+    public $logo;
+    public $optionl_logo;
+    public $header_image;
+    public $header_vip_image;
 
     public $active_menu_link_color, 
             $appearence, 

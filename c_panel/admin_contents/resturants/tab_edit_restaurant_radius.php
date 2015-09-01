@@ -404,6 +404,36 @@ if (isset($_POST['submit'])) {
         } else {
             $name3 = $_REQUEST['header_images'];
         }
+        ////////////////////////////////////////////////////////////
+        //--------------VIP Reward Image Start---------------------------
+        if (!empty($_FILES['userfile4']['name'])) 
+        {
+            $path4 = '../images/resturant_vip_headers/';
+            $exe4 = GetFileExt($_FILES['userfile4']['name']);
+            $name4 = "img_" . $catid . "_cat_header." . $exe4;
+
+            $newWidth = 635;
+            $newHeight = 85;
+                
+            $uploadfile4 = $path4.$name4;
+            move_uploaded_file($_FILES['userfile4']['tmp_name'], $uploadfile4);
+            list($width, $height, $type, $attr) = getimagesize("$uploadfile4");
+            
+            $ratio = min(array(635 / $width, 85 / $height));
+            $newWidth = $ratio * $width;
+            $newHeight = $ratio * $height;
+            
+            $image = new SimpleImage();
+            $image->load($uploadfile4);
+            $image->resizeToWidth($newWidth, $newHeight);
+            $image->save($uploadfile4);
+        } 
+        else 
+        {
+            $name4 = $_REQUEST['header_vip_images'];
+        }
+        //--------------VIP Reward Image End---------------------------
+        
         //--------------VIP List Image Start---------------------------
         if (!empty($_FILES['userfile5']['name'])) 
         {
@@ -426,7 +456,11 @@ if (isset($_POST['submit'])) {
             $image->load($uploadfile5);
             $image->resizeToWidth($newWidth, $newHeight);
             $image->save($uploadfile5);
-        } 
+        }
+        else
+        {
+            $name5 = $_REQUEST["VIP_List_Image"];
+        }
         //--------------VIP List Image End---------------------------
         
         //--------------BH Banner Image Start---------------------------
@@ -452,7 +486,11 @@ if (isset($_POST['submit'])) {
             $image->resizeToWidth($newWidth, $newHeight);
             $image->save($uploadfile6);
             dbAbstract::Update("UPDATE resturants SET bh_banner_image='".$name6."' WHERE id=".$catid);
-        } 
+        }
+        else
+        {
+            $name5 = $_REQUEST["bh_banner_image"];
+        }
         //--------------BH Banner Image End---------------------------
         
         ///////////////////////////////////////////////////////////
@@ -493,6 +531,7 @@ if (isset($_POST['submit'])) {
 						,owner_id='" . addslashes($owner_name) . "'
 						,license_id='" . $license_key . "'
 						,header_image= '$name3'
+                                                ,header_vip_image= '$name4'    
                                                 ,VIP_List_Image= '$name5'
 						,time_zone_id = '$time_zone'
 						,payment_method= '$payment_method'
@@ -547,6 +586,7 @@ if (isset($_POST['submit'])) {
 						,order_minimum=$order_minimum
 						,tax_percent=$tax_percent
 						,header_image= '$name3'
+                                                ,header_vip_image= '$name4'    
                                                 ,VIP_List_Image= '$name5'
 						,time_zone_id = '$time_zone'
 						,announcement='" . $rest_announcements . "'
@@ -613,7 +653,7 @@ if (isset($_POST['submit'])) {
 
             $quantityPremium = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,1);
             $quantityStandard = $chargify->getallocationQuantity($getResellerID->chargify_subcription_id,0);
-			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling multipleAllocations:subscriptionID:'.$getResellerID->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:'.$getSrid->premium_account, 'restaurant', 1);
+            Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling multipleAllocations:subscriptionID:'.$getResellerID->chargify_subcription_id.' qtyPremium:'.$quantityPremium.' qtyStandard:'.$quantityStandard.' premium_account:'.$getSrid->premium_account, 'restaurant', 1);
             $chargify->multipleAllocation($getResellerID->chargify_subcription_id,$quantityPremium,$quantityStandard,$getSrid->premium_account);
 
             $srid = $getSrid->srid;
@@ -663,12 +703,12 @@ if (isset($_POST['submit'])) {
     {
         if ($_POST["bh_restaurant"]=="1")
         {
-            dbAbstract::Execute("UPDATE resturants SET bh_restaurant = 1 WHERE id=".$catid,1);
+            dbAbstract::Update("UPDATE resturants SET bh_restaurant = 1 WHERE id=".$catid, 1);
         }
         else if ($_POST["bh_restaurant"]=="0")
         {
-            dbAbstract::Execute("UPDATE resturants SET bh_restaurant = 0 WHERE id=".$catid,1);
-            dbAbstract::Execute("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid,1);
+            dbAbstract::Update("UPDATE resturants SET bh_restaurant = 0 WHERE id=".$catid, 1);
+            dbAbstract::Update("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid, 1);
         }
     }
     
@@ -676,11 +716,11 @@ if (isset($_POST['submit'])) {
     {
         if ($_POST["bh_featured"]=="1")
         {
-            dbAbstract::Execute("UPDATE resturants SET bh_featured = 1 WHERE id=".$catid,1);
+            dbAbstract::Update("UPDATE resturants SET bh_featured = 1 WHERE id=".$catid, 1);
         }
         else if ($_POST["bh_featured"]=="0")
         {
-            dbAbstract::Execute("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid,1);
+            dbAbstract::Update("UPDATE resturants SET bh_featured = 0 WHERE id=".$catid, 1);
         }
     }
     
@@ -688,7 +728,7 @@ if (isset($_POST['submit'])) {
 } //end submit2		
 else if (isset($_POST["btnRemoveVIP"]))
 {
-    dbAbstract::Execute("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid,1);
+    dbAbstract::Update("UPDATE resturants SET VIP_List_Image='' WHERE id =".$catid, 1);
     if (file_exists(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>")))
     {
         unlink(realpath("../images/resturant_vip_headers/<?=$objRestaurant->VIP_List_Image?>"));
@@ -698,12 +738,52 @@ else if (isset($_POST["btnRemoveVIP"]))
 }
 else if (isset($_POST["btnRemoveBhBanner"]))
 {
-    dbAbstract::Update("UPDATE resturants SET bh_banner_image='' WHERE id =".$catid);
+    dbAbstract::Update("UPDATE resturants SET bh_banner_image='' WHERE id =".$catid, 1);
     if (file_exists(realpath("../images/resturant_bh_banner/<?=$objRestaurant->bh_banner_image?>")))
     {
         unlink(realpath("../images/resturant_bh_banner/<?=$objRestaurant->bh_banner_image?>"));
     }
     $errMessage = "BH banner image removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+}
+else if (isset($_POST["btnRemoveOptionalLogo"]))
+{
+    dbAbstract::Update("UPDATE resturants SET logo='' WHERE id =".$catid, 1);
+    if (file_exists(realpath("../images/resturant_logos/<?=$objRestaurant->logo?>")))
+    {
+        unlink(realpath("../images/resturant_logos/<?=$objRestaurant->bh_banner_image?>"));
+    }
+    $errMessage = "Optional logo removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+}
+else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
+{
+    dbAbstract::Update("UPDATE resturants SET optionl_logo='' WHERE id =".$catid, 1);
+    if (file_exists(realpath("../images/logos_thumbnail/<?=$objRestaurant->bh_banner_image?>")))
+    {
+        unlink(realpath("../images/logos_thumbnail/<?=$objRestaurant->bh_banner_image?>"));
+    }
+    $errMessage = "Optional logo thumbnail removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+}
+else if (isset($_POST["btnRemoveHeaderImage"]))
+{
+    dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
+    if (file_exists(realpath("../images/resturant_headers/<?=$objRestaurant->bh_banner_image?>")))
+    {
+        unlink(realpath("../images/resturant_headers/<?=$objRestaurant->bh_banner_image?>"));
+    }
+    $errMessage = "Header image removed successfully.";
+    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+}
+else if (isset($_POST["btnRemoveVIPRewardImage"]))
+{
+    mysql_query("UPDATE resturants SET header_vip_image='' WHERE id =".$catid);
+    if (file_exists(realpath("../images/resturant_headers/<?=$objRestaurant->header_vip_image?>")))
+    {
+        unlink(realpath("../images/resturant_headers/<?=$objRestaurant->header_vip_image?>"));
+    }
+    $errMessage = "VIP reward image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -871,30 +951,128 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                 </td>
 
             </tr>
-
-
-
+             <script type="text/javascript" language="javascript">
+                $(document).ready(function()
+                {
+                    $(".showImage").click(function()
+                    {
+                        var mType = $(this).attr("type");
+                        var mFlag = 0;
+                        var mRandom = 1 + Math.floor(Math.random() * 999999);
+                        
+                        if (mType==1)
+                        {
+                            $("#imgPreview").attr("src", "../images/resturant_logos/<?=$Objrestaurant->logo?>?"+mRandom);
+                            mFlag = 1;
+                        }
+                        else if (mType==2)
+                        {
+                            $("#imgPreview").attr("src", "../images/logos_thumbnail/<?=$Objrestaurant->optionl_logo?>?"+mRandom);
+                            mFlag = 1;
+                        }
+                        else if (mType==3)
+                        {
+                            $("#imgPreview").attr("src", "../images/resturant_headers/<?=$Objrestaurant->header_image?>?"+mRandom);
+                            mFlag = 1;
+                        }
+                        else if (mType==4)
+                        {
+                            $("#imgPreview").attr("src", "../images/resturant_vip_headers/<?=$Objrestaurant->header_vip_image?>");                        
+                            mFlag = 1;
+                        }
+                        else if (mType==5)
+                        {
+                            $("#imgPreview").attr("src", "../images/resturant_bh_banner/<?=$Objrestaurant->bh_banner_image?>?"+mRandom);
+                            mFlag = 1;
+                        }
+                        else if (mType==6)
+                        {
+                            $("#imgPreview").attr("src", "../images/resturant_vip_headers/<?=$Objrestaurant->VIP_List_Image?>?"+mRandom);
+                            mFlag = 1;
+                        }
+                        
+                        if (mFlag == 1)
+                        {
+                            $("#divOverlay").show();
+                            setTimeout(function()
+                            { 
+                                $('#dvImagePreview').css("position","absolute");
+                                $('#dvImagePreview').css("top", Math.max(0, (($(window).height() - $('#dvImagePreview').outerHeight()) / 2) + $(window).scrollTop()) - 100 + "px");
+                                $('#dvImagePreview').css("left", Math.max(0, (($(window).width() - $('#dvImagePreview').outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+                                $("#dvImagePreview").show();
+                            } , 1500);
+                        }
+                    });
+                });
+            </script>
             <tr align="left" valign="top">
                 <td>&nbsp;</td>
                 <td><strong>Optional Logo</strong><br> <font color="#666666"><!--(system will resize to 
                     500x500)--></font>
                     <input name="userfile" type="file" id="userfile">
+                    <?php
+                    if (trim($Objrestaurant->logo)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveOptionalLogo" name="btnRemoveOptionalLogo" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="1">Preview</span>
+                    <?php
+                    }
+                    ?>
                     <input type="hidden" name="logo" value="<?= $Objrestaurant->logo ?>">
-                    <input type="hidden" name="thumb" value="<?= $Objrestaurant->optionl_logo ?>"></td>
-            <input type="hidden" name="header_images" value="<?= $Objrestaurant->header_image ?>">
+                    <input type="hidden" name="thumb" value="<?= $Objrestaurant->optionl_logo ?>">
+                    <input type="hidden" name="header_images" value="<?= $Objrestaurant->header_image ?>">
+                    <input type="hidden" name="header_vip_images" value="<?= $Objrestaurant->header_vip_image ?>">
+                    <input type="hidden" name="VIP_List_Image" value="<?= $Objrestaurant->VIP_List_Image ?>">
+                    <input type="hidden" name="bh_banner_image" value="<?= $Objrestaurant->bh_banner_image ?>">
+                </td>
             </tr>
               <tr align="left" valign="top">
                 <td>&nbsp;</td>
                 <td><strong>Optional Logo Thumbnail</strong><br> <font color="#666666"><!--(system will
                     resize to 130x130)--></font>
-                    <input name="userfile2" type="file" id="userfile2"></td>
+                    <input name="userfile2" type="file" id="userfile2">
+                    <?php
+                    if (trim($Objrestaurant->optionl_logo)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveOptionalLogoThumbnail" name="btnRemoveOptionalLogoThumbnail" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="2">Preview</span>
+                    <?php
+                    }
+                    ?>
+                </td>
             </tr>
             <tr align="left" valign="top">
                 <td>&nbsp;</td>
                 <td><strong>Header Image</strong><br> <font color="#666666"><!--(system will
                     resize to 130x130)--></font>
-                    <input name="userfile3" type="file" id="userfile3"></td>
+                    <input name="userfile3" type="file" id="userfile3">
+                    <?php
+                    if (trim($Objrestaurant->header_image)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveHeaderImage" name="btnRemoveHeaderImage" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="3">Preview</span>
+                    <?php
+                    }
+                    ?>
+                </td>
             </tr>
+            <!----------------VIP Reward Image Start----------------------------->
+            <tr align="left" valign="top">
+                <td>&nbsp;</td>
+                <td><strong>VIP Reward Image</strong><br> <font color="#666666"><!--(system will
+                    resize to 130x130)--></font>
+                    <input name="userfile4" type="file" id="userfile4">
+                    <?php
+                    if (trim($Objrestaurant->header_vip_image)!="")
+                    {
+                    ?>
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveVIPRewardImage" name="btnRemoveVIPRewardImage" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="4">Preview</span>
+                    <?php
+                    }
+                    ?>
+                </td>
+            </tr>
+            <!--//--------------VVIP Reward Image End----------------------------->
             <!----------------VIP LIST Image Start----------------------------->
             <tr align="left" valign="top">
                 <td>&nbsp;</td>
@@ -905,7 +1083,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     if (trim($Objrestaurant->VIP_List_Image)!="")
                     {
                     ?>
-                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove VIP list image" id="btnRemoveVIP" name="btnRemoveVIP" />
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveVIP" name="btnRemoveVIP" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="6">Preview</span>
                     <?php
                     }
                     ?>
@@ -926,7 +1104,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
                     if (trim($Objrestaurant->bh_banner_image)!="")
                     {
                     ?>
-                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove BH Banner image" id="btnRemoveBhBanner" name="btnRemoveBhBanner" />
+                    &nbsp;&nbsp;&nbsp;<input type="submit" value="Remove" id="btnRemoveBhBanner" name="btnRemoveBhBanner" />&nbsp;&nbsp;<span class="showImage" style="text-decoration: underline; cursor: pointer; cursor: hand; color: #0000ee;" type="5">Preview</span>
                     <?php
                     }
                     ?>
@@ -1193,8 +1371,38 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 <div id="AdminRightConlum" style="padding:5px; min-height:560px;background-image:url('images/bg.jpg')">
 </div>
 <br class="clearfloat" />
-
-
+<script type="text/javascript" language="javascript">
+    $(document).ready(function()
+    {
+        $(".imgClosePreview").click(function()
+        {
+            $("#dvImagePreview").hide();
+            $("#divOverlay").hide();
+        });
+    });
+</script>
+<div id="dvImagePreview" style="display: none; padding: 10px; border: 5px solid #CCCCCC; padding: 10px; background-color: white; z-index: 1001;">
+    <img class="imgClosePreview" src="images/cross2.png" style="float: right; cursor: hand; cursor: pointer; margin-top: 1px; margin-bottom: 1px; " /><br />
+    <img id="imgPreview" />
+</div>
+<style type="text/css">
+    #divOverlay 
+    {
+        position: fixed;
+        opacity: 0.5;
+        filter: alpha(opacity = 50);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-color: Black;
+        color: White;
+        z-index: 1000;
+    }
+</style>
+<div id="divOverlay" style="display:none"></div>
 
 <script type="text/javascript">
     function saveZones() {
