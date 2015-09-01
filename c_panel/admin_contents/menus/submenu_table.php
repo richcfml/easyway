@@ -221,7 +221,7 @@
                                                             if($mRowPr['signature_sandwitch_id'] > 0){
 															  $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$mRowPr['signature_sandwitch_id']."'");
 															  echo '<div style="margin-left: 55px;" class="ss_prodDates">Featured Sandwich '.
-															  		date('d/m',$ss_obj->start_date).' - '.date('d/m',$ss_obj->end_date).
+															  		date('m/d',$ss_obj->start_date).' - '.date('m/d',$ss_obj->end_date).
 																	'</div>';
 															}
 															?>

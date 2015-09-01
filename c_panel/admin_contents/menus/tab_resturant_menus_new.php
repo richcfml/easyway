@@ -450,7 +450,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					<div class="ss_content">
 					  <div class="ss_prodTitle"><?=$row->item_name?></div>
 					  <div class="ss_prodDates">
-						Featured Sandwich <?=date('d/m',$row->start_date).' - '.date('d/m',$row->end_date)?>
+						Featured Sandwich <?=date('m/d',$row->start_date).' - '.date('m/d',$row->end_date)?>
 					  </div>
 					  <div class="ss_prodDescription"><?=$row->item_desc?></div>
 					</div>
