@@ -769,7 +769,10 @@ else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 else if (isset($_POST["btnRemoveHeaderImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
-    
+    echo("<pre>");
+    print_r($Objrestaurant);
+    echo("</pre>");
+    exit;
     if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>")))
     {
         unlink(realpath("../images/resturant_headers/<?=$Objrestaurant->header_image?>"));
