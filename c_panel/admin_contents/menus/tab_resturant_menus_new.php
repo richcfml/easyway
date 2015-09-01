@@ -360,7 +360,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         </div>
       </div>
       
-      <div style="width:60%; float:left">
+      <div style="width:70%; float:left">
       	<?php
 		if($Objrestaurant->bh_restaurant == 1){
 		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."'");
