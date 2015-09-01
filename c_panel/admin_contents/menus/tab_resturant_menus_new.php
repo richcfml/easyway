@@ -363,7 +363,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
       <div style="width:70%; float:left">
       	<?php
 		if($Objrestaurant->bh_restaurant == 1){
-		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."'");
+		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."' order by start_date");
 		  $ss_rows = dbAbstract::returnRowsCount($ss_qry);
 		  if($ss_rows > 0 ){
 		  ?>
