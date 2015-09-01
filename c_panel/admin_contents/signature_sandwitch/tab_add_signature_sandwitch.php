@@ -10,6 +10,7 @@
 <script src="js/fancybox.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/fancy.css">
 <script src="js/block.js" type="text/javascript"></script>
+<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 <style type="text/css">
     .BodyContainer
     {
@@ -43,6 +44,11 @@
     $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     $(document).ready(function()
     {   
+		
+		$("#product_description1").keydown(function(){
+			$(".ss_prodDescription").html($(this).text());
+		});
+		
         $( "#item_name" ).blur(function() {
             $('#item_name').attr('placeholder','Item Name');
         });
@@ -51,8 +57,26 @@
             $('#item_name').attr('placeholder','');
         });
         
-        $( "#start_date" ).blur(function() {
-               $('#start_date').attr('placeholder','Start Date');
+        $("#start_date").change(function(){
+			//ss_startdate ss_enddate
+			var date = new Date($(this).val());
+			var month = parseInt(date.getMonth())+1;
+			month = ((month < 10)? '0'+month:month);
+			var day = ((date.getDate() < 10)? '0'+date.getDate():date.getDate());
+			$("#ss_startdate").html(month+'/'+day);
+		});
+		
+        $("#end_date").change(function(){
+			//ss_startdate ss_enddate
+			var date = new Date($(this).val());
+			var month = parseInt(date.getMonth())+1;
+			month = ((month < 10)? '0'+month:month);
+			var day = ((date.getDate() < 10)? '0'+date.getDate():date.getDate());
+			$("#ss_enddate").html(month+'/'+day);
+		});
+		
+		$( "#start_date" ).blur(function() {
+			$('#start_date').attr('placeholder','Start Date');
         });
         $( "#start_date" ).focus(function() {
             $('#start_date').attr('placeholder','');
@@ -336,7 +360,6 @@
                 });
             }
         });
-        
         $("#userfile").change(function(event){
             $("#show_photo_before").css('opacity','0.5');
             $("#show_photo").css('opacity','0.5');
@@ -636,76 +659,96 @@ if($_POST['cropimg'])
 }
 ?>
 <form method ="post" id="add_Signature_sandwitch"  enctype="multipart/form-data">
-<div id ="main_div" class="main_div">
-<div id ="inner_div"> 
-           
-            <div class="Submenu_Heading">Add Signature Sandwitch</div>
-            <div class="add_area_div">
-                <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                        <td>
-                            <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="" class="textAreaClass" placeholder="Item Name"  maxlength="40" />
-                        </td>
-                        <td>
-                            <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;"/>
-                            <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            
-                                <textarea id="product_description" name="product_description" style="display: none;"></textarea>
-                                <input type="hidden" id="hdnSearch" />
-                                <div id="container">
-                                <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
+<div id ="main_div" class="main_div" ng-app="">
+    <div id ="inner_div"> 
+               
+                <div class="Submenu_Heading">Add Signature Sandwitch</div>
+                <div class="add_area_div">
+                    <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td>
+                                <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="" class="textAreaClass" placeholder="Item Name"  maxlength="40" ng-model="item_name" />
+                            </td>
+                            <td>
+                                <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;"/>
+                                <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                
+                                    <textarea id="product_description" name="product_description" style="display: none;"></textarea>
+                                    <input type="hidden" id="hdnSearch" />
+                                    <div id="container">
+                                    <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
+                                    </div>
+                                    <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
+                                    </div>
+                                    </div>
+                                
+                            </td>
+                            <td>
+                                <div class="photo_div_before" id="show_photo_before" ><div style="text-align: center;font-size: 16px;"> Photo of item? </div>
+    
+                                        <div style="height: 75px;width: 28%;">
+                                            <img src ="img/camera.png" id="item_img_camera" style="height: 79%;margin-left: 131%;margin-top: 8px;"/>
+                                        </div> 
+                                    <div style="text-align: center;text-align: center;width: 150px;margin-left: 15%;margin-top: 0px"> (Click to upload or drag and drop file here) </div>
+    
                                 </div>
-                                <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
+                                <div class="photo_div" id="show_photo" ><div style="text-align: center;font-size: 16px;"> Photo of item </div>
+                                    <div style="text-align:center;height: 160px;" id="imgDiv">
+                                         <img src ="" id="item_img" style="margin-top: 9px;"/>
+                                    </div>
                                 </div>
-                                </div>
-                            
-                        </td>
-                        <td>
-                            <div class="photo_div_before" id="show_photo_before" ><div style="text-align: center;font-size: 16px;"> Photo of item? </div>
-
-                                    <div style="height: 75px;width: 28%;">
-                                        <img src ="img/camera.png" id="item_img_camera" style="height: 79%;margin-left: 131%;margin-top: 8px;"/>
-                                    </div> 
-                                <div style="text-align: center;text-align: center;width: 150px;margin-left: 15%;margin-top: 0px"> (Click to upload or drag and drop file here) </div>
-
-                            </div>
-                            <div class="photo_div" id="show_photo" ><div style="text-align: center;font-size: 16px;"> Photo of item </div>
-                                <div style="text-align:center;height: 160px;" id="imgDiv">
-                                     <img src ="" id="item_img" style="margin-top: 9px;"/>
-                                </div>
-                            </div>
-                            <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td style="width:290px">
-                            <div id="sizeErrorMsg1" style="color: green;font-size: 13px;margin-left: 52px;">File Size must under 1MB</div>
-							
-							
-                             <span class="deleteimg" style="display:none;" id="deleteimg">Delete Photo</span>
-                             <input type="hidden" id="x" name="x" />
-                             <input type="hidden" id="y" name="y" />
-                             <input type="hidden" id="w" name="w" />
-                             <input type="hidden" id="h" name="h" />
-                             <span id="cropimg" name="cropimg" style="display: none;margin-left: 10px;" class="deleteimg" />Crop Image</span>
-                            <input type="hidden" id="hdnScale" name="hdnScale" />
-                        </td>
-
-                    </tr>
-                </table>
-                <div id="sucessMessage"></div>
-                <div>
-                    <input type="submit" value="Save" name="btnSaveAndAddMore" id="btnSaveAndAddMore"  class="btnadd" style="width: 16%;margin-top: 89px;margin-left: 240px; ">
-                    <input type="button" class="btnCancelSM" id="btnCancelProduct" value="Cancel" style="margin-left: 25px;height: 38px;width: 96px;cursor:pointer">
+                                <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="width:290px">
+                                <div id="sizeErrorMsg1" style="color: green;font-size: 13px;margin-left: 52px;">File Size must under 1MB</div>
+                                
+                                
+                                 <span class="deleteimg" style="display:none;" id="deleteimg">Delete Photo</span>
+                                 <input type="hidden" id="x" name="x" />
+                                 <input type="hidden" id="y" name="y" />
+                                 <input type="hidden" id="w" name="w" />
+                                 <input type="hidden" id="h" name="h" />
+                                 <span id="cropimg" name="cropimg" style="display: none;margin-left: 10px;" class="deleteimg" />Crop Image</span>
+                                <input type="hidden" id="hdnScale" name="hdnScale" />
+                            </td>
+    
+                        </tr>
+                    </table>
+                    <div id="sucessMessage"></div>
+                    <div>
+                        <input type="submit" value="Save" name="btnSaveAndAddMore" id="btnSaveAndAddMore"  class="btnadd" style="width: 16%;margin-top: 89px;margin-left: 240px; ">
+                        <input type="button" class="btnCancelSM" id="btnCancelProduct" value="Cancel" style="margin-left: 25px;height: 38px;width: 96px;cursor:pointer">
+                    </div>
                 </div>
             </div>
-        </div>
+	
+    <div style="width:25%; float:left; padding:10px">
+          
+          <div class="ss_content" style="padding: 20px 10px">
+            <div style="float:left; width:5%">
+              <img src="img/enable.png" width="16" height="16" border="0" style="cursor: pointer;">
+            </div>
+            
+            <div style="width:90%; float:right;">
+              <div class="ss_prodTitle">{{item_name}}</div>
+              <div class="ss_prodDates">
+                Featured Sandwich <span id="ss_startdate"></span> - <span id="ss_enddate"></span>
+              </div>
+              <div class="ss_prodDescription">{{product_description}}</div>
+            </div>
+            
+            <img src="img/bh_item1.png" style="margin-left: 10px; cursor: pointer;" data-tooltip="BH Item" class="spicy1">
+          </div>
+
+    </div>
 </div>
     <a class="fancyTrigger" href="#TheFancybox"></a>
     <div id="TheFancybox" class="handle_fancy">
