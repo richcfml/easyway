@@ -779,7 +779,7 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
 }
 else if (isset($_POST["btnRemoveVIPRewardImage"]))
 {
-    mysql_query("UPDATE resturants SET header_vip_image='' WHERE id =".$catid);
+    dbAbstract::Update("UPDATE resturants SET header_vip_image='' WHERE id =".$catid, 1);
     if (file_exists(realpath("../images/resturant_headers/<?=$Objrestaurant->header_vip_image?>")))
     {
         unlink(realpath("../images/resturant_headers/<?=$Objrestaurant->header_vip_image?>"));
