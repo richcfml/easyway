@@ -489,7 +489,7 @@ if (isset($_POST['submit'])) {
         }
         else
         {
-            $name5 = $_REQUEST["bh_banner_image"];
+            $name6 = $_REQUEST["bh_banner_image"];
         }
         //--------------BH Banner Image End---------------------------
         
