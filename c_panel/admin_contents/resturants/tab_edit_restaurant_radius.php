@@ -749,6 +749,8 @@ else if (isset($_POST["btnRemoveBhBanner"]))
 else if (isset($_POST["btnRemoveOptionalLogo"]))
 {
     dbAbstract::Update("UPDATE resturants SET logo='' WHERE id =".$catid, 1);
+    echo("../images/resturant_logos/".$Objrestaurant->logo);
+    exit;
     if (file_exists(realpath("../images/resturant_logos/".$Objrestaurant->logo)))
     {
         unlink(realpath("../images/resturant_logos/".$Objrestaurant->logo));
