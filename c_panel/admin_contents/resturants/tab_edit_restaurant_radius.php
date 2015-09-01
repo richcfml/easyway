@@ -751,7 +751,7 @@ else if (isset($_POST["btnRemoveOptionalLogo"]))
     dbAbstract::Update("UPDATE resturants SET logo='' WHERE id =".$catid, 1);
     if (file_exists(realpath("../images/resturant_logos/<?=$objRestaurant->logo?>")))
     {
-        unlink(realpath("../images/resturant_logos/<?=$objRestaurant->bh_banner_image?>"));
+        unlink(realpath("../images/resturant_logos/<?=$objRestaurant->logo?>"));
     }
     $errMessage = "Optional logo removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -759,9 +759,9 @@ else if (isset($_POST["btnRemoveOptionalLogo"]))
 else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 {
     dbAbstract::Update("UPDATE resturants SET optionl_logo='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/logos_thumbnail/<?=$objRestaurant->bh_banner_image?>")))
+    if (file_exists(realpath("../images/logos_thumbnail/<?=$objRestaurant->optionl_logo?>")))
     {
-        unlink(realpath("../images/logos_thumbnail/<?=$objRestaurant->bh_banner_image?>"));
+        unlink(realpath("../images/logos_thumbnail/<?=$objRestaurant->optionl_logo?>"));
     }
     $errMessage = "Optional logo thumbnail removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
@@ -769,16 +769,16 @@ else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 else if (isset($_POST["btnRemoveHeaderImage"]))
 {
     dbAbstract::Update("UPDATE resturants SET header_image='' WHERE id =".$catid, 1);
-    if (file_exists(realpath("../images/resturant_headers/<?=$objRestaurant->bh_banner_image?>")))
+    if (file_exists(realpath("../images/resturant_headers/<?=$objRestaurant->header_image?>")))
     {
-        unlink(realpath("../images/resturant_headers/<?=$objRestaurant->bh_banner_image?>"));
+        unlink(realpath("../images/resturant_headers/<?=$objRestaurant->header_image?>"));
     }
     $errMessage = "Header image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveVIPRewardImage"]))
 {
-    mysql_query("UPDATE resturants SET header_vip_image='' WHERE id =".$catid);
+    dbAbstract::Update("UPDATE resturants SET header_vip_image='' WHERE id =".$catid, 1);
     if (file_exists(realpath("../images/resturant_headers/<?=$objRestaurant->header_vip_image?>")))
     {
         unlink(realpath("../images/resturant_headers/<?=$objRestaurant->header_vip_image?>"));
