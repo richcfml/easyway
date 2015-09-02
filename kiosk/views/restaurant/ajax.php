@@ -181,7 +181,7 @@ else if (isset($_GET['addtocart']))
     extract ($_POST);
     //echo "<pre>"; print_r($_POST); exit;
     $mObjProduct = new product();
-    $product=$mObjProduct->getdetail($_GET["ProductID"]);
+    $product=$mObjProduct->getDetailsByProductId($_GET["ProductID"]);
     $attribute_index=1;
     $product_to_order=new product();
     if($quantity==''|| $quantity<=0) $quantity=1;
@@ -340,7 +340,7 @@ else if (isset($_GET['showEditPopup']))
     $hasAssociates = $_POST['hasAssociates'];
     $cartItemIndex = $_POST['cartItemIndex'];
     $productClass = new product();
-    $productDetails = $productClass->getProductDetailsForEditCartItem($product_id);
+    $productDetails = $productClass->getDetailsForEditCart($product_id);
     //$totalPrice=0;
     $cartItem = $cart->showCartItem($product_id,$cartItemIndex);
     if($hasAssociates == 1){

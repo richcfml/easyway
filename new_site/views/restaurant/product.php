@@ -8,7 +8,7 @@
 	  exit;
 	}
 
- 	$product=product::getdetail($id);
+ 	$product=product::getDetailsByProductId($id);
 	$quantity=1;
 	$cart_item_for='';
 	$notes='';

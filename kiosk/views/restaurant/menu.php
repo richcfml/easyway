@@ -32,7 +32,7 @@ if (isset($_GET['faverr'])) {
 }
 $objCategory->menu_id = $menuid;
 
-$arr = product::getproductsbyallcategories($menuid);
+$arr = product::getProductsByMenuId($menuid);
 $menus_details = $arr['details'];
 $total_cats = $arr['count'];
 $half = round($total_cats / 2);

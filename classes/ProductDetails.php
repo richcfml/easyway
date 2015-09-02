@@ -55,20 +55,17 @@ class ProductDetails {
      * @return type returna all associations of given product
      */
     public function getProductAssocByProductId($product_id) {
-        $firstindex = TRUE;
         $mSQL = "SELECT * FROM product_association WHERE product_id =". $product_id  ." order by sortOrder";
         $productDs = dbAbstract::Execute($mSQL);
         $arr_product_list = array();
         while ($productDetails = dbAbstract::returnObject($productDs)){
             $prod_id = $productDetails->product_id;
             $assoc_id = $productDetails->association_id;
-            
-            if ($prod_id != $currentID || $firstindex = TRUE){
-                $productDetails->$prod_id = self::getAssociationsByProductId($assoc_id);
-                $productDetailsArray = $productDetails->$prod_id;
-                if($productDetailsArray[0]->status == 1){
-                    $arr_product_list[] = $productDetails;
-                }
+                        
+            $productDetails->$prod_id = self::getAssociationsByProductId($assoc_id);
+            $productDetailsArray = $productDetails->$prod_id;
+            if($productDetailsArray[0]->status == 1){
+                $arr_product_list[] = $productDetails;
             }
         }
         return $arr_product_list;

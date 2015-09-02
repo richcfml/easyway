@@ -262,7 +262,7 @@ if (!is_numeric($id) || $id <= 0)
     exit;
 }
 
-$product = product::getdetail($id);
+$product = product::getDetailsByProductId($id);
 /*echo("<pre>");
 print_r($product);*/
 if (is_null($product)) 

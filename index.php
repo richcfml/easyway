@@ -27,7 +27,7 @@ else if(isset($_POST['x_sid']))
 	require_once('classes/valutec.php'); 
 	require_once('classes/Menu.php');
 	require_once('classes/Category.php');
-	require_once('classes/product.php');
+	require_once('classes/Product.php');
 	require_once('classes/cart.php');
 	require_once('classes/GO3.php');
  	require_once('lib/cdyne/cdyne.php');
@@ -41,7 +41,7 @@ else if(isset($_POST['x_sid']))
 	$objMail = new testmail();
 	$objMenu = new Menu();
 	$objCategory = new Category();
-	$product = new product();
+	$product = new Product();
  	$cart = new cart();
  	$objGO3 = new GO3();
 	$objcdyne=new cydne();

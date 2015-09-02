@@ -49,7 +49,7 @@
 
 	while($mRowS = dbAbstract::returnArray($mSQLS))
 	{
-		$product = product::getdetail($mRowS["ProductID"]);	
+		$product = product::getDetailsByProductId($mRowS["ProductID"]);	
 		$attribute_index = 1;
 		$totalattributes = count($product->distinct_attributes);
 		

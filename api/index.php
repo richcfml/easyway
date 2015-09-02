@@ -11,7 +11,7 @@ require "../includes/class.phpmailer.php";
 require_once('../classes/valutec.php');
 require_once('../classes/Menu.php');
 require_once('../classes/Category.php');
-require_once('../classes/product.php');
+require_once('../classes/Product.php');
 require_once('../classes/cart.php');
 require_once('../lib/cdyne/cdyne.php');
 require_once('../classes/abandoned_carts.php');
@@ -23,7 +23,7 @@ $validater = new Validater();
 $objRestaurant = new restaurant();
 $objMenu = new Menu();
 $objCategory = new Category();
-$product = new product();
+$product = new Product();
 $cart = new cart();
 $objcdyne = new cydne();
 $loggedinuser = new Users();
@@ -371,7 +371,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'new')) && (isset($_GET['type']) && (
 //                $requestnote = $item['request_note'];
                 $item_for = '';
                 $requestnote = '';
-                $product = @product::getdetail($product_id);
+                $product = @product::getDetailsByProductId($product_id);
                 $attribute_index = 1;
                 $product_to_order = new product();
                 if ($quantity == '' || $quantity <= 0) {

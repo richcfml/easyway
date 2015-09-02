@@ -8,7 +8,7 @@
         <ul style="width:100%">
             <?php
             if ($menuid > 0) {
-                $products = $product->getproducts($categoryid, 0);
+                $products = $product->getProductsByCategoryId($categoryid);
                 foreach ($products as $product) {
                     ?>
 
