@@ -8,9 +8,10 @@ while($product = dbAbstract::returnObject($qry))
     $end_date = $product->end_date;
     if($end_date < strtotime(date('Y-m-d')))
     {
+        
         dbAbstract::Delete("Delete from product where prd_id =  ".$product->prd_id."");
         dbAbstract::Delete("Delete from attribute where ProductID = ".$product->prd_id."");
-        dbAbstract::Delete("Delete from product_associationattribute w where product_id = ".$product->prd_id." or association_id = ".$product->prd_id."");
+        dbAbstract::Delete("Delete from product_association where product_id = ".$product->prd_id." or association_id = ".$product->prd_id."");
         
     }  
 }
@@ -19,7 +20,7 @@ $query = "Delete from bh_signature_sandwitch where end_date < ".strtotime(date('
 dbAbstract::Delete($query);
 
 //remove attributes where product not exist
-dbAbstract::Delete("Delete from attribute where ProductID not in(select prd_id from product where signature_sandwitch_id != '')");
+dbAbstract::Delete("Delete from attribute where ProductID not in(select prd_id from product)");
 
 
 
