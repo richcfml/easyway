@@ -1692,7 +1692,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
             }
         }
     }
-    if(isset($_GET['signature_sandwitch']) && strtolower($_GET['signature_sandwitch']) == "yes")
+    if(isset($_GET['signature']) && strtolower($_GET['signature']) == "1")
     {
         
         if($mSignatureSandwich == "yes")
