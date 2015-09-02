@@ -1,8 +1,16 @@
 <?php
-//ServerId, TID, TUNAME and ClientKey are defined constants in restaurant.php for MerchantID (Username), TerminalID (Terminal ID) and ClientKey(Password)
+
+/*
+*	ServerId, TID, TUNAME and ClientKey are defined constants in restaurant.php 
+*	for MerchantID (Username), TerminalID (Terminal ID) and ClientKey(Password)
+*/
+
 class GO3
 {
-    function go3CardBalance($pCardNumber) //Get Card Balance
+	/*
+	*	Get Card Balance
+	*/
+    function go3CardBalance($pCardNumber)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -17,8 +25,11 @@ class GO3
             return $mRetVal;
         }
     }
-
-    function go3RewardPoints($pCardNumber) //Get Reward Points
+	
+	/*
+	*	Get Reward Points
+	*/
+    function go3RewardPoints($pCardNumber)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -33,8 +44,11 @@ class GO3
             return $mRetVal;
         }
     }
-
-    function go3Sale($pCardNumber, $pAmount, $pOrderID) //Deduct amount from Card, $pOrderID =  $cart->order_id (submit_order.php -> notify_customers.php)
+	
+	/*
+	*	Deduct amount from Card, $pOrderID =  $cart->order_id (submit_order.php -> notify_customers.php)
+	*/
+    function go3Sale($pCardNumber, $pAmount, $pOrderID)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -49,8 +63,11 @@ class GO3
             return $mRetVal;
         }
     }
-
-    function go3AddValue($pCardNumber, $pAmount) //Add reward points
+	
+	/*
+	*	Add reward points
+	*/
+    function go3AddValue($pCardNumber, $pAmount)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -65,8 +82,11 @@ class GO3
             return $mRetVal;
         }
     }
-
-    function go3SetRegistration($pCardNumber, $pExpDate, $pCVV, $pInitialLoad, $pMobileNumber, $pUserID) //$pUserID for reference number, Exp Date mmyyyy(042015)
+	
+	/*
+	*	$pUserID for reference number, Exp Date mmyyyy(042015)
+	*/
+    function go3SetRegistration($pCardNumber, $pExpDate, $pCVV, $pInitialLoad, $pMobileNumber, $pUserID)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -82,8 +102,11 @@ class GO3
             return $mRetVal;
         }
     }
-
-    function go3ActivateReward($pCardNumber, $pExpDate, $pCVV, $pUserID) //$pUserID for reference number, Exp Date mmyyyy(042015)
+	
+	/*
+	*	$pUserID for reference number, Exp Date mmyyyy(042015)
+	*/
+    function go3ActivateReward($pCardNumber, $pExpDate, $pCVV, $pUserID)
     {
         $mSessionID = $this->go3Login();
         if ($mSessionID == "Error occurred.")
@@ -104,14 +127,7 @@ class GO3
     {		
         $mSQL = "SELECT COUNT(*) AS CardTotal FROM customer_registration WHERE valuetec_card_number=".$pCardNumber;
         $result = dbAbstract::ExecuteObject($mSQL);
-        if($result->CardTotal>0)
-        {
-            return true;	
-        }
-        else
-        {
-            return false;
-        }
+        return ($result->CardTotal>0)? true:false;
      }
 
     function go3DoRequest($pParam, $pURL)
@@ -123,105 +139,50 @@ class GO3
         {
             $mXML = simplexml_load_string($mResult); 
             Log::write('GO3 Response - GO3 API', $mResult, 'go3');
-            if ($pParam==1) //Login
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return strval($mXML->ResponseMessage->SessionID);
-                }
-                else
-                {
-                    return "Error occurred.";
-                }
-            }
-            else if ($pParam==2) //Card Balance
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return strval($mXML->CardBalance);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else if ($pParam==3) //Points
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return strval($mXML->ResponseData->RewardBalance);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else if ($pParam==4) //Sale (Redeem/Deduct amount)
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return "Success";
-                }
-                else
-                {
-                    return "Error occurred.";
-                }
-            }
-            else if ($pParam==5) //Add amount/points to card
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return "Success";
-                }
-                else
-                {
-                    return "Error occurred.";
-                }
-            }
-            else if ($pParam==6) //Register A Card
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return "Success";
-                }
-                else if (strval($mXML->ResponseCode)=="1000")
-                {
-                    if (trim(strtolower($mXML->ResponseMessage))=="card is already active") //Because we have to use Card even its already registered with GO3
-                    {
-                        return "Success";
-                    }
-                    else
-                    {
-                        return "Error occurred.";
-                    }
-                }
-                else
-                {
-                    return "Error occurred.";
-                }
-            }
-            else if ($pParam==7) //LogOut
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return "Success";
-                }
-                else
-                {
-                    return "Error occurred.";
-                }
-            }
-            else if ($pParam==8) //Activate Rewards for Card
-            {
-                if (strval($mXML->ResponseCode)=="0000")
-                {
-                    return "Success";
-                }
-                else
-                {
-                    return "Success";
-                }
-            }
+			$respCode = strval($mXML->ResponseCode);
+			
+			switch($pParam){
+				//	Login
+				case 1:
+					return ($respCode=="0000")? strval($mXML->ResponseMessage->SessionID):'Error occurred.';
+					break;
+				
+				//	Card Balance
+				case 2:
+					return ($respCode=="0000")? strval($mXML->CardBalance):'';
+					break;
+				
+				// Points
+				case 3:
+					return ($respCode=="0000")? strval($mXML->ResponseData->RewardBalance):'';
+					break;
+				
+				/*
+				*	4,5 and 7 has same response
+				*	4: Sale (Redeem/Deduct amount)
+				*	5: Add amount/points to card
+				*	7: LogOut
+				*/
+				case 4:
+				case 5:
+				case 7:
+				  return ($respCode=="0000")? 'Success':'Error occurred.';
+				  break;
+				  
+				// Register A Card
+				case 6:
+					if ($respCode=="0000") return "Success";
+					elseif($respCode=="1000"){
+						//Because we have to use Card even its already registered with GO3
+						return (trim(strtolower($mXML->ResponseMessage))=="card is already active")? 'Success':'Error occurred.';
+					}
+					else return "Error occurred.";
+					break;
+				
+				case 8:
+					return 'Success';
+					break;	
+			}
         }
         else
         {
@@ -232,14 +193,14 @@ class GO3
 
     function go3Login()
     {		
-            $mURL = "http://go3gift.com/services/index.php/webservices/login/?P01=".ServerId."&P02=".TUNAME."&P03=".md5(ClientKey);
-            return $this->go3DoRequest(1, $mURL);
+		$mURL = "http://go3gift.com/services/index.php/webservices/login/?P01=".ServerId."&P02=".TUNAME."&P03=".md5(ClientKey);
+		return $this->go3DoRequest(1, $mURL);
     }
 
     function go3LogOut($pSessionID)
     {		
-            $mURL = "http://go3gift.com/services/index.php/webervices/logout/?P01=".$pSessionID;
-            return $this->go3DoRequest(7, $mURL);
+		$mURL = "http://go3gift.com/services/index.php/webervices/logout/?P01=".$pSessionID;
+		return $this->go3DoRequest(7, $mURL);
     }
 }
 ?>

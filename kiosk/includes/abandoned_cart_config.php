@@ -72,11 +72,11 @@ if($cart->order_created===0) {
 
 	if(isset($_SESSION["abandoned_cart_id"])) {
 		//echo "updated";
-		$abandoned_carts->update_abandoned_cart($_SESSION["abandoned_cart_id"], $user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);
+		$abandoned_carts->updateAbandonedCart($_SESSION["abandoned_cart_id"], $user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);
 	} else {
 		if(!$cart->isempty()){
 			//echo "added";
-			$_SESSION["abandoned_cart_id"] = $abandoned_carts->add_abandoned_cart($user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);		
+			$_SESSION["abandoned_cart_id"] = $abandoned_carts->addNewAbandonedCart($user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);		
 		}
 	}
 }

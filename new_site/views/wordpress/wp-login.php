@@ -37,7 +37,7 @@ if (isset($_POST['login']))
 		{
             if ($loggedinuser->valuetec_card_number > 0) 
 			{
-                $Balance = CardBalance($loggedinuser->valuetec_card_number);
+                $Balance = valutecCardBalance($loggedinuser->valuetec_card_number);
                 $loggedinuser->valuetec_points = $Balance['PointBalance'];
                 $loggedinuser->valuetec_reward = $Balance['Balance'];
             }

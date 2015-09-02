@@ -151,7 +151,7 @@
 	
 	if(isset($_SESSION["abandoned_cart_id"]) && $_SESSION["abandoned_cart_id"] > 0) 
 	{
-		$abandoned_carts->delete_abandoned_cart($_SESSION["abandoned_cart_id"]);
+		$abandoned_carts->deleteAbandonedCart($_SESSION["abandoned_cart_id"]);
 	}
 	
 	$objChargify = new chargifyMeteredUsage();

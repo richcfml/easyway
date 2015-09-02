@@ -14,7 +14,7 @@ require_once('../classes/Category.php');
 require_once('../classes/Product.php');
 require_once('../classes/cart.php');
 require_once('../lib/cdyne/cdyne.php');
-require_once('../classes/abandoned_carts.php');
+require_once('../classes/AbandonedCarts.php');
 require_once('../classes/chargify.php');
 require('GoogleGeocode.php');
 
@@ -27,7 +27,7 @@ $product = new Product();
 $cart = new cart();
 $objcdyne = new cydne();
 $loggedinuser = new Users();
-$abandoned_carts = new abandoned_carts();
+$abandoned_carts = new AbandonedCarts();
 $fun = new clsFunctions();
 $objMail = new testmail();
 
@@ -575,7 +575,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'new')) && (isset($_GET['type']) && (
             $cart->save();
 
             if (isset($_SESSION["abandoned_cart_id"]) && $_SESSION["abandoned_cart_id"] > 0) {
-                $abandoned_carts->delete_abandoned_cart($_SESSION["abandoned_cart_id"]);
+                $abandoned_carts->deleteAbandonedCart($_SESSION["abandoned_cart_id"]);
             }
 
             $objChargify = new chargifyMeteredUsage();

@@ -97,7 +97,7 @@
 	
 	if(isset($_SESSION["abandoned_cart_id"]) && $_SESSION["abandoned_cart_id"] > 0) 
 	{
-		$abandoned_carts->delete_abandoned_cart($_SESSION["abandoned_cart_id"]);
+		$abandoned_carts->deleteAbandonedCart($_SESSION["abandoned_cart_id"]);
 	}
 	
 	$objChargify = new chargifyMeteredUsage();
@@ -419,13 +419,13 @@
 		$vip_discount=$cart->vip_discount;
 		if($vip_discount >0) 
 		{
-			Sale($loggedinuser->valuetec_card_number, $vip_discount);
+			valutecSale($loggedinuser->valuetec_card_number, $vip_discount);
 		}
 		else 
 		{
-			AddValue($loggedinuser->valuetec_card_number, round($objRestaurant->rewardPoints  *  $cart->sub_total, 0) );
+			valutecAddValue($loggedinuser->valuetec_card_number, round($objRestaurant->rewardPoints  *  $cart->sub_total, 0) );
 		}
-		$Balance=CardBalance($loggedinuser->valuetec_card_number);
+		$Balance=valutecCardBalance($loggedinuser->valuetec_card_number);
 		$loggedinuser->valuetec_points=$Balance['PointBalance'];
 		$loggedinuser->valuetec_reward=$Balance['Balance'];
 		$loggedinuser->saveToSession();

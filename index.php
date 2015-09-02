@@ -31,7 +31,7 @@ else if(isset($_POST['x_sid']))
 	require_once('classes/cart.php');
 	require_once('classes/GO3.php');
  	require_once('lib/cdyne/cdyne.php');
-	require_once('classes/abandoned_carts.php');
+	require_once('classes/AbandonedCarts.php');
 	require_once('classes/chargify.php');
 	
 	require_once('lib/device_detection/Mobile_Detect.php');
@@ -46,7 +46,7 @@ else if(isset($_POST['x_sid']))
  	$objGO3 = new GO3();
 	$objcdyne=new cydne();
 	$loggedinuser=new Users();
-	$abandoned_carts = new abandoned_carts();
+	$abandoned_carts = new AbandonedCarts();
 
 	$objRestaurant = $objRestaurant->getDetailbyUrl($_GET["name"]);
 

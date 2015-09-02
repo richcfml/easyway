@@ -47,7 +47,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 								{
 									if ($loggedinuser->valuetec_card_number > 0) 
 									{
-										$Balance = CardBalance($loggedinuser->valuetec_card_number);
+										$Balance = valutecCardBalance($loggedinuser->valuetec_card_number);
 										$loggedinuser->valuetec_points = $Balance['PointBalance'];
 										$loggedinuser->valuetec_reward = $Balance['Balance'];
 									}
@@ -114,7 +114,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 					{
 						if ($loggedinuser->valuetec_card_number > 0) 
 						{
-							$Balance = CardBalance($loggedinuser->valuetec_card_number);
+							$Balance = valutecCardBalance($loggedinuser->valuetec_card_number);
 							$loggedinuser->valuetec_points = $Balance['PointBalance'];
 							$loggedinuser->valuetec_reward = $Balance['Balance'];
 						}

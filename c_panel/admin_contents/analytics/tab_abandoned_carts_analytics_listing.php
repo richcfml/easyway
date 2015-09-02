@@ -1,10 +1,10 @@
 <?php
-	$abandoned_carts = new abandoned_carts();
-	$abandoned_cartss = $abandoned_carts->get_abandoned_carts($resturant_id);
+	$abandoned_carts = new AbandonedCarts();
+	$abandoned_cartss = $abandoned_carts->getAbandonedCarts($resturant_id);
 	
 
 	if(!empty($abandoned_cartss) && dbAbstract::returnRowsCount($abandoned_cartss, 1) > 0) {
-		$abandoned_carts->update_abandoned_carts_count($resturant_id, dbAbstract::returnRowsCount($abandoned_cartss, 1));
+		$abandoned_carts->updateAbandonedCarts_count($resturant_id, dbAbstract::returnRowsCount($abandoned_cartss, 1));
 ?>
 		<style type="text/css">
 		

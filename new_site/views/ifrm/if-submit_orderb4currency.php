@@ -104,7 +104,7 @@ if(!isset($repid_payment)){
 	$cart->order_created=1;
 	$cart->save();
 	if(isset($_SESSION["abandoned_cart_id"]) and $_SESSION["abandoned_cart_id"] > 0) {
-		$abandoned_carts->delete_abandoned_cart($_SESSION["abandoned_cart_id"]);
+		$abandoned_carts->deleteAbandonedCart($_SESSION["abandoned_cart_id"]);
 	}
         if ( $objRestaurant->order_destination == "POS" ) { 
             //Create a function object and call to posttoORDRSRVR function

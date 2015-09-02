@@ -35,25 +35,25 @@ if($objRestaurant->useValutec ==  2) //GO3
 }
 else if($objRestaurant->useValutec ==  1) //ValuTec
 {
-	if(isCardRegistered($InputCardNumber))
+	if(isRegisteredValutecCard($InputCardNumber))
 	{
 		echo json_encode(array("success"=>"0","message"=>"Invalid card number"));
 	}
 	else
 	{
-		$ResultData = GetRegistration($InputCardNumber);
+		$ResultData = valutecGetRegistration($InputCardNumber);
 		$Authorized	= $ResultData['Authorized'];
 		$ErrMessage	= $ResultData['ErrMessage'];
 		$reg_data=$ResultData;
 		if($Authorized=="true") 
 		{
-			$Balance=AddValue($InputCardNumber,$objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
+			$Balance=valutecAddValue($InputCardNumber,$objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
 			$loggedinuser->saveUserValutecCard($InputCardNumber,$Balance['PointBalance'],$Balance['Balance']);
 			echo json_encode(array("success"=>"1","message"=>"Thank you for registering your card, you now have <u style='font-size:16px;'>". $Balance['PointBalance'] ."</u> Point(s) and <u style='font-size:16px;'>$". $Balance['Balance'] ."</u> balance"));
 		}
 		else 
 		{
-			$ResultData = SetRegistration($InputCardNumber, $loggededuser->cust_your_name ." ".$loggededuser->LastName, $loggededuser->cust_odr_address, '',$loggededuser->cust_ord_city, $loggededuser->cust_ord_state, $loggededuser->cust_ord_zip, '', $loggededuser->cust_email, '', '', '', '', '', '');
+			$ResultData = valutecSetRegistration($InputCardNumber, $loggededuser->cust_your_name ." ".$loggededuser->LastName, $loggededuser->cust_odr_address, '',$loggededuser->cust_ord_city, $loggededuser->cust_ord_state, $loggededuser->cust_ord_zip, '', $loggededuser->cust_email, '', '', '', '', '', '');
 			$Authorized			= $ResultData['Authorized'];
 			$ErrMessage			= $ResultData['ErrMessage'];
 			$CardNumber			= $ResultData['CardNumber'];
@@ -64,7 +64,7 @@ else if($objRestaurant->useValutec ==  1) //ValuTec
 			}
 			else
 			{
-				$ResultData =  AddValue($InputCardNumber,$objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
+				$ResultData =  valutecAddValue($InputCardNumber,$objRestaurant->rewardPoints * $objRestaurant->numberofPoints);
 				$Authorized	= $ResultData['Authorized'];
 					 
 				if($Authorized=="false") 
