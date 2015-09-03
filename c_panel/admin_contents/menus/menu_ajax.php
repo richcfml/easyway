@@ -253,7 +253,11 @@ else if (isset($_GET['add_menu_item']))
     $lastid = dbAbstract::Insert("INSERT INTO product set cat_id = '".$_GET['restid']."', sub_cat_id = $sub_cat,item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = '$price', feature_sub_cat = $feature_subcat,pos_id = '$pos_id',item_type='" . $type . "',SortOrder=" . $maxOrderNo . ",signature_sandwitch_id=".$_GET['signature_sandwitch']."", 1, 2);
     if(isset($_GET['signature_sandwitch']) && $_GET['signature_sandwitch'] !=0)
     {
-        dbAbstract::Update("update attribute set ProductID = ".$lastid." where ProductID = ".$_GET['temp_product']."");
+        $affectedRows = dbAbstract::Update("update attribute set ProductID = ".$lastid." where ProductID = ".$_GET['temp_product']."",1,1);
+        if($affectedRows > 0)
+        {
+            dbAbstract::Update("update product set HasAttributes = 1 where prd_id = ".$lastid."");
+        }
     }
     if (!empty($_GET['ext']))
     {
