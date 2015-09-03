@@ -5,7 +5,7 @@
     
     //require_once('includes/config.php');
     
-    $mysql_conn = mysql_connect("104.239.145.91","root","Ezst^r7)m6J^gf`2") or die( mysql_error()."  cannot connect...");
+    $mysql_conn = mysql_connect("104.239.145.91","easywayordering","3a5yw4y0rd3ring") or die( mysql_error()."  cannot connect...");
     mysql_select_db("easywayordering",$mysql_conn);
         
     $mSQL  = "SELECT id, IFNULL(password, '') AS password FROM customer_registration";
