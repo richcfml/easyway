@@ -36,7 +36,7 @@ $mChkShow="";
 $mShow= " display:none;";
 	
 $mRestaurantID = $Objrestaurant->id;
-$mSettingsCount = $Objrestaurant->SelectCountIframeSettingsByRestaurantID($mRestaurantID);
+$mSettingsCount = $Objrestaurant->CountIframeSettingsByRestaurantID($mRestaurantID);
 
 function GetFileExt($pFileName)
 {
@@ -52,7 +52,7 @@ $mCBIFlag = 0;
 
 if (isset($_POST["btnDelOOBI"])) //Delete Order Online Image Button Clicked
 {
-	$mOOBICBI = $Objrestaurant->SelectOOBICBIByRestaurantID($Objrestaurant->id);
+	$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
 	if ($mOOBICBI!=0)
 	{
 		$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
@@ -65,7 +65,7 @@ if (isset($_POST["btnDelOOBI"])) //Delete Order Online Image Button Clicked
 }
 else if (isset($_POST["btnDelCBI"])) //Delete Cell BG Image Button Clicked
 {
-	$mOOBICBI = $Objrestaurant->SelectOOBICBIByRestaurantID($Objrestaurant->id);
+	$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
 	if ($mOOBICBI!=0)
 	{
 		$mTmpCBI = $mOOBICBI->CellBGImage;
@@ -169,7 +169,7 @@ else if (isset($_POST["btnSubmit"])) //Submit Button Clicked
 		}
 		else if ($mSettingsCount==1) //Settings Exist, Do Update
 		{
-			$mOOBICBI = $Objrestaurant->SelectOOBICBIByRestaurantID($Objrestaurant->id);
+			$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
 			if ($mOOBICBI!=0)
 			{
 				$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
@@ -229,7 +229,7 @@ else if (isset($_POST["btnDefault"])) //Default Button Clicked
 	}
 	else if ($mSettingsCount==1) //Settings Exist, Do Update
 	{
-		$mOOBICBI = $Objrestaurant->SelectOOBICBIByRestaurantID($Objrestaurant->id);
+		$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
 		if ($mOOBICBI!=0)
 		{
 			$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
@@ -260,7 +260,7 @@ else if (isset($_POST["btnDefault"])) //Default Button Clicked
 	}
 }
 
-$mIframeSettings = $Objrestaurant->SelectIframeDetailsByRestaurantID($Objrestaurant->id);
+$mIframeSettings = $Objrestaurant->getIframeDetailsByRestaurantID($Objrestaurant->id);
 if ($mIframeSettings!=0)
 {
 	$mGFS = $mIframeSettings->GeneralFontSize;

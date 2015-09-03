@@ -238,7 +238,7 @@ else if (isset($_GET['add_menu_item']))
     $maxOrderNo = 0;
     if(isset($_GET['signature_sandwitch']) && $_GET['signature_sandwitch'] !=0)
     {
-        $maxOrderNo = 1;
+        $maxOrderNo = 0;
         dbAbstract::Update("update product set SortOrder = SortOrder + 1 where sub_cat_id = ".$sub_cat."");
     }
     else

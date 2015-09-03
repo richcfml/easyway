@@ -2,7 +2,7 @@
 include("../includes/config.php");
 require_once('../classes/Users.php');
 require	"../includes/class.phpmailer.php";
-include "../classes/restaurant.php";
+include "../classes/Restaurant.php";
 
 if (isset($_GET['apikey']))
 {
@@ -433,7 +433,7 @@ function login()
     $mAPIKey = $_GET['apikey'];
     $objMail = new testmail();
     $loggedinuser = new Users();
-    $objRestaurant = new restaurant();
+    $objRestaurant = new Restaurant();
     error_reporting(E_ALL);
     $loggedinuser->cust_email=  $_GET['email'];
     $loggedinuser->password= '12345' ;

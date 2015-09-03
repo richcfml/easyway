@@ -6,7 +6,7 @@
   </div>
   <h1>Full Week Business Hours</h1>
   <?
-  $arr_days=$objRestaurant->allBusinessHours();
+  $arr_days=$objRestaurant->getBusinessHoursByRestaurantID();
   foreach($arr_days as $day){
   ?>
   <div class="hour_row">

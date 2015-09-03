@@ -31,7 +31,7 @@
 </style>
 <?php
 	$mTmpSPD = 0;
-	$mTmpIframeSettings = $objRestaurant->SelectIframeDetailsByRestaurantID($objRestaurant->id);
+	$mTmpIframeSettings = $objRestaurant->getIframeDetailsByRestaurantID($objRestaurant->id);
 	if ($mTmpIframeSettings!=0)
 	{
 		$mTmpSPD  = $mTmpIframeSettings->ShowPicturesDescription;

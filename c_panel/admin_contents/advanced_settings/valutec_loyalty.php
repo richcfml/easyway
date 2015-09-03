@@ -13,7 +13,7 @@
 		$Objrestaurant->numberofPoints=$numberofPoints;
 		$Objrestaurant->rewardAmount=$rewardAmount;					 
 		$Objrestaurant->rewardLevel=$rewardLevel;	
-		$Objrestaurant->saveValutec();
+		$Objrestaurant->saveLoyalitySetting();
 	 }
   include "nav.php" ?>
 <div class="form_outer" >

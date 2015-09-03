@@ -253,7 +253,7 @@ if (!empty($_GET)) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-$Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+$Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 if (isset($_POST['submit'])) {
 	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
     $restQry = dbAbstract::Execute("SELECT name from resturants where name='$catname' AND id!='$catid'",1);
@@ -724,7 +724,7 @@ if (isset($_POST['submit'])) {
         }
     }
     
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 } //end submit2		
 else if (isset($_POST["btnRemoveVIP"]))
 {
@@ -734,7 +734,7 @@ else if (isset($_POST["btnRemoveVIP"]))
         unlink(realpath("../images/resturant_vip_headers/".$Objrestaurant->VIP_List_Image));
     }
     $errMessage = "VIP list image removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveBhBanner"]))
 {
@@ -744,7 +744,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
         unlink(realpath("../images/resturant_bh_banner/".$Objrestaurant->bh_banner_image));
     }
     $errMessage = "BH banner image removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveOptionalLogo"]))
 {
@@ -754,7 +754,7 @@ else if (isset($_POST["btnRemoveOptionalLogo"]))
         unlink(realpath("../images/resturant_logos/".$Objrestaurant->logo));
     }
     $errMessage = "Optional logo removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
 {
@@ -764,7 +764,7 @@ else if (isset($_POST["btnRemoveOptionalLogoThumbnail"]))
         unlink(realpath("../images/logos_thumbnail/".$Objrestaurant->optionl_logo));
     }
     $errMessage = "Optional logo thumbnail removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveHeaderImage"]))
 {
@@ -774,7 +774,7 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
         unlink(realpath("../images/resturant_headers/".$Objrestaurant->header_image));
     }
     $errMessage = "Header image removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveVIPRewardImage"]))
 {
@@ -784,7 +784,7 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
         unlink(realpath("../images/resturant_headers/".$Objrestaurant->header_vip_image));
     }
     $errMessage = "VIP reward image removed successfully.";
-    $Objrestaurant= $Objrestaurant->getDetail($mRestaurantIDCP);
+    $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ?>

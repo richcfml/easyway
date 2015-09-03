@@ -1,5 +1,5 @@
 <?php 
-class restaurant  
+class Restaurant  
 {
     public $id;
     public $name;
@@ -82,18 +82,11 @@ class restaurant
             $easyway_url,
             $chargify_subscription_id,
             $chargify_subscription_status;
-	
-    public function setemailformat($rest_order_email_fromat) 
-    {
-            $this->rest_order_email_fromat =  ($rest_order_email_fromat=="" ?  "pdf" : $rest_order_email_fromat);
-    }
-    public function setorderdestination($order_destination) 
-    {
-            $this->order_destination =  ($order_destination=="" ?  "fax" : $order_destination);
-    }	
-
-    public function saveValutec() 
-    {
+    
+    /**
+     * save loyality advance setting
+     */
+    public function saveLoyalitySetting() {
         $query="update resturants set useValutec=". $this->useValutec ." 
                     ,locationName='". $this->locationName ."'
                     ,merchantID='". $this->merchantID ."'
@@ -109,38 +102,41 @@ class restaurant
         dbAbstract::Update($query);
         $this->saveToSession();
     }
-
-    public function getRestaurantDesignSettings($host) 
-    {
+    
+    /**
+     * 
+     * @param type $host
+     * @return type return restaurant design seeting for word press
+     */
+    public function getRestaurantDesignSettings($host) {
         $mSQL = "select * from wp_restaurent_design_settings where restaurant_id=".$this->id . " AND easyway_url='$host' ORDER BY date_added desc";
         $objRestaurant = dbAbstract::ExecuteObject($mSQL, 0, "restaurant");
         return $objRestaurant;
     }
 	
-    public function getDetail($id) 
-    {
+    /**
+     * 
+     * @param type $id
+     * @return type return restauarnt details
+     */
+    public function getDetailByRestaurantID($id) {
         $mSQL = "select *,url_name as url,facebookLink as facebook_link	  from resturants where id = ".$id;
         $objRestaurant = dbAbstract::ExecuteObject($mSQL, 0, "restaurant");
         $objRestaurant->setRestaurantTimeZone();
-        if($objRestaurant->did_number=='0') 
-        {
+        if($objRestaurant->did_number=='0') {
             $objRestaurant->did_number='';
         }
         $objRestaurant->saveToSession();
-
         return $objRestaurant;
 
     } 
-    
-    public function getResturantIdbyUrl($url)
-    {
-        $mSQL = "select id from resturants where url_name = '".$url ."'";
-        $objRestaurant = dbAbstract::ExecuteObject($mSQL, 0, "restaurant");
-        return $objRestaurant->id;
-    }
 	
-    public function getDetailbyUrl($url) 
-    {
+    /**
+     * 
+     * @param type $url
+     * @return type return restauarnt details
+     */
+    public function getDetailByRestaurantUrl($url) {
         $mSQL = "select *,url_name as url,facebookLink as facebook_link	  from resturants where url_name = '".$url ."'";
         $objRestaurant = dbAbstract::ExecuteObject($mSQL, 0, "restaurant");
         $objRestaurant->setRestaurantTimeZone();
@@ -148,50 +144,39 @@ class restaurant
         $objRestaurant->credit_card=0;
         $objRestaurant->cash=0;
 
-        if(trim($objRestaurant->authoriseLoginID)=='') 
-        {
+        if(trim($objRestaurant->authoriseLoginID)=='') {
                 $objRestaurant->payment_method='cash';
         }
 
-        if($objRestaurant->payment_method == 'credit' || $objRestaurant->payment_method == 'both' && trim($objRestaurant->authoriseLoginID) <>'')
-        {
+        if($objRestaurant->payment_method == 'credit' || $objRestaurant->payment_method == 'both' && trim($objRestaurant->authoriseLoginID) <>''){
             $objRestaurant->credit_card=1;	
         }
 
-        if($objRestaurant->payment_method == 'cash' || $objRestaurant->payment_method == 'both') 
-        {
+        if($objRestaurant->payment_method == 'cash' || $objRestaurant->payment_method == 'both') {
             $objRestaurant->cash=1;	
         }	
 
-        if(empty($objRestaurant->header_image))
-        {
+        if(empty($objRestaurant->header_image)) {
             $objRestaurant->header_image = "../images/default_200_by_200.jpg";
         } 
-        else 
-        {
+        else {
             $objRestaurant->header_image = "../images/resturant_headers/" . $objRestaurant->header_image;
         }
 
-
-        if($objRestaurant->isDoubleReward==true) 
-        {
+        if($objRestaurant->isDoubleReward==true) {
             $objRestaurant->VIPMessage='Join our V.I.P. Card program and earn 1 point for every $1 you spend in the restaurant and Double Points for every $1 you spend online!';
             $objRestaurant->rewardPoints=2;
 
         } 
-        else 
-        {
+        else {
             $objRestaurant->VIPMessage='Join our V.I.P. Card program and earn 1 point for every $1 you spend in the restaurant or online!';
             $objRestaurant->rewardPoints=1;
         }
 
         define('ClientKey', $objRestaurant->clientKey);
         //TERMINAL ID
-        //--------------------------------------
         define('TID', $objRestaurant->terminalID);
-        //--------------------------------------
         define('ServerId', $objRestaurant->merchantID);
-        //--------------------------------------
         define('TUNAME', $objRestaurant->terminalUserName);
 
         $format=array("(",")","-"," ");
@@ -202,137 +187,103 @@ class restaurant
 
         $objRestaurant->isOpen();
 
-        if($objRestaurant->rest_open_close=='0')
-        {
+        if($objRestaurant->rest_open_close=='0') {
             $objRestaurant->isOpenHour=0;
         }
 
-        if($objRestaurant->status==1)
-        {
-            $objRestaurant->loadreseller();
+        if($objRestaurant->status==1) {
+            $objRestaurant->getResellerByOwnerID();
         }
-        if($objRestaurant->did_number=='0') 
-        {
+        if($objRestaurant->did_number=='0') {
             $objRestaurant->did_number='';
         }
 
         return $objRestaurant;
-
     } 
     
-    private function setRestaurantTimeZone() 
-    {
+    private function setRestaurantTimeZone() {
         $mSQL = "SELECT  time_zone FROM times_zones WHERE id = ".$this->time_zone_id;
         $timezoneRs = dbAbstract::ExecuteArray($mSQL);
         date_default_timezone_set($timezoneRs['time_zone']);
-
     }
     
-    private function isOpen() 
-    {
+    /**
+     * check restaurant is open
+     */
+    private function isOpen() {
         $this->isOpenHour=0;
         $day_name=date('l');
-        if($day_name == 'Monday') 
-        {
+        if($day_name == 'Monday') {
             $day_of_week = 0;
-        } 
-        else if($day_name == 'Tuesday') 
-        {
+        } else if($day_name == 'Tuesday') {
             $day_of_week = 1; 
-        } 
-        else if($day_name == 'Wednesday') 
-        {
+        } else if($day_name == 'Wednesday') {
             $day_of_week = 2; 
-        } 
-        else if($day_name == 'Thursday') 
-        {
+        } else if($day_name == 'Thursday') {
             $day_of_week = 3;
-        } 
-        else if($day_name == 'Friday') 
-        {
+        } else if($day_name == 'Friday') {
             $day_of_week = 4; 
-        } else if($day_name == 'Saturday') 
-        {
+        } else if($day_name == 'Saturday') {
             $day_of_week = 5;
-        } else if($day_name == 'Sunday') 
-        {
+        } else if($day_name == 'Sunday') {
             $day_of_week = 6;
         }
         
         $mSQL =  "SELECT open, close FROM business_hours WHERE day = $day_of_week AND rest_id = ". $this->id ."";
         $businessHrQry =  dbAbstract::Execute($mSQL);
         
-        while($business_hours=dbAbstract::returnObject($businessHrQry))
-        {
+        while($business_hours=dbAbstract::returnObject($businessHrQry)) {
             $current_time=date("Hi",time());
-            if($current_time >= $business_hours->open && $current_time <= $business_hours->close) 
-            {
+            if($current_time >= $business_hours->open && $current_time <= $business_hours->close) {
                 $this->isOpenHour=1;
             }
 
-            if(strrpos($business_hours->open,"-") !== FALSE)
-            {
+            if(strrpos($business_hours->open,"-") !== FALSE) {
                 $business_hours->open = "0000";
             }
 
-            if(strrpos($business_hours->close,"-") !== FALSE)
-            {
+            if(strrpos($business_hours->close,"-") !== FALSE){
                 $business_hours->close = "0100";
             }
 
             $this->openTime=strtotime($business_hours->open);
             $this->closeTime=strtotime($business_hours->close);
-            if($this->isOpenHour==1)
-            {
+            if($this->isOpenHour==1) {
                 break;
             }
        }
-
     }
     
-    public function allBusinessHours()
-    {
+    /**
+     * 
+     * @return type get restaurant buisness hours
+     */
+    public function getBusinessHoursByRestaurantID() {
         $mSQL= "select *,'' as dayName  from business_hours where rest_id='". $this->id."' order by day asc";
         $qry= dbAbstract::Execute($mSQL);
         $arr_days=array();
-        while($day=dbAbstract::returnObject($qry))
-        {
-            if($day->day == 0) 
-            {
+        while($day=dbAbstract::returnObject($qry)) {
+            if($day->day == 0) {
                 $day->dayName = 'Monday';
-            }
-            else if($day->day == 1) 
-            {
+            } else if($day->day == 1) {
                 $day->dayName= 'Tuesday';
-            }
-            else if($day->day == 2) 
-            {
+            } else if($day->day == 2) {
                 $day->dayName = 'Wednesday';
-            }
-            else if($day->day == 3) 
-            {
+            } else if($day->day == 3) {
                 $day->dayName = 'Thursday';
-            }
-            else if($day->day == 4) 
-            {
+            } else if($day->day == 4) {
                 $day->dayName = 'Friday';
-            }
-            else if($day->day == 5) 
-            {
+            } else if($day->day == 5) {
                 $day->dayName = 'Saturday';
-            }
-            else if($day->day == 6) 
-            {
+            } else if($day->day == 6) {
                 $day->dayName = 'Sunday';
             }
 
-            if(strrpos($day->open,"-") !== FALSE)
-            {
+            if(strrpos($day->open,"-") !== FALSE) {
                 $day->open = "0000";
             }
 
-            if(strrpos($day->close,"-") !== FALSE)
-            {
+            if(strrpos($day->close,"-") !== FALSE) {
                 $day->close = "0100";
             }
 
@@ -343,60 +294,41 @@ class restaurant
             return $arr_days;
     }
 
-    public function DayBusinessHours($pDayNumber)
-    {
+    public function getBusinessHoursByDay($pDayNumber) {
            $mSQL = "SELECT *,'' as dayName FROM business_hours WHERE rest_id='". $this->id."' AND day=".$pDayNumber." ORDER BY open ASC";
            $qry = dbAbstract::Execute($mSQL);
            $arr_days=array();
-           while($day = dbAbstract::returnObject($qry))
-           {
-                if($day->day == 0) 
-                {
+           while($day = dbAbstract::returnObject($qry)) {
+                if($day->day == 0) {
                     $day->dayName = 'Monday';
-                }
-                else if($day->day == 1) 
-                {
+                } else if($day->day == 1) {
                     $day->dayName= 'Tuesday';
-                }
-                else if($day->day == 2) 
-                {
+                } else if($day->day == 2) {
                     $day->dayName = 'Wednesday';
-                }
-                else if($day->day == 3) 
-                {
+                } else if($day->day == 3) {
                     $day->dayName = 'Thursday';
-                }
-                else if($day->day == 4) 
-                {
+                } else if($day->day == 4) {
                     $day->dayName = 'Friday';
-                }
-                else if($day->day == 5) 
-                {
+                } else if($day->day == 5) {
                     $day->dayName = 'Saturday';
-                }
-                else if($day->day == 6) 
-                {
+                } else if($day->day == 6) {
                     $day->dayName = 'Sunday';
                 }
 
-                if ((strrpos($day->open,"-") === FALSE) && (strrpos($day->close,"-") === FALSE))
-                {
+                if ((strrpos($day->open,"-") === FALSE) && (strrpos($day->close,"-") === FALSE)) {
                     $day->open=date("g:i A",strtotime($day->open));
                     $day->close=date("g:i A",strtotime($day->close));
                 }
-                else if ((strrpos($day->open,"-") !== FALSE) && (strrpos($day->close,"-") !== FALSE))
-                {
+                else if ((strrpos($day->open,"-") !== FALSE) && (strrpos($day->close,"-") !== FALSE)) {
                     $day->open = "Closed";
                     $day->close = "Closed";
                 }
-                else if (strrpos($day->open,"-") !== FALSE)
-                {
+                else if (strrpos($day->open,"-") !== FALSE) {
                     $day->open = "0000";
                     $day->open=date("g:i A",strtotime($day->open));
                     $day->close=date("g:i A",strtotime($day->close));
                 }
-                else if (strrpos($day->close,"-") !== FALSE)
-                {
+                else if (strrpos($day->close,"-") !== FALSE) {
                     $day->close = "2359";
                     $day->open=date("g:i A",strtotime($day->open));
                     $day->close=date("g:i A",strtotime($day->close));
@@ -404,40 +336,35 @@ class restaurant
                 $arr_days[]=$day;
             }
             return $arr_days;
-
     }
                  
-    public function saveToSession() 
-    {
+    public function saveToSession() {
             $_SESSION['restaurant_detail']=serialize($this);
     }
 	
-    public function getSession() 
-    {
+    public function getSession() {
             return unserialize($_SESSION['restaurant_detail']); 
     }
     
-    public function loadreseller() 
-    {
+    /*
+     * get resseler details
+     */
+    public function getResellerByOwnerID() {
         $this->reseller=new reseller();
         $mSQL = "select reseller_id from reseller_client where client_id=".$this->owner_id;
         $ResellerInfoRs = dbAbstract::ExecuteArray($mSQL);
 
-        if(is_array($ResellerInfoRs) && $ResellerInfoRs["reseller_id"]!="247") 
-        {
+        if(is_array($ResellerInfoRs) && $ResellerInfoRs["reseller_id"]!="247") {
             $reseller_id=$ResellerInfoRs["reseller_id"];
 
             $licenseRS=dbAbstract::ExecuteArray("SELECT `status` FROM licenses WHERE id=".$this->license_id);
 
-            if($licenseRS)
-            {
-                if(strtolower($licenseRS['status'])!='activated')
-                {
+            if($licenseRS) {
+                if(strtolower($licenseRS['status'])!='activated') {
                     $this->status=0;
                 }
             }
-            else
-            {
+            else {
                 $this->status=0;
             }
 
@@ -445,86 +372,120 @@ class restaurant
             $this->reseller	= dbAbstract::ExecuteObject($reseller_info_sql, 0 ,'reseller');	
         } 
     }
-    /* Gulfam Added Functions Start */
-    function SelectCountIframeSettingsByRestaurantID($pRestaurantID)
-    {
+    
+    /*
+     * count iframe setting
+     */
+    function CountIframeSettingsByRestaurantID($pRestaurantID) {
         $mSQLQuery = "SELECT COUNT(*) AS SettingsCount FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
         $mResult = dbAbstract::Execute($mSQLQuery);
-        if (dbAbstract::returnRowsCount($mResult)>0)
-        {
+        if (dbAbstract::returnRowsCount($mResult)>0) {
             $mRow = dbAbstract::returnObject($mResult);
             return $mRow->SettingsCount;
-        }
-        else
-        {
+        } else {
             return -1;
         }
     }
-	
-    function SelectIframeDetailsByRestaurantID($pRestaurantID)
-    {
-            $mSQLQuery = "SELECT IFNULL(ShowLoyaltyBox, 0) AS ShowLoyaltyBox, IFNULL(LayoutStyle, 0) AS LayoutStyle, IFNULL(ShowPicturesDescription, 0) AS ShowPicturesDescription, IFNULL(CellBGImageStretchTile, 0) AS CellBGImageStretchTile, IFNULL(OrderOnlineButtonImage, '') AS OrderOnlineButtonImage, IFNULL(CellBGImage, '') AS CellBGImage, IFNULL(GeneralFontSize, '12') AS GeneralFontSize, IFNULL(GeneralTextColor, '000000') AS GeneralTextColor, IFNULL(SecondaryTextColor, '000000') AS SecondaryTextColor, IFNULL(MenuBGColor, 'F4F4F4') AS MenuBGColor, IFNULL(MenuLinkColorOnActive, 'CC0000') AS MenuLinkColorOnActive, IFNULL(MenuLinkColorOnInactive, '333333') AS MenuLinkColorOnInactive, IFNULL(SubMenuHeadingsColor, '585858') AS SubMenuHeadingsColor, IFNULL(SubMenuDescriptionsColor, '585858') AS SubMenuDescriptionsColor, IFNULL(ItemsTitleColor, '000000') AS ItemsTitleColor, IFNULL(ItemsPriceColor, '000000') AS ItemsPriceColor, IFNULL(ItemsDscriptionColor, '000000') AS ItemsDscriptionColor, ";
-            $mSQLQuery = $mSQLQuery." IFNULL(ItemsPricesFontSize, '14') AS ItemsPricesFontSize, IFNULL(YourOrderSummaryColor, '5F5F5F') AS YourOrderSummaryColor, IFNULL(YourOrderSummaryFontSize, '18') AS YourOrderSummaryFontSize, IFNULL(CellBGColor, 'fff') AS CellBGColor, IFNULL(CellBorderColor, 'e4e4e4') AS CellBorderColor, IFNULL(CellBorderThickness, '1') AS CellBorderThickness, IFNULL(TitlesFontSize, '12') AS TitlesFontSize, IFNULL(TitlesFont, 'Arial,Helvetica,sans-serif') AS TitlesFont, IFNULL(MinWidthOfTheContainer, '0') AS MinWidthOfTheContainer, IFNULL(ColorForVIPProgressBar, '00CCFF') AS ColorForVIPProgressBar FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
+    /**
+     * 
+     * @param type $pRestaurantID
+     * @return int return iframe details settings
+     */
+    function getIframeDetailsByRestaurantID($pRestaurantID) {
+            $mSQLQuery = "SELECT IFNULL(ShowLoyaltyBox, 0) AS ShowLoyaltyBox, IFNULL(LayoutStyle, 0) AS LayoutStyle, 
+                         IFNULL(ShowPicturesDescription, 0) AS ShowPicturesDescription, IFNULL(CellBGImageStretchTile, 0) AS CellBGImageStretchTile, 
+                         IFNULL(OrderOnlineButtonImage, '') AS OrderOnlineButtonImage, IFNULL(CellBGImage, '') AS CellBGImage, 
+                         IFNULL(GeneralFontSize, '12') AS GeneralFontSize, IFNULL(GeneralTextColor, '000000') AS GeneralTextColor, 
+                         IFNULL(SecondaryTextColor, '000000') AS SecondaryTextColor, IFNULL(MenuBGColor, 'F4F4F4') AS MenuBGColor, 
+                         IFNULL(MenuLinkColorOnActive, 'CC0000') AS MenuLinkColorOnActive, IFNULL(MenuLinkColorOnInactive, '333333') AS MenuLinkColorOnInactive, 
+                         IFNULL(SubMenuHeadingsColor, '585858') AS SubMenuHeadingsColor, IFNULL(SubMenuDescriptionsColor, '585858') AS SubMenuDescriptionsColor, 
+                         IFNULL(ItemsTitleColor, '000000') AS ItemsTitleColor, IFNULL(ItemsPriceColor, '000000') AS ItemsPriceColor, 
+                         IFNULL(ItemsDscriptionColor, '000000') AS ItemsDscriptionColor,
+                         IFNULL(ItemsPricesFontSize, '14') AS ItemsPricesFontSize, IFNULL(YourOrderSummaryColor, '5F5F5F') AS YourOrderSummaryColor, 
+                         IFNULL(YourOrderSummaryFontSize, '18') AS YourOrderSummaryFontSize, IFNULL(CellBGColor, 'fff') AS CellBGColor, 
+                         IFNULL(CellBorderColor, 'e4e4e4') AS CellBorderColor, IFNULL(CellBorderThickness, '1') AS CellBorderThickness, 
+                         IFNULL(TitlesFontSize, '12') AS TitlesFontSize, IFNULL(TitlesFont, 'Arial,Helvetica,sans-serif') AS TitlesFont, 
+                         IFNULL(MinWidthOfTheContainer, '0') AS MinWidthOfTheContainer, IFNULL(ColorForVIPProgressBar, '00CCFF') AS ColorForVIPProgressBar 
+                         FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
             $mResult = dbAbstract::Execute($mSQLQuery);
-            if (dbAbstract::returnRowsCount($mResult)>0)
-            {
+            
+            if (dbAbstract::returnRowsCount($mResult)>0) {
                 return dbAbstract::returnObject($mResult);
-            }
-            else
-            {
+            } else {
                 return 0;
             }
     }
 	
-    function SelectOOBICBIByRestaurantID($pRestaurantID)
-    {
+    function getOOBICBIByRestaurantID($pRestaurantID) {
         $mSQLQuery = "SELECT IFNULL(OrderOnlineButtonImage, '') AS OrderOnlineButtonImage, IFNULL(CellBGImage, '') AS CellBGImage FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
 
         $mResult = dbAbstract::Execute($mSQLQuery);
-        if (dbAbstract::returnRowsCount($mResult)>0)
-        {
+        if (dbAbstract::returnRowsCount($mResult)>0) {
             return dbAbstract::returnObject($mResult);
-        }
-        else
-        {
+        } else {
             return 0;
         }
     }
-	
+    
+    /**
+     * Insert iframe settings
+     */
     function InsertIframeDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription)
     {
-        $mSQLQuery = "INSERT INTO iframe_settings (RestaurantID, GeneralFontSize, GeneralTextColor, SecondaryTextColor, MenuBGColor, MenuLinkColorOnActive, MenuLinkColorOnInactive, SubMenuHeadingsColor, SubMenuDescriptionsColor, ItemsTitleColor, ItemsPriceColor, ItemsDscriptionColor, ItemsPricesFontSize, YourOrderSummaryColor, YourOrderSummaryFontSize, CellBGcolor, CellBorderColor, CellBorderThickness, TitlesFontSize, TitlesFont, MinWidthOfTheContainer, ColorForVIPProgressBar, OrderOnlineButtonImage, CellBGImage, CellBGImageStretchTile, ShowLoyaltyBox, LayoutStyle, ShowPicturesDescription) ";
-        $mSQLQuery = $mSQLQuery."VALUES (".$pRestaurantID.", ".$pGeneralFontSize.", '".$pGeneralTextColor."', '".$pSecondaryTextColor."', '".$pMenuBGColor."', '".$pMenuLinkColorOnActive."', '".$pMenuLinkColorOnInactive."', '".$pSubMenuHeadingsColor."', '".$pSubMenuDescriptionsColor."', '".$pItemsTitleColor."', '".$pItemsPriceColor."', '".$pItemsDscriptionColor."', ".$pItemsPricesFontSize.", '".$pYourOrderSummaryColor."', ".$pYourOrderSummaryFontSize.", '".$pCellBGcolor."', '".$pCellBorderColor."', ".$pCellBorderThickness.", ".$pTitlesFontSize.", '".$pTitlesFont."', ";
-        $mSQLQuery = $mSQLQuery.$pMinWidthOfTheContainer.", '".$pColorForVIPProgressBar."', '".$pOrderOnlineButtonImage."', '".$pCellBGImage."', ".$pCellBGImageStretchTile.", ".$pShowLoyaltyBox.", ".$pLayoutStyle.", ".$pShowPicturesDescription.")";
+        $mSQLQuery = "INSERT INTO iframe_settings (RestaurantID, GeneralFontSize, GeneralTextColor, SecondaryTextColor, 
+                                  MenuBGColor, MenuLinkColorOnActive, MenuLinkColorOnInactive, SubMenuHeadingsColor, SubMenuDescriptionsColor, 
+                                  ItemsTitleColor, ItemsPriceColor, ItemsDscriptionColor, ItemsPricesFontSize, YourOrderSummaryColor, 
+                                  YourOrderSummaryFontSize, CellBGcolor, CellBorderColor, CellBorderThickness, TitlesFontSize, TitlesFont, 
+                                  MinWidthOfTheContainer, ColorForVIPProgressBar, OrderOnlineButtonImage, CellBGImage, CellBGImageStretchTile, 
+                                  ShowLoyaltyBox, LayoutStyle, ShowPicturesDescription)
+                                  VALUES (".$pRestaurantID.", ".$pGeneralFontSize.", '".$pGeneralTextColor."', '".$pSecondaryTextColor."', 
+                                  '".$pMenuBGColor."', '".$pMenuLinkColorOnActive."', '".$pMenuLinkColorOnInactive."', '".$pSubMenuHeadingsColor."', 
+                                  '".$pSubMenuDescriptionsColor."', '".$pItemsTitleColor."', '".$pItemsPriceColor."', '".$pItemsDscriptionColor."', 
+                                  ".$pItemsPricesFontSize.", '".$pYourOrderSummaryColor."', ".$pYourOrderSummaryFontSize.", '".$pCellBGcolor."', 
+                                  '".$pCellBorderColor."', ".$pCellBorderThickness.", ".$pTitlesFontSize.", '".$pTitlesFont."',
+                                  $pMinWidthOfTheContainer, '".$pColorForVIPProgressBar."', '".$pOrderOnlineButtonImage."', '".$pCellBGImage."', 
+                                  ".$pCellBGImageStretchTile.", ".$pShowLoyaltyBox.", ".$pLayoutStyle.", ".$pShowPicturesDescription.")";
         return dbAbstract::Insert($mSQLQuery);
     }
-
+    
+    /**
+     * Update iframe settings
+     */
     function UpdateIframeDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription)
     {
-        $mSQLQuery = "UPDATE iframe_settings SET GeneralFontSize=".$pGeneralFontSize.", GeneralTextColor='".$pGeneralTextColor."', SecondaryTextColor='".$pSecondaryTextColor."', MenuBGColor='".$pMenuBGColor."', MenuLinkColorOnActive='".$pMenuLinkColorOnActive."', MenuLinkColorOnInactive='".$pMenuLinkColorOnInactive."', SubMenuHeadingsColor='".$pSubMenuHeadingsColor."', SubMenuDescriptionsColor='".$pSubMenuDescriptionsColor."', ItemsTitleColor='".$pItemsTitleColor."', ItemsPriceColor='".$pItemsPriceColor."', ItemsDscriptionColor='".$pItemsDscriptionColor."', ItemsPricesFontSize=".$pItemsPricesFontSize.", YourOrderSummaryColor='".$pYourOrderSummaryColor."', YourOrderSummaryFontSize=".$pYourOrderSummaryFontSize.", CellBGcolor='".$pCellBGcolor."', CellBorderColor='".$pCellBorderColor."', CellBorderThickness=".$pCellBorderThickness.", TitlesFontSize=".$pTitlesFontSize.", TitlesFont='".$pTitlesFont."', MinWidthOfTheContainer=".$pMinWidthOfTheContainer.", ";
-        $mSQLQuery = $mSQLQuery."ColorForVIPProgressBar='".$pColorForVIPProgressBar."', OrderOnlineButtonImage='".$pOrderOnlineButtonImage."', CellBGImage='".$pCellBGImage."', CellBGImageStretchTile=".$pCellBGImageStretchTile.", ShowLoyaltyBox=".$pShowLoyaltyBox.", LayoutStyle=".$pLayoutStyle.", ShowPicturesDescription=".$pShowPicturesDescription." WHERE RestaurantID=".$pRestaurantID;
+        $mSQLQuery = "UPDATE iframe_settings SET GeneralFontSize=".$pGeneralFontSize.", GeneralTextColor='".$pGeneralTextColor."', 
+                                                 SecondaryTextColor='".$pSecondaryTextColor."',MenuBGColor='".$pMenuBGColor."', 
+                                                 MenuLinkColorOnActive='".$pMenuLinkColorOnActive."',MenuLinkColorOnInactive='".$pMenuLinkColorOnInactive."', 
+                                                 SubMenuHeadingsColor='".$pSubMenuHeadingsColor."',SubMenuDescriptionsColor='".$pSubMenuDescriptionsColor."', 
+                                                 ItemsTitleColor='".$pItemsTitleColor."',ItemsPriceColor='".$pItemsPriceColor."', 
+                                                 ItemsDscriptionColor='".$pItemsDscriptionColor."',ItemsPricesFontSize=".$pItemsPricesFontSize.", 
+                                                 YourOrderSummaryColor='".$pYourOrderSummaryColor."',YourOrderSummaryFontSize=".$pYourOrderSummaryFontSize.", 
+                                                 CellBGcolor='".$pCellBGcolor."', CellBorderColor='".$pCellBorderColor."', 
+                                                 CellBorderThickness=".$pCellBorderThickness.", TitlesFontSize=".$pTitlesFontSize.", 
+                                                 TitlesFont='".$pTitlesFont."',  MinWidthOfTheContainer=".$pMinWidthOfTheContainer.",
+                                                 ColorForVIPProgressBar='".$pColorForVIPProgressBar."', OrderOnlineButtonImage='".$pOrderOnlineButtonImage."', 
+                                                 CellBGImage='".$pCellBGImage."', CellBGImageStretchTile=".$pCellBGImageStretchTile.", 
+                                                 ShowLoyaltyBox=".$pShowLoyaltyBox.", LayoutStyle=".$pLayoutStyle.", 
+                                                 ShowPicturesDescription=".$pShowPicturesDescription." WHERE RestaurantID=".$pRestaurantID;
         return dbAbstract::Update($mSQLQuery);
     }
 	
-    function UpdateOOBIByRestaurantID($pRestaurantID, $pOrderOnlineButtonImage)
-    {
+    function UpdateOOBIByRestaurantID($pRestaurantID, $pOrderOnlineButtonImage) {
         $mSQLQuery = "UPDATE iframe_settings SET OrderOnlineButtonImage='".$pOrderOnlineButtonImage."' WHERE RestaurantID=".$pRestaurantID;
         return dbAbstract::Update($mSQLQuery);
     }
 
-    function UpdateCBIByRestaurantID($pRestaurantID, $pCellBGImage)
-    {
+    function UpdateCBIByRestaurantID($pRestaurantID, $pCellBGImage) {
         $mSQLQuery = "UPDATE iframe_settings SET CellBGImage='".$pCellBGImage."' WHERE RestaurantID=".$pRestaurantID;
         return dbAbstract::Update($mSQLQuery);
     }
-    /* Gulfam Added Functions End */
+    
 }
 
 class reseller 
 {
     public $id,$company_name,$company_logo,$company_logo_link,$pdf_image_header,$plain_text_header;	
-    function __construct() 
-    {
+    function __construct() {
         $id=0;
         $company_name='';
         $company_logo='';

@@ -59,7 +59,7 @@
 							$mDayNumber = 6; //Because in PHP 0 is for Sunday while in our system 0 is programed for Monday.						
 						}
 						
-						$arr_days=$objRestaurant->DayBusinessHours($mDayNumber);
+						$arr_days=$objRestaurant->getBusinessHoursByDay($mDayNumber);
 						$mCount = 1;
                                                 $mOpenHourCount = count($arr_days);
 					  	foreach($arr_days as $day)
