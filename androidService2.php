@@ -6,16 +6,16 @@ $message = array();
 $desiredResult = array();
     
 if (isset($_REQUEST['op'])) {
-    include "classes/restaurant.php";
+    include "classes/Restaurant.php";
     
     $function_obj = new clsFunctions();
-    $Objrestaurant = new restaurant();
+    $Objrestaurant = new Restaurant();
 
     $op = $_REQUEST['op'];    
     if ($op == 'getItem') {
         if (isset($_REQUEST['Slug']) && !empty($_REQUEST['Slug'])) {
             $restaurant_slug = $_REQUEST['Slug'];
-            $Objrestaurant = $Objrestaurant->getDetailbyUrl($restaurant_slug);
+            $Objrestaurant = $Objrestaurant->getDetailByRestaurantUrl($restaurant_slug);
             $restuarant_id = $Objrestaurant->id;
             $categories = array();
             $cat_qry = dbAbstract::Execute("SELECT * FROM categories where parent_id = $restuarant_id ");

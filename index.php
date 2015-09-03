@@ -19,7 +19,7 @@ else if(isset($_POST['x_sid']))
 	
  	require_once('lib/nusoap.php');
 	
-	include "classes/restaurant.php";
+	include "classes/Restaurant.php";
 	include "classes/Users.php";
 	include "classes/Validater.php";
 	require_once("classes/trackers.php"); 
@@ -37,7 +37,7 @@ else if(isset($_POST['x_sid']))
 	require_once('lib/device_detection/Mobile_Detect.php');
 	$function_obj = new clsFunctions();
 	$validater = new Validater(); 
-	$objRestaurant = new restaurant();
+	$objRestaurant = new Restaurant();
 	$objMail = new testmail();
 	$objMenu = new Menu();
 	$objCategory = new Category();
@@ -48,7 +48,7 @@ else if(isset($_POST['x_sid']))
 	$loggedinuser=new Users();
 	$abandoned_carts = new AbandonedCarts();
 
-	$objRestaurant = $objRestaurant->getDetailbyUrl($_GET["name"]);
+	$objRestaurant = $objRestaurant->getDetailByRestaurantUrl($_GET["name"]);
 
 	if($loggedinuser->loadFromSession())
 	{

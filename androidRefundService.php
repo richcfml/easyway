@@ -7,11 +7,11 @@ ini_set('display_errors', 1);
 error_reporting(1);
 
 if (isset($_REQUEST['op'])) {
-    include "classes/restaurant.php";
+    include "classes/Restaurant.php";
     include("includes/class.phpmailer.php"); 
 
     $function_obj = new clsFunctions();
-    $Objrestaurant = new restaurant();
+    $Objrestaurant = new Restaurant();
 
     $op = $_REQUEST['op'];
     if ($op == 'refund') {
@@ -89,7 +89,7 @@ if (isset($_REQUEST['op'])) {
                                             }
 
                                             $Objrestaurant = new restaurant();
-                                            $Objrestaurant = $Objrestaurant->getDetail($mRestaurantID);
+                                            $Objrestaurant = $Objrestaurant->getDetailByRestaurantID($mRestaurantID);
                                             require_once 'c_panel/admin_contents/gateways/' . $mRow->payment_gateway . '.php';
                                             if ($success == 1) {
                                                 dbAbstract::Update("UPDATE ordertbl set payment_approv=0 where OrderID=" . $mOrderID);
@@ -159,7 +159,7 @@ if (isset($_REQUEST['op'])) {
 }
 
 function getRestaurantDetailsBySlug($restaurant_slug, $Objrestaurant) {
-    return $Objrestaurant->getDetailbyUrl($restaurant_slug);
+    return $Objrestaurant->getDetailByRestaurantUrl($restaurant_slug);
 }
 
 $jsonData[] = $jsonTempData;

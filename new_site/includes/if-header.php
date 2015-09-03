@@ -123,7 +123,7 @@ if (strtolower(trim($_GET["item"]))!="login")
 	$mLS = 0;
 	$mSPD = 0;
 	
-	$mIframeSettings = $objRestaurant->SelectIframeDetailsByRestaurantID($objRestaurant->id);
+	$mIframeSettings = $objRestaurant->getIframeDetailsByRestaurantID($objRestaurant->id);
 	if ($mIframeSettings!=0)
 	{
 		$mGFS = $mIframeSettings->GeneralFontSize;

@@ -1,20 +1,20 @@
-<? 
+<?php 
 	 
-	require_once("../classes/restaurant.php");
-	$Objrestaurant_data=new restaurant();
-	$Objrestaurant=new restaurant();
+	require_once("../classes/Restaurant.php");
+	$Objrestaurant_data=new Restaurant();
+	$Objrestaurant=new Restaurant();
         
 	if(isset($_SESSION['restaurant_detail'])){
 	 		$Objrestaurant=$Objrestaurant_data->getSession();
 		
 		if(isset($_GET['cid'])){
 			if($Objrestaurant->id!=$_GET['cid']){
- 			   $Objrestaurant = $Objrestaurant_data->getDetail($_GET['cid']);			 
+ 			   $Objrestaurant = $Objrestaurant_data->getDetailByRestaurantID($_GET['cid']);			 
 			}
 		}		
 	}
 	else {
-		  $Objrestaurant= $Objrestaurant_data->getDetail($_GET['cid']);
+		  $Objrestaurant= $Objrestaurant_data->getDetailByRestaurantID($_GET['cid']);
 	}
  
 	if($Objrestaurant->region == 1  || $Objrestaurant->region == 2) {$currency = "$";$java_currency = "$";}else{$currency = "&#163;"; $java_currency = "\u00A3";}

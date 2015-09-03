@@ -250,9 +250,9 @@ if ($mVerifyRequest==1) //Valid Session
 						}
 						elseif(isset($_GET['cc_action']) && !empty($_GET['slug'])){
 						  $email = $userResult->email;
-						  include_once ("../classes/restaurant.php");
-						  $objRestaurant = new restaurant();
-						  $objRestaurant = $objRestaurant->getDetailbyUrl($_GET["slug"]);
+						  include_once ("../classes/Restaurant.php");
+						  $objRestaurant = new Restaurant();
+						  $objRestaurant = $objRestaurant->getDetailByRestaurantUrl($_GET["slug"]);
 						  
 						  switch($_GET['cc_action']){
 							case 'delete':

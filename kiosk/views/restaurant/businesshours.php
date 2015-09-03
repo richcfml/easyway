@@ -21,7 +21,7 @@
 <center><h2 style="background-color:#EFEFEF; padding:5px 0px 5px 0px; font-size:16px;">Full Week Business Hours</h2></center>
 
   <?php
-    $arr_days=$objRestaurant->allBusinessHours();
+    $arr_days=$objRestaurant->getBusinessHoursByRestaurantID();
     foreach($arr_days as $day)
     {
         if (($day->open=="Closed") && ($day->close=="Closed"))

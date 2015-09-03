@@ -3,7 +3,7 @@ require_once "../includes/config.php";
 require_once 'function.php';
 
 
-include "../classes/restaurant.php";
+include "../classes/Restaurant.php";
 include "../classes/Users.php";
 include "../classes/Validater.php";
 require_once("../classes/trackers.php");
@@ -20,7 +20,7 @@ require('GoogleGeocode.php');
 
 $geo = new GoogleGeocode($google_api_key);
 $validater = new Validater();
-$objRestaurant = new restaurant();
+$objRestaurant = new Restaurant();
 $objMenu = new Menu();
 $objCategory = new Category();
 $product = new Product();
@@ -44,10 +44,10 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'fetch')) && (isset($_GET['field']) &
     $myRestId = $_POST['restaurant_id'];
     $qry = dbAbstract::Execute("select * from resturants where id = '" . $myRestId . "'");
     $rest_qry = dbAbstract::returnObject($qry);
-    $objRestaurant = $objRestaurant->getDetailbyUrl($rest_qry->url_name);
+    $objRestaurant = $objRestaurant->getDetailByRestaurantUrl($rest_qry->url_name);
 
     $objMenu->restaurant_id = $myRestId;
-    $restaurant_info = $objRestaurant->getDetail($myRestId);
+    $restaurant_info = $objRestaurant->getDetailByRestaurantID($myRestId);
     $menuname = '';
     $menuid = (isset($_GET['menuid']) ? $_GET['menuid'] : "");
     $menus = $objMenu->getMenusByRestaurantId();
@@ -185,7 +185,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'create')) && (isset($_GET['type']) &
     }
     if (isset($_POST['restaurant_id']) && !empty($_POST['restaurant_id'])) {
         $loggedinuser->resturant_id = $_POST['restaurant_id'];
-        $objRestaurant = $objRestaurant->getDetail($_POST['restaurant_id']);
+        $objRestaurant = $objRestaurant->getDetailByRestaurantID($_POST['restaurant_id']);
     } else {
         echo json_encode(array('success' => '0', 'msg' => 'Restaurant Id not entered!'));
         exit;
@@ -322,7 +322,7 @@ if ((isset($_GET['op']) && ($_GET['op'] == 'new')) && (isset($_GET['type']) && (
         if ($auth_user['restaurant_id'] == $restaurant_id) {
             $userId = $auth_user['user_id'];
             $rest_url = Easy_Way_Api::getRestaurantUrl($restaurant_id);
-            $objRestaurant = $objRestaurant->getDetailbyUrl($rest_url);
+            $objRestaurant = $objRestaurant->getDetailByRestaurantUrl($rest_url);
             if ($objRestaurant->isOpenHour != 1) {
                 echo json_encode(array('success' => '0', 'msg' => 'Restaurant closed'));
                 exit;
@@ -730,7 +730,7 @@ if (isset($_GET['op']) && ($_GET['op'] == 'getToken')) {
         exit;
     }
     
-    $objRestaurant = $objRestaurant->getDetail($_REQUEST['restaurant_id']);
+    $objRestaurant = $objRestaurant->getDetailByRestaurantID($_REQUEST['restaurant_id']);
     
     if($objRestaurant == false){
         echo json_encode(array('success' => '0', 'msg' => 'Invalid Restaurant Id!'));

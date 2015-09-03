@@ -1,7 +1,7 @@
 <?php
-	require_once("../classes/restaurant.php");
-	$Objrestaurant_data=new restaurant();
-	$Objrestaurant=new restaurant();
+	require_once("../classes/Restaurant.php");
+	$Objrestaurant_data=new Restaurant();
+	$Objrestaurant=new Restaurant();
 	
 	if ((isset($_GET["cid"])) && (is_numeric($_GET["cid"])))
 	{
@@ -101,7 +101,7 @@
             }
         }
         
-	$Objrestaurant= $Objrestaurant_data->getDetail($mRestaurantIDCP);
+	$Objrestaurant= $Objrestaurant_data->getDetailByRestaurantID($mRestaurantIDCP);
 		 
 	if (($Objrestaurant->region == 1)  || ($Objrestaurant->region == 2))
 	{
