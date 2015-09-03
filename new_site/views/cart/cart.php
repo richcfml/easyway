@@ -35,7 +35,7 @@ if (isset($_GET['ajax']))
 			$mFavoriteID=$loggedinuser->arrFavorites[$findex]->id;
 			$mTip= $tip;
 			$mDM =$DM;
-			$loggedinuser->updateFavorite_TipAmount_DeliveryMethod($mFavoriteID, $mTip, $mDM); 
+			$loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
 }
 ?>

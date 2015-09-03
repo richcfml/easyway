@@ -7,14 +7,14 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 {
 	if (isset($_GET['fbid']))
 	{
-		$mRow = $loggedinuser->selectUserIDByFBID_RestaurantID($_GET['fbid'], $objRestaurant->id);
+		$mRow = $loggedinuser->selectUserIDByFBIDRestaurantID($_GET['fbid'], $objRestaurant->id);
 		if ($mRow==0) //No EWO account associated
 		{
 			if (isset($_GET['email']))
 			{
 				if (trim($_GET['email'])!="")
 				{
-					$mRow = $loggedinuser->selectUserIDByEmail_RestaurantID(urldecode($_GET['email']), $objRestaurant->id);
+					$mRow = $loggedinuser->selectUserIdByEmailRestaurantId(urldecode($_GET['email']), $objRestaurant->id);
 					if ($mRow==0) //No EWO account associated
 					{
 						echo("<ewo_result>0</ewo_result>");

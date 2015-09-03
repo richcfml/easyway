@@ -24,12 +24,18 @@
 define('ProgramType','Loyalty');
 define('Identifier',substr(sha1(time()),0,10));
 define('CLIENT','http://ws.valutec.net/Valutec.asmx?WSDL');
-	
+
+/*
+*	Call Valutec API
+*/
 function valutecCall($title, $input){
 	$client = new nusoap_client(CLIENT, array('trace' => 1));
     return $client->call($title, $input);
 }
 
+/*
+*	Check valutec card balance by card number
+*/
 function valutecCardBalance($CardNumber)
 {
     $input = array
@@ -60,6 +66,9 @@ function valutecCardBalance($CardNumber)
     return $data;
 }
 
+/*
+*	Make transection using valutec card number and amount
+*/
 function valutecSale($CardNumber, $Amount)
 {
     $input = array
@@ -80,7 +89,10 @@ function valutecSale($CardNumber, $Amount)
     $data = $trans['Transaction_SaleResult'];
 	return (Identifier == $data['Identifier'])? $data:'Security error, transaction has been terminated';
 } 
-		
+
+/*
+*	Add point to valutec using card number and points
+*/
 function valutecAddValue($CardNumber, $Points)
 {
     $input = array
@@ -105,6 +117,9 @@ function valutecAddValue($CardNumber, $Points)
     return $response;
 } 
 
+/*
+*	Register new valutec card
+*/
 function valutecGetRegistration($CardNumber)
 {
     $input = array('ClientKey' => ClientKey, 'TerminalID' => TID, 'CardNumber' => $CardNumber);
@@ -144,7 +159,10 @@ function valutecSetRegistration($CardNumber, $Name='', $Address1='', $Address2='
     Log::write('Valutec Response - SetRegistration', print_r($trans, true), 'valutec');
 	return $trans['Registration_SetResult'];
 }	
-	
+
+/*
+*	Check if the valutec card number is register or not
+*/
 function isRegisteredValutecCard($CardNumber) 
 {
     $mSQL = "SELECT COUNT(*) AS total FROM customer_registration WHERE valuetec_card_number=".$CardNumber;
