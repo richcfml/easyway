@@ -116,7 +116,8 @@ class AuthnetCIM
     	curl_setopt($this->ch, CURLOPT_HEADER, 0);
     	curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->xml);
     	curl_setopt($this->ch, CURLOPT_POST, 1);
-    	curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+    	//curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, false);
         $this->response = curl_exec($this->ch);
 		//echo $this->response;
         if($this->response)
