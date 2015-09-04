@@ -1090,7 +1090,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <input type="checkbox" name ="type[]" class="chk_style" id ="bh_item" value="B" 
                 <?=((strpos($type,'B') !== false)? 'checked':'')?>/>
                   <label for="bh_item"></label>
-                  <div style="margin-left: 27px;"> <img src="img/bh_item1.png<?php echo $jsParameter;?>" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;"> </div></td>
+                  <div style="margin-left: 27px;"> <img src="img/bh_item.png" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;"> </div></td>
                 <?php
                                 }
                             }

@@ -7,7 +7,11 @@ if (isset($_GET['add_item']))
     extract($_POST);
     $flag =0;
     //echo "<pre>";print_r($_POST);
-    $query = dbAbstract::Execute("Select start_date, end_date from bh_signature_sandwitch");
+	$where='';
+	if($id > 0){
+		$where=" where id <> $id";
+	}
+    $query = dbAbstract::Execute("Select start_date, end_date from bh_signature_sandwitch $where");
     while ($dates = dbAbstract::returnObject($query, 1))
     {
         $db_start_date = $dates->start_date;
@@ -27,8 +31,15 @@ if (isset($_GET['add_item']))
     if($flag == 0)
     {
         $product_description = replaceBhSpecialChars($product_description);
-        $qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = ".strtotime($start_date).", end_date = ".  strtotime($end_date)."";
-        $lastid = dbAbstract::Insert($qry, 1, 2);
+		if($id > 0){
+			$qry = "UPDATE bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = ".strtotime($start_date).", end_date = ".  strtotime($end_date)." WHERE id='$id'";
+			dbAbstract::Update($qry, 1, 0);
+		  	$lastid = $id;
+		}else{
+        	$qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = ".strtotime($start_date).", end_date = ".  strtotime($end_date)."";
+		  	$lastid = dbAbstract::Insert($qry, 1, 2);
+		}
+        
         if (!empty($_GET['ext']))
         {
             $exe = array_pop(explode(".", $_GET['ext']));
@@ -41,7 +52,7 @@ if (isset($_GET['add_item']))
             $destination_img_path = $destination_dir . "/" . $name;
             copy($source_img_path, $destination_img_path);
         }
-        echo $lastid;;
+        echo $lastid;
         
     }
     else
@@ -131,6 +142,15 @@ else if (isset($_GET['cropimg']))
     imagedestroy($dst_r);
     
     
+}
+elseif(isset($_GET['ssdata'])){
+	$row = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$_POST['id'],1);
+	echo '<tr>
+			  <td>
+			  <a href="'.$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id.'">
+				  '.$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'.'</td>
+			  </a>
+		  </tr>';
 }
 function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);

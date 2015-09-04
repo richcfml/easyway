@@ -1,3 +1,126 @@
+<?php 
+if (isset($_GET['ssid'])) {
+    $ssid = $_GET['ssid'];
+
+    $prd_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$ssid,1);
+    $item_name = stripcslashes($prd_data->item_name);
+	
+	$startDate = date('m/d/Y', $prd_data->start_date);
+	$endtDate = date('m/d/Y', $prd_data->end_date);
+	
+    $description = $prd_data->item_desc;
+	$description1 = $prd_data->item_desc;
+    $imgSource = $prd_data->item_image;
+	
+    if (strtolower(substr(php_uname('s'), 0, 3))=="win")
+    {
+        $description1 = str_replace("<br/>", "\r\n", $description1);
+        $description1 = str_replace("<br>", "\r\n", $description1);
+        $description1 = str_replace("<br />", "\r\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='linux')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(php_uname('s'))=='unix')
+    {
+        $description1 = str_replace("<br/>", "\n", $description1);
+        $description1 = str_replace("<br>", "\n", $description1);
+        $description1 = str_replace("<br />", "\n", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 6))=="darwin")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else if (strtolower(substr(php_uname('s'), 0, 3))=="mac")
+    {
+        $description1 = str_replace("<br/>", "\r", $description1);
+        $description1 = str_replace("<br>", "\r", $description1);
+        $description1 = str_replace("<br />", "\r", $description1);
+    }
+    else
+    {
+        $description1=str_replace ("<br/>", "\n", $description1);
+        $description1=str_replace ("<br>", "\n", $description1);
+        $description1=str_replace ("<br />", "\n", $description1);
+    }
+    
+    if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
+    {
+        $mSQLBH = "SELECT * FROM `bh_items` ORDER BY LENGTH(ItemName) DESC";
+        $mResBH = dbAbstract::Execute($mSQLBH,1);
+        
+        $mPrevItem = "";
+        
+        while ($mRowBH = dbAbstract::returnObject($mResBH,1))
+        {
+            if (strpos($description, $mRowBH->ItemName)!==FALSE)
+            {
+                if ($mPrevItem!=$mRowBH->ItemName)
+                {
+                    $mPrevItem = $mRowBH->ItemName;
+                    $description = str_replace($mRowBH->ItemName, "<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>".$mRowBH->ItemName."</a>" ,$description);
+                }
+            }
+        }
+    }
+    
+	$size = getimagesize("./images/signaturesandwich/". $imgSource);
+	
+	if (($size[0]>=450) || ($size[1]>=450))
+	{
+		$mWidth = round($size[0]/4.5);
+		$mHeight = round($size[1]/4.5);
+		$mScale = 4.5;
+	}
+	else if ((($size[0]<450) && ($size[0]>=400)) || (($size[1]<450) && ($size[1]>=400)))
+	{
+		$mWidth = round($size[0]/4);
+		$mHeight = round($size[1]/4);
+		$mScale = 4;
+	}
+	else if ((($size[0]<400) && ($size[0]>=300)) || (($size[1]<400) && ($size[1]>=300)))
+	{
+		$mWidth = round($size[0]/3.5);
+		$mHeight = round($size[1]/3.5);
+		$mScale = 3.5;
+	}
+	else if ((($size[0]<300) && ($size[0]>=250)) || (($size[1]<300) && ($size[1]>=250)))
+	{
+		$mWidth = round($size[0]/3);
+		$mHeight = round($size[1]/3);
+		$mScale = 3;
+	}
+	else if ((($size[0]<250) && ($size[0]>=220)) || (($size[1]<250) && ($size[1]>=220)))
+	{
+		$mWidth = round($size[0]/2.5);
+		$mHeight = round($size[1]/2.5);
+		$mScale = 2.5;
+	}																							
+	else if ((($size[0]<220) && ($size[0]>=190)) || (($size[1]<220) && ($size[1]>=190)))
+	{
+		$mWidth = round($size[0]/2);
+		$mHeight = round($size[1]/2);
+		$mScale = 2;
+	}
+	else if ((($size[0]<190) && ($size[0]>=120)) || (($size[1]<190) && ($size[1]>=105)))
+	{
+		$mWidth = round($size[0]/1.5);
+		$mHeight = round($size[1]/1.5);
+		$mScale = 1.5;
+	}
+	else
+	{
+		$mWidth = round($size[0]/1);
+		$mHeight = round($size[1]/1);
+		$mScale = 1;
+	}
+}
+?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
 <link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
@@ -43,7 +166,10 @@
 <script type="text/javascript">
     $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     $(document).ready(function()
-    {   
+    {  
+		$("#item_name").change(function(){
+			$("#ss_item_name").html($(this).val());
+		});
 		
 		$("#product_description1").keydown(function(){
 			$(".ss_prodDescription").html($(this).text());
@@ -150,13 +276,26 @@
                     url: "admin_contents/signature_sandwitch/ajax.php?add_item=1&ext="+ext,
                     data: $("#add_Signature_sandwitch").serialize(),
                     success: function(data) {
-                        if(isNaN(data))
+						id = parseInt(<?=((isset($_GET['ssid']) && $_GET['ssid'] > 0)? $_GET['ssid']:0)?>);
+						if(isNaN(data))
                         {
                             $("#sucessMessage").text('Date can not be overlap').addClass('errorMessage').removeClass('sucessMessage');
                         }
                         else if(data > 0)
                         {
-                            $("#sucessMessage").text('Signature sandwitch item added successfully').addClass('sucessMessage').removeClass('errorMessage');
+							if(id > 0){
+								$("#sucessMessage").text('Signature sandwitch item update successfully').addClass('sucessMessage').removeClass('errorMessage');
+							}else{
+                            	$("#sucessMessage").text('Signature sandwitch item added successfully').addClass('sucessMessage').removeClass('errorMessage');
+								$.ajax({
+									type:"POST",
+									url: "admin_contents/signature_sandwitch/ajax.php?ssdata=1",
+									data: {id:data},
+									success: function(tablerow) {
+										$("#tblsandwiches").append(tablerow);
+									}
+								});				
+							}
                             $("#item_name").val('');
                             $("#product_description1").text('');
                             $("#start_date").val('');
@@ -180,6 +319,14 @@
             $('#item_img1').Jcrop({ aspectRatio: 0, onSelect: updateCoords,maxSize: [ 500, 500 ]
             });
         });
+		function isJson(str) {
+			try {
+				JSON.parse(str);
+			} catch (e) {
+				return false;
+			}
+			return true;
+		}
         function updateCoords(c) {
             $('#x').val(c.x);
             $('#y').val(c.y);
@@ -472,178 +619,178 @@
     
 </script>
 <script type="text/javascript">
-                                $(document).ready(function()
-                                {
-                                    var start=/@/ig; // @ Match
-                                    
-                                    $("#product_description1").blur(function()
-                                    {
-                                        if ($.trim($("#product_description1").text())=="")
-                                        {
-                                            $("#product_description1").text("Description of Item");
-                                            $("#product_description1").css("color", "#917591");
-                                        }
-                                    });
-                                    
-                                    $("#product_description1").focus(function()
-                                    {
-                                        if ($.trim($("#product_description1").text())=="Description of Item")
-                                        {
-                                            $("#product_description1").text("");
-                                            $("#product_description1").css("color", "#000000");
-                                        }
-                                    });
-                                    
-                                    $("#product_description1").live("keydown",function(e)
-                                    {
-                                        // trap the return key being pressed
-                                        if (jQuery.browser.safari)
-                                        {
-                                            if (e.keyCode === 13) {
-                                              // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
-                                              document.execCommand('insertHTML', false, '<br><br>');
-                                              // prevent the default behaviour of return key pressed
-                                              return false;
-                                            }
-                                        }
-                                      });
-                                    
-                                    $("#product_description1").live("keyup",function(e)
-                                    {
-                                        var search = "";
-                                        var content=$(this).text(); //Content Box Data
-                                        if (content=="")
-                                        {
-                                            $("#display").hide();
-                                            $("#product_description").val("");
-                                            return;
-                                        }
-                                        
-                                        search = content.substring(content.indexOf("@"));
-                                        
-                                        if (search.indexOf(" ")>=0)
-                                        {   
-                                            search = search.substring(0, search.indexOf(" "));
-                                        }
-                                        
-                                        if (search.indexOf(",")>=0)
-                                        {   
-                                            search = search.substring(0, search.indexOf(","));
-                                        }
-                                        
-                                        search = $.trim(search);
-                                        
-                                        var go= content.match(start); //Content Matching @
-
-                                        var dataString = 'searchword='+ search;
-                                        
-                                        if (go)
-                                        {
-                                            if(go.length>0)
-                                            {
-                                                if (e.keyCode==32)
-                                                {
-                                                    if ((search!="") && (search!="@"))
-                                                    {
-                                                        $("#hdnSearch").val(search);
-                                                        setTimeout(function()
-                                                        {
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "admin_contents/products/ajax.php?sku1=1", // Database name search
-                                                                data: dataString,
-                                                                cache: false,
-                                                                success: function(data)
-                                                                {
-                                                                    if ($.trim(data)!="")
-                                                                    {
-                                                                        var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
-                                                                        $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
-                                                                        mTmpHTML = removeAnchors($("#product_description1").html());
-                                                                        $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
-                                                                        $("#bh_item").attr('checked', true);
-                                                                    }
-                                                                }
-                                                            });
-                                                        }, 100);
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                mTmpHTML = removeAnchors($("#product_description1").html());
-                                                $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            mTmpHTML = removeAnchors($("#product_description1").html());
-                                            $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
-                                        }
-                                        
-                                        if ($("#product_description1").html().indexOf("<a ")<0)
-                                        {
-                                            $("#bh_item").attr('checked', false);
-                                        }
-
-                                        return false;
-                                    });
-                                    
-                                    function removeAnchors(pStr)
-                                    {
-                                        mTmpHTML = pStr;
-                                        if (mTmpHTML.indexOf("<a")!=-1)
-                                        {
-                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<a"), mTmpHTML.indexOf("</i>") + 4);
-
-                                            mTmpHTML = mTmpHTML.replace(mStr, "").replace("</a>","");
-                                            if (mTmpHTML.indexOf("</i>")!=-1)
-                                            {
-                                                mTmpHTML = removeAnchors(mTmpHTML);
-                                            }
-
-                                            //mTmpHTML =  removeSpans(mTmpHTML);
-                                        }
-                                        return mTmpHTML;
-                                    }
-                                    
-                                    function removeSpans(pStr)
-                                    {
-                                        mTmpHTML = pStr;
-                                        if (mTmpHTML.indexOf("<span")!=-1)
-                                        {
-                                            mStr = mTmpHTML.substring(mTmpHTML.indexOf("<span"), mTmpHTML.indexOf("</span>") + 7);
-
-                                            mTmpHTML = mTmpHTML.replace(mStr, "");
-
-                                            if (mTmpHTML.indexOf("</span>")!=-1)
-                                            {
-                                                mTmpHTML = removeSpans(mTmpHTML);
-                                            }
-                                        }
-                                        return mTmpHTML;
-                                    }
-                                    
-                                    function placeCaretAtEnd(el) {
-                                        el.focus();
-                                        if (typeof window.getSelection != "undefined"
-                                                && typeof document.createRange != "undefined") {
-                                            var range = document.createRange();
-                                            range.selectNodeContents(el);
-                                            range.collapse(false);
-                                            var sel = window.getSelection();
-                                            sel.removeAllRanges();
-                                            sel.addRange(range);
-                                        } else if (typeof document.body.createTextRange != "undefined") {
-                                            var textRange = document.body.createTextRange();
-                                            textRange.moveToElementText(el);
-                                            textRange.collapse(false);
-                                            textRange.select();
-                                        }
-                                    }
-                                });
-                            </script>
+  $(document).ready(function()
+  {
+	  var start=/@/ig; // @ Match
+	  
+	  $("#product_description1").blur(function()
+	  {
+		  if ($.trim($("#product_description1").text())=="")
+		  {
+			  $("#product_description1").text("Description of Item");
+			  $("#product_description1").css("color", "#917591");
+		  }
+	  });
+	  
+	  $("#product_description1").focus(function()
+	  {
+		  if ($.trim($("#product_description1").text())=="Description of Item")
+		  {
+			  $("#product_description1").text("");
+			  $("#product_description1").css("color", "#000000");
+		  }
+	  });
+	  
+	  $("#product_description1").live("keydown",function(e)
+	  {
+		  // trap the return key being pressed
+		  if (jQuery.browser.safari)
+		  {
+			  if (e.keyCode === 13) {
+				// insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
+				document.execCommand('insertHTML', false, '<br><br>');
+				// prevent the default behaviour of return key pressed
+				return false;
+			  }
+		  }
+		});
+	  
+	  $("#product_description1").live("keyup",function(e)
+	  {
+		  var search = "";
+		  var content=$(this).text(); //Content Box Data
+		  if (content=="")
+		  {
+			  $("#display").hide();
+			  $("#product_description").val("");
+			  return;
+		  }
+		  
+		  search = content.substring(content.indexOf("@"));
+		  
+		  if (search.indexOf(" ")>=0)
+		  {   
+			  search = search.substring(0, search.indexOf(" "));
+		  }
+		  
+		  if (search.indexOf(",")>=0)
+		  {   
+			  search = search.substring(0, search.indexOf(","));
+		  }
+		  
+		  search = $.trim(search);
+		  
+		  var go= content.match(start); //Content Matching @
+  
+		  var dataString = 'searchword='+ search;
+		  
+		  if (go)
+		  {
+			  if(go.length>0)
+			  {
+				  if (e.keyCode==32)
+				  {
+					  if ((search!="") && (search!="@"))
+					  {
+						  $("#hdnSearch").val(search);
+						  setTimeout(function()
+						  {
+							  $.ajax({
+								  type: "POST",
+								  url: "admin_contents/products/ajax.php?sku1=1", // Database name search
+								  data: dataString,
+								  cache: false,
+								  success: function(data)
+								  {
+									  if ($.trim(data)!="")
+									  {
+										  var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
+										  $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
+										  placeCaretAtEnd(document.getElementById("product_description1"));
+										  mTmpHTML = removeAnchors($("#product_description1").html());
+										  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+										  $("#bh_item").attr('checked', true);
+									  }
+								  }
+							  });
+						  }, 100);
+					  }
+				  }
+			  }
+			  else
+			  {
+				  mTmpHTML = removeAnchors($("#product_description1").html());
+				  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+			  }
+		  }
+		  else
+		  {
+			  mTmpHTML = removeAnchors($("#product_description1").html());
+			  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+		  }
+		  
+		  if ($("#product_description1").html().indexOf("<a ")<0)
+		  {
+			  $("#bh_item").attr('checked', false);
+		  }
+  
+		  return false;
+	  });
+	  
+	  function removeAnchors(pStr)
+	  {
+		  mTmpHTML = pStr;
+		  if (mTmpHTML.indexOf("<a")!=-1)
+		  {
+			  mStr = mTmpHTML.substring(mTmpHTML.indexOf("<a"), mTmpHTML.indexOf("</i>") + 4);
+  
+			  mTmpHTML = mTmpHTML.replace(mStr, "").replace("</a>","");
+			  if (mTmpHTML.indexOf("</i>")!=-1)
+			  {
+				  mTmpHTML = removeAnchors(mTmpHTML);
+			  }
+  
+			  //mTmpHTML =  removeSpans(mTmpHTML);
+		  }
+		  return mTmpHTML;
+	  }
+	  
+	  function removeSpans(pStr)
+	  {
+		  mTmpHTML = pStr;
+		  if (mTmpHTML.indexOf("<span")!=-1)
+		  {
+			  mStr = mTmpHTML.substring(mTmpHTML.indexOf("<span"), mTmpHTML.indexOf("</span>") + 7);
+  
+			  mTmpHTML = mTmpHTML.replace(mStr, "");
+  
+			  if (mTmpHTML.indexOf("</span>")!=-1)
+			  {
+				  mTmpHTML = removeSpans(mTmpHTML);
+			  }
+		  }
+		  return mTmpHTML;
+	  }
+	  
+	  function placeCaretAtEnd(el) {
+		  el.focus();
+		  if (typeof window.getSelection != "undefined"
+				  && typeof document.createRange != "undefined") {
+			  var range = document.createRange();
+			  range.selectNodeContents(el);
+			  range.collapse(false);
+			  var sel = window.getSelection();
+			  sel.removeAllRanges();
+			  sel.addRange(range);
+		  } else if (typeof document.body.createTextRange != "undefined") {
+			  var textRange = document.body.createTextRange();
+			  textRange.moveToElementText(el);
+			  textRange.collapse(false);
+			  textRange.select();
+		  }
+	  }
+  });
+  </script>
 <?php 
 if($_POST['cropimg'])
 {
@@ -659,6 +806,7 @@ if($_POST['cropimg'])
 }
 ?>
 <form method ="post" id="add_Signature_sandwitch"  enctype="multipart/form-data">
+<input type="hidden" name="id" value="<?=((isset($_GET['ssid']))? $_GET['ssid']:0)?>">
 <div id ="main_div" class="main_div" ng-app="">
     <div id ="inner_div"> 
                
@@ -667,20 +815,23 @@ if($_POST['cropimg'])
                     <table style="width: 85%; margin: 0px;margin-left: 21px;" cellpadding="0" cellspacing="0" border="0">
                         <tr>
                             <td>
-                                <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="" class="textAreaClass" placeholder="Item Name"  maxlength="40" ng-model="item_name" />
+                                <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?=((isset($_GET['ssid']))? $item_name:'')?>" class="textAreaClass" placeholder="Item Name"  maxlength="40" />
                             </td>
                             <td>
-                                <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;"/>
-                                <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;"/>
+                                <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $startDate:'')?>"/>
+                                <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $startDate:'')?>"/>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 
-                                    <textarea id="product_description" name="product_description" style="display: none;"></textarea>
+                                    <textarea id="product_description" name="product_description" style="display: none;"><?=((isset($_GET['ssid']))? $description:'')?></textarea>
                                     <input type="hidden" id="hdnSearch" />
                                     <div id="container">
-                                    <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" style="overflow: auto; color: #917591; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">Description of Item
+                                    <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" 
+                                    style="overflow: auto; color:<?=((isset($_GET['ssid']))? '#000':'#917591')?>; font-size: 15px; 
+                                    font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
+                                    	<?=((isset($_GET['ssid']))? $description:'Description of Item')?>
                                     </div>
                                     <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
                                     </div>
@@ -688,20 +839,23 @@ if($_POST['cropimg'])
                                 
                             </td>
                             <td>
-                                <div class="photo_div_before" id="show_photo_before" ><div style="text-align: center;font-size: 16px;"> Photo of item? </div>
-    
-                                        <div style="height: 75px;width: 28%;">
-                                            <img src ="img/camera.png" id="item_img_camera" style="height: 79%;margin-left: 131%;margin-top: 8px;"/>
-                                        </div> 
-                                    <div style="text-align: center;text-align: center;width: 150px;margin-left: 15%;margin-top: 0px"> (Click to upload or drag and drop file here) </div>
-    
+                              <div class="photo_div_before" id="show_photo_before" <?=((isset($_GET['ssid']) && $imgSource != '')? 'style="display:none;"':'')?>>
+                                <div style="text-align: center;font-size: 16px;"> Photo of item? </div>
+                                <div style="height: 75px;width: 28%;">
+                                    <img src ="img/camera.png" id="item_img_camera" style="height: 79%;margin-left: 131%;margin-top: 8px;"/>
                                 </div>
-                                <div class="photo_div" id="show_photo" ><div style="text-align: center;font-size: 16px;"> Photo of item </div>
-                                    <div style="text-align:center;height: 160px;" id="imgDiv">
-                                         <img src ="" id="item_img" style="margin-top: 9px;"/>
-                                    </div>
+                                <div style="text-align: center;text-align: center;width: 150px;margin-left: 15%;margin-top: 0px"> 
+                                (Click to upload or drag and drop file here) </div>
+    
+                              </div>
+                              
+                              <div class="photo_div" id="show_photo" <?=((isset($_GET['ssid']) && $imgSource != '')? 'style="display:block;"':'')?>>
+                                <div style="text-align: center;font-size: 16px;"> Photo of item </div>
+                                <div style="text-align:center;height: 160px;" id="imgDiv">
+                                     <img src ="<?=((isset($_GET['ssid']) && $imgSource != '')? './images/signaturesandwich/'.$imgSource.'?time='.time():'')?>" id="item_img" style="margin-top: 9px; <?=((isset($_GET['ssid']) && $imgSource != '')? 'width:'.$mWidth.'px; height:'.$mHeight.'px;':'')?>"/>
                                 </div>
-                                <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
+                              </div>
+                              <input name="userfile" type="file" id="userfile" size="30" style="margin-left: 4%;margin-top: -160px;opacity: 0;position: absolute;height: 165px;cursor: pointer" title=" ">
                                 
                             </td>
                         </tr>
@@ -730,26 +884,49 @@ if($_POST['cropimg'])
                 </div>
             </div>
 	
+    <!--	Right Bar Start	-->
     <div style="width:25%; float:left; padding:10px">
           
-          <div class="ss_content" style="padding: 20px 10px">
-            <div style="float:left; width:5%">
-              <img src="img/enable.png" width="16" height="16" border="0" style="cursor: pointer;">
-            </div>
-            
-            <div style="width:90%; float:right;">
-              <div class="ss_prodTitle">{{item_name}}</div>
-              <div class="ss_prodDates">
-                Featured Sandwich <span id="ss_startdate"></span> - <span id="ss_enddate"></span>
-              </div>
-              <div class="ss_prodDescription">{{product_description}}</div>
-            </div>
-            
-            <img src="img/bh_item1.png<?php echo $jsParameter;?>" style="margin-left: 10px; cursor: pointer;" data-tooltip="BH Item" class="spicy1">
+      <div class="ss_content" style="padding: 20px 10px">
+        <div style="float:left; width:5%">
+          <img src="img/enable.png" width="16" height="16" border="0" style="cursor: pointer;">
+        </div>
+        
+        <div style="width:90%; float:right;">
+          <div class="ss_prodTitle" id="ss_item_name"><?=((isset($_GET['ssid']))? $item_name:'')?></div>
+          <div class="ss_prodDates">
+            Featured Sandwich 
+            <span id="ss_startdate"><?=((isset($_GET['ssid']))? date('m/d', strtotime($startDate)):'')?></span> - 
+            <span id="ss_enddate"><?=((isset($_GET['ssid']))? date('m/d', strtotime($endtDate)):'')?></span>
           </div>
-
+          <div class="ss_prodDescription"><?=((isset($_GET['ssid']))? $description:'')?></div>
+        </div>
+        
+        <img src="img/bh_item1.png<?php echo $jsParameter;?>" style="margin-left: 10px; cursor: pointer;" data-tooltip="BH Item" class="spicy1">
+      </div>
+	  
+      <div style="clear:both"></div>
+      
+      <h1>Signature Sandwiches</h1>
+      <table id="tblsandwiches" width="100%" cellpadding="3" cellspacing="0">
+      <?php
+      $query = dbAbstract::Execute("Select * from bh_signature_sandwitch where end_date >= '".strtotime(date('Y-m-d'))."'");
+	  while($row = dbAbstract::returnObject($query)){
+	  ?>
+	    <tr>
+        	<td>
+			<a href="<?=$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id?>">
+				<?=$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'?></td>
+            </a>
+        </tr>
+	  <?php
+	  }
+	  ?>
+      </table>
     </div>
+    <!--	Right Bar End	-->
 </div>
+
     <a class="fancyTrigger" href="#TheFancybox"></a>
     <div id="TheFancybox" class="handle_fancy">
         <div style="background-image: url('img/fupload.png');width:558px;height: 390px;display: none;" class="uploader_div">
