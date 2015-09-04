@@ -292,13 +292,20 @@ if ($mVerifyRequest==1) //Valid Session
                     $rest_url = dbAbstract::ExecuteObject($mSQL);
                     if ($rest_url)
                     {
+                        $mMaxID = 0;
                         $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 1 AND rest_id=".$rest_url->id);
                         if ($mRowMaxID)
                         {
                             $mMaxID = $mRowMaxID->id;
-                            dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
-                            
-                            $mUnLikeMessage = "Restaurant un-liked successfully.";
+                            if (isset($mMaxID) && ($mMaxID>0))
+                            {
+                                dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
+                                $mUnLikeMessage = "Restaurant un-liked successfully.";
+                            }
+                            else
+                            {
+                                $mUnLikeMessage = "No likes for this restaurant.";    
+                            }
                         }
                         else
                         {
@@ -425,13 +432,20 @@ if ($mVerifyRequest==1) //Valid Session
                 $rest_url = dbAbstract::ExecuteObject($mSQL);
                 if ($rest_url)
                 {
+                    $mMaxID = 0;
                     $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 0 AND rest_id=".$rest_url->id);
                     if ($mRowMaxID)
                     {
                         $mMaxID = $mRowMaxID->id;
-                        dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
-
-                        $mUnLikeMessage = "Restaurant un-disliked successfully.";
+                        if (isset($mMaxID) && ($mMaxID>0))
+                        {
+                            dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
+                            $mUnLikeMessage = "Restaurant un-disliked successfully.";
+                        }
+                        else
+                        {
+                            $mUnLikeMessage = "No dislikes for this restaurant.";
+                        }
                     }
                     else
                     {
