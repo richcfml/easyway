@@ -153,7 +153,7 @@
 							  $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$mRowPr['signature_sandwitch_id']."'");
 							  
 							}
-							if($mRowPr['signature_sandwitch_id']==0 || ($mRowPr['signature_sandwitch_id'] > 0 && $ss_obj->end_date > strtotime('Y-m-d'))){
+							if($mRowPr['signature_sandwitch_id']==0 || ($mRowPr['signature_sandwitch_id'] > 0 && $ss_obj->end_date > strtotime(date('Y-m-d')))){
                     ?>
                         <ul id="tblS" class="clsS" sub_cat="<?=$mRow["cat_id"]?>">
                             <li id="liPrd" class="liPrd" sub_cat="<?=$mRow["cat_id"]?>">
