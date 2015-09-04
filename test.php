@@ -9,6 +9,7 @@
             echo("Server Timezone: ".date_default_timezone_get());
             while ($mRow = dbAbstract::returnObject($mRes))
             {
+                echo("<br />");
                 $mStartDateDB = $mRow->start_date;
                 $mEndDateDB = $mRow->end_date;
                 echo("<br />Start Date/Time: ".$mStartDateDB.", ".gmdate("Y-m-d H:i:s", $mStartDateDB));
