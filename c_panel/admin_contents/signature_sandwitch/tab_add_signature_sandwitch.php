@@ -49,16 +49,16 @@ if (isset($_GET['ssid'])) {
         $description1=str_replace ("<br />", "\n", $description1);
     }
     
-    if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
+    if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
     {
-        $mSQLBH = "SELECT * FROM `bh_items` ORDER BY LENGTH(ItemName) DESC";
-        $mResBH = dbAbstract::Execute($mSQLBH,1);
+		$mSQLBH = "SELECT * FROM bh_items ORDER BY LENGTH(ItemName) DESC";
+        $mResBH = dbAbstract::Execute($mSQLBH);
         
         $mPrevItem = "";
         
         while ($mRowBH = dbAbstract::returnObject($mResBH,1))
         {
-            if (strpos($description, $mRowBH->ItemName)!==FALSE)
+	        if (strpos($description, $mRowBH->ItemName)!==FALSE)
             {
                 if ($mPrevItem!=$mRowBH->ItemName)
                 {
@@ -68,8 +68,7 @@ if (isset($_GET['ssid'])) {
             }
         }
     }
-    
-	$size = getimagesize("./images/signaturesandwich/". $imgSource);
+    $size = getimagesize("./images/signaturesandwich/". $imgSource);
 	
 	if (($size[0]>=450) || ($size[1]>=450))
 	{
@@ -833,13 +832,13 @@ if($_POST['cropimg'])
                         <tr>
                             <td>
                                 
-                                    <textarea id="product_description" name="product_description" style="display: none;"><?=((isset($_GET['ssid']))? $description:'')?></textarea>
+                                    <textarea id="product_description" name="product_description" style="display: none;"><?=((isset($_GET['ssid']))? trim($description1):'')?></textarea>
                                     <input type="hidden" id="hdnSearch" />
                                     <div id="container">
                                     <div id="product_description1" name="product_description1" contenteditable="true" class="textAreaClass" 
                                     style="overflow: auto; color:<?=((isset($_GET['ssid']))? '#000':'#917591')?>; font-size: 15px; 
                                     font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
-                                    	<?=((isset($_GET['ssid']))? $description:'Description of Item')?>
+                                    	<?=((isset($_GET['ssid']))? trim($description):'Description of Item')?>
                                     </div>
                                     <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;">
                                     </div>
