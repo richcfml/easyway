@@ -296,7 +296,7 @@ if ($mVerifyRequest==1) //Valid Session
                         if ($mRowMaxID)
                         {
                             $mMaxID = $mRowMaxID->id;
-                            dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mRowMaxID);
+                            dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
                             
                             $mUnLikeMessage = "Restaurant un-liked successfully.";
                         }
@@ -429,7 +429,7 @@ if ($mVerifyRequest==1) //Valid Session
                     if ($mRowMaxID)
                     {
                         $mMaxID = $mRowMaxID->id;
-                        dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mRowMaxID);
+                        dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mMaxID);
 
                         $mUnLikeMessage = "Restaurant un-disliked successfully.";
                     }
