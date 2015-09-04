@@ -30,7 +30,6 @@ if (isset($_GET['faverr'])) {
 $objCategory->menu_id = $menuid;
 
 $arr = product::getProductsByMenuId($menuid);
-
 $menus_details = $arr['details'];
 $total_cats = $arr['count'];
 $half = round($total_cats / 2);
@@ -1118,7 +1117,7 @@ $.each(attributeRequired, function(index, value) {
 					$display = 'block';
 					if($menulist->signature_sandwitch_id > 0){
 						$ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$menulist->signature_sandwitch_id."'");
-						if($ss_obj->start_date > strtotime(date("Y-m-d")) || $ss_obj->end_date < strtotime(date("Y-m-d"))){
+						if($ss_obj->end_date < strtotime(date("Y-m-d"))){
 							$display = 'none';
 						}
 					}

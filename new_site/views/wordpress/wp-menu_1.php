@@ -121,6 +121,9 @@ $loop_index_check = FALSE;
             if(product_item_type.indexOf('9') !== -1){
                 $('<img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
             }
+            if(product_item_type.indexOf('B') !== -1){
+                $('<img src="../c_panel/img/bh_item1.png?v4" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
+            }
         }
         $('#retail_price').html('<?=$currency?>' + productDetails.retail_price);
         $('#product_sale_price').val(productDetails.sale_price);
@@ -1138,8 +1141,15 @@ $(document).ready(function()
                     }
 
                     if ($current_cat == $menulist->sub_cat_id || $firstindex == 0) {
+                        $display = 'block';
+                        if($menulist->signature_sandwitch_id > 0){
+                                $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$menulist->signature_sandwitch_id."'");
+                                if( $ss_obj->end_date < strtotime(date("Y-m-d"))){
+                                        $display = 'none';
+                                }
+                        }
                         ?>
-                        <div class="products_area" style="height: 40px; <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ")) { echo("display: none;"); }?>">
+                        <div class="products_area" style="height: 40px; <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ") || ($display=='none')) { echo("display: none;"); }?>">
                             <table style="margin: 0px; width: 100%;" cellpadding="0" cellspacing="0" border="0">
                                 <tr style="height: 40px;">
                                     <td style="width: 2%;">

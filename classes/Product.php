@@ -158,7 +158,7 @@ class Product
     public function getProductsByCategories($subCatIDs,$arrCats,$cat_count)
     {
         $queryProducts= "SELECT SortOrder, prd_id,product.status, product.HasAssociates, product.HasAttributes, product.sub_cat_id, product.item_title,"
-                        ." product.item_type,product.prd_id, product.item_des AS item_des,product.retail_price,product.sale_price,product.item_image"
+                        ." product.item_type,product.prd_id, product.item_des AS item_des,product.retail_price,product.sale_price,product.item_image,product.signature_sandwitch_id"   
                         ." FROM product "
                         ." WHERE sub_cat_id in (".$subCatIDs.") Order by SortOrder";
         $prodResult = dbAbstract::Execute($queryProducts);
@@ -192,6 +192,7 @@ class Product
             $arrProductList[$mIndex]->item_image = $prodRow->item_image;
             $arrProductList[$mIndex]->cat_ordering = $arrCats[$prodRow->sub_cat_id]->cat_ordering;
             $arrProductList[$mIndex]->SortOrder = $prodRow->SortOrder;
+            $arrProductList[$mIndex]->signature_sandwitch_id = $prodRow->signature_sandwitch_id;
             if (trim($arrCats[$prodRow->sub_cat_id]->status)=="0")
             {
                     $arrProductList[$mIndex]->display = " style='display: none;' ";
