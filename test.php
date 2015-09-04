@@ -11,7 +11,7 @@
             $mEndDateDB = $mRow->end_date;
             echo("Server Timezone: ".date_default_timezone_get());
             echo("<br />Start Date/Time: ".$mStartDateDB.", ".gmdate("Y-m-d H:i:s", $mStartDateDB));
-            echo("<br />End Date/Time: ".$mEndDB.", ".gmdate("Y-m-d H:i:s", $mEndDB));
+            echo("<br />End Date/Time: ".$mEndDateDB.", ".gmdate("Y-m-d H:i:s", $mEndDateDB));
             date_default_timezone_set("Europe/London");
             $mCurrentTimeStamp = strtotime(date("Y-m-d H:i:s"));
             echo("<br /><br /><br />Restaurant Timezone: ".date_default_timezone_get());
