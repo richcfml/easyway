@@ -16,7 +16,7 @@
                 echo("<br />End Date/Time: ".$mEndDateDB.", ".gmdate("Y-m-d H:i:s", $mEndDateDB));
             }
             
-            date_default_timezone_set("Europe/London");
+            date_default_timezone_set("US/Eastern");
             $mCurrentTimeStamp = strtotime(date("Y-m-d H:i:s"));
             echo("<br /><br /><br />Restaurant Timezone: ".date_default_timezone_get());
             echo("<br />Current Date/Time: ".$mCurrentTimeStamp.", ".gmdate("Y-m-d H:i:s", $mCurrentTimeStamp));
