@@ -565,7 +565,7 @@ if (isset($_GET['ssid'])) {
 
                                                     if ((mWidth>=450) || (mHeight>=450))
                                                     {
-                                                            $('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+															$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
                                                             $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
                                                             $('#hdnScale').val('4.5');
                                                     }
@@ -717,6 +717,7 @@ if (isset($_GET['ssid'])) {
 										  mTmpHTML = removeAnchors($("#product_description1").html());
 										  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 										  $("#bh_item").attr('checked', true);
+										  $(".ss_prodDescription").html($("#product_description1").html());
 									  }
 								  }
 							  });
