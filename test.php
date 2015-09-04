@@ -19,7 +19,9 @@
             date_default_timezone_set("US/Eastern");
             $mCurrentTimeStamp = strtotime(date("Y-m-d H:i:s"));           
             echo("<br /><br /><br />Restaurant Timezone: ".date_default_timezone_get());
-            echo("<br />Difference from UTC/GMT: ".timezone_offset_get(date()));
+            $mCurrentDateTimeZone = new DateTimeZone("US/Eastern");
+            $mCurrentDateTime = new DateTime("now", $mCurrentDateTimeZone);
+            echo("<br />Difference from UTC/GMT: ".timezone_offset_get($mCurrentDateTime));
             echo("<br />Current Date/Time: ".$mCurrentTimeStamp.", ".gmdate("Y-m-d H:i:s", $mCurrentTimeStamp));
         }
         else
