@@ -145,12 +145,16 @@ else if (isset($_GET['cropimg']))
 }
 elseif(isset($_GET['ssdata'])){
 	$row = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$_POST['id'],1);
-	echo '<tr>
-			  <td>
-			  <a href="'.$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id.'">
-				  '.$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'.'</td>
-			  </a>
-		  </tr>';
+	
+	$sslink = '<a href="'.$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id.'">'.
+					$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'.
+				  '</a>';
+	if($_GET['ssdata']=='linkonly'){
+		echo $sslink;
+	}elseif($_GET['ssdata']=='row'){
+		echo '<tr><td>'.$sslink.'</td></tr>';
+	}
+	
 }
 function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);

@@ -285,11 +285,19 @@ if (isset($_GET['ssid'])) {
                         {
 							if(id > 0){
 								$("#sucessMessage").text('Signature sandwitch item update successfully').addClass('sucessMessage').removeClass('errorMessage');
+								$.ajax({
+									type:"POST",
+									url: "admin_contents/signature_sandwitch/ajax.php?ssdata=linkonly",
+									data: {id:id},
+									success: function(tablerow) {
+										$("#ss_"+id).html(tablerow);
+									}
+								});
 							}else{
                             	$("#sucessMessage").text('Signature sandwitch item added successfully').addClass('sucessMessage').removeClass('errorMessage');
 								$.ajax({
 									type:"POST",
-									url: "admin_contents/signature_sandwitch/ajax.php?ssdata=1",
+									url: "admin_contents/signature_sandwitch/ajax.php?ssdata=row",
 									data: {id:data},
 									success: function(tablerow) {
 										$("#tblsandwiches").append(tablerow);
@@ -915,7 +923,7 @@ if($_POST['cropimg'])
 	  ?>
 	    <tr>
         	<td>
-			<a href="<?=$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id?>">
+			<a href="<?=$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id?>" id="ss_<?=$row->id?>">
 				<?=$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'?></td>
             </a>
         </tr>
