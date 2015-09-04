@@ -745,7 +745,7 @@ if($_POST['cropimg'])
               <div class="ss_prodDescription">{{product_description}}</div>
             </div>
             
-            <img src="img/bh_item1.png" style="margin-left: 10px; cursor: pointer;" data-tooltip="BH Item" class="spicy1">
+            <img src="img/bh_item1.png<?php echo $jsParameter;?>" style="margin-left: 10px; cursor: pointer;" data-tooltip="BH Item" class="spicy1">
           </div>
 
     </div>

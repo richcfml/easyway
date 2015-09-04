@@ -1109,7 +1109,7 @@ if($_POST['cropimg'])
                                 <?=((isset($_GET['sandwichId']) && $_GET['sandwichId'] > 0)? 'checked':'')?>/>
                                 <label for="bh_item"></label>
                                 <div style="margin-left: 27px;">
-                                    <img src="img/bh_item.png" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;">
+                                    <img src="img/bh_item1.png<?php echo $jsParameter;?>" data-tooltip="BH Item" id ="bh_item1" style="width: 36px;">
                                 </div>
                             </td>
                         <?php

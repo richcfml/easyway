@@ -8,7 +8,7 @@ require("classes/ChargifyApi.php");
 include("../includes/class.phpmailer.php"); 
 include("../includes/class.smtp.php");
 require_once('../classes/AbandonedCarts.php');
-$jsParameter = "?v3";
+$jsParameter = "?v4";
 $function_obj = new clsFunctions();
 $chargify = new ChargifyApi();
 
@@ -71,7 +71,7 @@ $clientQuery = dbAbstract::Execute("SELECT * FROM users WHERE  id IN ( $client_i
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="js/Togle.js"></script>
-<link href="css/adminMain.css" rel="stylesheet" type="text/css" />
+<link href="css/adminMain.css<?php echo $jsParameter;?>" rel="stylesheet" type="text/css" />
 <link href="css/south-street/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css" />
 
 

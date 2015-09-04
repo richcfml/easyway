@@ -128,7 +128,7 @@ $loop_index_check = FALSE;
                 $('<img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/><img src="../c_panel/img/spicy_icon22.png" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
             }
             if(product_item_type.indexOf('B') !== -1){
-                $('<img src="../c_panel/img/bh_item1.png" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
+                $('<img src="../c_panel/img/bh_item1.png?v4" style="margin-left: 10px;" class="item_title_type"/>').insertAfter($('#item_title'));
             }
         }
         $('#retail_price').html('<?=$currency?>' + productDetails.retail_price);
