@@ -283,6 +283,55 @@ if ($mVerifyRequest==1) //Valid Session
             $mExecutionTime = $mEndTime - $mStartTime;
             Log::write("BH API: like", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');
         }
+        else if (isset($_GET["unlike"]))
+        {
+            $mStartTime = strtotime(date("Y-m-d H:i:s"));
+            if (isset($_GET["slug"]))
+            {
+                    $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                    $rest_url = dbAbstract::ExecuteObject($mSQL);
+                    if ($rest_url)
+                    {
+                        $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 1");
+                        if ($mRowMaxID)
+                        {
+                            $mMaxID = $mRowMaxID->id;
+                            dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mRowMaxID);
+                            
+                            $mUnLikeMessage = "Restaurant un-liked successfully.";
+                        }
+                        else
+                        {
+                            $mUnLikeMessage = "No likes for this restaurant.";
+                        }
+                        
+                        $mLikeCount = returnLikeCount($rest_url->id);
+                        $mDislikeCount = returnDislikeCount($rest_url->id);
+                        $mLikePercentage = 0;
+
+                        if (($mLikeCount==0) && ($mDislikeCount==0))
+                        {
+                            $mLikePercentage = 0;
+                        }
+                        else
+                        {
+                            $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+                        }
+                        
+                        $mReturn = array(
+                                        "successDescription" => $mUnLikeMessage,
+                                        "satisfactionPercentage" => $mLikePercentage
+                                        );
+                    }
+            }
+            else
+            {
+                $mReturn = errorFunction("3", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+            $mEndTime = strtotime(date("Y-m-d H:i:s"));
+            $mExecutionTime = $mEndTime - $mStartTime;
+            Log::write("BH API: like", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');
+        }
         else if (isset($_GET["dislike"]))
         {
             $mStartTime = strtotime(date("Y-m-d H:i:s"));
@@ -357,6 +406,55 @@ if ($mVerifyRequest==1) //Valid Session
                 else
                 {
                     $mReturn = errorFunction("4", "Please specify at least one Option.", "Please specify at least one Option.", "Attribute Error");
+                }
+            }
+            else
+            {
+                $mReturn = errorFunction("3", "Slug not specified.", "Slug not specified.", "Attribute Error");
+            }
+            $mEndTime = strtotime(date("Y-m-d H:i:s"));
+            $mExecutionTime = $mEndTime - $mStartTime;
+            Log::write("BH API: dislike", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');
+        }
+        else if (isset($_GET["undislike"]))
+        {
+            $mStartTime = strtotime(date("Y-m-d H:i:s"));
+            if (isset($_GET["slug"]))
+            {
+                $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
+                $rest_url = dbAbstract::ExecuteObject($mSQL);
+                if ($rest_url)
+                {
+                    $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 0");
+                    if ($mRowMaxID)
+                    {
+                        $mMaxID = $mRowMaxID->id;
+                        dbAbstract::UPDATE("UPDATE bh_rest_rating SET Rating = 2 WHERE id=".$mRowMaxID);
+
+                        $mUnLikeMessage = "Restaurant un-disliked successfully.";
+                    }
+                    else
+                    {
+                        $mUnLikeMessage = "No dislikes for this restaurant.";
+                    }
+
+                    $mLikeCount = returnLikeCount($rest_url->id);
+                    $mDislikeCount = returnDislikeCount($rest_url->id);
+                    $mLikePercentage = 0;
+
+                    if (($mLikeCount==0) && ($mDislikeCount==0))
+                    {
+                        $mLikePercentage = 0;
+                    }
+                    else
+                    {
+                        $mLikePercentage = round(($mLikeCount/($mLikeCount + $mDislikeCount))*100);
+                    }
+
+                    $mReturn = array(
+                                    "successDescription" => $mUnLikeMessage,
+                                    "satisfactionPercentage" => $mLikePercentage
+                                    );
                 }
             }
             else
