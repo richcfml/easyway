@@ -1,4 +1,4 @@
-<div style="font-family: Arial; font-size: 18px;">
+<div style="font-family: Arial; font-size: 14px;">
 <?php 
     include("includes/config.php");
     $mRes = dbAbstract::Execute("SELECT start_date, end_date FROM bh_signature_sandwitch LIMIT 1");
