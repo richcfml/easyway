@@ -292,7 +292,7 @@ if ($mVerifyRequest==1) //Valid Session
                     $rest_url = dbAbstract::ExecuteObject($mSQL);
                     if ($rest_url)
                     {
-                        $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 1");
+                        $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 1 AND rest_id=".$rest_url->id);
                         if ($mRowMaxID)
                         {
                             $mMaxID = $mRowMaxID->id;
@@ -425,7 +425,7 @@ if ($mVerifyRequest==1) //Valid Session
                 $rest_url = dbAbstract::ExecuteObject($mSQL);
                 if ($rest_url)
                 {
-                    $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 0");
+                    $mRowMaxID = dbAbstract::ExecuteObject("SELECT MAX(id) AS id FROM bh_rest_rating WHERE Rating = 0 AND rest_id=".$rest_url->id);
                     if ($mRowMaxID)
                     {
                         $mMaxID = $mRowMaxID->id;
