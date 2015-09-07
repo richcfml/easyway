@@ -146,13 +146,9 @@ else if (isset($_GET['cropimg']))
     
 }
 elseif(isset($_GET['ssdata'])){
-	$row = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$_POST['id'],1);
-	$s_date = new DateTime($row->start_date);
-        $start_date = $s_date->format('m/d');
-        
-        $d_date = new DateTime($row->end_date);
-        $end_date = $d_date->format('m/d');
-        
+	$row = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$_POST['id'],1);        
+        $start_date = date("m/d",strtotime($row->start_date));
+        $end_date = date("m/d",strtotime($row->end_date));
 	$sslink = '<a href="'.$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id.'">'.
 					$row->item_name.' ('.$start_date.' - '.$end_date.')'.
 				  '</a>';

@@ -5,13 +5,11 @@ if (isset($_GET['ssid'])) {
     $prd_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$ssid,1);
     $item_name = stripcslashes($prd_data->item_name);
 
-    $s_date = new DateTime($prd_data->start_date);
-    $s_fulldate = $s_date->format('m/d/Y');
-    $startDate = $s_date->format('m/d');
-
-    $d_date = new DateTime($prd_data->end_date);
-    $e_fulldate = $d_date->format('m/d/Y');
-    $endtDate = $d_date->format('m/d');
+    $start_date = date("m/d",strtotime($prd_data->start_date));
+    $s_fulldate = date("m/d/Y",strtotime($prd_data->start_date));
+    
+    $endtDate = date("m/d",strtotime($prd_data->end_date));
+    $e_fulldate = date("m/d/Y",strtotime($prd_data->start_date));
 	
     $description = $prd_data->item_desc;
     $description1 = $prd_data->item_desc;
@@ -925,11 +923,9 @@ if($_POST['cropimg'])
       <?php
       $query = dbAbstract::Execute("Select * from bh_signature_sandwitch where end_date >= '".date('Y-m-d')."'");
 	  while($row = dbAbstract::returnObject($query)){
-            $s_date = new DateTime($row->start_date);
-            $start_date = $s_date->format('m/d');
-
-            $d_date = new DateTime($row->end_date);
-            $end_date = $d_date->format('m/d');
+              
+            $start_date = date("m/d",strtotime($row->start_date));
+            $end_date = date("m/d",strtotime($row->end_date));
 	  ?>
 	    <tr>
         	<td>
