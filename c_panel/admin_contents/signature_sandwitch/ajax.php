@@ -14,11 +14,8 @@ if (isset($_GET['add_item']))
     $query = dbAbstract::Execute("Select start_date, end_date from bh_signature_sandwitch $where");
     while ($dates = dbAbstract::returnObject($query, 1))
     {
-        $s_date = new DateTime($start_date);
-        $start_date = $s_date->format('Y-m-d');
-        
-        $d_date = new DateTime($end_date);
-        $end_date = $d_date->format('Y-m-d');
+        $start_date = date("Y-m-d",strtotime($start_date));
+        $end_date = date("Y-m-d",strtotime($end_date));
         
         $db_start_date = $dates->start_date;
         $db_end_date = $dates->end_date;
