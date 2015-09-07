@@ -1128,11 +1128,11 @@ $(document).ready(function()
                     if ($current_cat == $menulist->sub_cat_id || $firstindex == 0) {
                                     $display = 'block';
                                     if($menulist->signature_sandwitch_id > 0){
-                                            $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$menulist->signature_sandwitch_id."'");
-                                            if($ss_obj->start_date > strtotime(date("Y-m-d"))){
-                                                    $display = 'none';
-                                            }
-                                    }
+										$ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$menulist->signature_sandwitch_id."'");
+										if(strtotime($ss_obj->start_date) > strtotime(date("Y-m-d")) || strtotime($ss_obj->end_date) < strtotime(date("Y-m-d"))){
+											$display = 'none';
+										}
+									}
                         ?>
                         <div class="products_area" style="height: 40px; <?php if (($menulist->status!=1) || ($menulist->display==" style='display: none;' ") || ($display=='none')) { echo("display: none;"); }?>">
                             <table style="margin: 0px; width: 100%;" cellpadding="0" cellspacing="0" border="0">

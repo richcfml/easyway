@@ -153,7 +153,7 @@
 							  $ss_obj  = dbAbstract::ExecuteObject("select start_date,end_date from bh_signature_sandwitch where id='".$mRowPr['signature_sandwitch_id']."'");
 							  
 							}
-							if($mRowPr['signature_sandwitch_id']==0 || ($mRowPr['signature_sandwitch_id'] > 0 && $ss_obj->end_date >= strtotime(date('Y-m-d')))){
+							if($mRowPr['signature_sandwitch_id']==0 || ($mRowPr['signature_sandwitch_id'] > 0 && strtotime($ss_obj->end_date) >= strtotime(date('Y-m-d')))){
                     ?>
                         <ul id="tblS" class="clsS" sub_cat="<?=$mRow["cat_id"]?>">
                             <li id="liPrd" class="liPrd" sub_cat="<?=$mRow["cat_id"]?>">
@@ -227,7 +227,7 @@
 															// If Signature Sandwich Than Get start date and End Date
                                                             if($mRowPr['signature_sandwitch_id'] > 0){
 															  echo '<div style="margin-left: 55px;" class="ss_prodDates">Featured Sandwich '.
-															  		date('m/d',$ss_obj->start_date).' - '.date('m/d',$ss_obj->end_date).
+															  		date('m/d',strtotime($ss_obj->start_date)).' - '.date('m/d',strtotime($ss_obj->end_date)).
 																	'</div>';
 															}
 															?>

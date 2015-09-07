@@ -4,12 +4,17 @@ if (isset($_GET['ssid'])) {
 
     $prd_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$ssid,1);
     $item_name = stripcslashes($prd_data->item_name);
-	
-	$startDate = date('m/d/Y', $prd_data->start_date);
-	$endtDate = date('m/d/Y', $prd_data->end_date);
+
+    $s_date = new DateTime($prd_data->start_date);
+    $s_fulldate = $s_date->format('m/d/Y');
+    $startDate = $s_date->format('m/d');
+
+    $d_date = new DateTime($prd_data->end_date);
+    $e_fulldate = $d_date->format('m/d/Y');
+    $endtDate = $d_date->format('m/d');
 	
     $description = $prd_data->item_desc;
-	$description1 = $prd_data->item_desc;
+    $description1 = $prd_data->item_desc;
     $imgSource = $prd_data->item_image;
 	
     if (strtolower(substr(php_uname('s'), 0, 3))=="win")
@@ -565,7 +570,7 @@ if (isset($_GET['ssid'])) {
 
                                                     if ((mWidth>=450) || (mHeight>=450))
                                                     {
-															$('#item_img').css("width",Math.round(mWidth/4.5)+"px");
+                                                            $('#item_img').css("width",Math.round(mWidth/4.5)+"px");
                                                             $('#item_img').css("height",Math.round(mHeight/4.5)+"px");
                                                             $('#hdnScale').val('4.5');
                                                     }
@@ -826,8 +831,8 @@ if($_POST['cropimg'])
                                 <input type="text" id="item_name" name="item_name" style="margin-left: 13%;margin-top: 30px;width:85%;padding:8px" value="<?=((isset($_GET['ssid']))? $item_name:'')?>" class="textAreaClass" placeholder="Item Name"  maxlength="40" />
                             </td>
                             <td>
-                                <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $startDate:'')?>"/>
-                                <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $startDate:'')?>"/>
+                                <input type="text" name="start_date" id="start_date"  placeholder="Start Date" class="textAreaClass" style="margin-left: 18%;margin-top: 25px;padding: 5px;width:36%;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $s_fulldate:'')?>"/>
+                                <input type="text" name="end_date" id="end_date" readonly="true" placeholder="End Date" class="textAreaClass" style="width:35%;margin-top: 25px;padding: 5px;cursor:pointer;" value="<?=((isset($_GET['ssid']))? $e_fulldate:'')?>"/>
                             </td>
                         </tr>
                         <tr>
@@ -904,8 +909,8 @@ if($_POST['cropimg'])
           <div class="ss_prodTitle" id="ss_item_name"><?=((isset($_GET['ssid']))? $item_name:'')?></div>
           <div class="ss_prodDates">
             Featured Sandwich 
-            <span id="ss_startdate"><?=((isset($_GET['ssid']))? date('m/d', strtotime($startDate)):'')?></span> - 
-            <span id="ss_enddate"><?=((isset($_GET['ssid']))? date('m/d', strtotime($endtDate)):'')?></span>
+            <span id="ss_startdate"><?=((isset($_GET['ssid']))?  $startDate:'')?></span> - 
+            <span id="ss_enddate"><?=((isset($_GET['ssid']))?  $endtDate:'')?></span>
           </div>
           <div class="ss_prodDescription"><?=((isset($_GET['ssid']))? $description:'')?></div>
         </div>
@@ -918,13 +923,18 @@ if($_POST['cropimg'])
       <h1>Signature Sandwiches</h1>
       <table id="tblsandwiches" width="100%" cellpadding="3" cellspacing="0">
       <?php
-      $query = dbAbstract::Execute("Select * from bh_signature_sandwitch where end_date >= '".strtotime(date('Y-m-d'))."'");
+      $query = dbAbstract::Execute("Select * from bh_signature_sandwitch where end_date >= '".date('Y-m-d')."'");
 	  while($row = dbAbstract::returnObject($query)){
+            $s_date = new DateTime($row->start_date);
+            $start_date = $s_date->format('m/d');
+
+            $d_date = new DateTime($row->end_date);
+            $end_date = $d_date->format('m/d');
 	  ?>
 	    <tr>
         	<td>
 			<a href="<?=$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id?>" id="ss_<?=$row->id?>">
-				<?=$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'?></td>
+				<?=$row->item_name.' ('.$start_date.' - '.$end_date.')'?></td>
             </a>
         </tr>
 	  <?php

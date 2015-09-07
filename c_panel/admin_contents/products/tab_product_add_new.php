@@ -58,8 +58,6 @@ if (isset($_GET['sandwichId'])) {
     $item_name = $sandwitch_data->item_name;
     $description = $sandwitch_data->item_desc;
     $description1 = $sandwitch_data->item_desc;
-    $start_date = $sandwitch_data->start_date;
-    $end_date = $sandwitch_data->end_date;
     $imgSource = $sandwitch_data->item_image;
 
     //add attribute which has apply_sub_cat is 1

@@ -6,7 +6,7 @@ $qry = dbAbstract::Execute("Select p.prd_id,bh.start_date,bh.end_date from produ
 while($product = dbAbstract::returnObject($qry))
 {
     $end_date = $product->end_date;
-    if($end_date < strtotime(date('Y-m-d')))
+    if(strtotime($end_date) < strtotime(date('Y-m-d')))
     {
         
         dbAbstract::Delete("Delete from product where prd_id =  ".$product->prd_id."");
@@ -16,7 +16,8 @@ while($product = dbAbstract::returnObject($qry))
     }  
 }
 //delete expire item from signature sandwitch
-$query = "Delete from bh_signature_sandwitch where end_date < ".strtotime(date('Y-m-d'))."";
+$query = "Delete from bh_signature_sandwitch where end_date < '".date('Y-m-d')."'";
+
 dbAbstract::Delete($query);
 
 //remove attributes where product not exist

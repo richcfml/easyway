@@ -372,7 +372,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
       <div style="width:70%; float:left">
       	<?php
 		if($Objrestaurant->bh_restaurant == 1){
-		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".strtotime(date('Y-m-d'))."' or end_date >= '".strtotime(date('Y-m-d'))."' order by start_date");
+		  $ss_qry  = dbAbstract::Execute("select * from bh_signature_sandwitch where start_date >= '".date('Y-m-d')."' or end_date >= '".date('Y-m-d')."' order by start_date asc");
 		  $ss_rows = dbAbstract::returnRowsCount($ss_qry);
 		  if($ss_rows > 0 ){
 		  ?>
@@ -423,7 +423,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 							<img src="./images/signaturesandwich/BH_Pause.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
 					<?php	
 						}
-						elseif($row->start_date <= strtotime(date("Y-m-d")) && $row->end_date >= strtotime(date("Y-m-d"))){
+						elseif(strtotime($row->start_date) <= strtotime(date("Y-m-d")) && strtotime($row->end_date) >= strtotime(date("Y-m-d"))){
 							$draggable = 'false';
 							$boarsHeadBtm = '55px';
 							$boarsHeadlft = '90px';
@@ -431,7 +431,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					?>
 							<img src="./images/signaturesandwich/BH_Check.svg" draggable="false" style="position:relative; top:45px; left:88px; z-index:10">
 					<?php
-						}elseif($row->start_date > strtotime(date("Y-m-d"))){
+						}elseif(strtotime($row->start_date) > strtotime(date("Y-m-d"))){
 							$draggable = 'false';
 							$boarsHeadBtm = '60px';
 							$boarsHeadlft = '90px';
@@ -459,7 +459,7 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
 					<div class="ss_content">
 					  <div class="ss_prodTitle"><?=$row->item_name?></div>
 					  <div class="ss_prodDates">
-						Featured Sandwich <?=date('m/d',$row->start_date).' - '.date('m/d',$row->end_date)?>
+						Featured Sandwich <?=date('m/d',strtotime($row->start_date)).' - '.date('m/d',strtotime($row->end_date))?>
 					  </div>
 					  <div class="ss_prodDescription"><?=$row->item_desc?></div>
 					</div>

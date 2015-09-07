@@ -14,29 +14,34 @@ if (isset($_GET['add_item']))
     $query = dbAbstract::Execute("Select start_date, end_date from bh_signature_sandwitch $where");
     while ($dates = dbAbstract::returnObject($query, 1))
     {
+        $s_date = new DateTime($start_date);
+        $start_date = $s_date->format('Y-m-d');
+        
+        $d_date = new DateTime($end_date);
+        $end_date = $d_date->format('Y-m-d');
+        
         $db_start_date = $dates->start_date;
         $db_end_date = $dates->end_date;
-        $start_ts = strtotime($start_date);
-        $end_ts = strtotime($end_date);
-        if(($start_ts >= $db_start_date) && ($start_ts <= $db_end_date))
+        if(($start_date >= $db_start_date) && ($start_date <= $db_end_date))
         {
             $flag =2;
         }
-        if(($end_ts >= $db_start_date) && ($end_ts <= $db_end_date))
+        if(($end_date >= $db_start_date) && ($end_date <= $db_end_date))
         {
             $flag =2;
         }
     }
     
     if($flag == 0)
-    {
+    {  
+        
         $product_description = replaceBhSpecialChars($product_description);
 		if($id > 0){
-			$qry = "UPDATE bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = ".strtotime($start_date).", end_date = ".  strtotime($end_date)." WHERE id='$id'";
+			$qry = "UPDATE bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."' WHERE id='$id'";
 			dbAbstract::Update($qry, 1, 0);
 		  	$lastid = $id;
 		}else{
-        	$qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = ".strtotime($start_date).", end_date = ".  strtotime($end_date)."";
+        	$qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."'";
 		  	$lastid = dbAbstract::Insert($qry, 1, 2);
 		}
         
@@ -145,9 +150,14 @@ else if (isset($_GET['cropimg']))
 }
 elseif(isset($_GET['ssdata'])){
 	$row = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = ".$_POST['id'],1);
-	
+	$s_date = new DateTime($row->start_date);
+        $start_date = $s_date->format('m/d');
+        
+        $d_date = new DateTime($row->end_date);
+        $end_date = $d_date->format('m/d');
+        
 	$sslink = '<a href="'.$SiteUrl.'c_panel/?mod=signaturesandwitch&ssid='.$row->id.'">'.
-					$row->item_name.' ('.date('m/d',$row->start_date).' - '.date('m/d',$row->end_date).')'.
+					$row->item_name.' ('.$start_date.' - '.$end_date.')'.
 				  '</a>';
 	if($_GET['ssdata']=='linkonly'){
 		echo $sslink;

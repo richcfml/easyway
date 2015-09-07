@@ -1532,7 +1532,7 @@ function returnDislikeCount($pRestaurantID)
 
 function checkSignatureSandwich($rest_id)
 { 
-    $qry = "Select signature_sandwitch_id from product p inner join bh_signature_sandwitch bh on bh.id = p.signature_sandwitch_id where p.signature_sandwitch_id !='' and p.status = 1 and bh.start_date <= '".strtotime(date('Y-m-d'))."' and bh.end_date >= '".strtotime(date('Y-m-d'))."' and p.cat_id = ".$rest_id."";
+    $qry = "Select signature_sandwitch_id from product p inner join bh_signature_sandwitch bh on bh.id = p.signature_sandwitch_id where p.signature_sandwitch_id !='' and p.status = 1 and bh.start_date <= '".date('Y-m-d')."' and bh.end_date >= '".date('Y-m-d')."' and p.cat_id = ".$rest_id."";
     
     $query = dbAbstract::Execute($qry);
     $rowsCount = dbAbstract::returnRowsCount($query);
