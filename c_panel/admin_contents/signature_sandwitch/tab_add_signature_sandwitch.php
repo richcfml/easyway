@@ -9,7 +9,7 @@ if (isset($_GET['ssid'])) {
     $s_fulldate = date("m/d/Y",strtotime($prd_data->start_date));
     
     $endtDate = date("m/d",strtotime($prd_data->end_date));
-    $e_fulldate = date("m/d/Y",strtotime($prd_data->start_date));
+    $e_fulldate = date("m/d/Y",strtotime($prd_data->end_date));
 	
     $description = $prd_data->item_desc;
     $description1 = $prd_data->item_desc;
