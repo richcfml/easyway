@@ -7,7 +7,7 @@ $likeQry = dbAbstract::Execute("SELECT
 FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id where r.bh_restaurant = 1
 GROUP BY rest_id");
 
-$dislikeQry = dbAbstract::Execute("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id left join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1");
+$dislikeQry = dbAbstract::Execute("SELECT bh.rest_id,dl.*,r.url_name FROM bh_rest_rating bh inner join resturants r on r.id = bh.rest_id left join bh_dislike dl on dl.bh_rest_rating_id = bh.id where r.bh_restaurant = 1 and bh.Rating = 0");
 
 ?>
 <div>
