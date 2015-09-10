@@ -122,10 +122,11 @@
 			  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
 			  
 			  $loggedinuser->resturant_id =$objRestaurant->id;
-			  $result=$loggedinuser->register($objRestaurant,$objMail);
-			  if($result===true){
-				header("location: ". $SiteUrl .$objRestaurant->url."/");
-				exit;	
+			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail);
+			  if($result===true)
+                          {
+                            redirect($SiteUrl.$objRestaurant->url."/");
+                            exit;	
 			  }
 			}
 		}else{
