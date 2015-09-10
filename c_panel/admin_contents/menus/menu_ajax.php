@@ -318,23 +318,17 @@ else if (isset($_GET['update_menu_item']))
     }
 	//Gulfam - Code to for Editing restaurants other than US region starts 
 	$mRegioRes = dbAbstract::Execute("SELECT IFNULL(R.region, 1) AS RestaurantRegion FROM  resturants R INNER JOIN  product P ON R.id = P.cat_id AND P.prd_id=".$_GET['prd_id'], 1);
+	if(($mRegioRow->RestaurantRegion == 1) || ($mRegioRow->RestaurantRegion == 2))
+        {
+            $currency = "$";
+        }
+        else
+        {
+            $currency = "£"; 
+        }
 	
-	if (dbAbstract::returnRowsCount($mRegioRes, 1)>0)
-	{
-		$mRegioRow = dbAbstract::returnObject($mRegioRes, 1);
-		if (($mRegioRow->RestaurantRegion!=1) && ($mRegioRow->RestaurantRegion!=2))
-		{
-				$price = str_replace("�",",",$price);
-		}
-		else
-		{
-			$price = str_replace("$",",",$price);
-		}
-	}
-	else
-	{
-		$price = str_replace("$",",",$price);
-	}
+        $price = str_replace($currency,",",$price);
+		
 	//Gulfam - Code to for Editing restaurants other than US region Ends 
 	
 	
