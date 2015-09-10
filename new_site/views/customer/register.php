@@ -21,11 +21,11 @@
         $loggedinuser->delivery_state1= trim($cstate) ;
         $loggedinuser->deivery1_zip= trim($czip) ;
         $loggedinuser->resturant_id =$objRestaurant->id;
-        $result=$loggedinuser->register($objRestaurant,$objMail);
+        $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
         
         if($result===true)
         {
-            header("location: ". $SiteUrl .$objRestaurant->url ."/?item=account" );
+            redirect($SiteUrl .$objRestaurant->url ."/?item=account");
             exit;	
         }
     }

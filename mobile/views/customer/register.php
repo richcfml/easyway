@@ -31,7 +31,7 @@ if(isset($_POST['btnsave']))
     $loggedinuser->delivery_state1= trim($cstate) ;
     $loggedinuser->deivery1_zip= trim($czip) ;
     $loggedinuser->resturant_id =$objRestaurant->id;
-    $result=$loggedinuser->register($objRestaurant,$objMail);
+    $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
     if($result===true)
     {
         redirect($SiteUrl.$objRestaurant->url ."/?item=account");
