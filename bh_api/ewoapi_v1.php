@@ -2021,13 +2021,20 @@ function getorderdetails($OrderID)
         
         $getLatLong = findLatLong($mResturantRow);
         
+        $mDDT = "delivery_datetime";
+        
+        if (trim(strtolower($Ord_RS["order_receiving_method"]))=="pickup")
+        {
+            $mDDT = "pickup_datetime";
+        }
+        
         $orderArray =  array(
                     "customer_information" => array("customer_name" => replaceSpecialChar($Ord_RS['cust_your_name']).' '.replaceSpecialChar($Ord_RS["LastName"]), "address" => replaceSpecialChar(trim($Ord_RS["DeliveryAddress"],"~")." ".$Ord_RS["cust_ord_city"]." ".$Ord_RS["cust_ord_state"]),"phone" => replaceSpecialChar($Ord_RS['cust_phone1'])),
                     "restaurant_information" => array("name" => replaceSpecialChar($mResturantRow->name), "slug" => $mResturantRow->url_name, "email" => $mResturantRow->email, "address" => $mResturantRow->rest_address.', '.$mResturantRow->rest_city.' '.$mResturantRow->rest_state.' '.$mResturantRow->rest_zip, "latitude" => $getLatLong[0], "longitude" => $getLatLong[1], "phone" => $mResturantRow->phone, "fax" => $mResturantRow->fax),
                     "order_information" =>array("order_no" => $Ord_RS['OrderID'],
                                                 "payment_method" => $Ord_RS['payment_method'],
                                                 "order_receiving_method" => $Ord_RS['order_receiving_method'],
-                                                "delivery_datetime" => $Ord_RS["DesiredDeliveryDate"],
+                                                $mDDT => $Ord_RS["DesiredDeliveryDate"],
                                                 "submission_datetime" => date("m-d-Y h:i:s", strtotime($Ord_RS["submit_time"])),
                                                 "special_request" => replaceSpecialChar( $Ord_RS["DelSpecialReq"])),
                     "order_detail" => $order_detail_array, 
