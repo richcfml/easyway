@@ -76,6 +76,7 @@ else if (isset($_GET["sku1"]))
     if (dbAbstract::returnRowsCount($sql_res,1)>0)
     {
         $row=dbAbstract::returnArray($sql_res,1);
+        ob_clean();
         echo($row['ItemName']);
     }
     else
@@ -90,4 +91,3 @@ function GetFileExt($fileName)
     $ext = strtolower($ext);
 	return substr($ext, 0, 4);
 }
-?>
