@@ -673,22 +673,18 @@ if (isset($_POST['submit'])) {
                 $mResult = curl_exec($ch);
                 curl_close($ch);
                 unset($ch);
-                //$mResult= json_decode($mResult);
-                
-                
             }
             else
             {
                 $cntry=$_POST['region'];
                 if($cntry=='0'){$cntry="GB";}else if($cntry=='1'){$cntry="US";} else if($cntry=='2'){$cntry="CA";}else{$cntry="US";}
                 $demoAccountFlag = "true";
-				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
+                Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
                 $chargify->cancelVendesta($srid);
-                dbAbstract::Update("UPDATE resturants set srid = '' where id ".$catid."",1);
-				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
+                dbAbstract::Update("UPDATE resturants set srid = '' where id = ".$catid."",1);
+                Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
                 $srid = $chargify->createVendestaPremium($catname,$cntry,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag,$phone,$getOwnerEmail->email);
                 
-		
 		if(!empty($srid))
                 {
                     dbAbstract::Update("UPDATE resturants SET srid='".$srid."' where id = $catid",1);
