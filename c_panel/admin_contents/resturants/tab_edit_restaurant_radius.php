@@ -225,14 +225,6 @@ $catid = $mRestaurantIDCP;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$myimage = new ImageSnapshot; //new instance
-$myimage2 = new ImageSnapshot; //new instance
-
-if (isset($_FILES['userfile']))
-    $myimage->ImageField = $_FILES['userfile']; //uploaded file array
-if (isset($_FILES['userfile2']))
-    $myimage2->ImageField = $_FILES['userfile2']; //uploaded file array
-
 function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);
     $ext = strtolower($ext);
@@ -293,15 +285,7 @@ if (isset($_POST['submit'])) {
     else if ($fax == '') 
     {
         $errMessage = "Please enter fax number";
-    } 
-    else if (!empty($_FILES['userfile']['name']) && $myimage->ProcessImage() == false) 
-    {
-        $errMessage = "Pleaser Enter Valid Logo";
-    } 
-    else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) 
-    {
-        $errMessage = "Pleaser Enter Valid Logo Thumbnail";
-    } 
+    }
     else if ($rest_zip == '') 
     {
         $errMessage = "Please enter resturant zip code";
@@ -673,22 +657,18 @@ if (isset($_POST['submit'])) {
                 $mResult = curl_exec($ch);
                 curl_close($ch);
                 unset($ch);
-                //$mResult= json_decode($mResult);
-                
-                
             }
             else
             {
                 $cntry=$_POST['region'];
                 if($cntry=='0'){$cntry="GB";}else if($cntry=='1'){$cntry="US";} else if($cntry=='2'){$cntry="CA";}else{$cntry="US";}
                 $demoAccountFlag = "true";
-				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
+                Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta srid:'.$srid, 'restaurant', 1);
                 $chargify->cancelVendesta($srid);
-                dbAbstract::Update("UPDATE resturants set srid = '' where id ".$catid."",1);
-				Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
+                dbAbstract::Update("UPDATE resturants set srid = '' where id = ".$catid."",1);
+                Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Calling Cancel Vandesta premium catname:'.$catname, 'restaurant', 1);
                 $srid = $chargify->createVendestaPremium($catname,$cntry,$rest_address,$rest_city,$rest_state,$rest_zip,$demoAccountFlag,$phone,$getOwnerEmail->email);
                 
-		
 		if(!empty($srid))
                 {
                     dbAbstract::Update("UPDATE resturants SET srid='".$srid."' where id = $catid",1);
