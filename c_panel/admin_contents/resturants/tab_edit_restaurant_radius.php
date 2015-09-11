@@ -225,6 +225,14 @@ $catid = $mRestaurantIDCP;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$myimage = new ImageSnapshot; //new instance
+$myimage2 = new ImageSnapshot; //new instance
+
+if (isset($_FILES['userfile']))
+    $myimage->ImageField = $_FILES['userfile']; //uploaded file array
+if (isset($_FILES['userfile2']))
+    $myimage2->ImageField = $_FILES['userfile2']; //uploaded file array
+
 function GetFileExt($fileName) {
     $ext = substr($fileName, strrpos($fileName, '.') + 1);
     $ext = strtolower($ext);
@@ -285,7 +293,15 @@ if (isset($_POST['submit'])) {
     else if ($fax == '') 
     {
         $errMessage = "Please enter fax number";
-    }
+    } 
+    else if (!empty($_FILES['userfile']['name']) && $myimage->ProcessImage() == false) 
+    {
+        $errMessage = "Pleaser Enter Valid Logo";
+    } 
+    else if (!empty($_FILES['userfile2']['name']) && $myimage2->ProcessImage() == false) 
+    {
+        $errMessage = "Pleaser Enter Valid Logo Thumbnail";
+    } 
     else if ($rest_zip == '') 
     {
         $errMessage = "Please enter resturant zip code";
@@ -558,7 +574,7 @@ if (isset($_POST['submit'])) {
 					where id =" . $license_key;
             dbAbstract::Update($queryLicences,1);
 			Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Updated Restaurant Licences:'.$queryLicences, 'restaurant', 1);
-        } else if ($_SESSION['admin_type'] == 'store owner' || $_SESSION['admin_type'] == 'reseller') {
+        } else if ($_SESSION['admin_type'] == 'store owner' || $_SESSION['admin_type'] == 'reseller'  || $_SESSION['admin_type'] == 'bh') {
 			$queryUpdate="UPDATE resturants 
 					SET name= '" . prepareStringForMySQL($catname) . "'
 						,email= '" . addslashes($email) . "'
