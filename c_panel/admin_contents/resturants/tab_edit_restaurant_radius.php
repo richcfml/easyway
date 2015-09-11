@@ -322,7 +322,7 @@ if (isset($_POST['submit'])) {
     {
         $errMessage = "Please enter delivery charges";
     } 
-    else if (($delivery_offer == '1') && (!isset($delivery_option) || trim($delivery_option)==""))
+    else if (($delivery_offer == 1) && (!isset($delivery_option) || trim($delivery_option)==""))
     {
         $errMessage = "Please seelct delivery option (Delivery Radius or Custom Delivery Zone).";   
     } 
