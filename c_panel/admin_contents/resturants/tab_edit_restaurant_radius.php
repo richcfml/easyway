@@ -322,6 +322,13 @@ if (isset($_POST['submit'])) {
     {
         $errMessage = "Please enter delivery charges";
     } 
+    else if ($delivery_offer == '1') 
+    {
+        if (!isset($delivery_option) || trim($delivery_option)=="")
+        {
+            $errMessage = "Please seelct delivery option (Delivery Radius or Custom Delivery Zone).";   
+        }
+    } 
     else if ($time_zone < 0) 
     {
         $errMessage = "Please select resturant's time zone";
@@ -1167,7 +1174,7 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
             </tr>  
             <tr align="left" valign="top"> 
                 <td></td>
-                <td><strong>Resturant Status:</strong><br />
+                <td><strong>Restaurant Status:</strong><br />
                     <input name="rest_open_close" type="radio" value="1"  id="rest_open_close" <?php if ($Objrestaurant->rest_open_close == "1") {
     echo "checked";
 } ?>>Open            &nbsp;&nbsp;
