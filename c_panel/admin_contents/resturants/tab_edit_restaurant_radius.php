@@ -255,7 +255,7 @@ if (!empty($_GET)) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 if (isset($_POST['submit'])) {
-	Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
+    Log::write('Edit Restaurant - tab_edit_restaurant_radius.php', 'Posted Array:'.print_r($_POST,true), 'restaurant', 1);
     $restQry = dbAbstract::Execute("SELECT name from resturants where name='$catname' AND id!='$catid'",1);
     $restRs = dbAbstract::returnRowsCount($restQry,1);
     if ($restRs > 0)
@@ -273,7 +273,7 @@ if (isset($_POST['submit'])) {
         $restRs1 = dbAbstract::returnObject($restQry1,1);
         $restRs1 = $restRs1->total;
     }
-
+    
     if ($catname == '') 
     {
         $errMessage = "Please Enter Restaurant Name";
@@ -322,12 +322,9 @@ if (isset($_POST['submit'])) {
     {
         $errMessage = "Please enter delivery charges";
     } 
-    else if ($delivery_offer == '1') 
+    else if (($delivery_offer == '1') && (!isset($delivery_option) || trim($delivery_option)==""))
     {
-        if (!isset($delivery_option) || trim($delivery_option)=="")
-        {
-            $errMessage = "Please seelct delivery option (Delivery Radius or Custom Delivery Zone).";   
-        }
+        $errMessage = "Please seelct delivery option (Delivery Radius or Custom Delivery Zone).";   
     } 
     else if ($time_zone < 0) 
     {
