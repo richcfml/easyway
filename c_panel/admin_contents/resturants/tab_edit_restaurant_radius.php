@@ -285,15 +285,7 @@ if (isset($_POST['submit'])) {
     else if ($fax == '') 
     {
         $errMessage = "Please enter fax number";
-    } 
-    else if (!empty($_FILES['userfile']['name'])) 
-    {
-        $errMessage = "Pleaser Enter Valid Logo";
-    } 
-    else if (!empty($_FILES['userfile2']['name'])) 
-    {
-        $errMessage = "Pleaser Enter Valid Logo Thumbnail";
-    } 
+    }
     else if ($rest_zip == '') 
     {
         $errMessage = "Please enter resturant zip code";
