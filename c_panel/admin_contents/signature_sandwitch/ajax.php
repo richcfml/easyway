@@ -33,15 +33,16 @@ if (isset($_GET['add_item']))
     {  
         
         $product_description = replaceBhSpecialChars($product_description);
-        $product_description = preg_replace("/(^)?(<br\s*\/?>\s*)+$/", "", $product_description);
-		if($id > 0){
-			$qry = "UPDATE bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."' WHERE id='$id'";
-			dbAbstract::Update($qry, 1, 0);
-		  	$lastid = $id;
-		}else{
-        	$qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."'";
-		  	$lastid = dbAbstract::Insert($qry, 1, 2);
-		}
+        $product_description = preg_replace_callback("/(^)?(<br\s*\/?>\s*)+$/", function ($matches) { return ''; }, $product_description);
+                
+        if($id > 0){
+                $qry = "UPDATE bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."' WHERE id='$id'";
+                dbAbstract::Update($qry, 1, 0);
+                $lastid = $id;
+        }else{
+        $qry = "INSERT INTO bh_signature_sandwitch set item_name = '" . ucfirst(addslashes($item_name)) . "', item_desc = '" . prepareStringForMySQL($product_description) . "', start_date = '".$start_date."', end_date = '".  $end_date."'";
+                $lastid = dbAbstract::Insert($qry, 1, 2);
+        }
         
         if (!empty($_GET['ext']))
         {
