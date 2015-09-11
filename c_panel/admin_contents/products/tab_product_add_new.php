@@ -54,6 +54,16 @@ if (isset($_GET['sub_cat'])) {
 }
 if (isset($_GET['sandwichId'])) {
     $signature_sandwitch_id = $_GET['sandwichId'];
+    $ssp_qry=dbAbstract::Execute("select status from product where cat_id='$Objrestaurant->id' AND signature_sandwitch_id='$signature_sandwitch_id'");
+    $ssp_rows=dbAbstract::returnRowsCount($ssp_qry);
+    
+    if($ssp_rows > 0){
+        ?>
+    <script type="text/javascript" language="javascript">
+        window.location.href = "<?= $AdminSiteUrl ?>?mod=new_menu&catid=<?= $Objrestaurant->id ?>&menuid=<?= $menuid ?>&menu_name=<?= $menu_name ?>";
+    </script>
+    <?}
+    
     $sandwitch_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = " . $signature_sandwitch_id . "",1);
     $item_name = $sandwitch_data->item_name;
     $description = $sandwitch_data->item_desc;
