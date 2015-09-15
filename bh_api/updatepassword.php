@@ -73,7 +73,7 @@ if (isset($_POST['password']) && $result != -2){
   <div class="wrapper text-center">
   	<div class="contents">
     	<div id="logo"><a href="#"><img src="../images/bh_logo.png"></a></div>
-        <div id="main">
+        <div id="main" style="margin-top:-5px">
       <div class="container">
         <div class="row">
           <div class="col-md-3 col-sm-3 col-xs-12">&nbsp;</div>
@@ -117,10 +117,10 @@ if (isset($_POST['password']) && $result != -2){
     </div>
     </div>
     <footer>
-        <p class="font_14 upperCase">
+        <p class="font_14 upperCase footer_text bold">
             powered by <img src="../images/bh_logo2.png" width="150">
         </p>
-        <p>
+        <p class="footer_text">
             &copy; 2015 Boar’s Head Brand&reg; All rights reserved.
         </p>
     </footer> 

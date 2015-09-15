@@ -6,7 +6,7 @@ body{
 	background:#191714; 
 	padding:20px 0px; 
 	text-align:center; 
-	margin-bottom:15px;
+	margin-bottom:0px;
 }
 #main{
 	color:#c3bcae;
@@ -29,8 +29,8 @@ h1{
 	margin-bottom:10px;
 	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif !important;
 	font-style:italic;
-	color:#dfb968;
-	font-size:14px;
+	color:#FFF;
+	font-size:16px;
 	font-weight:normal !important
 }
 .form_group .text_box{
@@ -43,6 +43,7 @@ h1{
 	text-align:center;
 	color:#333;
 	border-radius:5px;
+	padding-top:6px;
 }
 .form_group button{
 	background:#922a1b;
@@ -70,3 +71,7 @@ footer{
 }
 .error_message{ color:#D90505; }
 .success{ color:#059305; }
+.footer_text{
+	color: #c3bcae;
+}
+.bold{ font-weight:bold; }
