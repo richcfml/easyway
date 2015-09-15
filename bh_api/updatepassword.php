@@ -118,7 +118,7 @@ if (isset($_POST['password']) && $result != -2){
     </div>
     <footer>
         <p class="font_14 upperCase footer_text bold">
-            powered by <img src="../images/bh_logo2.png" width="150">
+            powered by  &nbsp;<img src="../images/bh_logo2.png" width="150">
         </p>
         <p class="footer_text">
             &copy; 2015 Boar’s Head Brand&reg; All rights reserved.
