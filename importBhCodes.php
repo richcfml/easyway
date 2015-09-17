@@ -17,17 +17,24 @@ if (isset($_POST['submit']))
                     $mSQL = "SELECT COUNT(*) As RecCount FROM bh_items WHERE ItemCode='".trim($data[0])."'";
                     $mResult = dbAbstract::Execute($mSQL);
                     //$mResult = mysql_query($mSQL);
-                    if ($mResult)
+                    if (dbAbstract::returnRowsCount($mResult)>0)
+                    //if (mysql_num_rows($mResult)>0)
                     {
                         $mRow = dbAbstract::returnObject($mResult);
                         //$mRow = mysql_fetch_object($mResult);
                         if ($mRow)
                         {
+                            $mItemName = replaceBhSpecialChars(trim(utf8_encode($data[1])));
                             if ($mRow->RecCount==0)
                             {
-                                $mItemName = replaceBhSpecialChars(trim($data[1]));
                                 $mSQL = "INSERT into bh_items (ItemCode, ItemName) VALUES ('".trim($data[0])."','".$mItemName."')";
                                 dbAbstract::Insert($mSQL);
+                                //mysql_query($mSQL);
+                            }
+                            else
+                            {
+                                $mSQL = "UPDATE bh_items SET ItemName='".$mItemName."' WHERE ItemCode='".trim($data[0])."'";
+                                dbAbstract::Update($mSQL);
                                 //mysql_query($mSQL);
                             }
                         }
