@@ -428,7 +428,25 @@ else if ($mVerifyRequest==3) //Session ID expred
 /* General (Helping) Functions Starts Here */
 function adminLogin()
 {   
-    $qry = "Select * from users where ewo_api_key = '".$_GET["apikey"]."'";
+    $mApiKey = "";
+    foreach (getallheaders() as $name => $value) 
+    {
+        if (trim(strtolower($name))=="apikey")
+        {
+            $mApiKey = trim($value);
+        }
+    }
+    //$mStartTime = strtotime(date("Y-m-d H:i:s"));
+    
+    if ($mApiKey == "")
+    {
+        if (isset($_GET["apikey"]))
+        {
+            $mApiKey = $_GET["apikey"];
+        }
+    }
+    
+    $qry = "Select * from users where ewo_api_key = '".$mApiKey."'";
     Log::write("Admin Login - sso.php - IF", "QUERY --".$qry, 'menu', 1);
     $exeQry = dbAbstract::Execute($qry);
     $resultArray = dbAbstract::returnObject($exeQry);
@@ -451,9 +469,27 @@ function adminLogin()
 }
 function verifyRequest()
 {
-    if (isset($_GET["apikey"]))
+    $mApiKey = "";
+    foreach (getallheaders() as $name => $value) 
     {
-        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$_GET["apikey"]."'");
+        if (trim(strtolower($name))=="apikey")
+        {
+            $mApiKey = trim($value);
+        }
+    }
+    //$mStartTime = strtotime(date("Y-m-d H:i:s"));
+    
+    if ($mApiKey == "")
+    {
+        if (isset($_GET["apikey"]))
+        {
+            $mApiKey = $_GET["apikey"];
+        }
+    }
+    
+    if ($mApiKey!="")
+    {
+        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$mApiKey."'");
         $qryCount = dbAbstract::returnRowsCount($Qry);
         if ($qryCount <= 0)
         {
@@ -469,6 +505,7 @@ function verifyRequest()
         return 2; //sso (session id) not present
     }
 }
+
 function errorFunction($errorCode,$errorDescription,$errorMessage,$errorTitile)
 {
     $result = array(

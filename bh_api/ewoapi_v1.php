@@ -1110,13 +1110,13 @@ function verifyRequest()
     }
     //$mStartTime = strtotime(date("Y-m-d H:i:s"));
     
-    /*if ($mApiKey == "")
+    if ($mApiKey == "")
     {
         if (isset($_GET["apikey"]))
         {
             $mApiKey = $_GET["apikey"];
         }
-    }*/
+    }
     
     if ($mApiKey!="")
     {
