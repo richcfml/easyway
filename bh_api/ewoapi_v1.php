@@ -1100,10 +1100,27 @@ function doProcessing($rest_url, $pLat="", $pLong="", $pUserID=0)
 function verifyRequest()
 {
     global $mAPICallNumber;
-    //$mStartTime = strtotime(date("Y-m-d H:i:s"));
-    if (isset($_GET["apikey"]))
+    $mApiKey = "";
+    foreach (getallheaders() as $name => $value) 
     {
-        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$_GET["apikey"]."'");
+        if (trim(strtolower($name))=="apikey")
+        {
+            $mApiKey = trim($value);
+        }
+    }
+    //$mStartTime = strtotime(date("Y-m-d H:i:s"));
+    
+    if ($mApiKey == "")
+    {
+        if (isset($_GET["apikey"]))
+        {
+            $mApiKey = $_GET["apikey"];
+        }
+    }
+    
+    if ($mApiKey!="")
+    {
+        $Qry = dbAbstract::Execute("Select * from users where ewo_api_key = '".$mApiKey."'");
         $qryCount = dbAbstract::returnRowsCount($Qry);
         if ($qryCount <= 0)
         {
@@ -1833,7 +1850,24 @@ function getorderdetails($OrderID)
     if(dbAbstract::returnRowsCount($prdQuery) > 0)
     {
         $Ord_RS=dbAbstract::returnArray($prdQuery,MYSQL_BOTH);
-        $userQry = dbAbstract::ExecuteArray("Select id,type from users where ewo_api_key ='".$_GET["apikey"]."'");
+        $mApiKey = "";
+        foreach (getallheaders() as $name => $value) 
+        {
+            if (trim(strtolower($name))=="apikey")
+            {
+                $mApiKey = trim($value);
+            }
+        }
+        
+        if ($mApiKey == "")
+        {
+            if (isset($_GET["apikey"]))
+            {
+                $mApiKey = $_GET["apikey"];
+            }
+        }
+        
+        $userQry = dbAbstract::ExecuteArray("Select id,type from users where ewo_api_key ='".$mApiKey."'");
         if($userQry['type']=='bh')
         {
             $mSQLBH = dbAbstract::ExecuteObject("SELECT bh_restaurant FROM resturants WHERE id=".$Ord_RS['cat_id']);
