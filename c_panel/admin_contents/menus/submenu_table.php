@@ -165,11 +165,10 @@
                                         <tr sub_cat="<?=$mRow["cat_id"]?>">
                                             <td style=" font-size: 12px;" sub_cat="<?=$mRow["cat_id"]?>">
                                                 <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 45px;">
-                                                      <tr style="height: 20px;" sub_cat="<?=$mRow["cat_id"]?>">
-                                                            <td valign="top" width="100%" sub_cat="<?=$mRow["cat_id"]?>">
-
-                                                                <div class="enable-menu-options" sub_cat="<?=$mRow["cat_id"]?>">
-                                                                <?php
+                                                    <tr style="height: 20px;" sub_cat="<?=$mRow["cat_id"]?>">
+                                                        <td valign="top" style="width: 85%;" sub_cat="<?=$mRow["cat_id"]?>">
+                                                            <div class="enable-menu-options" sub_cat="<?=$mRow["cat_id"]?>">
+                                                            <?php
                                                                 if ($mRowPr["item_image"]) {
                                                                 ?>
                                                                     <div id="dvIcon" sub_cat="<?=$mRow["cat_id"]?>">
@@ -185,55 +184,55 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td sub_cat="<?=$mRow["cat_id"]?>">
+                                                        <td sub_cat="<?=$mRow["cat_id"]?>" style="width: 15%;">
                                                             <img src="img/move.png" alt="Move" title="Move" id="imgMove" style="float: left;" class="imgMove" sub_cat="<?=$mRow["cat_id"]?>"/>
                                                         </td>
                                                     </tr>
-                                                <tr sub_cat="<?=$mRow["cat_id"]?>">
-                                                    <td style="width: 200px;float:left" sub_cat="<?=$mRow["cat_id"]?>">
-                                                        <? if ($mRowPr['status'] == 1) {
-                                                        ?>
+                                                    <tr sub_cat="<?=$mRow["cat_id"]?>">
+                                                        <td style="width: 85%; float:left" sub_cat="<?=$mRow["cat_id"]?>">
+                                                            <?php 
+                                                                if ($mRowPr['status'] == 1) 
+                                                                {
+                                                            ?>
                                                                 <div style="float: left;margin-right: 10px;margin-left: 30px;" sub_cat="<?=$mRow["cat_id"]?>">
                                                                     <img src="img/enable.png" width="16" height="16" border="0" data-tooltip="Enabled" class ="rdb_status" alt="<?= $mRowPr["prd_id"] ?>" status="<?= $mRowPr["status"] ?>" sub_cat="<?=$mRow["cat_id"]?>"/>
                                                                 </div>
-                                                        <? } else if ($mRowPr['status'] == 0) {
-                                                        ?>
+                                                            <?php 
+                                                                } 
+                                                                else if ($mRowPr['status'] == 0) 
+                                                                {
+                                                            ?>
                                                                 <div style="float: left;margin-right: 10px;margin-left: 30px;" sub_cat="<?=$mRow["cat_id"]?>">
                                                                     <img src="img/disable.png" width="16" height="16" border="0" data-tooltip="Disabled" class ="rdb_status" alt="<?= $mRowPr["prd_id"] ?>" status="<?= $mRowPr["status"] ?>" sub_cat="<?=$mRow["cat_id"]?>"/>
                                                                 </div>
-                                                        <? } ?>
-                                                            
-                                                            <!--	Item Title -->
+                                                            <?php 
+                                                                } 
+                                                            ?>
                                                             <div style="margin-left: 55px; font-weight: bold; <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'text-align:left;color:#FFF;width:100%':'')?>" sub_cat="<?=$mRow["cat_id"]?>" class="<?=(($mRowPr["status"] == 0)? 'disable-menu':'enable-menu')?> <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'ss_prodTitle':'')?>">
                                                               <div style="width:150px">
-															  <?= wordwrap($mRowPr["item_title"], 10, "\n", true); ?>
+                                                                    <?= wordwrap($mRowPr["item_title"], 10, "\n", true); ?>
                                                               </div>
                                                             </div>
                                                             <span id="lblProductID" sub_cat="<?=$mRow["cat_id"]?>" style="display: none;"><?= $mRowPr["prd_id"] ?></span>
                                                         </td>
-                                                        
-                                                        <!--	Item Price -->
-                                                        <td style=" font-size: 12px;float:left;margin-left: 10px;" sub_cat="<?=$mRow["cat_id"]?>">
-                                                          <div sub_cat="<?=$mRow["cat_id"]?>" class="<?=(($mRowPr["status"] == 0)? 'disable-menu':'enable-menu')?>" <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'style="color:#FFF;margin-top: 5px;"':'')?>>
-														  	<?= $currency . $mRowPr["retail_price"] ?>
-                                                          </div>
+                                                        <td style="font-size: 12px; float:left; width: 15%;" sub_cat="<?=$mRow["cat_id"]?>">
+                                                            <div sub_cat="<?=$mRow["cat_id"]?>" class="<?=(($mRowPr["status"] == 0)? 'disable-menu':'enable-menu')?>" <?=(($mRowPr['signature_sandwitch_id'] > 0)? 'style="color:#FFF;margin-top: 5px;"':'')?>>
+                                                                <?= $currency . $mRowPr["retail_price"] ?>
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                    
-                                                    <!--	Item Description	 -->
                                                     <tr sub_cat="<?=$mRow["cat_id"]?>">
-                                                        <td style="font-style: italic;width: 200px;word-wrap: break-word;" sub_cat="<?=$mRow["cat_id"]?>">
+                                                        <td style="font-style: italic; width: 100%;word-wrap: break-word;" sub_cat="<?=$mRow["cat_id"]?>" colspan="2">
                                                             <?php
-															// If Signature Sandwich Than Get start date and End Date
-                                                            if($mRowPr['signature_sandwitch_id'] > 0){
-															  echo '<div style="margin-left: 55px;" class="ss_prodDates">Featured Sandwich '.
-															  		date('m/d',strtotime($ss_obj->start_date)).' - '.date('m/d',strtotime($ss_obj->end_date)).
-																	'</div>';
-															}
-															?>
-                                                            
+                                                            if($mRowPr['signature_sandwitch_id'] > 0)
+                                                            {
+                                                            echo '<div style="margin-left: 55px;" class="ss_prodDates">Featured Sandwich '.
+                                                                    date('m/d',strtotime($ss_obj->start_date)).' - '.date('m/d',strtotime($ss_obj->end_date)).
+                                                                '</div>';
+                                                            }
+                                                            ?>
                                                             <div sub_cat="<?=$mRow["cat_id"]?>" style="margin-left:55px;width: 200px; <?=(($mRowPr['signature_sandwitch_id']>0)? 'color:#c3bcaf':'')?>" class="<?=(($mRowPr["status"]==0)? 'disable-menu':'enable-menu')?>">
-																<?= wordwrap($mRowPr["item_des"], 20, "\n", false); ?>
+                                                                <?= wordwrap($mRowPr["item_des"], 20, "\n", false); ?>
                                                             </div>
                                                         </td>
                                                     </tr>
