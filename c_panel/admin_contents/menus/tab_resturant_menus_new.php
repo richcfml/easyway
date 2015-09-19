@@ -152,13 +152,22 @@ if(isset($_POST['btnDeleteMenu']) && $_POST['allowDelete']==1)
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <title>jQuery Test</title>
         <link rel="stylesheet" type="text/css" href="css/tab.css">
-        
-        <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>-->
-        
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/normalize.css">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+        <?php
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+        {
+        ?>
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+        <?php
+        }
+        else
+        {
+        ?>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+        <?php
+        }
+        ?>
         
         <script type="text/javascript" src="js/jquery.dnd_page_scroll.js"></script>
         <script type="text/javascript" src="js/new-menu.js<?php echo $jsParameter;?>"></script>
