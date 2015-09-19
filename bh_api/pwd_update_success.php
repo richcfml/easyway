@@ -22,10 +22,10 @@
         
     </div>
     <footer class="text-center">
-        <p class="font_14 upperCase">
+        <p class="font_14 upperCase" style="color:#B7B7B7">
             powered by <img src="../images/bh_logo2.png" width="150">
         </p>
-        <p>
+        <p style="color:#B7B7B7">
             &copy; 2015 Boar’s Head Brand&reg; All rights reserved.
         </p>
     </footer>
