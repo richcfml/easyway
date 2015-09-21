@@ -1,6 +1,19 @@
-<!--https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=baa71229d8d85d5eba66427133455eea&per_page=500&format=json&user_id=fadedfilmstrips-->
+<?php
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+{
+?>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<?php
+}
+else
+{
+?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<?php
+}
+?>
 <script type="text/javascript" src="js/new-menu.js<?php echo $jsParameter;?>"></script>
 <link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
 <script src="../js/mask.js" type="text/javascript"></script>
@@ -819,7 +832,20 @@ if($_POST['cropimg'])
                                                             function FlickrImport()
                                                             {
                                                                     $("#imgAjaxFlickr").show();
-                                                                    $.getScript("http://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json&per_page=100");
+                                                                    <?php
+                                                                    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+                                                                    {
+                                                                    ?>
+                                                                    $.getScript("https://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json");
+                                                                    <?php
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    ?>
+                                                                    $.getScript("http://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json");
+                                                                    <?php
+                                                                    }
+                                                                    ?>
                                                             }
                                                     </script>
                                                     <span style="font-size: 16px;">Enter your Flickr ID:</span>&nbsp;&nbsp;<input type="text" id="txtFlickrID" style="width: 200px; height: 30px; font-size: 16px;"/>&nbsp;&nbsp;&nbsp;<input class='btnadd' onclick='FlickrImport();' type='button' id='btnGoFlickr' name='btnGoFlickr' value='Show Photos' size='60' style='margin-left: 0px !important; width: 90px !important;' />&nbsp;<img src="images/ajax.gif" alt="Processing" style="display: none;" id="imgAjaxFlickr" /><br />

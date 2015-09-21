@@ -1,6 +1,19 @@
-<!--https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=baa71229d8d85d5eba66427133455eea&per_page=500&format=json&user_id=fadedfilmstrips-->
+<?php
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+{
+?>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<?php
+}
+else
+{
+?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<?php
+}
+?>
 <script type="text/javascript" src="js/new-menu.js<?php echo $jsParameter;?>"></script>
 <link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
 <script src="../js/mask.js" type="text/javascript"></script>
@@ -774,7 +787,20 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 						
 						function FlickrImport(){
 							$("#imgAjaxFlickr").show();
-							$.getScript("http://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json");
+                                                        <?php
+                                                        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+                                                        {
+                                                        ?>
+							$.getScript("https://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json");
+                                                        <?php
+                                                        }
+                                                        else
+                                                        {
+                                                        ?>
+                                                        $.getScript("http://api.flickr.com/services/feeds/photos_public.gne?id="+$("#txtFlickrID").val()+"&lang=en-us&format=json");
+                                                        <?php
+                                                        }
+                                                        ?>
 						}
 					  </script>
                       
