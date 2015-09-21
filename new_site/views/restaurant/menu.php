@@ -1243,7 +1243,8 @@ $.each(attributeRequired, function(index, value) {
                 var itemTitleIs = $(this).attr('myItemTitle');
                 var itemDescIs = $(this).attr('myItemDescription');
                 var itemImageIs = $(this).attr('myItemImage');
-                var imageHTML = itemImageIs ? '<img style="float:right" class="images" src="/images/item_images/' + itemImageIs + '"/>' : '';
+                //var imageHTML = itemImageIs ? '<img style="float:right" class="images" src="/images/item_images/' + itemImageIs + '"/>' : '';
+                var imageHTML = '';
                 var myNewHTML = $('<div class="popupDiv"><span>' + itemTitleIs + '</span><br /><br />' + itemDescIs + ' ' + imageHTML + '</div>');
                 ddrivetip(myNewHTML.html());
                 positiontip(e);
