@@ -630,7 +630,14 @@ if (isset($_POST['submit'])) {
             );
         }
         $addresslink = str_replace(' ', '+', $rest_address . " " . $rest_city . " " . $rest_state);
-        $result = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . $addresslink . '&sensor=false');
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+        {
+            $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $addresslink . '&sensor=false');
+        }
+        else
+        {
+            $result = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . $addresslink . '&sensor=false');
+        }
         $array = (json_decode($result, true));
         if (!empty($array['results'][0]['geometry']['location']['lat']))
         {
@@ -1546,9 +1553,23 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
     var polygon_resizing = false; //To track Polygon Resizing 
 
 //Polygon Marker/Node icons 
-    image = "http://maps.google.com/mapfiles/ms/icons/red-pushpin.png";
-    image = "http://maps.google.com/mapfiles/ms/icons/blue-pushpin.png";
-
+    <?php
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+    {
+    ?>
+        image = "https://maps.google.com/mapfiles/ms/icons/red-pushpin.png";
+        image = "https://maps.google.com/mapfiles/ms/icons/blue-pushpin.png";
+    <?php
+    }
+    else
+    {
+    ?>
+        image = "http://maps.google.com/mapfiles/ms/icons/red-pushpin.png";
+        image = "http://maps.google.com/mapfiles/ms/icons/blue-pushpin.png";
+    <?php
+    }
+    ?>
+    
     function initializeMap(latitude, longitude) { //Initialize google.maps.oogle Map
         if (google.maps.BrowserIsCompatible()) {
             map = new google.maps.Map2(document.getElementById("map_canvas")); //New google.maps.Map object
