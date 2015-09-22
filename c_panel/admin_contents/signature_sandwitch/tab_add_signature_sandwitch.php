@@ -123,8 +123,24 @@ if (isset($_GET['ssid'])) {
 	}
 }
 ?>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<?php
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") 
+{
+?>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.6.2.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+    <script src= "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<?php
+}
+else
+{
+?>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<?php
+}
+?>
 <link rel="stylesheet" type="text/css" href="css/new_menu.css<?php echo $jsParameter;?>">
 <script src="../js/mask.js" type="text/javascript"></script>
 <script src="js/jquery.Jcrop.min.js"></script>
@@ -135,7 +151,7 @@ if (isset($_GET['ssid'])) {
 <script src="js/fancybox.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/fancy.css">
 <script src="js/block.js" type="text/javascript"></script>
-<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
 <style type="text/css">
     .BodyContainer
     {
