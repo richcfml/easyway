@@ -1,9 +1,16 @@
 <?php
 if((!isset($_SERVER['HTTPS'])) || ($_SERVER['HTTPS'] == "") || ($_SERVER['HTTPS'] == "off"))
 {
+    echo("!11111111111111111");
+    exit;
     $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: $redirect");
+}
+else
+{
+    echo("!2222222222222222");
+    exit;
 }
 
 require_once "includes/config.php";
