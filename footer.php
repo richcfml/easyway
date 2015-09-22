@@ -4,10 +4,11 @@
 	<div style="padding: 20px 0px;	"> 
     <div class="grid50 floatleft">  
      <ul class="  grid100 floatleft">
-          <li><a href="about.php?careers=1">Careers</a></li>
+          <li style="width:15%"><a href="about.php?careers=1">Careers</a></li>
           <li><a href="#">Developers</a></li>
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="support.php">Support</a></li>
+          <li style="width:15%"><a href="privacy.php">Privacy</a></li>
+          <li style="width:15%"><a href="support.php">Support</a></li>
+          <li style="width:25%"><a href="tos.php">Terms of Services</a></li>
       
           </ul>
           
