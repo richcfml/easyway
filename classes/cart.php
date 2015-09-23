@@ -404,6 +404,7 @@ class cart
 	//Modified01082013
     public function createNewOrder($userId,$userAddress,$serving_date,$asap,$payment_method,$invoice_number,$payment_approve,$type,$cc,$data_2,$transaction_id, $platform_used, $is_guest=0,$del_special_notes, $pCarkTokenOrderTbl = "")
     {
+		global $loggedinuser;
         $mSQL = "UPDATE customer_registration SET orders_count=orders_count+1 WHERE id=$userId";
         dbAbstract::Update($mSQL);
         
@@ -457,7 +458,11 @@ class cart
             if (($result->total==0) && ($type!=0) && ($cc!=0))
             {
                 $mSQL = "insert into general_detail(id_2,data_type,data_1,data_2) values($userId ,'$type' ,'$cc','$data_2')";
-                dbAbstract::Insert($mSQL);
+				if($loggedinuser->ssoUserId > 0){
+					$mSQL = "insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2) values('".$loggedinuser->ssoUserId."', $userId ,'$type' ,'$cc','$data_2')";
+				}
+				
+				dbAbstract::Insert($mSQL);
             }
         }
         $this->order_created=1;	

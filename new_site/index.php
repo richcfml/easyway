@@ -1,5 +1,5 @@
 <?php
-    $site_base = '../';
+	$site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";
 	$js_root=$site_base."js/";
@@ -87,7 +87,8 @@
 					dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
 ?>
 				<form method="post" name="sso_login" action="<?=$SiteUrl.$objRestaurant->url.'/?item=login'?>">
-                	<input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
+                	<input type="hidden" name="ssoUserId" value="<?=$sso_row->id?>"/>
+                    <input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
                     <input type="hidden" name="login" value="sso"/>
                 </form>
                 <script language="javascript">
@@ -103,9 +104,9 @@
 			else{
 			  // if customer record not exist than register & login
 			  $loggedinuser->cust_email=  $sso_row->email;
-                          $mSalt = hash('sha256', mt_rand(10,1000000));    
-                          $loggedinuser->salt= $mSalt;
-                          $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
+			  $mSalt = hash('sha256', mt_rand(10,1000000));    
+			  $loggedinuser->salt= $mSalt;
+			  $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
 			  $loggedinuser->cust_your_name= trim($sso_row->firstName);
 			  $loggedinuser->LastName= trim($sso_row->lastName);
 			  $loggedinuser->street1= trim($sso_row->address1) ;
@@ -122,14 +123,17 @@
 			  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
 			  
 			  $loggedinuser->resturant_id =$objRestaurant->id;
+			  $loggedinuser->ssoUserId = $sso_row->id;
+			  
 			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail);
 			  if($result===true)
-                          {
-                            redirect($SiteUrl.$objRestaurant->url."/");
-                            exit;	
+			  {
+				redirect($SiteUrl.$objRestaurant->url."/");
+				exit;	
 			  }
 			}
-		}else{
+		}
+		else{
 			echo '<div style="width=100%; text-align:center; color:#F00; height:20px; width:982px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid session id or session id has been expired.</div>';
 		}
 	}

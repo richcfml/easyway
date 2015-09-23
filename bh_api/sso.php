@@ -105,7 +105,7 @@ if ($mVerifyRequest==1) //Valid Session
                 }
                 $expiryDate = date("c",  strtotime("+1 day"));  
                 $date = strtotime($expiryDate);
-                Log::write("Sign In - sso.php - IF", "QUERY --".$mSQL, 'sso', 1);
+                Log::write("Sign In - sso.php - IF", "QUERY --".$qry, 'sso', 1);
                 $userResult = dbAbstract::ExecuteObject($qry);
                 Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);
                 if ($userResult->id >0)
@@ -158,16 +158,17 @@ if ($mVerifyRequest==1) //Valid Session
                                 "loyality_member" => "$userResult->loyality_member"
                                 );
 
-                                  if(isset($_GET['slug']) && !empty($_GET['slug'])){
+                                  //if(isset($_GET['slug']) && !empty($_GET['slug'])){
                                         // Getting CC Info Start
-                                        $stmt = "select g.id, g.data_type, g. data_1, g.data_2, c.id as cust_id, r.url_name
+                                        $stmt = "select g.id, g.data_type, g.data_1, g.data_2, c.id as cust_id, r.url_name
                                                         From general_detail g, resturants r, customer_registration c
-                                                        where g.id_2=c.id and c.resturant_id=r.id and g.sso_user_id='".$userResult->id."' and r.url_name='".$_GET['slug']."'";
+                                                        where g.id_2=c.id and c.resturant_id=r.id and g.sso_user_id='".$userResult->id."'";
+														
+										//$stmt = "select id, data_type, data_1, data_2 From general_detail where sso_user_id='$sso_userId'";
 										$rs = dbAbstract::Execute($stmt);
-                                        $ccinfo_arr = array();
+										$ccinfo_arr = array();
                                         while($row = dbAbstract::returnObject($rs)){
                                                 $ccinfo_arr[] = array('restaurant' => $row->url_name,
-																	  'user_id' => urlencode(base64_encode($row->cust_id)),
 																	  'cc_id' => urlencode(base64_encode($row->id)),
 																	  'cc_type' => $row->data_type,
 																	  'cc_endwith' => $row->data_1,
@@ -178,7 +179,7 @@ if ($mVerifyRequest==1) //Valid Session
                                         if(count($ccinfo_arr) > 0){
                                                 $mReturn[] = $ccinfo_arr;
                                         }
-                                }
+                                //}
                         }
                         else
                         {
@@ -248,7 +249,7 @@ if ($mVerifyRequest==1) //Valid Session
 							  $mReturn = errorFunction("14", "0 rows updated", "Record not updated.","Data Error");
 						  }
 						}
-						elseif(isset($_GET['cc_action']) && !empty($_GET['slug'])){
+						elseif(isset($_GET['cc_action'])){
 						  $email = $userResult->email;
 						  include_once ("../classes/Restaurant.php");
 						  $objRestaurant = new Restaurant();
@@ -256,11 +257,10 @@ if ($mVerifyRequest==1) //Valid Session
 						  
 						  switch($_GET['cc_action']){
 							case 'delete':
-							  if(!empty($_GET['cc_id']) &&  !empty($_GET['user_id'])){
+							  if(!empty($_GET['cc_id'])){
 								$ccid = base64_decode(urldecode($_GET['cc_id']));
-								$userid = base64_decode(urldecode($_GET['user_id']));
 								
-								$gd_rs = dbAbstract::Execute("select * from general_detail where id='$ccid' and id_2='$userid'");
+								$gd_rs = dbAbstract::Execute("select * from general_detail where id='$ccid'");
 								if(dbAbstract::returnRowsCount($gd_rs) > 0){
 								  $gd_row = dbAbstract::returnObject($gd_rs);
 								  //echo "<pre>"; print_r($gd_row); echo "</pre>";

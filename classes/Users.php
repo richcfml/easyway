@@ -177,17 +177,17 @@ class Users
 	/*
 	*	Login sso user
 	*/
-    public function ssoUserLogin($email, $restaurant_id)
+    public function ssoUserLogin($email, $restaurant_id, $ssoUserId)
     {
         $email    = prepareStringForMySQL($email);
         $user_qry = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and resturant_id= '" . $restaurant_id . "'", 1);
-        return $this->login($user_qry, 1);
+        return $this->login($user_qry, 1, 0, $ssoUserId);
     }
     
 	/*
 	*	login user
 	*/
-    private function login($user_qry, $pC_Panel, $loginById = 0)
+    private function login($user_qry, $pC_Panel, $loginById = 0, $ssoUserId=0)
     {
         if (dbAbstract::returnRowsCount($user_qry) > 1 || dbAbstract::returnRowsCount($user_qry) == 0) {
             return NULL;
@@ -196,7 +196,7 @@ class Users
         $user = dbAbstract::returnObject($user_qry, $pC_Panel, "users");
         if ($loginById == 0) {
             $user->delivery_address_choice = 1;
-            $user->getUserCCTokens();
+            $user->getUserCCTokens($ssoUserId);
             $user->loadUserFavorites();
         }
         return $user;
@@ -291,11 +291,15 @@ class Users
 	/*
 	*	Get user cc tokens
 	*/
-    public function getUserCCTokens()
+    public function getUserCCTokens($ssoUserId=0)
     {
+		global $loggedinuser;
         $this->arrTokens = array();
         $mSQL            = "SELECT * FROM general_detail WHERE id_2=" . $this->id . " ORDER BY data_3 DESC";
-        $tokens          = dbAbstract::Execute($mSQL);
+		if($ssoUserId > 0){
+			$mSQL            = "SELECT * FROM general_detail WHERE id_2=" . $this->id . " OR sso_user_id='$ssoUserId' ORDER BY data_3 DESC";
+		}
+		$tokens          = dbAbstract::Execute($mSQL);
         while ($token = dbAbstract::returnObject($tokens)) {
             $this->arrTokens[] = $token;
         }
@@ -329,6 +333,7 @@ class Users
 	*/
     public function updateCustomerRegistration()
     {
+		global $loggedinuser;
         $this->cust_odr_address  = $this->street1 . '~' . $this->street2;
         $this->delivery_address1 = $this->delivery_street1 . '~' . $this->delivery_street2;
         
@@ -352,6 +357,24 @@ class Users
         
         dbAbstract::Update($qry);
         $this->saveToSession();
+		
+		// Update Bh SSO User Info
+		if($loggedinuser->ssoUserId > 0){
+			$qry = "update bh_sso_user set
+					email='" . prepareStringForMySQL($this->cust_email) . "', 
+					firstName='" . prepareStringForMySQL($this->cust_your_name) . "', 
+					lastName='" . prepareStringForMySQL($this->LastName) . "', 
+					address1='" . prepareStringForMySQL($this->street1) . "',
+					address2='" . prepareStringForMySQL($this->street2) . "', 
+					city='" . prepareStringForMySQL($this->cust_ord_city) . "', 
+					state='" . prepareStringForMySQL($this->cust_ord_state) . "', 
+					zip='" . prepareStringForMySQL($this->cust_ord_zip) . "', 
+					phone='" . prepareStringForMySQL($this->cust_phone1) . "', 
+					password='" . prepareStringForMySQL($_POST['user_password']) . "'
+					where id=" . $loggedinuser->ssoUserId . "";
+			dbAbstract::Update($qry);
+		}
+		
         return true;
         
     }
@@ -572,6 +595,7 @@ class Users
 	*/
     public function saveCCTokenWithExpiry($secure_data, $token, $default, $pCardExpiry)
     {
+		global $loggedinuser;
         $type = substr($secure_data, 0, 1);
         $cc   = substr($secure_data, -4, 4);
         
@@ -579,6 +603,11 @@ class Users
         $result = dbAbstract::ExecuteObject($mSQL);
         if (($result->total == 0) && ($type != 0) && ($cc != 0)) {
             $mSQL = "INSERT INTO general_detail (id_2,data_type,data_1,data_2,card_expiry) VALUES(" . $this->id . " ,'$type' ,'$cc','$token'," . $pCardExpiry . ")";
+			
+			if($loggedinuser->ssoUserId > 0){
+				$mSQL = "insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2) values('".$loggedinuser->ssoUserId."' $userId ,'$type' ,'$cc','$data_2')";
+			}
+			
             dbAbstract::Insert($mSQL);
             if ($default == 1) {
                 $this->setUserDefaultCard($token);

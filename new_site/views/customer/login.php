@@ -15,7 +15,7 @@ if (isset($_POST['login']))
     $user_email = $_POST['email'];
     if($_POST['login']=='sso')
     {
-        $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id);
+        $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id, $_POST['ssoUserId']);
     }
     else
     {
@@ -70,7 +70,11 @@ if (isset($_POST['login']))
         {
             $loggedinuser->delivery_street2 = $address1[1];
         }
-
+		
+		if($_POST['login']=='sso'){
+			$loggedinuser->ssoUserId = $_POST['ssoUserId'];
+		}
+		
         $loggedinuser->saveToSession();
         $result = true;
         $itemcount= $cart->totalItems();
