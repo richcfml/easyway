@@ -123,9 +123,9 @@
 			  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
 			  
 			  $loggedinuser->resturant_id =$objRestaurant->id;
-			  $loggedinuser->ssoUserId = $sso_row->id;
 			  
 			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail);
+			  $loggedinuser->ssoUserId = $sso_row->id;
 			  if($result===true)
 			  {
 				redirect($SiteUrl.$objRestaurant->url."/");
