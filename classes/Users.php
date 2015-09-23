@@ -382,7 +382,7 @@ class Users
 	/*
 	*	register new cutomer 
 	*/
-    public function customerRegistration(&$objRestaurant, &$objMail)
+    public function customerRegistration(&$objRestaurant, &$objMail, $ssoUserId=0)
     {
         $this->resturant_id = $objRestaurant->id;
         
@@ -395,7 +395,10 @@ class Users
         
         $this->createNewUser();
         if (is_numeric($this->id)) {
-            $this->delivery_address_choice = 1;
+			$this->delivery_address_choice = 1;
+			if($ssoUserId > 0){
+				$this->getUserCCTokens($ssoUserId);
+			}
             $this->saveToSession();
             $this->sendUserRegisterationEmail($objRestaurant, $objMail);
             return true;

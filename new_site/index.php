@@ -1,5 +1,4 @@
 <?php
-
 	$site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";
@@ -124,8 +123,9 @@
 			  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
 			  
 			  $loggedinuser->resturant_id =$objRestaurant->id;
+			  $loggedinuser->ssoUserId = $sso_row->id;
 			  
-			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail);
+			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail, $sso_row->id);
 			  $loggedinuser->ssoUserId = $sso_row->id;
 			  if($result===true)
 			  {
