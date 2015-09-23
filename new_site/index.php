@@ -1,5 +1,5 @@
 <?php
-echo "<pre>"; print_r($loggedinuser); echo "</pre>";
+
 	$site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";
