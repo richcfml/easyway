@@ -357,27 +357,23 @@ class Users
         
         dbAbstract::Update($qry);
         $this->saveToSession();
-		
-		// Update Bh SSO User Info
-		if($loggedinuser->ssoUserId > 0){
-			$qry = "update bh_sso_user set
-					email='" . prepareStringForMySQL($this->cust_email) . "', 
-					firstName='" . prepareStringForMySQL($this->cust_your_name) . "', 
-					lastName='" . prepareStringForMySQL($this->LastName) . "', 
-					address1='" . prepareStringForMySQL($this->street1) . "',
-					address2='" . prepareStringForMySQL($this->street2) . "', 
-					city='" . prepareStringForMySQL($this->cust_ord_city) . "', 
-					state='" . prepareStringForMySQL($this->cust_ord_state) . "', 
-					zip='" . prepareStringForMySQL($this->cust_ord_zip) . "', 
-					phone='" . prepareStringForMySQL($this->cust_phone1) . "', 
-					password='" . prepareStringForMySQL($_POST['user_password']) . "'
-					where id=" . $loggedinuser->ssoUserId . "";
-			dbAbstract::Update($qry);
-		}
-		
         return true;
-        
     }
+	
+	public function updateSSOUserProfile(){
+		global $loggedinuser;
+		$qry = "update bh_sso_user set
+				firstName='" . prepareStringForMySQL($_POST[x_first_name]) . "', 
+				lastName='" . prepareStringForMySQL($_POST[x_last_name]) . "', 
+				address1='" . prepareStringForMySQL($_POST[x_address]) . "',
+				city='" . prepareStringForMySQL($_POST[x_city]) . "', 
+				state='" . prepareStringForMySQL($_POST[x_state]) . "', 
+				zip='" . prepareStringForMySQL($_POST[x_zip]) . "', 
+				phone='" . prepareStringForMySQL($_POST[x_phone]) . "'
+				where id=" . $loggedinuser->ssoUserId . "";
+		$resp = dbAbstract::Update($qry);
+		
+	}
     
 	/*
 	*	register new cutomer 

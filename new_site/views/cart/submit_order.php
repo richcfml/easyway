@@ -54,6 +54,10 @@
             $loggedinuser->billing_city=$_POST[x_city];
             $loggedinuser->billing_state=$_POST[x_state];        
             $loggedinuser->billing_zip=$_POST[x_zip];
+			
+			if($loggedinuser->ssoUserId > 0){
+				$loggedinuser->updateSSOUserProfile();
+			}
         }    
         //End
         if(isset($_POST['customer_name']))
