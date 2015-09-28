@@ -120,7 +120,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                         if (($mLikeCount==0) && ($mDislikeCount==0))
                         {
-                            $mLikePercentage = 0;
+                            $mLikePercentage = "NULL";
                         }
                         else
                         {
@@ -263,7 +263,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                         if (($mLikeCount==0) && ($mDislikeCount==0))
                         {
-                            $mLikePercentage = 0;
+                            $mLikePercentage = "NULL";
                         }
                         else
                         {
@@ -318,7 +318,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                         if (($mLikeCount==0) && ($mDislikeCount==0))
                         {
-                            $mLikePercentage = 0;
+                            $mLikePercentage = "NULL";
                         }
                         else
                         {
@@ -375,7 +375,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                         if (($mLikeCount==0) && ($mDislikeCount==0))
                         {
-                            $mLikePercentage = 0;
+                            $mLikePercentage = "NULL";
                         }
                         else
                         {
@@ -458,7 +458,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                     if (($mLikeCount==0) && ($mDislikeCount==0))
                     {
-                        $mLikePercentage = 0;
+                        $mLikePercentage = "NULL";
                     }
                     else
                     {
@@ -1594,7 +1594,7 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
 
     if (($mLikeCount==0) && ($mDislikeCount==0))
     {
-        $mLikePercentage = 0;
+        $mLikePercentage = "NULL";
     }
     else
     {
@@ -2111,7 +2111,7 @@ function returnLocationArray($rest_url, $mLikePercentage = 0,$pUserID=0)
     $mSignatureSandwich = checkSignatureSandwich($rest_url->id);
     if (($mLikeCount==0) && ($mDislikeCount==0))
     {
-        $mLikePercentage = 0;
+        $mLikePercentage = "NULL";
     }
     else
     {
