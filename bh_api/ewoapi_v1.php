@@ -200,6 +200,7 @@ if ($mVerifyRequest==1) //Valid Session
                 {
                     $getaddress = $_GET['deliversto'];
                     $addresslink = str_replace(' ', '+', $getaddress);
+                    
                     $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
                     $array = (json_decode($result, true));
                     if (!empty($array['results'][0]['geometry']['location']['lat']))
