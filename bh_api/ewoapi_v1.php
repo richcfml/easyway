@@ -876,13 +876,13 @@ if (!(isset($mReturn["errorCode"])))
     }
 }
 
-echo("<pre>");
+/*echo("<pre>");
 print_r($mReturn);
-echo("</pre>");
+echo("</pre>");*/
 
 $json = json_encode($mReturn, true);
 
-//echo($json);
+echo($json);
 /* Search Functions Ends Here */
 
 /* General (Helping) Functions Starts Here */
