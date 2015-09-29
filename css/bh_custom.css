@@ -15,10 +15,14 @@ h1, h2, h3, h4, h5, h6{
 	margin:0px 0px 15px 0px; 
 	font-weight:normal !important; 
 	color:#FFF !important; 
-	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif !important
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif
 }
 h1{
 	font-size:24px !important;
+}
+.heading_style{
+	font-family: Sabon, 'Sabon LT Std', Georgia, Cambria, Times, 'Times New Roman', serif !important;
+	font-style:italic !important;
 }
 .margin-bottom-45{margin-bottom:45px !important}
 .form_group{

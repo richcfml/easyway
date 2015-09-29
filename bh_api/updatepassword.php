@@ -78,7 +78,7 @@ if (isset($_POST['password']) && $result != -2){
         <div class="row">
           <div class="col-md-3 col-sm-3 col-xs-12">&nbsp;</div>
           <div class="col-md-6 col-sm-6 col-xs-12">
-            <h1>Create A New Password</h1>
+            <h1 class="heading_style">Create A New Password</h1>
             <p class="margin-bottom-45">
                 Passwords must be 8-20 characters long and contain one or more capital letters and one or more numbers.
             </p>
@@ -97,11 +97,11 @@ if (isset($_POST['password']) && $result != -2){
               
             <form action="" method="post" class="commentsblock">
                 <div class="form_group">
-                    <label for="password">Enter your new password</label>
+                    <label for="password" class="heading_style">Enter your new password</label>
                     <input type="password" name="password" id="password" class="text_box" placeholder="* * * * * *">
                 </div>
                 <div class="form_group">
-                    <label for="cpassword">Confirm your new password</label>
+                    <label for="cpassword" class="heading_style">Confirm your new password</label>
                     <input type="password" name="cpassword" id="cpassword" class="text_box" placeholder="* * * * * *">
                 </div>
                 
