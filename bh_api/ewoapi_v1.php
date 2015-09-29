@@ -200,7 +200,6 @@ if ($mVerifyRequest==1) //Valid Session
                 {
                     $getaddress = $_GET['deliversto'];
                     $addresslink = str_replace(' ', '+', $getaddress);
-                    
                     $result = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$addresslink.'&sensor=false&key=AIzaSyBOYImEs38uinA8zuHZo-Q9VnKAW3dSrgo');
                     $array = (json_decode($result, true));
                     if (!empty($array['results'][0]['geometry']['location']['lat']))
@@ -1340,8 +1339,8 @@ function getCategories($pMenuID)
     while ($mRowCat = dbAbstract::returnObject($mResCat))
     {
         $arr_categories[] = array(
-                        "category" => replaceSpecialChar($mRowCat->cat_name),
-                        "category_subdescriptions" => replaceSpecialChar($mRowCat->cat_des),
+                        "category" => replaceSpecialChar(strip_tags($mRowCat->cat_name)),
+                        "category_subdescriptions" => replaceSpecialChar(strip_tags($mRowCat->cat_des)),
                         "active" => "true",
                         "items" => getProducts($mRowCat->cat_id)
                     );
@@ -1361,8 +1360,8 @@ function getProducts($pCategoryID)
     while ($mRowProduct = dbAbstract::returnObject($mResProduct))
     {
         $arr_products[] = array(
-                        "name" => replaceSpecialChar($mRowProduct->item_title),
-                        "details" => replaceSpecialChar($mRowProduct->item_des),
+                        "name" => replaceSpecialChar(strip_tags($mRowProduct->item_title)),
+                        "details" => replaceSpecialChar(strip_tags($mRowProduct->item_des)),
                         "price" => $mRowProduct->retail_price,
                         "image_url" => (!empty($mRowProduct->item_image)?$SiteUrl."images/item_images/".$mRowProduct->item_image:""),
                         "posID" => $mRowProduct->pos_id,
