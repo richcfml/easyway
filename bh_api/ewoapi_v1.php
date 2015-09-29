@@ -1423,6 +1423,8 @@ function replaceSpecialChar($string)
     global $mAPICallNumber;
     //$mStartTime = strtotime(date("Y-m-d H:i:s"));
     $string = str_replace('<BR/>', '\n', str_replace('<BR />', '\n', str_replace('<BR>', '\n', str_replace('\t', '',str_replace('<br />', '\n',str_replace('<br/>', '\n',str_replace('<br>', '\n',str_replace('\'', '&#39;', $string))))))));
+    $string = str_replace('&lt;', '<', $string);
+    $string = str_replace('&gt;', '>', $string);
     /*$mEndTime = strtotime(date("Y-m-d H:i:s"));
     $mExecutionTime = $mEndTime - $mStartTime;
     Log::write("BH API: replaceSpecialChar()", "Line Number: ".__LINE__."\nAPI Call Number: ".$mAPICallNumber."\nExecution Time: ".$mExecutionTime." Seconds", 'BH_API');*/
