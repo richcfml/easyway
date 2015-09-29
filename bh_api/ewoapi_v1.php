@@ -1339,8 +1339,8 @@ function getCategories($pMenuID)
     while ($mRowCat = dbAbstract::returnObject($mResCat))
     {
         $arr_categories[] = array(
-                        "category" => replaceSpecialChar(strip_tags($mRowCat->cat_name)),
-                        "category_subdescriptions" => replaceSpecialChar(strip_tags($mRowCat->cat_des)),
+                        "category" => strip_tags(replaceSpecialChar($mRowCat->cat_name)),
+                        "category_subdescriptions" => strip_tags(replaceSpecialChar($mRowCat->cat_des)),
                         "active" => "true",
                         "items" => getProducts($mRowCat->cat_id)
                     );
@@ -1360,8 +1360,8 @@ function getProducts($pCategoryID)
     while ($mRowProduct = dbAbstract::returnObject($mResProduct))
     {
         $arr_products[] = array(
-                        "name" => replaceSpecialChar(strip_tags($mRowProduct->item_title)),
-                        "details" => replaceSpecialChar(strip_tags($mRowProduct->item_des)),
+                        "name" => strip_tags(replaceSpecialChar($mRowProduct->item_title)),
+                        "details" => strip_tags(replaceSpecialChar($mRowProduct->item_des)),
                         "price" => $mRowProduct->retail_price,
                         "image_url" => (!empty($mRowProduct->item_image)?$SiteUrl."images/item_images/".$mRowProduct->item_image:""),
                         "posID" => $mRowProduct->pos_id,
