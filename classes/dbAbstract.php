@@ -221,12 +221,15 @@ class dbAbstract
     public static function Insert($pSQL, $pC_Panel = 0, $pReturnType = 0, $pLogResults = false)
     {
         global $dbh;
-		$mResult = $dbh->prepare($pSQL);
-		
-		if($mResult->execute()){
-			$qResult = true;
-		}else $qResult = false;
-		
+        $mResult = $dbh->prepare($pSQL);
+        if($mResult->execute())
+        {
+            $qResult = true;
+        }
+        else 
+        {
+            $qResult = false;
+        }
         $mAffectedRows = $mResult->rowCount();
         
         if ($pC_Panel==0)
@@ -453,26 +456,23 @@ class dbAbstract
     
     public static function returnRealEscapedString($pString, $pC_Panel = 0, $pLogResults = false)
     {
-		/*
-		* We do not need this function any more.
-		* Which is why, instead we use what is called "a prepared statement", 
-		* as it eliminates the  need to sanitize the inputs in the first place.
-		*/
-		return $pString;
-        global $mysqli;
-        $mReturn =  mysqli_real_escape_string($mysqli, $pString);
-        if ($pLogResults)
-        {
-            if ($pC_Panel==0)
-            {
-                Log::write("DB Abstract returnRealEscapedString Function - dbAbstract.php", "Return String -- ".$mReturn, 'dbAbstract', 0);
-            }
-            else
-            {
-                Log::write("DB Abstract returnRealEscapedString Function - dbAbstract.php", "Return String -- ".$mReturn, 'dbAbstract', 1, 'cpanel');
-            }
-        }
-        return $mReturn;
+        global $dbh;
+        /*
+        * We do not need this function any more.
+        * Which is why, instead we use what is called "a prepared statement", 
+        * as it eliminates the  need to sanitize the inputs in the first place.
+        */        
+        return trim(trim($dbh->quote($pString), "'"), '"');
     }
+    
+    /*private function startsWith($haystack, $needle) 
+    {
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    }
+    
+    private function endsWith($haystack, $needle) 
+    {
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+    }*/
 }
 ?>
