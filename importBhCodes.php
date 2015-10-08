@@ -69,6 +69,10 @@ if (isset($_POST['submit']))
         {
             echo("Data Found.");
         }
+        else if ($mFlag == 4)
+        {
+            echo("Rows Found.");
+        }
         echo("<br />Inserted: ".$mInserted);
         echo("<br />Updated: ".$mUpdated);
     }
