@@ -32,10 +32,9 @@ if(isset($_GET['op']))
             }
             else
             {
-                $message['message'] = $mLine;
+                $message['message'] = 'authentication failed';
             }
         }
-        $message['message'] = 'authentication failed';
     }
     elseif($op == 'confirmOrder')
     {
