@@ -232,7 +232,10 @@
                                                             }
                                                             ?>
                                                             <div sub_cat="<?=$mRow["cat_id"]?>" style="margin-left:55px;width: 200px; <?=(($mRowPr['signature_sandwitch_id']>0)? 'color:#c3bcaf':'')?>" class="<?=(($mRowPr["status"]==0)? 'disable-menu':'enable-menu')?>">
-                                                                <?= wordwrap($mRowPr["item_des"], 20, "\n", false); ?>
+                                                                <?php //wordwrap($mRowPr["item_des"], 20, "\n", false); ?>
+                                                                <?php
+                                                                echo getProductDescription(wordwrap($mRowPr["item_des"], 20, "\n", false));
+																?>
                                                             </div>
                                                         </td>
                                                     </tr>

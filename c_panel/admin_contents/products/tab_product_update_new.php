@@ -37,6 +37,7 @@ else
 <script src="js/jquery.Jcrop.js"></script>
 <script language="Javascript">
    var jcrop_api;
+   var codeArr = new Array();
     $(document).ready(function(){
              $('#item_img').Jcrop({ addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
             },function(){
@@ -126,25 +127,21 @@ if (isset($_GET['prd_id'])) {
         $description1=str_replace ("<br>", "\n", $description1);
         $description1=str_replace ("<br />", "\n", $description1);
     }
-    
+
     if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
     {
-        $mSQLBH = "SELECT * FROM `bh_items` ORDER BY LENGTH(ItemName) DESC";
-        $mResBH = dbAbstract::Execute($mSQLBH,1);
-        
-        $mPrevItem = "";
-        
-        while ($mRowBH = dbAbstract::returnObject($mResBH,1))
-        {
-            if (strpos($description, $mRowBH->ItemName)!==FALSE)
-            {
-                if ($mPrevItem!=$mRowBH->ItemName)
-                {
-                    $mPrevItem = $mRowBH->ItemName;
-                    $description = str_replace($mRowBH->ItemName, "<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>".$mRowBH->ItemName."</a>" ,$description);
-                }
-            }
-        }
+		$description = preg_replace_callback('|@[0-9]+|', 
+			function ($matches) {
+				$code = str_replace('@','',$matches[0]);
+				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
+				$E = '<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
+				?>
+				<script language="javascript">
+                codeArr['<?=$E?>']= '<?='@'.$result->ItemCode?>';
+                </script>
+                <?php
+				return $E;
+			}, $description);
     }
     
 	$size = getimagesize("../images/item_images/". $imgSource);
@@ -448,10 +445,12 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 													{
 														if ($.trim(data)!="")
 														{
-															var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
+															var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
+															codeArr[E]=search;
 															$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 															placeCaretAtEnd(document.getElementById("product_description1"));
-															mTmpHTML = removeAnchors($("#product_description1").html());
+															//mTmpHTML = removeAnchors($("#product_description1").html());
+															mTmpHTML = removeAnchors($("#product_description2").val());
 															$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 															$("#bh_item").attr('checked', true);
 														}
@@ -463,14 +462,21 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 								}
 								else
 								{
-									mTmpHTML = removeAnchors($("#product_description1").html());
+									//mTmpHTML = removeAnchors($("#product_description1").html());
+									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 								}
 							}
 							else
 							{
-								mTmpHTML = removeAnchors($("#product_description1").html());
+								//mTmpHTML = removeAnchors($("#product_description1").html());
+								mTmpHTML = removeAnchors($("#product_description2").val());
 								$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+							}
+							
+							$("#product_description2").val($("#product_description1").html());
+							for (var key in codeArr) {
+								$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
 							}
 							
 							if ($("#product_description1").html().indexOf("<a ")<0)
@@ -550,6 +556,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
                 <?php
 				}
                 ?>
+                <input type="hidden" name="product_description2" id="product_description2">
                 </td>
                 <td>
                   <div class="photo_div_before" id="show_photo_before" <?=(($imgSource != '')? 'style="display:none;"':'')?>>

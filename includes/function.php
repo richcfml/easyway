@@ -1117,4 +1117,13 @@ function func_pregreplace($re, $replacement, $str){
                                                     return $replacement;}, $str);
 	return $result;
 }
+
+function getProductDescription($description){
+	return preg_replace_callback('|@[0-9]+|', 
+			function ($matches) {
+				$code = str_replace('@','',$matches[0]);
+				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
+				return $result->ItemName;
+			}, $description);
+}
 ?>

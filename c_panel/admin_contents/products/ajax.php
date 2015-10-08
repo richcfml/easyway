@@ -47,7 +47,7 @@ else if (isset($_GET["sku"]))
     $q=str_replace("@","",$q);
     $q=trim($q);
     
-    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode LIKE '$q%' ORDER BY ID LIMIT 3",1);
+    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode LIKE '$q%' ORDER BY ID DESC LIMIT 3",1);
 ?>
 <div>
     <img class="imgCloseBH" src="images/cross2.png" style="float: right; cursor: hand; cursor: pointer; margin-top: 3px; margin-right: 3px;" />
@@ -72,7 +72,7 @@ else if (isset($_GET["sku1"]))
     $q=str_replace("@","",$q);
     $q=trim($q);
     
-    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode = '$q'",1);
+    $sql_res=dbAbstract::Execute("SELECT * from bh_items WHERE ItemCode = '$q' ORDER BY ID DESC",1);
     if (dbAbstract::returnRowsCount($sql_res,1)>0)
     {
         $row=dbAbstract::returnArray($sql_res,1);

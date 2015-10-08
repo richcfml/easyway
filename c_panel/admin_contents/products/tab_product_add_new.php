@@ -75,7 +75,7 @@ if (isset($_GET['sandwichId'])) {
     <script type="text/javascript" language="javascript">
         window.location.href = "<?= $AdminSiteUrl ?>?mod=new_menu&catid=<?= $Objrestaurant->id ?>&menuid=<?= $menuid ?>&menu_name=<?= $menu_name ?>";
     </script>
-    <?}
+    <? }
     
     $sandwitch_data = dbAbstract::ExecuteObject("Select * from bh_signature_sandwitch where id = " . $signature_sandwitch_id . "",1);
     $item_name = $sandwitch_data->item_name;
@@ -188,6 +188,16 @@ if (isset($_GET['sandwichId'])) {
 		$mHeight = round($size[1]/1);
 		$mScale = 1;
 	}
+	
+	if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
+    {
+		$description = preg_replace_callback('|@[0-9]+|', 
+		function ($matches) {
+			$code = str_replace('@','',$matches[0]);
+			$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
+			return $E = '<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
+		}, $description);
+    }
 }
 if($_POST['cropimg'])
 {
@@ -208,7 +218,7 @@ if($_POST['cropimg'])
 
     $(document).ready(function()
     {
-        $("#btnCancelProduct").click(function()
+		$("#btnCancelProduct").click(function()
         {
             $("#popup_boxProduct").css('display','block');
         });
@@ -387,6 +397,7 @@ if($_POST['cropimg'])
                             <script type="text/javascript">
                                 $(document).ready(function()
                                 {
+									var codeArr = new Array();
                                     var start=/@/ig; // @ Match
                                     
                                     $("#product_description1").blur(function()
@@ -459,7 +470,7 @@ if($_POST['cropimg'])
                                                     if ((search!="") && (search!="@"))
                                                     {
                                                         $("#hdnSearch").val(search);
-                                                        setTimeout(function()
+														setTimeout(function()
                                                         {
                                                             $.ajax({
                                                                 type: "POST",
@@ -470,10 +481,12 @@ if($_POST['cropimg'])
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-                                                                        var E="<a contentEditable='false' href='#' style='color: #0066CC;'><i></i>"+data+"</a>";
+																		var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
+																		codeArr[E]=search;
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
-                                                                        mTmpHTML = removeAnchors($("#product_description1").html());
+							                                            placeCaretAtEnd(document.getElementById("product_description1"));
+                                                                        //mTmpHTML = removeAnchors($("#product_description1").html());
+																		mTmpHTML = removeAnchors($("#product_description2").val());
                                                                         $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
@@ -485,16 +498,23 @@ if($_POST['cropimg'])
                                             }
                                             else
                                             {
-                                                mTmpHTML = removeAnchors($("#product_description1").html());
+												//mTmpHTML = removeAnchors($("#product_description1").html());
+												mTmpHTML = removeAnchors($("#product_description2").val());
                                                 $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                             }
                                         }
                                         else
                                         {
-                                            mTmpHTML = removeAnchors($("#product_description1").html());
+                                            //mTmpHTML = removeAnchors($("#product_description1").html());
+											mTmpHTML = removeAnchors($("#product_description2").val());
                                             $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                         }
                                         
+										$("#product_description2").val($("#product_description1").html());
+										for (var key in codeArr) {
+											$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+										}
+										
                                         if ($("#product_description1").html().indexOf("<a ")<0)
                                         {
                                             $("#bh_item").attr('checked', false);
@@ -561,9 +581,10 @@ if($_POST['cropimg'])
                                 
                                 
                             </script>
-                                <textarea id="product_description" name="product_description" style="display: none;"><?= $description1 ?></textarea>
-                                <input type="hidden" id="hdnSearch" />
-                                <div id="container">
+                            
+                            <textarea id="product_description" name="product_description" style="display: none;"><?= $description1 ?></textarea>
+                            <input type="hidden" id="hdnSearch" />
+                            <div id="container">
                                     <div id="product_description1" name="product_description1" <?php if(isset($_GET['sandwichId'])){ ?> contenteditable="false" <?php }else{ ?> contenteditable="true" <?php }?> class="textAreaClass" style="overflow: auto;font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
                                  <?= trim( $description) ?>
                                 </div>
@@ -575,10 +596,12 @@ if($_POST['cropimg'])
                             else
                             {
                             ?>
-                                <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly <?php } ?>  class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= $description1 ?></textarea>
+                            
+                            <textarea rows="4" cols="50" id="product_description" name="product_description" <?php if(isset($_GET['sandwichId'])){ ?> readonly <?php } ?>  class="textAreaClass" style="margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;" placeholder="Description of Item"><?= $description1 ?></textarea>
                             <?php
                             }
                             ?>
+                            <input type="hidden" name="product_description2" id="product_description2">
                         </td>
                         <td>
                             <div class="photo_div_before" id="show_photo_before" <?=(($imgSource != '')? 'style="display:none;"':'')?>>
