@@ -1,26 +1,31 @@
 <?php
 require_once "includes/config.php";
+$mLine = 0; 
 if(isset($_GET['op'])){
-
+$mLine = 1; 
     
     
     $op = $_GET['op'];
     $message = array();
     if($op == 'authenticate'){
-
+$mLine = 2;
         
         $username = $_POST['user'];
         $password = $_POST['pass'];
-        
+        $mLine = 3;
         $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'");
+        $mLine = 4;
         if ($mRow)
         {
+            $mLine = 5;
             $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);        
+            $mLine = 6;
             $result = dbAbstract::Execute("SELECT * FROM users WHERE username = '".dbAbstract::returnRealEscapedString($username)."' AND epassword='".$epassword."'");
-
+$mLine = 7;
         $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
-
+$mLine = 8;
         if($authenticated){
+            $mLine = 9;
             $message['message'] = 'authenticated';
             $user = dbAbstract::returnObject($result);
             
@@ -35,9 +40,11 @@ if(isset($_GET['op'])){
             $message['user'] = $user->id;
             
         }else{
-            $message['message'] = 'authentication failed';
+            $mLine = 10;
+            $message['message'] = 10;
         }
         }
+        $message['message'] = 'authentication failed';
     }elseif($op == 'confirmOrder'){
         $rest_id = $_POST['rest_id'];
         $order_id = $_POST['order_id'];
