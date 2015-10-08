@@ -15,6 +15,7 @@ if(isset($_GET['op']))
             $mSalt    = $mRow->salt;
             $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);        
             $result = dbAbstract::Execute("SELECT * FROM users WHERE username = '".dbAbstract::returnRealEscapedString($username)."' AND epassword='".$epassword."'");
+            echo("SELECT * FROM users WHERE username = '".dbAbstract::returnRealEscapedString($username)."' AND epassword='".$epassword."'");
             $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
             if($authenticated)
             {
@@ -23,6 +24,8 @@ if(isset($_GET['op']))
 
                 $rests = array();
                 $restaurants = dbAbstract::Execute('SELECT * FROM resturants WHERE owner_id='.$user->id);
+                echo("<br /><br />SELECT * FROM resturants WHERE owner_id=".$user->id);
+                exit;
                 while($restaurant = dbAbstract::returnObject($restaurants))
                 {
                     $rests[$restaurant->url_name] = $restaurant->id;
