@@ -170,7 +170,6 @@
 ?>
 	<div id="body">
 		<?php
-                echo("||".$include."||");
 		require($include);
 		if(empty($_REQUEST["wp_api"])) 
 		{
