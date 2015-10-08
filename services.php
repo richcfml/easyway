@@ -1,51 +1,44 @@
 <?php
 require_once "includes/config.php";
-$mLine = 0; 
-if(isset($_GET['op'])){
-$mLine = 1; 
-    
-    
+
+if(isset($_GET['op']))
+{
     $op = $_GET['op'];
     $message = array();
-    if($op == 'authenticate'){
-$mLine = 2;
-        
+    if($op == 'authenticate')
+    {
         $username = $_POST['user'];
         $password = $_POST['pass'];
-        $mLine = 3;
         $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'");
-        $mLine = 4;
         if ($mRow)
         {
-            $mLine = 5;
+            $mSalt    = $mRow->salt;
             $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);        
-            $mLine = 6;
             $result = dbAbstract::Execute("SELECT * FROM users WHERE username = '".dbAbstract::returnRealEscapedString($username)."' AND epassword='".$epassword."'");
-$mLine = 7;
-        $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
-$mLine = 8;
-        if($authenticated){
-            $mLine = 9;
-            $message['message'] = 'authenticated';
-            $user = dbAbstract::returnObject($result);
-            
-            $rests = array();
-            $restaurants = dbAbstract::Execute('SELECT * FROM resturants WHERE owner_id='.$user->id);
-            while($restaurant = dbAbstract::returnObject($restaurants)){
-                $rests[$restaurant->url_name] = $restaurant->id;
+            $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
+            if($authenticated)
+            {
+                $message['message'] = 'authenticated';
+                $user = dbAbstract::returnObject($result);
+
+                $rests = array();
+                $restaurants = dbAbstract::Execute('SELECT * FROM resturants WHERE owner_id='.$user->id);
+                while($restaurant = dbAbstract::returnObject($restaurants))
+                {
+                    $rests[$restaurant->url_name] = $restaurant->id;
+                }
+                $message['rest'] = dbAbstract::returnRealEscapedString(serialize($rests));
+                $message['user'] = $user->id;
             }
-
-
-            $message['rest'] = dbAbstract::returnRealEscapedString(serialize($rests));
-            $message['user'] = $user->id;
-            
-        }else{
-            $mLine = 10;
-            $message['message'] = 10;
-        }
+            else
+            {
+                $message['message'] = $mLine;
+            }
         }
         $message['message'] = 'authentication failed';
-    }elseif($op == 'confirmOrder'){
+    }
+    elseif($op == 'confirmOrder')
+    {
         $rest_id = $_POST['rest_id'];
         $order_id = $_POST['order_id'];
         if(is_numeric($rest_id) && is_numeric($order_id)){
