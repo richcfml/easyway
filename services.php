@@ -1,4 +1,6 @@
 <?php
+echo("111111111111111111");
+exit;
 require_once "includes/config.php";
 
 if(isset($_GET['op']))
