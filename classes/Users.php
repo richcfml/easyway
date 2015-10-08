@@ -160,7 +160,7 @@ class Users
 	*/
     public function loginUser($email, $password, $restaurant_id)
     {
-        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='" . prepareStringForMySQL($email) . "' AND resturant_id=" . $restaurant_id . " AND TRIM(password)<>''");
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM customer_registration WHERE TRIM(LOWER(cust_email))='" . prepareStringForMySQL($email) . "' AND resturant_id=" . $restaurant_id . " AND TRIM(epassword)<>''");
         if ($mRow) {
             $mSalt    = $mRow->salt;
             $email    = prepareStringForMySQL($email);
