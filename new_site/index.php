@@ -104,9 +104,9 @@
 			else{
 			  // if customer record not exist than register & login
 			  $loggedinuser->cust_email=  $sso_row->email;
-			  $mSalt = hash('sha256', mt_rand(10,1000000));    
-			  $loggedinuser->salt= $mSalt;
-			  $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
+                          $mSalt = hash('sha256', mt_rand(10,1000000));    
+                          $loggedinuser->salt= $mSalt;
+                          $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
 			  $loggedinuser->cust_your_name= trim($sso_row->firstName);
 			  $loggedinuser->LastName= trim($sso_row->lastName);
 			  $loggedinuser->street1= trim($sso_row->address1) ;
@@ -128,9 +128,9 @@
 			  $result=$loggedinuser->customerRegistration($objRestaurant, $objMail, $sso_row->id);
 			  $loggedinuser->ssoUserId = $sso_row->id;
 			  if($result===true)
-			  {
-				redirect($SiteUrl.$objRestaurant->url."/");
-				exit;	
+                          {
+                            redirect($SiteUrl.$objRestaurant->url."/");
+                            exit;	
 			  }
 			}
 		}
@@ -170,6 +170,7 @@
 ?>
 	<div id="body">
 		<?php
+                echo("||".$include."||");
 		require($include);
 		if(empty($_REQUEST["wp_api"])) 
 		{
