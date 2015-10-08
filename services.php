@@ -7,8 +7,8 @@ if(isset($_GET['op']))
     $message = array();
     if($op == 'authenticate')
     {
-        $username = $_POST['user'];
-        $password = $_POST['pass'];
+        $username = $_REQUEST['user'];
+        $password = $_REQUEST['pass'];
         $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'");
         if ($mRow)
         {
