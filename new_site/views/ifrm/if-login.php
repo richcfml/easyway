@@ -12,13 +12,6 @@ $register_result = -1;
 $errMessage = "";
 if (isset($_POST['login'])) 
 {
-        if($email == '') {
-             $result=false;
-        } else if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
-                 $result=false;
-        } else if($user_password == '') {
-                     $result=false;
-        }
 	$user_email = $_POST['email'];
 	$user = $loggedinuser->loginUser($_POST['email'], $_POST['password'], $objRestaurant->id);
 
@@ -92,30 +85,8 @@ else if(isset($_POST['btnregister']))
 	{
 		$mFBID=$_POST["txtFBID"];
 	}
-        if($email == '') {
-             $errMessage = "Please enter email address";
-        } else if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
-                 $errMessage = "Please enter email address in correct format";
-        } else if($user_password == '') {
-                 $errMessage = "Please enter password";
-        } else if(!preg_match("/^.*(?=.*\d)(?=.*[a-zA-Z]).*$/", $user_password) || strlen($user_password) < 5) {
-                 $errMessage = "password must be alphanumeric with minimum 5 characters and maximum 20 character";
-        } else if($first_name == '') {
-                 $errMessage = "Please enter first name";
-        } else if($last_name == '') {
-                 $errMessage = "Please enter last name";
-        } else if($address1 == '') {
-                 $errMessage = "Please enter address";
-        } else if($city == '') {
-                 $errMessage = "Please enter city";
-        } else if($state == '') {
-                 $errMessage = "Please enter state";
-        } else if($zip == '') {
-                 $errMessage = "Please enter zip";
-        } else if($phone1 == '') {
-                 $errMessage = "Please enter phone";
-        } else{
-		$loggedinuser->	cust_email=  $email;
+       
+        $loggedinuser->	cust_email=  $email;
 	$mSalt = hash('sha256', mt_rand(10,1000000));    
         $loggedinuser->salt= $mSalt;
 	$loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
@@ -147,7 +118,7 @@ else if(isset($_POST['btnregister']))
 			exit;		
 		}
 	}
-        }
+        
 } 
 else if(is_numeric($loggedinuser->id)) 
 {
