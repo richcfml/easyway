@@ -148,6 +148,7 @@ else if(isset($_POST['btnregister']))
 			exit;
 		}
 	}
+        }
 } 
 else if(is_numeric($loggedinuser->id)) 
 {
