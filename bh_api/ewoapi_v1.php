@@ -879,7 +879,7 @@ if (!(isset($mReturn["errorCode"])))
 print_r($mReturn);
 echo("</pre>");*/
 
-$json = json_encode($mReturn, true);
+$json = json_encode($mReturn, JSON_UNESCAPED_SLASHES);
 
 echo($json);
 /* Search Functions Ends Here */
