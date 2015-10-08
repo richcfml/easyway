@@ -12,11 +12,11 @@ if(isset($_GET['op'])){
         $username = $_POST['user'];
         $password = $_POST['pass'];
         
-        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'"));
+        $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".$username."'");
         if ($mRow)
         {
             $epassword=hash('sha256', prepareStringForMySQL($password).$mSalt);        
-        $result = dbAbstract::Execute('SELECT * FROM users WHERE username = "'.  dbAbstract::returnRealEscapedString($username).'" AND epassword='".$epassword."'");
+            $result = dbAbstract::Execute("SELECT * FROM users WHERE username = '".dbAbstract::returnRealEscapedString($username)."' AND epassword='".$epassword."'");
 
         $authenticated = dbAbstract::returnRowsCount($result) > 0 ? true : false;
 
