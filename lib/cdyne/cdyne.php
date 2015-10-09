@@ -17,7 +17,7 @@ class cydne
  
 	public function sendSMS($to, $message, $reference='', $matchedmessageid='', $type=1)
 	{
-		global $objRestaurant,$CdynePostBackUrl;
+		global $objRestaurant, $CdynePostBackUrl, $gCdynePostURL;
 	 	$objfun=new clsFunctions();
 		$message= $objfun->_esc_xmlchar(str_replace("!","",str_replace("'","",$message)));
 		$to= $objfun->esc_special($to);
@@ -33,8 +33,7 @@ class cydne
 				}';
 
 		//Method
-		//$url='http://sms2.cdyne.com/sms.svc/AdvancedSMSsend';
-                $url='https://sms2.cdyne.com/sms.svc/SecureREST/AdvancedSMSsend';
+                $url= $gCdynePostURL;
 		$post_array = json_decode($json);
         Log::write('CDYNE Post Array - Send SMS', print_r($post_array,true), 'cdyne');
 		$cURL = curl_init();
