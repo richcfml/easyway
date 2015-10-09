@@ -33,8 +33,8 @@ class cydne
 				}';
 
 		//Method
-		$url='http://sms2.cdyne.com/sms.svc/AdvancedSMSsend';
-	 
+		//$url='http://sms2.cdyne.com/sms.svc/AdvancedSMSsend';
+                $url='https://sms2.cdyne.com/sms.svc/SecureREST/AdvancedSMSsend';
 		$post_array = json_decode($json);
         Log::write('CDYNE Post Array - Send SMS', print_r($post_array,true), 'cdyne');
 		$cURL = curl_init();
