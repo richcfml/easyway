@@ -36,7 +36,11 @@ business tips and tricks, <strong>FOR FREE!</strong> - subscribe now</h4>
    </div>
    <br clear="all"/>
 	</div>
+    <div class="ewo-container">
+        <p style="font-size: 13px;">EasyWay Ordering is a wholly-owned subsidiary of First Data Corporation, the global leader in commerce-enabling technology and solutions, serving millions of businesses and thousands of financial institutions around the world.</p>
     
+            </div>
+        <br clear="all"/>
     <div style="border-top: 1px solid #4c4c4c; clear:both; padding: 0 0px;">
 	<div class="grid50 floatleft"  style=" padding: 20px 0px 0 0;">Copyright © 2014 Easyway. All Rights Reserved.</div>
     <div class="grid40 floatright" style=" padding: 10px 0px 0 0;"><p align="right" style="margin-left:0px;">
