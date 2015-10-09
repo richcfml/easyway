@@ -1,5 +1,4 @@
 <?php
-Log::write('CDYNE Debug- cdyne/index.php', "123456" , 'debug');
 if(isset($_POST['SMSSent']) && $_POST['SMSSent'])
 {
 	//outgoing message has been queued for sending
