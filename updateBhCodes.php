@@ -24,7 +24,6 @@ while ($row = dbAbstract::returnObject($rs))
 				$mPrevItem = $key;
 				$description = str_replace($key, $val ,$row->item_des);
 				$update = true;
-				echo $key." : ".$val."<br>";
 			}
 		}
 	}
@@ -33,13 +32,7 @@ while ($row = dbAbstract::returnObject($rs))
 	
 	if($update){
 		dbAbstract::Update("update product set item_des = '".$description."' where prd_id=".$row->prd_id);
-		echo "Before<br>";
-		echo $row->item_des."<br><br>";
-		
-		echo "After<br>";
-		echo $description."<br>";
-		
-		echo "-------------------------------------------------------------------------------------<br>";
+		echo $row->prd_id." : updated<br>";
 	}
 }
 
