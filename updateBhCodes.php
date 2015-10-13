@@ -29,7 +29,7 @@ while ($row = dbAbstract::returnObject($rs))
 		}
 	}
 	
-	$description = replaceBhSpecialChars(addcslashes(trim(utf8_encode($description))));
+	$description = replaceBhSpecialChars(trim(utf8_encode($description)));
 	
 	if($update){
 		dbAbstract::Update("update product set item_des = '".$description."' where prd_id=".$row->prd_id);
