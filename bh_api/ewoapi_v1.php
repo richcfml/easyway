@@ -1361,7 +1361,10 @@ function getProducts($pCategoryID)
     {
         $arr_products[] = array(
                         "name" => strip_tags(replaceSpecialChar($mRowProduct->item_title)),
-                        "details" => strip_tags(replaceSpecialChar($mRowProduct->item_des)),
+						/*
+						getProductDescription Function used in below line is written in includes/function.php file
+						*/
+                        "details" => getProductDescription(strip_tags(replaceSpecialChar($mRowProduct->item_des))),
                         "price" => $mRowProduct->retail_price,
                         "image_url" => (!empty($mRowProduct->item_image)?$SiteUrl."images/item_images/".$mRowProduct->item_image:""),
                         "posID" => $mRowProduct->pos_id,
