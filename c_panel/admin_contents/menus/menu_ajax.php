@@ -415,6 +415,8 @@ else if (isset($_GET['update_menu_item']))
             }
         }
     }
+    $product_description = ltrim($product_description);
+   
     
     Log::write("Update Product Title, Desc, Retail Pric, Type - menu_ajax.php", "QUERY -- update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).", item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 'menu', 1 , 'cpanel');
     dbAbstract::Update("update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).",pos_id = '$pos_id', item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 1);
