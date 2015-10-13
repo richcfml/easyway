@@ -47,6 +47,7 @@ while ($row = dbAbstract::returnObject($rs))
 function replaceBhSpecialChars($pDescription)
 {
     $pDescription = str_replace("'", "&#39;", $pDescription);
+	$pDescription = str_replace("'", "&#39;", $pDescription);
     $pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
