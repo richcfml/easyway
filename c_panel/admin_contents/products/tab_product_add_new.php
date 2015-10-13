@@ -494,7 +494,7 @@ if($_POST['cropimg'])
 																		}
 																		
 																		mTmpHTML = removeAnchors($("#product_description2").val());
-																		$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+																		$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace("™","&#8482;").replace("'","&#39;"));
 																		
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
@@ -507,7 +507,7 @@ if($_POST['cropimg'])
                                             else
                                             {
 												tmp_html = $("#product_description1").html();
-												$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+												$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
 												
 												for (var key in codeArr) {
 													$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
@@ -520,7 +520,7 @@ if($_POST['cropimg'])
                                         else
                                         {
                                             tmp_html = $("#product_description1").html();
-											$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+											$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
 											
 											for (var key in codeArr) {
 												$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
