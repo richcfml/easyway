@@ -450,12 +450,14 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 															$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 															placeCaretAtEnd(document.getElementById("product_description1"));
 															
-															$("#product_description2").val($("#product_description1").html());
+															tmp_html = $("#product_description1").html();
+															$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+															
 															for (var key in codeArr) {
 																$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+																alert(key);
 															}
 															
-															//mTmpHTML = removeAnchors($("#product_description1").html());
 															mTmpHTML = removeAnchors($("#product_description2").val());
 															$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 															$("#bh_item").attr('checked', true);
@@ -468,25 +470,28 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 								}
 								else
 								{
-									$("#product_description2").val($("#product_description1").html());
+									tmp_html = $("#product_description1").html();
+									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+									
 									for (var key in codeArr) {
 										$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
 									}
 									
-									//mTmpHTML = removeAnchors($("#product_description1").html());
 									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 								}
 							}
 							else
 							{
-								$("#product_description2").val($("#product_description1").html());
-								for (var key in codeArr) {
-									$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-								}
-								//mTmpHTML = removeAnchors($("#product_description1").html());
-								mTmpHTML = removeAnchors($("#product_description2").val());
-								$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+								tmp_html = $("#product_description1").html();
+									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+									
+									for (var key in codeArr) {
+										$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+									}
+									
+									mTmpHTML = removeAnchors($("#product_description2").val());
+									$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 							}
 							
 							

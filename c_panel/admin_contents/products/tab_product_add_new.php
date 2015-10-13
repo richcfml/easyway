@@ -486,14 +486,16 @@ if($_POST['cropimg'])
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 							                                            placeCaretAtEnd(document.getElementById("product_description1"));
                                                                         
-																		$("#product_description2").val($("#product_description1").html());
+																		tmp_html = $("#product_description1").html();
+																		$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+																		
 																		for (var key in codeArr) {
 																			$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
 																		}
 																		
-																		//mTmpHTML = removeAnchors($("#product_description1").html());
 																		mTmpHTML = removeAnchors($("#product_description2").val());
-                                                                        $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+																		$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+																		
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
                                                                 }
@@ -504,24 +506,28 @@ if($_POST['cropimg'])
                                             }
                                             else
                                             {
-												$("#product_description2").val($("#product_description1").html());
+												tmp_html = $("#product_description1").html();
+												$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+												
 												for (var key in codeArr) {
 													$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
 												}
-												//mTmpHTML = removeAnchors($("#product_description1").html());
+												
 												mTmpHTML = removeAnchors($("#product_description2").val());
-                                                $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+												$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                             }
                                         }
                                         else
                                         {
-                                            $("#product_description2").val($("#product_description1").html());
+                                            tmp_html = $("#product_description1").html();
+											$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&"));
+											
 											for (var key in codeArr) {
 												$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
 											}
-											//mTmpHTML = removeAnchors($("#product_description1").html());
+											
 											mTmpHTML = removeAnchors($("#product_description2").val());
-                                            $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+											$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
                                         }
 										
                                         if ($("#product_description1").html().indexOf("<a ")<0)
