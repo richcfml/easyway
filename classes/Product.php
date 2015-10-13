@@ -185,7 +185,8 @@ class Product
             $arrProductList[$mIndex]->item_type = $prodRow->item_type;
             $arrProductList[$mIndex]->prd_id=$prodRow->prd_id;
             $itemDesc = preg_replace_callback("/\r|\n/", function ($matches) { return " "; }, getProductDescription($prodRow->item_des));
-            $itemDesc=  strip_tags(str_replace("</b>", "", str_replace("<b>", "", str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc))))));
+            $itemDesc=  str_replace("</b>", "", str_replace("<b>", "", str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc)))));
+            //$itemDesc=  strip_tags(str_replace("</b>", "", str_replace("<b>", "", str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$itemDesc))))));
             $arrProductList[$mIndex]->item_des = $itemDesc;
             $arrProductList[$mIndex]->retail_price = $prodRow->retail_price;
             $arrProductList[$mIndex]->sale_price = $prodRow->sale_price;
