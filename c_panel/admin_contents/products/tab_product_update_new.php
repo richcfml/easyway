@@ -455,7 +455,6 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 															
 															for (var key in codeArr) {
 																$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-																alert(key);
 															}
 															
 															mTmpHTML = removeAnchors($("#product_description2").val());
