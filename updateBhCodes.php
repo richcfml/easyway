@@ -24,12 +24,14 @@ while ($row = dbAbstract::returnObject($rs))
 				$mPrevItem = $key;
 				$description = str_replace($key, $val ,$row->item_des);
 				$update = true;
+				echo $key." : ".$val."<br>";
 			}
 		}
 	}
 	
 	if($update){
 		dbAbstract::Update("update product set item_des = '$description' where prd_id=".$row->prd_id);
-		echo "Product Id ".$row->prd_id.": Update Successfully<br>";
+		echo $row->item_des."<br><br>";
+		echo "-------------------------------------------------------------------------------------<br>";
 	}
 }
