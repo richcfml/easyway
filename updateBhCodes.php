@@ -55,6 +55,7 @@ function replaceBhSpecialChars($pDescription)
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
+	$pDescription = str_replace("®", "&#174;", $pDescription);
 	
     $pDescription = str_replace("ä", "&#228;", $pDescription);
     $pDescription = str_replace("è", "&#232;", $pDescription);
