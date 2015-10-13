@@ -29,10 +29,10 @@ while ($row = dbAbstract::returnObject($rs))
 		}
 	}
 	
-	$description = replaceBhSpecialChars(trim(utf8_encode($description)));
+	$description = replaceBhSpecialChars(addcslashes(trim(utf8_encode($description))));
 	
 	if($update){
-		dbAbstract::Update("update product set item_des = '".addcslashes($description)."' where prd_id=".$row->prd_id);
+		dbAbstract::Update("update product set item_des = '".$description."' where prd_id=".$row->prd_id);
 		echo $row->prd_id." : updated<br>";
 		echo "Before<br>";
 		echo $row->item_des."<br><br>";
@@ -52,6 +52,9 @@ function replaceBhSpecialChars($pDescription)
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	
+	$pDescription = str_replace("®", "&#174;", $pDescription);
+	$pDescription = str_replace("®", "&#174;", $pDescription);
+	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
 	$pDescription = str_replace("®", "&#174;", $pDescription);
