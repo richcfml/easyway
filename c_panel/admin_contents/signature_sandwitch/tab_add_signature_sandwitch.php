@@ -750,6 +750,12 @@ else
 										  
 										  $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 										  placeCaretAtEnd(document.getElementById("product_description1"));
+										  
+										  $("#product_description2").val($("#product_description1").html());
+										  for (var key in codeArr) {
+											  $("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+										  }
+										  
 										  mTmpHTML = removeAnchors($("#product_description2").val());
 										  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 										  $("#bh_item").attr('checked', true);
@@ -763,21 +769,26 @@ else
 			  }
 			  else
 			  {
+				  $("#product_description2").val($("#product_description1").html());
+				  for (var key in codeArr) {
+					  $("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+				  }
+				  
 				  mTmpHTML = removeAnchors($("#product_description2").val());
 				  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 			  }
 		  }
 		  else
 		  {
+			  $("#product_description2").val($("#product_description1").html());
+			  for (var key in codeArr) {
+				  $("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
+			  }
+		  
 			  mTmpHTML = removeAnchors($("#product_description2").val());
 			  $("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
 		  }
 		  
-		  $("#product_description2").val($("#product_description1").html());
-		  for (var key in codeArr) {
-			  $("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-		  }
-			
 		  if ($("#product_description1").html().indexOf("<a ")<0)
 		  {
 			  $("#bh_item").attr('checked', false);
@@ -990,5 +1001,4 @@ if($_POST['cropimg'])
             </div>
         </div>
     </div>
-    
 </form>
