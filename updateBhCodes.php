@@ -29,6 +29,8 @@ while ($row = dbAbstract::returnObject($rs))
 		}
 	}
 	
+	$description = replaceBhSpecialChars(trim(utf8_encode($description)));
+	
 	if($update){
 		dbAbstract::Update("update product set item_des = '".$description."' where prd_id=".$row->prd_id);
 		echo "Before<br>";
@@ -39,4 +41,16 @@ while ($row = dbAbstract::returnObject($rs))
 		
 		echo "-------------------------------------------------------------------------------------<br>";
 	}
+}
+
+function replaceBhSpecialChars($pDescription)
+{
+    $pDescription = str_replace("'", "&#39;", $pDescription);
+    $pDescription = str_replace("®", "&#174;", $pDescription);
+    $pDescription = str_replace("ä", "&#228;", $pDescription);
+    $pDescription = str_replace("è", "&#232;", $pDescription);
+    $pDescription = str_replace("ñ", "&#241;", $pDescription);
+    $pDescription = str_replace("™", "&#8482;", $pDescription);
+    $pDescription = str_replace(" ", " ", $pDescription);
+    return $pDescription;
 }
