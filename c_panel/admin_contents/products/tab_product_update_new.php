@@ -458,7 +458,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 															}
 															
 															mTmpHTML = removeAnchors($("#product_description2").val());
-															$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;").replace("™","&#8482;").replace("'","&#39;"));
+															$("#product_description").val(mTmpHTML);
 															$("#bh_item").attr('checked', true);
 														}
 													}
@@ -477,7 +477,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 									}
 									
 									mTmpHTML = removeAnchors($("#product_description2").val());
-									$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+									$("#product_description").val(mTmpHTML);
 								}
 							}
 							else
@@ -490,7 +490,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 									}
 									
 									mTmpHTML = removeAnchors($("#product_description2").val());
-									$("#product_description").val(mTmpHTML.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("ñ", "&#241;"));
+									$("#product_description").val(mTmpHTML);
 							}
 							
 							
