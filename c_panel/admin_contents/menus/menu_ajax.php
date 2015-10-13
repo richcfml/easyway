@@ -214,7 +214,7 @@ else if (isset($_GET['add_menu_item']))
     $mBHItem = 0;
     if ($mRestBH==1)
     {
-        $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemName, '".$product_description."')>0";
+        $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
         $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
         if ($mResBH)
         {
@@ -373,7 +373,7 @@ else if (isset($_GET['update_menu_item']))
         $mBHItem = 0;
         if ($mRestBH==1)
         {
-            $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemName, '".$product_description."')>0";
+            $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
             $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
             if ($mResBH)
             {
