@@ -397,7 +397,6 @@ if($_POST['cropimg'])
                             <script type="text/javascript">
                                 $(document).ready(function()
                                 {
-									var codeArr = new Array();
                                     var start=/@/ig; // @ Match
                                     
                                     $("#product_description1").blur(function()
@@ -470,7 +469,7 @@ if($_POST['cropimg'])
                                                     if ((search!="") && (search!="@"))
                                                     {
                                                         $("#hdnSearch").val(search);
-														setTimeout(function()
+                                                        setTimeout(function()
                                                         {
                                                             $.ajax({
                                                                 type: "POST",
@@ -481,20 +480,15 @@ if($_POST['cropimg'])
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-																		var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
-																		codeArr[E]=search;
+                                                                        var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-							                                            placeCaretAtEnd(document.getElementById("product_description1"));
+                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
                                                                         
-																		tmp_html = $("#product_description1").html();
-																		$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
-																		
-																		for (var key in codeArr) {
-																			$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-																		}
-																		
-																		mTmpHTML = removeAnchors($("#product_description2").val());
-																		$("#product_description").val(mTmpHTML);
+                                                                        tmp_html = $("#product_description1").html();
+                                                                        $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                                                        mTmpHTML = removeAnchors($("#product_description2").val());
+                                                                        $("#product_description").val(mTmpHTML);
 																		
                                                                         $("#bh_item").attr('checked', true);
                                                                     }
@@ -506,28 +500,20 @@ if($_POST['cropimg'])
                                             }
                                             else
                                             {
-												tmp_html = $("#product_description1").html();
-												$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
-												
-												for (var key in codeArr) {
-													$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-												}
-												
-												mTmpHTML = removeAnchors($("#product_description2").val());
-												$("#product_description").val(mTmpHTML);
+                                                tmp_html = $("#product_description1").html();
+                                                $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                                mTmpHTML = removeAnchors($("#product_description2").val());
+                                                $("#product_description").val(mTmpHTML);
                                             }
                                         }
                                         else
                                         {
                                             tmp_html = $("#product_description1").html();
-											$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
-											
-											for (var key in codeArr) {
-												$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-											}
-											
-											mTmpHTML = removeAnchors($("#product_description2").val());
-											$("#product_description").val(mTmpHTML);
+                                            $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                            mTmpHTML = removeAnchors($("#product_description2").val());
+                                            $("#product_description").val(mTmpHTML);
                                         }
 										
                                         if ($("#product_description1").html().indexOf("<a ")<0)

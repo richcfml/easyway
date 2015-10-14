@@ -37,7 +37,7 @@ else
 <script src="js/jquery.Jcrop.js"></script>
 <script language="Javascript">
    var jcrop_api;
-   var codeArr = new Array();
+   
     $(document).ready(function(){
              $('#item_img').Jcrop({ addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
             },function(){
@@ -135,11 +135,6 @@ if (isset($_GET['prd_id'])) {
 				$code = str_replace('@','',$matches[0]);
 				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
 				$E = '<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
-				?>
-				<script language="javascript">
-                codeArr['<?=$E?>']= '<?='@'.$result->ItemCode?>';
-                </script>
-                <?php
 				return $E;
 			}, $description);
     }
@@ -446,16 +441,12 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 														if ($.trim(data)!="")
 														{
 															var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
-															codeArr[E]=search;
+															
 															$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 															placeCaretAtEnd(document.getElementById("product_description1"));
 															
 															tmp_html = $("#product_description1").html();
 															$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
-															
-															for (var key in codeArr) {
-																$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-															}
 															
 															mTmpHTML = removeAnchors($("#product_description2").val());
 															$("#product_description").val(mTmpHTML);
@@ -472,10 +463,6 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 									tmp_html = $("#product_description1").html();
 									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
 									
-									for (var key in codeArr) {
-										$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-									}
-									
 									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML);
 								}
@@ -484,10 +471,6 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 							{
 								tmp_html = $("#product_description1").html();
 									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&amp;',"&").replace("™","&#8482;").replace("'","&#39;"));
-									
-									for (var key in codeArr) {
-										$("#product_description2").val($("#product_description2").val().replace(key, codeArr[key]));
-									}
 									
 									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML);
