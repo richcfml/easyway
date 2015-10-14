@@ -14,13 +14,18 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
-                
-        if (compareStrs($mDescription, $mItemName)!==null)
+            
+        $mRes = compareStrs($mDescription, $mItemName);
+        if ($mRes !== null)
         {
-            echo("<b>Product ID: </b>".$mRowProducts->prd_id);
-            echo("<br /><b>Description: </b>".$mRowProducts->item_des);
-            echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
-            $mRecordCount = $mRecordCount + 1;
+            if (strlen($mRes)>5)
+            {
+                echo("<b>Product ID: </b>".$mRowProducts->prd_id);
+                echo("<br /><b>Item: </b>".$mRowBH->ItemName);
+                echo("<br /><b>Description: </b>".$mRowProducts->item_des);
+                echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
+                $mRecordCount = $mRecordCount + 1;
+            }
         }
     }
 }
