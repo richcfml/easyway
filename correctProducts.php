@@ -5,7 +5,7 @@ ini_set('max_execution_time', 1000);
 require_once "includes/config.php";
 
 $mResBH = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-$mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND item_des LIKE '%Proudly Featuring Boar%'");
+$mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
 $mRecordCount = 0;
 
 while ($mRowProducts = dbAbstract::returnObject($mResProducts))
