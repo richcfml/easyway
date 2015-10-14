@@ -14,20 +14,19 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
+        echo($mItemName);
+        echo("<br />".$mDescription."<br /><br /><br />");
         
-        if (strpos($mDescription, $mItemName)!==FALSE)
+        /*if (strpos($mDescription, $mItemName)!==FALSE)
         {
-            echo($mItemName);
-            echo("<br />".$mDescription);
-            exit;
             $mDescription = str_replace($mItemName, "@".$mRowBH->ItemCode, $mDescription);
             dbAbstract::Update("UPDATE product SET item_des='".$mDescription."' WHERE prd_id=".$mRowProducts->prd_id);
             $mRecordCount = $mRecordCount + 1;
-        }
+        }*/
     }
 }
 
-echo ($mRecordCount." records updated.");
+//echo ($mRecordCount." records updated.");
 
 function replaceBhSpecialChars($pDescription)
 {
