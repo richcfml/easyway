@@ -3,14 +3,15 @@ error_reporting(E_ALL);
 set_time_limit(1000);
 ini_set('max_execution_time', 1000);
 require_once "includes/config.php";
+$mObjDbAb = new dbAb();
 
-$mResBH = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-$mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
+$mResBH = $mObjDbAb->Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
+$mResProducts = $mObjDbAb->Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
 $mRecordCount = 0;
 
-while ($mRowProducts = dbAbstract::returnObject($mResProducts))
+while ($mRowProducts = $mObjDbAb->returnObject($mResProducts))
 {
-    while ($mRowBH = dbAbstract::returnObject($mResBH))
+    while ($mRowBH = $mObjDbAb->returnObject($mResBH))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
@@ -21,7 +22,7 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
         /*if (strpos($mDescription, $mItemName)!==FALSE)
         {
             $mDescription = str_replace($mItemName, "@".$mRowBH->ItemCode, $mDescription);
-            dbAbstract::Update("UPDATE product SET item_des='".$mDescription."' WHERE prd_id=".$mRowProducts->prd_id);
+            $mObjDbAb->Update("UPDATE product SET item_des='".$mDescription."' WHERE prd_id=".$mRowProducts->prd_id);
             $mRecordCount = $mRecordCount + 1;
         }*/
     }
