@@ -7,13 +7,18 @@ require_once "includes/config.php";
 $mResBH = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
 $mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND item_des LIKE '%Proudly Featuring Boar%'");
 $mRecordCount = 0;
+echo("A");
 while ($mRowProducts = dbAbstract::returnObject($mResProducts))
 {
+    echo("B");
     while ($mRowBH = dbAbstract::returnObject($mResBH))
     {
+        echo("C");
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
-        
+        echo($mItemName);
+        echo("<br />".$mDescription);
+        exit;
         if (strpos($mDescription, $mItemName)!==FALSE)
         {
             $mDescription = str_replace($mItemName, "@".$mRowBH->ItemCode, $mDescription);
