@@ -3,31 +3,24 @@ error_reporting(E_ALL);
 set_time_limit(1000);
 ini_set('max_execution_time', 1000);
 require_once "includes/config.php";
-$mObjDbAb = new dbAb();
 
-$mResBH = $mObjDbAb->Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-$mResProducts = $mObjDbAb->Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
+$mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
 $mRecordCount = 0;
 
-echo("Products Count: ".$mObjDbAb->returnRowsCount($mResProducts)."<br /><br />");
-
-while ($mRowProducts = $mObjDbAb->returnObject($mResProducts))
+while ($mRowProducts = dbAbstract::returnObject($mResProducts))
 {
-    echo("<br /><br /><br />AAAAAAAA<br /><br /><br />");
-    while ($mRowBH = $mObjDbAb->returnObject($mResBH))
+    $mResBH = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
+    while ($mRowBH = dbAbstract::returnObject($mResBH))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
-        $mRecordCount = $mRecordCount + 1;
-        echo($mItemName);
-        echo("<br />".$mDescription."<br /><br /><br />");
-        
-        /*if (strpos($mDescription, $mItemName)!==FALSE)
+                
+        if (strpos($mDescription, $mItemName)!==FALSE)
         {
             $mDescription = str_replace($mItemName, "@".$mRowBH->ItemCode, $mDescription);
-            $mObjDbAb->Update("UPDATE product SET item_des='".$mDescription."' WHERE prd_id=".$mRowProducts->prd_id);
+            dbAbstract::Update("UPDATE product SET item_des='".$mDescription."' WHERE prd_id=".$mRowProducts->prd_id);
             $mRecordCount = $mRecordCount + 1;
-        }*/
+        }
     }
 }
 
