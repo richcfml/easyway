@@ -20,12 +20,15 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
         {
             if (strlen($mRes)>8)
             {
-                echo("<b>Product ID: </b>".$mRowProducts->prd_id);
-                echo("<br /><b>Item ID: </b>".$mRowBH->ID);
-                echo("<br /><b>Item: </b>".$mRowBH->ItemName);
-                echo("<br /><b>Description: </b>".$mRowProducts->item_des);
-                echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
-                $mRecordCount = $mRecordCount + 1;
+                if (strpos($mRes, " ")!==FALSE)
+                {
+                    echo("<b>Product ID: </b>".$mRowProducts->prd_id);
+                    echo("<br /><b>Item ID: </b>".$mRowBH->ID);
+                    echo("<br /><b>Item: </b>".$mRowBH->ItemName);
+                    echo("<br /><b>Description: </b>".$mRowProducts->item_des);
+                    echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
+                    $mRecordCount = $mRecordCount + 1;
+                }
             }
         }
     }
