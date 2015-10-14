@@ -14,6 +14,7 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
+        $mRecordCount = $mRecordCount + 1;
         echo($mItemName);
         echo("<br />".$mDescription."<br /><br /><br />");
         
@@ -26,7 +27,7 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
     }
 }
 
-//echo ($mRecordCount." records updated.");
+echo ($mRecordCount." records updated.");
 
 function replaceBhSpecialChars($pDescription)
 {
