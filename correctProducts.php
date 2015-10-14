@@ -9,8 +9,11 @@ $mResBH = $mObjDbAb->Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER 
 $mResProducts = $mObjDbAb->Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
 $mRecordCount = 0;
 
+echo("Products Count: ".$mObjDbAb->returnRowsCount($mResProducts)."<br /><br />");
+
 while ($mRowProducts = $mObjDbAb->returnObject($mResProducts))
 {
+    echo("<br /><br /><br />AAAAAAAA<br /><br /><br />");
     while ($mRowBH = $mObjDbAb->returnObject($mResBH))
     {
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
