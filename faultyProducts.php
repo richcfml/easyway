@@ -18,9 +18,10 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
         $mRes = compareStrs($mDescription, $mItemName);
         if ($mRes !== null)
         {
-            if (strlen($mRes)>5)
+            if (strlen($mRes)>8)
             {
                 echo("<b>Product ID: </b>".$mRowProducts->prd_id);
+                echo("<br /><b>Item ID: </b>".$mRowBH->ID);
                 echo("<br /><b>Item: </b>".$mRowBH->ItemName);
                 echo("<br /><b>Description: </b>".$mRowProducts->item_des);
                 echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
