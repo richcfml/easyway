@@ -211,7 +211,6 @@ else if (isset($_GET['add_menu_item']))
     
     $product_description = replaceBhSpecialChars($product_description);
     $product_description = strip_tags($product_description, "<br>");
-    dbAbstract::Insert("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (1, 'Description', '".$product_description."')");
     $mResBhItemAdd = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
     while ($mRowBhItemAdd = dbAbstract::returnObject($mResBhItemAdd))
     {
@@ -222,8 +221,7 @@ else if (isset($_GET['add_menu_item']))
             $product_description = str_replace($mItemName, "@".$mRowBhItemAdd->ItemCode, $product_description);
         }
     }
-    dbAbstract::Insert("INSERT INTO tblDebug(Step, Value1, Value2) VALUES (2, 'Description', '".$product_description."')");
-    $mBHItem = 0;
+    
     if ($mRestBH==1)
     {
         $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
@@ -381,36 +379,36 @@ else if (isset($_GET['update_menu_item']))
         }
         
         $product_description = replaceBhSpecialChars($product_description);
-
-        $mBHItem = 0;
-        if ($mRestBH==1)
+    }
+    $product_description = ltrim($product_description);
+    $product_description = strip_tags($product_description, "<br>");
+    
+    $mResBhItemAdd = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
+    while ($mRowBhItemAdd = dbAbstract::returnObject($mResBhItemAdd))
+    {
+        $mItemName = trim(replaceBhSpecialChars($mRowBhItemAdd->ItemName));
+                
+        if (strpos($product_description, $mItemName)!==FALSE)
         {
-            $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
-            $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
-            if ($mResBH)
+            $product_description = str_replace($mItemName, "@".$mRowBhItemAdd->ItemCode, $product_description);
+        }
+    }
+    
+    if ($mRestBH==1)
+    {
+        $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
+        $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
+        if ($mResBH)
+        {
+            if ($mResBH->ItemCount>0)
             {
-                if ($mResBH->ItemCount>0)
+                if ($type=="")
                 {
-                    if ($type=="")
-                    {
-                        $type = "B";
-                    }
-                    else
-                    {
-                        $type = $type.",B";
-                    }
+                    $type = "B";
                 }
                 else
                 {
-                    if (trim($type)=="B")
-                    {
-                        $type = "";
-                    }
-                    else
-                    {
-                        $type = str_replace(",B", "", $type);
-                        $type = str_replace(", B", "", $type);
-                    }
+                    $type = $type.",B";
                 }
             }
             else
@@ -426,18 +424,17 @@ else if (isset($_GET['update_menu_item']))
                 }
             }
         }
-    }
-    $product_description = ltrim($product_description);
-    $product_description = strip_tags($product_description, "<br>");
-    
-    $mResBhItemAdd = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-    while ($mRowBhItemAdd = dbAbstract::returnObject($mResBhItemAdd))
-    {
-        $mItemName = trim(replaceBhSpecialChars($mRowBhItemAdd->ItemName));
-                
-        if (strpos($product_description, $mItemName)!==FALSE)
+        else
         {
-            $product_description = str_replace($mItemName, "@".$mRowBhItemAdd->ItemCode, $product_description);
+            if (trim($type)=="B")
+            {
+                $type = "";
+            }
+            else
+            {
+                $type = str_replace(",B", "", $type);
+                $type = str_replace(", B", "", $type);
+            }
         }
     }
     
