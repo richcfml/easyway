@@ -15,7 +15,7 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
         $mItemName = trim(replaceBhSpecialChars($mRowBH->ItemName));
         $mDescription = trim(replaceBhSpecialChars($mRowProducts->item_des));
                 
-        if (strpos($mDescription, $mItemName)!==FALSE)
+        if (compareStrs($mDescription, $mItemName)!==null)
         {
             echo("<b>Product ID: </b>".$mRowProducts->prd_id);
             echo("<br /><b>Description: </b>".$mRowProducts->item_des);
@@ -41,3 +41,16 @@ function replaceBhSpecialChars($pDescription)
     $pDescription = str_replace(" ", " ", $pDescription);
     return $pDescription;
 }
+
+function compareStrs($str1, $str2)
+{
+    for ($i = strlen($str1); $i != 0; $i--) {
+        for ($x = 0; $x < strlen($str1) - $i; $x++) {
+            if (($pos = strpos($str2, substr($str1, $x, $i + 1))) !== false) {
+                return substr($str1, $x, $i + 1);
+            }
+        }
+    }
+    return null;
+}
+?>
