@@ -37,7 +37,7 @@ else
 <script src="js/jquery.Jcrop.js"></script>
 <script language="Javascript">
    var jcrop_api;
-   
+   var codeArr = new Array();
     $(document).ready(function(){
              $('#item_img').Jcrop({ addClass: 'jcrop-centered',aspectRatio: 1, onSelect: updateCoords,maxSize: [ 500, 500 ]
             },function(){
@@ -130,11 +130,16 @@ if (isset($_GET['prd_id'])) {
 
     if ((($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh')) && ($Objrestaurant->bh_restaurant=='1'))
     {
-		$description = preg_replace_callback('|@[0-9]+|', 
+		$newdescription1 = preg_replace_callback('|@[0-9]+|', 
 			function ($matches) {
 				$code = str_replace('@','',$matches[0]);
 				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
-				$E = '<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
+				$E = '<span style="display:none">'.$result->ItemCode.'</span><a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
+				?>
+				<script language="javascript">
+                codeArr['<?=$E?>']= '<?='@'.$result->ItemCode?>';
+                </script>
+                <?php
 				return $E;
 			}, $description);
     }
@@ -440,16 +445,14 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 													{
 														if ($.trim(data)!="")
 														{
-															var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
-															
+															tempsearch = search.replace('@','');
+															var E='<span style="display:none">'+tempsearch+'</span><a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
+															codeArr[E]=search;
 															$("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
 															placeCaretAtEnd(document.getElementById("product_description1"));
 															
-															tmp_html = $("#product_description1").html();
-															$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
+															manageDescription();
 															
-															mTmpHTML = removeAnchors($("#product_description2").val());
-															$("#product_description").val(mTmpHTML);
 															$("#bh_item").attr('checked', true);
 														}
 													}
@@ -460,20 +463,12 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 								}
 								else
 								{
-									tmp_html = $("#product_description1").html();
-									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
-									
-									mTmpHTML = removeAnchors($("#product_description2").val());
-									$("#product_description").val(mTmpHTML);
+									manageDescription();
 								}
 							}
 							else
 							{
-								tmp_html = $("#product_description1").html();
-									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
-									
-									mTmpHTML = removeAnchors($("#product_description2").val());
-									$("#product_description").val(mTmpHTML);
+								manageDescription();
 							}
 							
 							
@@ -484,6 +479,30 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 							
 							return false;
 						});
+						
+						function manageDescription(){
+							var tmp_html = replaceAll("'", "&#39;", $("#product_description1").html());
+							tmp_html = replaceAll("®", "&#174;", tmp_html);
+							tmp_html = replaceAll("ä", "&#228;", tmp_html);
+							tmp_html = replaceAll("è", "&#232;", tmp_html);
+							tmp_html = replaceAll("ñ", "&#241;", tmp_html);
+							tmp_html = replaceAll('&amp;',"&", tmp_html);
+							tmp_html = replaceAll("™","&#8482;", tmp_html);
+							tmp_html = replaceAll("'","&#39;", tmp_html);
+							
+							$("#product_description2").val(tmp_html);
+							
+							for (var key in codeArr) {
+								$("#product_description2").val(replaceAll(key, codeArr[key],$("#product_description2").val()));
+							}
+							
+							mTmpHTML = removeAnchors($("#product_description2").val());
+							$("#product_description").val(mTmpHTML);
+						}
+						
+						function replaceAll(find, replace, str) {
+						  return str.replace(new RegExp(find, 'g'), replace);
+						}
 						
 						function removeAnchors(pStr)
 						{
@@ -539,11 +558,11 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 						}
 					});
 				  </script>
-                  <textarea id="product_description" name="product_description" style="display: none;"><?= trim($description1) ?></textarea>
+                  <textarea id="product_description" name="product_description" style="display: none;"><?= trim($description) ?></textarea>
                   <input type="hidden" id="hdnSearch" />
                   <div id="container">
                     <div id="product_description1" name="product_description1" <?php if(isset($_GET['sandwichId'])){ ?> contenteditable="false" <?php }else{ ?> contenteditable="true" <?php }?> class="textAreaClass" style="overflow: auto; font-size: 15px; font-family: Arial; background-color: white; border: 1px solid #A9A9A9; margin-left: 13%;resize: none;margin-top: 30px;width: 85%;height: 133px;padding: 8px;">
-                      <?= trim($description) ?>
+                      <?= trim($newdescription1) ?>
                     </div>
                     <div id='display' style="background-color: #FFF8DC; margin-left: 4%; margin-top: 1px; position: absolute; width: 25%; z-index: 2;"> </div>
                   </div>
