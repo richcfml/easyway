@@ -38,10 +38,11 @@ class cydne
         Log::write('CDYNE Post Array - Send SMS', print_r($post_array,true), 'cdyne');
 		$cURL = curl_init();
 		 
-		curl_setopt($cURL,CURLOPT_URL,$url);
-		curl_setopt($cURL,CURLOPT_POST,true);
-		curl_setopt($cURL,CURLOPT_POSTFIELDS,$json);
-		curl_setopt($cURL,CURLOPT_RETURNTRANSFER, true);  
+		curl_setopt($cURL, CURLOPT_URL,$url);
+		curl_setopt($cURL, CURLOPT_POST,true);
+		curl_setopt($cURL, CURLOPT_POSTFIELDS,$json);
+		curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);  
+                curl_setopt($cURL, CURLOPT_SSLVERSION, "CURL_SSLVERSION_TLSv1_2");
 		curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Accept: application/json'));
 		//If you desire your results in xml format, use the following line for your httpheaders and comment out the httpheaders code line above.
 		$result = curl_exec($cURL);
