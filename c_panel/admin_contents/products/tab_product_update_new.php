@@ -146,7 +146,7 @@ if (isset($_GET['prd_id'])) {
 			}, $description);
     }
 	
-	if($updatedOn < strtotime('2015-10-15') || $updatedOn == -3600){
+	if($updatedOn < strtotime('2015-10-16') || $updatedOn == -3600){
 		
 		$mSQLBH = "SELECT * FROM bh_items ORDER BY LENGTH(ItemName) DESC";
         $mResBH = dbAbstract::Execute($mSQLBH);
