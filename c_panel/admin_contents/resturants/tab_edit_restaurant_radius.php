@@ -716,6 +716,19 @@ if (isset($_POST['submit'])) {
     }
     
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
+    if($Objrestaurant->header_image != '')
+    {
+        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image";
+    }else{
+        $imageSrc = "../images/default_200_by_200.jpg";
+    }
+    ?>
+            <script language="javascript">
+                    $(document).ready(function(){
+                        $("#restaurant_header").attr('src','<?= $imageSrc?>');
+                    });
+            </script>
+    <?php
 } //end submit2		
 else if (isset($_POST["btnRemoveVIP"]))
 {
@@ -766,6 +779,19 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
     }
     $errMessage = "Header image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
+    if($Objrestaurant->header_image != '')
+    {
+        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image";
+    }else{
+        $imageSrc = "../images/default_200_by_200.jpg";
+    }
+    ?>
+            <script language="javascript">
+                    $(document).ready(function(){
+                        $("#restaurant_header").attr('src','<?= $imageSrc?>');
+                    });
+            </script>
+    <?php
 }
 else if (isset($_POST["btnRemoveVIPRewardImage"]))
 {

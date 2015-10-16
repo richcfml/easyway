@@ -131,9 +131,15 @@
 <?php 
 if($Objrestaurant) 
 { 
+    if($Objrestaurant->header_image != '')
+    {
+        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image";
+    }else{
+        $imageSrc = "../images/default_200_by_200.jpg";
+    }
 ?>
 	<div style="padding-bottom:10px;text-align:center">
-    	<img style="width:1085px; height:90px;" src="../images/resturant_headers/<?=$Objrestaurant->header_image?>" border="0" />
+    	<img style="width:1085px; height:90px;" id="restaurant_header" src="<?= $imageSrc; ?>" border="0" />
 	</div>
 <?php 
 } 
