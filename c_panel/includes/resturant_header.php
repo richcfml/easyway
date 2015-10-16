@@ -139,9 +139,8 @@ if($Objrestaurant)
         $imageSrc = "../images/default_200_by_200.jpg";
     }
 ?>
-	<div style="padding-bottom:10px;text-align:center;position: relative;margin: 0 auto;width: 1085px;">
-    	<div id="restaurant_header" style="background: url(<?= $imageSrc ?>);height: 90px;width: 1085px;text-align: center;"></div>
-<!--    	<img style="width:1085px; height:90px;" id="restaurant_header" src="<?= $imageSrc; ?>" border="0" />-->
+	<div style="padding-bottom:10px;text-align:center">
+    	<img style="width:1085px; height:90px;" id="restaurant_header" src="<?= $imageSrc; ?>" border="0" />
 	</div>
 <?php 
 } 
