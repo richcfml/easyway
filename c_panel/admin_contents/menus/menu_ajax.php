@@ -210,18 +210,8 @@ else if (isset($_GET['add_menu_item']))
     }
     
     $product_description = replaceBhSpecialChars($product_description);
-    $product_description = strip_tags($product_description, "<br>");
-    $mResBhItemAdd = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-    while ($mRowBhItemAdd = dbAbstract::returnObject($mResBhItemAdd))
-    {
-        $mItemName = trim(replaceBhSpecialChars($mRowBhItemAdd->ItemName));
-                
-        if (strpos($product_description, $mItemName)!==FALSE)
-        {
-            $product_description = str_replace($mItemName, "@".$mRowBhItemAdd->ItemCode, $product_description);
-        }
-    }
     
+    $mBHItem = 0;
     if ($mRestBH==1)
     {
         $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
@@ -379,36 +369,36 @@ else if (isset($_GET['update_menu_item']))
         }
         
         $product_description = replaceBhSpecialChars($product_description);
-    }
-    $product_description = ltrim($product_description);
-    $product_description = strip_tags($product_description, "<br>");
-    
-    $mResBhItemAdd = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
-    while ($mRowBhItemAdd = dbAbstract::returnObject($mResBhItemAdd))
-    {
-        $mItemName = trim(replaceBhSpecialChars($mRowBhItemAdd->ItemName));
-                
-        if (strpos($product_description, $mItemName)!==FALSE)
+
+        $mBHItem = 0;
+        if ($mRestBH==1)
         {
-            $product_description = str_replace($mItemName, "@".$mRowBhItemAdd->ItemCode, $product_description);
-        }
-    }
-    
-    if ($mRestBH==1)
-    {
-        $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
-        $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
-        if ($mResBH)
-        {
-            if ($mResBH->ItemCount>0)
+            $mSQLBH = "SELECT COUNT(*) AS ItemCount FROM bh_items WHERE LOCATE(ItemCode, '".$product_description."')>0";
+            $mResBH = dbAbstract::ExecuteObject($mSQLBH, 1);
+            if ($mResBH)
             {
-                if ($type=="")
+                if ($mResBH->ItemCount>0)
                 {
-                    $type = "B";
+                    if ($type=="")
+                    {
+                        $type = "B";
+                    }
+                    else
+                    {
+                        $type = $type.",B";
+                    }
                 }
                 else
                 {
-                    $type = $type.",B";
+                    if (trim($type)=="B")
+                    {
+                        $type = "";
+                    }
+                    else
+                    {
+                        $type = str_replace(",B", "", $type);
+                        $type = str_replace(", B", "", $type);
+                    }
                 }
             }
             else
@@ -424,19 +414,9 @@ else if (isset($_GET['update_menu_item']))
                 }
             }
         }
-        else
-        {
-            if (trim($type)=="B")
-            {
-                $type = "";
-            }
-            else
-            {
-                $type = str_replace(",B", "", $type);
-                $type = str_replace(", B", "", $type);
-            }
-        }
     }
+    $product_description = ltrim($product_description);
+   
     
     Log::write("Update Product Title, Desc, Retail Pric, Type - menu_ajax.php", "QUERY -- update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).", item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 'menu', 1 , 'cpanel');
     dbAbstract::Update("update product set item_title = '" . ucfirst(addslashes($item_name)) . "', item_des = '" . prepareStringForMySQL($product_description) . "', retail_price = ".str_replace('$','',$price).",pos_id = '$pos_id', item_type='" . $type . "' where prd_id = " . $_GET['prd_id'] . "", 1);
@@ -1717,9 +1697,6 @@ function replaceBhSpecialChars($pDescription)
     $pDescription = str_replace("ä", "&#228;", $pDescription);
     $pDescription = str_replace("è", "&#232;", $pDescription);
     $pDescription = str_replace("ñ", "&#241;", $pDescription);
-    $pDescription = str_replace("™", "&#8482;", $pDescription);
-    $pDescription = str_replace("&amp;", "&#38;", $pDescription);
-    $pDescription = str_replace(" & ", " &#38; ", $pDescription);
     $pDescription = str_replace(" ", " ", $pDescription);
     return $pDescription;
 }
