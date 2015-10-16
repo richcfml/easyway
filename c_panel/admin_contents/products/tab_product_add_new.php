@@ -420,15 +420,15 @@ if($_POST['cropimg'])
                                     $("#product_description1").live("keydown",function(e)
                                     {
                                         // trap the return key being pressed
-                                        if (jQuery.browser.safari)
+                                        /*if (jQuery.browser.safari)
                                         {
                                             if (e.keyCode === 13) {
                                               // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
-                                              document.execCommand('insertHTML', false, '<br><br>');
+                                              document.execCommand('insertHTML', false, '<br>');
                                               // prevent the default behaviour of return key pressed
                                               return false;
                                             }
-                                        }
+                                        }*/
                                       });
                                     
                                     $("#product_description1").live("keyup",function(e)
