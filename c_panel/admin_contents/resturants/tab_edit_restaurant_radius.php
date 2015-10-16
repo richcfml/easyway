@@ -725,7 +725,7 @@ if (isset($_POST['submit'])) {
     ?>
             <script language="javascript">
                     $(document).ready(function(){
-                        $("#restaurant_header").attr('src','<?= $imageSrc?>');
+                        $("#restaurant_header").css('background-image','url(<?= $imageSrc?>)');
                     });
             </script>
     <?php
@@ -788,7 +788,7 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
     ?>
             <script language="javascript">
                     $(document).ready(function(){
-                        $("#restaurant_header").attr('src','<?= $imageSrc?>');
+                        $("#restaurant_header").css('background-image','url(<?= $imageSrc?>)');
                     });
             </script>
     <?php
