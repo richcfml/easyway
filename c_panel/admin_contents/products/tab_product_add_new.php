@@ -82,8 +82,7 @@ if (isset($_GET['sandwichId'])) {
     $description = $sandwitch_data->item_desc;
     $description1 = $sandwitch_data->item_desc;
     $imgSource = $sandwitch_data->item_image;
-	$updatedOn = strtotime(date('Y-m-d', strtotime($prd_data->UpdatedOn)));
-	
+
     //add attribute which has apply_sub_cat is 1
     $category_id = $_GET['sub_cat'];
     $query = dbAbstract::Execute("Select prd_id from product where sub_cat_id = ".$category_id."");
@@ -193,52 +192,12 @@ if (isset($_GET['sandwichId'])) {
 	if (($_SESSION['admin_type'] == 'admin') || ($_SESSION['admin_type'] == 'bh'))
     {
 		$description = preg_replace_callback('|@[0-9]+|', 
-			function ($matches) {
-				$code = str_replace('@','',$matches[0]);
-				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
-				$E = '<span style="display:none">'.$result->ItemCode.'</span><a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
-				?>
-				<script language="javascript">
-                codeArr['<?=$E?>']= '<?='@'.$result->ItemCode?>';
-                </script>
-                <?php
-				return $E;
-			}, $description);
-			
-		/*$description = preg_replace_callback('|@[0-9]+|', 
 		function ($matches) {
 			$code = str_replace('@','',$matches[0]);
 			$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
 			return $E = '<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$result->ItemName.'</a>';
-		}, $description);*/
+		}, $description);
     }
-	
-	if($updatedOn < strtotime('2015-10-15') || $updatedOn == -3600){
-		$mSQLBH = "SELECT * FROM bh_items ORDER BY LENGTH(ItemName) DESC";
-        $mResBH = dbAbstract::Execute($mSQLBH);
-        
-        $mPrevItem = "";
-        
-        while ($mRowBH = dbAbstract::returnObject($mResBH,1))
-        {
-	        if (strpos($description, $mRowBH->ItemName)!==FALSE)
-            {
-				
-                if ($mPrevItem!=$mRowBH->ItemName)
-                {
-                    $mPrevItem = $mRowBH->ItemName;
-					$E = '<span style="display:none">'.$mRowBH->ItemCode.'</span><a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'.$mRowBH->ItemName.'</a>';
-					$description = str_replace($mRowBH->ItemName, $E,$description);
-					$description1 = str_replace($mRowBH->ItemName, '@'.$mRowBH->ItemCode,$description1);
-					?>
-					<script language="javascript">
-                    codeArr['<?=$E?>']= '<?='@'.$mRowBH->ItemCode?>';
-                    </script>
-                    <?php
-                }
-            }
-        }
-	}
 }
 if($_POST['cropimg'])
 {
@@ -438,7 +397,6 @@ if($_POST['cropimg'])
                             <script type="text/javascript">
                                 $(document).ready(function()
                                 {
-									var codeArr = new Array();
                                     var start=/@/ig; // @ Match
                                     
                                     $("#product_description1").blur(function()
@@ -511,7 +469,7 @@ if($_POST['cropimg'])
                                                     if ((search!="") && (search!="@"))
                                                     {
                                                         $("#hdnSearch").val(search);
-														setTimeout(function()
+                                                        setTimeout(function()
                                                         {
                                                             $.ajax({
                                                                 type: "POST",
@@ -522,13 +480,17 @@ if($_POST['cropimg'])
                                                                 {
                                                                     if ($.trim(data)!="")
                                                                     {
-																		tempsearch = search.replace('@','');
-																		var E='<span style="display:none">'+tempsearch+'</span><a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
-																		codeArr[E]=search;
+                                                                        var E='<a contenteditable="false" href="#" style="color: #0066CC;"><i></i>'+data+'</a>';
                                                                         $("#product_description1").html($("#product_description1").html().replace($("#hdnSearch").val(), E));
-							                                            placeCaretAtEnd(document.getElementById("product_description1"));
-                                                                        manageDescription();
-																		$("#bh_item").attr('checked', true);
+                                                                        placeCaretAtEnd(document.getElementById("product_description1"));
+                                                                        
+                                                                        tmp_html = $("#product_description1").html();
+                                                                        $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                                                        mTmpHTML = removeAnchors($("#product_description2").val());
+                                                                        $("#product_description").val(mTmpHTML);
+																		
+                                                                        $("#bh_item").attr('checked', true);
                                                                     }
                                                                 }
                                                             });
@@ -538,12 +500,20 @@ if($_POST['cropimg'])
                                             }
                                             else
                                             {
-												manageDescription();
+                                                tmp_html = $("#product_description1").html();
+                                                $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                                mTmpHTML = removeAnchors($("#product_description2").val());
+                                                $("#product_description").val(mTmpHTML);
                                             }
                                         }
                                         else
                                         {
-                                            manageDescription();
+                                            tmp_html = $("#product_description1").html();
+                                            $("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;"));
+
+                                            mTmpHTML = removeAnchors($("#product_description2").val());
+                                            $("#product_description").val(mTmpHTML);
                                         }
 										
                                         if ($("#product_description1").html().indexOf("<a ")<0)
@@ -554,30 +524,6 @@ if($_POST['cropimg'])
                                         return false;
                                     });
                                     
-									function manageDescription(){
-										var tmp_html = replaceAll("'", "&#39;", $("#product_description1").html());
-										tmp_html = replaceAll("®", "&#174;", tmp_html);
-										tmp_html = replaceAll("ä", "&#228;", tmp_html);
-										tmp_html = replaceAll("è", "&#232;", tmp_html);
-										tmp_html = replaceAll("ñ", "&#241;", tmp_html);
-										tmp_html = replaceAll('&amp;',"&", tmp_html);
-										tmp_html = replaceAll("™","&#8482;", tmp_html);
-										tmp_html = replaceAll("'","&#39;", tmp_html);
-										
-										$("#product_description2").val(tmp_html);
-										
-										for (var key in codeArr) {
-											$("#product_description2").val(replaceAll(key, codeArr[key],$("#product_description2").val()));
-										}
-										
-										mTmpHTML = removeAnchors($("#product_description2").val());
-										$("#product_description").val(mTmpHTML);
-									}
-									
-									function replaceAll(find, replace, str) {
-									  return str.replace(new RegExp(find, 'g'), replace);
-									}
-									
                                     function removeAnchors(pStr)
                                     {
                                         mTmpHTML = pStr;
