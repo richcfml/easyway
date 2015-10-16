@@ -718,7 +718,7 @@ if (isset($_POST['submit'])) {
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
     if($Objrestaurant->header_image != '')
     {
-        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image";
+        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image?".time();
     }else{
         $imageSrc = "../images/default_200_by_200.jpg";
     }
@@ -781,7 +781,7 @@ else if (isset($_POST["btnRemoveHeaderImage"]))
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
     if($Objrestaurant->header_image != '')
     {
-        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image";
+        $imageSrc = "../images/resturant_headers/$Objrestaurant->header_image?".time();
     }else{
         $imageSrc = "../images/default_200_by_200.jpg";
     }
