@@ -6,7 +6,7 @@ require_once "includes/config.php";
 
 $mResProducts = dbAbstract::Execute("SELECT prd_id, item_des FROM product WHERE LENGTH(item_des) > 0 AND LOWER(item_des) LIKE '%proudly featuring boar%'");
 $mRecordCount = 0;
-
+$mPrdID = 0;
 while ($mRowProducts = dbAbstract::returnObject($mResProducts))
 {
     $mResBH = dbAbstract::Execute("SELECT ID, ItemCode, ItemName FROM bh_items ORDER BY LENGTH(ItemName) DESC");
@@ -22,12 +22,16 @@ while ($mRowProducts = dbAbstract::returnObject($mResProducts))
             {
                 if (strpos($mRes, " ")!==FALSE)
                 {
-                    echo("<b>Product ID: </b>".$mRowProducts->prd_id);
-                    echo("<br /><b>Item ID: </b>".$mRowBH->ID);
-                    echo("<br /><b>Item: </b>".$mRowBH->ItemName);
-                    echo("<br /><b>Description: </b>".$mRowProducts->item_des);
-                    echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
-                    $mRecordCount = $mRecordCount + 1;
+                    if ($mPrdID != $mRowProducts->prd_id)
+                    {
+                        $mPrdID = $mRowProducts->prd_id;
+                        echo("<b>Product ID: </b>".$mRowProducts->prd_id);
+                        echo("<br /><b>Item ID: </b>".$mRowBH->ID);
+                        echo("<br /><b>Item: </b>".$mRowBH->ItemName);
+                        echo("<br /><b>Description: </b>".$mRowProducts->item_des);
+                        echo("<br /><br />- - - - - - - - - - - - - - - - - - - - - <br />");
+                        $mRecordCount = $mRecordCount + 1;
+                    }
                 }
             }
         }
