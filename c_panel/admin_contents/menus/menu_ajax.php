@@ -1713,6 +1713,7 @@ function GetFileExt($fileName) {
 function replaceBhSpecialChars($pDescription)
 {
     $pDescription = str_replace("'", "&#39;", $pDescription);
+    $pDescription = str_replace("’", "&#39;", $pDescription);
     $pDescription = str_replace("®", "&#174;", $pDescription);
     $pDescription = str_replace("©", "&#169;", $pDescription);
     $pDescription = str_replace("Ã", "&#195;", $pDescription);

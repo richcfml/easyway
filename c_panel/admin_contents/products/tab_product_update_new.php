@@ -446,7 +446,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 															placeCaretAtEnd(document.getElementById("product_description1"));
 															
 															tmp_html = $("#product_description1").html();
-															$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;"));
+															$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;").replace("’","&#39;"));
 															
 															mTmpHTML = removeAnchors($("#product_description2").val());
 															$("#product_description").val(mTmpHTML);
@@ -461,7 +461,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 								else
 								{
 									tmp_html = $("#product_description1").html();
-									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;"));
+									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;").replace("’","&#39;"));
 									
 									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML);
@@ -470,7 +470,7 @@ input[type=text].alert-error, input[type=select].alert-error, input[type=passwor
 							else
 							{
 								tmp_html = $("#product_description1").html();
-									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;"));
+									$("#product_description2").val(tmp_html.replace("'", "&#39;").replace("®", "&#174;").replace("ä", "&#228;").replace("è", "&#232;").replace("è", "&#232;").replace("ñ", "&#241;").replace('&#38;',"&").replace("™","&#8482;").replace("'","&#39;").replace("©","&#169;").replace("Ã","&#195;").replace("’","&#39;"));
 									
 									mTmpHTML = removeAnchors($("#product_description2").val());
 									$("#product_description").val(mTmpHTML);

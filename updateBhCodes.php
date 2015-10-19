@@ -47,22 +47,16 @@ while ($row = dbAbstract::returnObject($rs))
 function replaceBhSpecialChars($pDescription)
 {
     $pDescription = str_replace("'", "&#39;", $pDescription);
-	$pDescription = str_replace("'", "&#39;", $pDescription);
+    $pDescription = str_replace("’", "&#39;", $pDescription);
     $pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	$pDescription = str_replace("®", "&#174;", $pDescription);
-	
+    $pDescription = str_replace("©", "&#169;", $pDescription);
+    $pDescription = str_replace("Ã", "&#195;", $pDescription);
     $pDescription = str_replace("ä", "&#228;", $pDescription);
     $pDescription = str_replace("è", "&#232;", $pDescription);
     $pDescription = str_replace("ñ", "&#241;", $pDescription);
     $pDescription = str_replace("™", "&#8482;", $pDescription);
+    $pDescription = str_replace("&amp;", "&#38;", $pDescription);
+    $pDescription = str_replace(" & ", " &#38; ", $pDescription);
     $pDescription = str_replace(" ", " ", $pDescription);
     return $pDescription;
 }
