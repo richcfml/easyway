@@ -75,7 +75,11 @@ $loop_index_check = FALSE;
     function setProductDetailsToPopup(productDetails){
 
         $('#item_title').html(productDetails.item_title);
-        productDetails.item_des = productDetails.item_des.replace("&#174;", "<sub>&#174;</sub>").replace("&#8482;", "<sub>&#8482;</sub>").replace("&#169;", "<sub>&#169;</sub>");
+        mTmpDesc = productDetails.item_des;
+        mTmpDesc = mTmpDesc.split("&#174;").join("<sub>&#174;</sub>");
+        mTmpDesc = mTmpDesc.split("&#8482;").join("<sub>&#8482;</sub>");
+        mTmpDesc = mTmpDesc.split("&#169;").join("<sub>&#169;</sub>");
+        productDetails.item_des = mTmpDesc;
         $('#item_des').html(productDetails.item_des);
 
         if(productDetails.item_image){
