@@ -84,9 +84,6 @@ $loop_index_check = FALSE;
         mTmpDesc = mTmpDesc.split("&#174;").join("<sub>&#174;</sub>");
         mTmpDesc = mTmpDesc.split("&#8482;").join("<sub>&#8482;</sub>");
         mTmpDesc = mTmpDesc.split("&#169;").join("<sub>&#169;</sub>");
-        mTmpDesc = mTmpDesc.split("®;").join("<sub>®</sub>");
-        mTmpDesc = mTmpDesc.split("©").join("<sub>©</sub>");
-        mTmpDesc = mTmpDesc.split("™").join("<sub>™</sub>");
         productDetails.item_des = mTmpDesc;
         $('#item_des').html(productDetails.item_des);
 
@@ -1130,7 +1127,7 @@ $.each(attributeRequired, function(index, value) {
                                     <td style="width: 2%;"></td>
                                     <td align="left" style="width: 88%; font-size:12px;" valign="top">
                                         <div class="product_name">
-                                          <a id='showProductPopup' myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "®", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> >
+                                          <a id='showProductPopup' myItemTitle="<?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "\n", str_replace("<br/>", "\n", str_replace("<br>", "\n", $menulist->item_title)))))) ?>" myItemDescription="<?= $function_obj->_esc_xmlchar(trim(str_replace("&#8482;", "<sub>™</sub>", str_replace("&#169;", "<sub>©</sub>", str_replace("&#39;", "'", str_replace("&#174;", "<sub>®</sub>", str_replace("&#228;", "ä", str_replace("&#232;", "è", str_replace("&#241;", "ñ", $menulist->item_des))))))))) ?>" myItemImage="<?= trim($menulist->item_image) ?>" onMouseout="hideddrivetip()" <? if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#"  onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>,-1);"<? } ?> >
 											
 											<?= stripslashes($menulist->item_title)?>
                                         </a>
