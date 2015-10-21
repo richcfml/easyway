@@ -1170,11 +1170,11 @@ $.each(attributeRequired, function(index, value) {
 										?>
                                         	<div class="product_name">
                                             	<a id="prd_<?=$menulist->prd_id?>" class="<?php echo('pr-'.$menulist->prd_id); ?>" <?php if ($iscurrentMenuAvaible == 0) { ?> href="javascript:alert('menu is not available at this time');" <?php } else { ?> href="#" onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>, -1);" <? } ?> ><?= stripslashes($menulist->item_title) ?></a><br />
-                                                <span style="font-size:12px;"><? echo stripslashes(stripcslashes($menulist->item_des)) ?></span>
+                                                <span style="font-size:12px;"><?php echo stripslashes(stripcslashes( str_replace("&#174;", "<sub>&#174;</sub>", str_replace("&#169;", "<sub>&#169;</sub>", str_replace("&#8482;", "<sub>&#8482;</sub>", $menulist->item_des))))) ?></span>
                                             </div>
                                         <? } else { ?>
                                             <div class="product_name">
-                                                <a id="prd_<?=$menulist->prd_id?>" class="<?php echo('pr-'.$menulist->prd_id); ?>"  onMouseover="ddrivetip('<span><?= htmlspecialchars(trim(str_replace("&#39;", "'", str_replace("<br />", "/n", str_replace("<br>", "\n",str_replace("<br/>", "\n", $menulist->item_title)))))) ?></span><br /><br /><?= $function_obj->_esc_xmlchar(trim(str_replace("&#39;", "'", str_replace("&#174;", "�", str_replace("&#228;", "�", str_replace("&#232;", "�", str_replace("&#241;", "�", $menulist->item_des))))))) ?>')" onMouseout="hideddrivetip()" <?php if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#" onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>, -1);" <? } ?> ><?= stripslashes($menulist->item_title) ?></a>
+                                                <a id="prd_<?=$menulist->prd_id?>" class="<?php echo('pr-'.$menulist->prd_id); ?>"  <?php if ($iscurrentMenuAvaible == 0) { ?>  href="javascript:alert('menu is not available at this time');" <? } else { ?> href="#" onclick="event.preventDefault();showPopup(<?php echo $menulist->prd_id; ?> , <?php echo $menulist->HasAssociates; ?>, <?php echo $menulist->HasAttributes; ?>, -1);" <? } ?> ><?= stripslashes($menulist->item_title) ?></a>
                                             </div>
                                         <? } ?>
 
