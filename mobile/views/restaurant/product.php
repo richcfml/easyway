@@ -263,8 +263,9 @@ if (!is_numeric($id) || $id <= 0)
 }
 
 $product = product::getDetailsByProductId($id);
-/*echo("<pre>");
-print_r($product);*/
+$item_desc = preg_replace_callback("/\r|\n/", function ($matches) { return " "; }, getProductDescription($product->item_des));         
+$item_desc =  strip_tags(str_replace("</b>", "", str_replace("<b>", "", str_replace("'", "&#39;",str_replace("<br />"," ",str_replace("\t", "",$item_desc))))), "<br>");
+
 if (is_null($product)) 
 {
     redirect($SiteUrl . $objRestaurant->url . "/");
@@ -405,7 +406,7 @@ if (isset($_POST['addtocart']))
 <section class="menu_list_wrapper content">
     <div>
         <h1 class="product"><? echo stripslashes(stripcslashes($product->item_title)) ?> </h1>
-        <div  class="normal"><? echo stripslashes(stripcslashes($product->item_des)) ?> </div>
+        <div  class="normal"><?php echo $item_desc ?> </div>
 		<?php
 			$mPreviousPrice = $product->retail_price;
 			$mPreviousPrice = trim(str_replace("$", "", $mPreviousPrice));
