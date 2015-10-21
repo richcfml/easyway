@@ -233,7 +233,7 @@
                                                             ?>
                                                             <div sub_cat="<?=$mRow["cat_id"]?>" style="margin-left:55px;width: 200px; <?=(($mRowPr['signature_sandwitch_id']>0)? 'color:#c3bcaf':'')?>" class="<?=(($mRowPr["status"]==0)? 'disable-menu':'enable-menu')?>">
                                                                 <?php
-                                                                echo str_replace("&#169", "<sub>&#169</sub>", str_replace("&#8482;", "<sub>&#8482;</sub>", str_replace("&#174", "<sub>&#174</sub>", getProductDescription(wordwrap($mRowPr["item_des"], 20, "\n", false)))));
+                                                                echo str_replace("&#169;", "<sub>&#169;</sub>", str_replace("&#8482;", "<sub>&#8482;</sub>", str_replace("&#174;", "<sub>&#174;</sub>", getProductDescription(wordwrap($mRowPr["item_des"], 20, "\n", false)))));
 																?>
                                                             </div>
                                                         </td>
