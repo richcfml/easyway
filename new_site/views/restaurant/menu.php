@@ -69,10 +69,8 @@ $loop_index_check = FALSE;
     
 ?>
 <script>
-/*------------------------------Naveed Start---------------------------------------------------*/
         var attributeRequired;
-/*------------------------------Naveed End-----------------------------------------------------*/
-        
+      
 	function isNumeric(n) 
 	{
 	  return !isNaN(parseFloat(n)) && isFinite(n);
@@ -82,6 +80,7 @@ $loop_index_check = FALSE;
     function setProductDetailsToPopup(productDetails){
 
         $('#item_title').html(productDetails.item_title);
+        productDetails.item_des = productDetails.item_des.replace("&#174;", "<sub>&#174;</sub>").replace("&#8482;", "<sub>&#8482;</sub>").replace("&#169;", "<sub>&#169;</sub>");
         $('#item_des').html(productDetails.item_des);
 
         if(productDetails.item_image){
@@ -660,7 +659,6 @@ $loop_index_check = FALSE;
             var hasAttributes = $('#hasAttributes').val();
             var hasAssociates = $('#hasAssociates').val();
             
-/*------------------------------Naveed Start---------------------------------------------------*/
 var isValid = true;
 
 $.each(attributeRequired, function(index, value) {
@@ -709,7 +707,6 @@ $.each(attributeRequired, function(index, value) {
     {
         $($('[id=updateMessage]')[1]).hide();
         $($('[id=updateMessage1]')[1]).hide();
-/*------------------------------Naveed End-----------------------------------------------------*/        
         var mUrl = '';
         var mRandom = Math.floor((Math.random() * 1000000) + 1);
         mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
@@ -738,9 +735,7 @@ $.each(attributeRequired, function(index, value) {
                     alert('Error occurred.');
                 }
             });
-/*------------------------------Naveed Start---------------------------------------------------*/        
     }
-/*------------------------------Naveed End-----------------------------------------------------*/         
         });
     });
 	
@@ -1093,7 +1088,7 @@ $.each(attributeRequired, function(index, value) {
     <?php
     				$loop_index_check = TRUE;
            		}
-                //            print_r($menulist);
+
            		if ((($current_cat1 != $menulist->sub_cat_id || $firstindex1 == 0)) || ($menulist->sub_cat_id==""))
 				{
 					$index++;
@@ -1242,8 +1237,7 @@ $.each(attributeRequired, function(index, value) {
                 mouseOnProductName = true;
                 var itemTitleIs = $(this).attr('myItemTitle');
                 var itemDescIs = $(this).attr('myItemDescription');
-                var itemImageIs = $(this).attr('myItemImage');
-                //var imageHTML = itemImageIs ? '<img style="float:right" class="images" src="/images/item_images/' + itemImageIs + '"/>' : '';
+                itemDescIs = itemDescIs.replace("&#174;", "<sub>&#174;</sub>").replace("&#8482;", "<sub>&#8482;</sub>").replace("&#169;", "<sub>&#169;</sub>");
                 var imageHTML = '';
                 var myNewHTML = $('<div class="popupDiv"><span>' + itemTitleIs + '</span><br /><br />' + itemDescIs + ' ' + imageHTML + '</div>');
                 ddrivetip(myNewHTML.html());

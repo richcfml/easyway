@@ -72,10 +72,8 @@ $loop_index_check = FALSE;
     
 ?>
 <script>
-/*------------------------------Naveed Start---------------------------------------------------*/
         var attributeRequired;
-/*------------------------------Naveed End-----------------------------------------------------*/
-        
+       
 	function isNumeric(n) 
 	{
 	  return !isNaN(parseFloat(n)) && isFinite(n);
@@ -85,6 +83,7 @@ $loop_index_check = FALSE;
     function setProductDetailsToPopup(productDetails){
 
         $('#item_title').html(productDetails.item_title);
+        productDetails.item_des = productDetails.item_des.replace("&#174;", "<sub>&#174;</sub>").replace("&#8482;", "<sub>&#8482;</sub>").replace("&#169;", "<sub>&#169;</sub>");
         $('#item_des').html(productDetails.item_des);
 
         if(productDetails.item_image){
@@ -175,7 +174,6 @@ $loop_index_check = FALSE;
         if(hasAssociates == 1 || hasAttribute == 1 || cartItemIndex>=0){
 
             var mUrl = '';
-            var mRandom = Math.floor((Math.random() * 1000000) + 1);
             if(cartItemIndex>=0)
             {
                 mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&kiosk=1&showEditPopup=1&ajax=1";
@@ -236,14 +234,10 @@ $loop_index_check = FALSE;
                         $('#requestnote').val('');
                         $('#requestnote').text('');
                     }
-/*------------------------------Naveed Start---------------------------------------------------*/
                     var requiredIndex = 0;
-/*------------------------------Naveed End-----------------------------------------------------*/                    
                     $.each(attributes_array, function(i, attribute) {
                         mAttReq = '';
-/*------------------------------Naveed Start---------------------------------------------------*/
                         mAttrReqHtml = '';
-/*------------------------------Naveed End---------------------------------------------------*/                        
                         mStrRe = '<tr><td colspan="3" style="width: 100%; font-size: 11px !important; color: red;">&nbsp;<i>';
 
                         var mAttrName = attribute.attr_name;
@@ -266,14 +260,10 @@ $loop_index_check = FALSE;
 						
                         if (attribute.Required == 1)
                         {
-/*------------------------------Naveed Start---------------------------------------------------*/
                             attributeRequired[requiredIndex] = attribute.id;
                             requiredIndex++;
-/*------------------------------Naveed End---------------------------------------------------*/
                             mStrRe = mStrRe + 'Choose at least one';
-/*------------------------------Naveed Start---------------------------------------------------*/                            
                             mAttrReqHtml = '<span id="attrRequired-'+attribute.id+'" class="red" style="display:none;">*</span>';
-/*------------------------------Naveed End---------------------------------------------------*/                            
                         }
 						
                         if (($.trim(mLimit)!="") && ($.trim(mLimitPrice)!=""))
@@ -292,7 +282,6 @@ $loop_index_check = FALSE;
                         }
 
                         mStrRe = mStrRe + '</i></td></tr>';
-/*------------------------------Naveed Start---------------------------------------------------*/
 						if (attribute.display_Name!=null)
 						{
 							if (($.trim(attribute.display_Name)!="") && ($.trim(attribute.display_Name)!="Type your message here"))
@@ -308,7 +297,6 @@ $loop_index_check = FALSE;
 						{
 	                        html = html + '<tr><td><table id=attrRequiredBorder-'+attribute.id+' style="margin-bottom:5px;width: 100%;"><tr><td>&nbsp;</td></tr><tr ><td><strong class="Text_14px">' + attribute.option_name + '</strong>'+mAttrReqHtml+'<input type="hidden" name="' + attribute_parent_name + '" value="' + attribute.option_name + '" />'+mAttReq+'</td></tr><tr><td>'+mStrRe+'</td></tr>';
 						}
-/*------------------------------Naveed End---------------------------------------------------*/
                         if (attribute.Type == 1) {
                             html = html + '  <tr><td><select id="ddlAttr" attributeid="'+attribute.id+'" textboxid="txtDD'+attribute.id+'" type="select" name="' + attribute_name + '" class="inputAttrDD">';
                             
@@ -680,7 +668,6 @@ $loop_index_check = FALSE;
             var hasAttributes = $('#hasAttributes').val();
             var hasAssociates = $('#hasAssociates').val();
             
-/*------------------------------Naveed Start---------------------------------------------------*/
 var isValid = true;
 
 $.each(attributeRequired, function(index, value) {
