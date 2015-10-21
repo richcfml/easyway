@@ -84,6 +84,9 @@ $loop_index_check = FALSE;
         mTmpDesc = mTmpDesc.split("&#174;").join("<sub>&#174;</sub>");
         mTmpDesc = mTmpDesc.split("&#8482;").join("<sub>&#8482;</sub>");
         mTmpDesc = mTmpDesc.split("&#169;").join("<sub>&#169;</sub>");
+        mTmpDesc = mTmpDesc.split("®;").join("<sub>®</sub>");
+        mTmpDesc = mTmpDesc.split("©").join("<sub>©</sub>");
+        mTmpDesc = mTmpDesc.split("™").join("<sub>™</sub>");
         productDetails.item_des = mTmpDesc;
         $('#item_des').html(productDetails.item_des);
 
@@ -1245,6 +1248,9 @@ $.each(attributeRequired, function(index, value) {
                 mTmpDesc = mTmpDesc.split("&#174;").join("<sub>&#174;</sub>");
                 mTmpDesc = mTmpDesc.split("&#8482;").join("<sub>&#8482;</sub>");
                 mTmpDesc = mTmpDesc.split("&#169;").join("<sub>&#169;</sub>");
+                mTmpDesc = mTmpDesc.split("®;").join("<sub>®</sub>");
+                mTmpDesc = mTmpDesc.split("©").join("<sub>©</sub>");
+                mTmpDesc = mTmpDesc.split("™").join("<sub>™</sub>");
                 itemDescIs = mTmpDesc;
                 var imageHTML = '';
                 var myNewHTML = $('<div class="popupDiv"><span>' + itemTitleIs + '</span><br /><br />' + itemDescIs + ' ' + imageHTML + '</div>');
