@@ -465,7 +465,9 @@ function posttoVCS($orderId, $faxstatus, $faxid)
 		if($rest_rs['phone_notification'] == 1) //If phone notifications are ON then send JSON to phone server.
 		{
 			global $VcsURL;
-    		$this->do_post_request($VcsURL,json_encode ($order),""); //$VcsURL is defined in includes/config.php
+                        Log::write("PostTOVCS: Send to VCS, Before Call", print_r(json_encode($order)), 'send2VCS', 0, '');
+                        $this->do_post_request($VcsURL,json_encode ($order),""); //$VcsURL is defined in includes/config.php
+                        Log::write("PostTOVCS: Send to VCS, Call Sent", print_r(json_encode($order)), 'send2VCS', 0 , '');
 		}
 	}
 	catch (Exception $e)  
