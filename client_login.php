@@ -7,44 +7,79 @@ $chargify_url = "";
 
 if (isset($_POST['submit'])) {
     $username = $_REQUEST['username'];
-    $pass = $_REQUEST['pass'];
+    $pass 	  = $_REQUEST['pass'];
+    //echo "SELECT salt FROM users WHERE username='".prepareStringForMySQL($username)."'";exit;
+    $mRow = dbAbstract::ExecuteObject("SELECT salt FROM users WHERE username='".prepareStringForMySQL($username)."'", 1);
+    if ($mRow)
+    {   
+        $mSalt = $mRow->salt;
+        //echo $mSalt;exit;
+        $qry_str = "SELECT id, type, status FROM users WHERE username='".dbAbstract::returnRealEscapedString(stripslashes($username))."' AND epassword='".hash('sha256', $pass.$mSalt)."'";
+        
+        $user = dbAbstract::Execute($qry_str, 1);
+        if(dbAbstract::returnRowsCount($user, 1) > 0) 
+        {
+            $user = dbAbstract::returnAssoc($user, 1);
+            if($user["status"] == 1) 
+            {
+                if ($user["status"]!="bh")
+                {
+                    // get resturants whom licences suspended due to cancellation of payment
+                    $qry_str = "
+                            SELECT c.site_shared_key,r.chargify_subscription_id,c.hosted_page_url
+                            FROM chargify_products c
+                            LEFT JOIN resturants r
+                            ON r.chargify_subscription_canceled=1 AND r.owner_id='". $user["id"] ."'
+                            WHERE r.chargify_product_id=c.settings_id AND c.site_shared_key!=''";
+                    $resturants = dbAbstract::Execute($qry_str, 1);
+                    if(dbAbstract::returnRowsCount($resturants, 1) > 0) 
+                    {
+                        // ask user to update payment of the suspended restaurant licenses
+                        $resturant = mysql_fetch_assoc($resturants);
+                        $return_url = $resturant["hosted_page_url"];
+                        $subdomain = substr($return_url, 7, strpos($return_url, '.')-strlen($return_url));
+                        $message = "update_payment--". $resturant["chargify_subscription_id"] ."--". $resturant["site_shared_key"];
+                        $message = SHA1($message);
+                        $token = substr($message, 0, 10);
+                        $chargify_url = "https://$subdomain.chargify.com/update_payment/". $resturant["chargify_subscription_id"] ."/$token";
+                        $admin_err = 3;
+                    } 
+                    else 
+                    {
+                        // login user
+                        $_SESSION['admin_session_user_name'] = $username;
+                        $_SESSION['admin_session_pass'] = $pass;
+                        $_SESSION['admin_type'] = $user["type"];
+                        $_SESSION['owner_id'] = $user["id"];
 
-    $qry_str = "SELECT id, type, status FROM users WHERE username='" . prepareStringForMySQL($username) . "' AND password='" . prepareStringForMySQL($pass) . "'";
-    $user = dbAbstract::Execute($qry_str);
-    if (dbAbstract::returnRowsCount($user) > 0) {
-        $user = dbAbstract::returnAssoc($user);
-        if ($user["status"] == 1) {
-            $qry_str = "SELECT c.site_shared_key,r.chargify_subscription_id,c.hosted_page_url
-                FROM chargify_products c
-                LEFT JOIN resturants r
-                ON r.chargify_subscription_canceled=1 AND r.owner_id='" . $user["id"] . "'
-                WHERE r.chargify_product_id=c.settings_id AND c.site_shared_key!=''";
+                        header("location:./c_panel/?mod=resturant");
+                    }
+                }
+                else
+                {
+                    $_SESSION['admin_session_user_name'] = $username;
+                    $_SESSION['admin_session_pass'] = $pass;
+                    $_SESSION['admin_type'] = $user["type"];
+                    $_SESSION['owner_id'] = $user["id"];
 
-            $resturants = dbAbstract::Execute($qry_str);
-            if (dbAbstract::returnRowsCount($resturants) > 0) {
-                // ask user to update payment of the suspended restaurant licenses
-                $resturant = dbAbstract::returnAssoc($resturants);
-                $return_url = $resturant["hosted_page_url"];
-                $subdomain = substr($return_url, 7, strpos($return_url, '.') - strlen($return_url));
-                $message = "update_payment--" . $resturant["chargify_subscription_id"] . "--" . $resturant["site_shared_key"];
-                $message = SHA1($message);
-                $token = substr($message, 0, 10);
-                $chargify_url = "https://$subdomain.chargify.com/update_payment/" . $resturant["chargify_subscription_id"] . "/$token";
-                $admin_err = 3;
-            } else {
-                // login user
-                $_SESSION['admin_session_user_name'] = $username;
-                $_SESSION['admin_session_pass'] = $pass;
-                $_SESSION['admin_type'] = $user["type"];
-                $_SESSION['owner_id'] = $user["id"];
-                header("location:./c_panel/?mod=resturant");
+                    header("location:./c_panel/?mod=resturant");
+                }
+            } 
+            else 
+            {
+                    // user is not active
+                    $admin_err = 2;
             }
-        } else {
-            // user is not active
-            $admin_err = 2;
+        } 
+        else 
+        {
+            // provided credentials are incomplete or incorrect
+            $admin_err = 1;
         }
-    } else {
-        // provided credentials are incomplete
+    }
+    else
+    {
+        // provided credentials are incomplete or incorrect
         $admin_err = 1;
     }
 }
