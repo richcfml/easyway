@@ -144,6 +144,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 //---------------------------------End---------------------------------------------------//
 	$myimage = new ImageSnapshot; //new instance
 	$myimage2 = new ImageSnapshot; //new instance
+	
 	if(isset($_FILES['userfile']))
 		$myimage->ImageField = $_FILES['userfile']; //uploaded file array
 	if(isset($_FILES['userfile2']))
@@ -170,6 +171,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 	if (isset($_REQUEST['submit'])){
 		$restQry=dbAbstract::Execute("SELECT name from resturants where name='$catname'",1);
 		@$restRs	=	dbAbstract::returnRowsCount($restQry,1);
+		
 		if($restRs > 0) 
 			$rest_exist = 1;	
 
@@ -177,6 +179,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 		
 		// check if chargify_subscription_id already taken
 		$restRs1 = 0;
+		
 		if(!empty($chargify_subscription_id)) {
 			$restQry1 = dbAbstract::Execute("SELECT COUNT(*) AS total FROM resturants WHERE chargify_subscription_id='$chargify_subscription_id' AND id!='$catid'",1);
 			$restRs1	= dbAbstract::returnObject($restQry1,1);
@@ -221,6 +224,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 			$rest_url_name = str_replace($characters_arr, "_", stripslashes($catname));
 			$rest_url_name = strtolower($rest_url_name);
 			/*=================================*/
+			
 			$homefeatute = 0;	
 			if($open_close == ''){ $open_close = 0; }
 
@@ -231,8 +235,8 @@ function getXMLHTTP() { //fuction to return the xml http object
 			} else if($cash) {
 				$payment_method = "cash"; 
 			}else{
-                                $payment_method = " ";
-                        }
+				$payment_method = " ";
+			}
 
 			// Get Chargify Product ID Starts Here // -- Gulfam
 			$mChargify_Settings_ID = 0;
@@ -311,176 +315,177 @@ function getXMLHTTP() { //fuction to return the xml http object
 
                             //************End Vedesta Account**********************//
 			
-			
+						
                         if(!empty($getSrid))
                         {
-                        if(!empty($chargify_subscription_id->subscription))
-                        {
-                            	$credit_card_info = $chargify_subscription_id->subscription;
-                                if(!empty($credit_card_info->credit_card->id))
-                                {
-                                    $check_card_data_Qry = dbAbstract::ExecuteObject("SELECT * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id->chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
-                                    if(empty($check_card_data_Qry))
-                                    {
-                                        dbAbstract::Insert(
-                                                "INSERT INTO chargify_payment_method
-                                                SET user_id= '".addslashes($owner_name)."'
-                                                        ,chargify_customer_id= '".addslashes($chargify_customer_id->chargify_customer_id)."'
-                                                        ,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
-                                                        ,card_number='".$credit_card_info->credit_card->masked_card_number."'",1
-                                        );
-                                    }
-                                }				
-			    $check_product_premium = dbAbstract::ExecuteObject("SELECT premium_account from chargify_products where product_id = ".$product_details." and user_id = ".$reselelr."",1);
-                            
-	
-			    $reseller_chargify_id = dbAbstract::ExecuteObject("SELECT chargify_subcription_id FROM users WHERE id=".addslashes($reselelr),1);
-                              $quantity = 0;  
-				$quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$check_product_premium->premium_account);
-
-                                    $quantity = $quantity+1;
-                                    $chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$check_product_premium->premium_account,'activate');
-
-	
-			     $queryInsertRestaurant = "INSERT INTO resturants
-                                    SET name= '".prepareStringForMySQL($catname)."'
-                                            ,url_name= '".prepareStringForMySQL($rest_url_name)."'
-                                            ,owner_id='".prepareStringForMySQL($owner_name)."'
-                                            ,license_id='".$license_key."'
-					    ,status = '1'
-                                            ,email='".prepareStringForMySQL($email)."'
-                                            ,fax='".prepareStringForMySQL($fax)."'
-                                            ,phone='".prepareStringForMySQL($phone)."'
-                                            ,rest_open_close = '1'
-                                            ,delivery_offer = '0'
-					    ,order_minimum = '".$order_minimum."'
-                                            ,payment_method='".prepareStringForMySQL($payment_method)."'
-                                            ,time_zone_id='".prepareStringForMySQL($time_zone)."'
-                                            ,rest_address= '".prepareStringForMySQL($rest_address)."'
-                                            ,rest_city= '".prepareStringForMySQL($rest_city)."'
-                                            ,rest_state= '".prepareStringForMySQL($rest_state)."'
-                                            ,rest_zip= '".prepareStringForMySQL($rest_zip)."'
-					    ,premium_account = '".$check_product_premium->premium_account."'
-                                            ,chargify_subscription_id='".$chargify_subscription_id->subscription->id."'
-                                            ,region='" . prepareStringForMySQL(trim($region)) . "'
-					    ,srid = '".$getSrid."'";
-			    $catid = dbAbstract::Insert($queryInsertRestaurant, 1, 2);
-			
-
-				if($catid>0)
-				{
-					if (isset($optionallogo))
-					{
-						if (trim($optionallogo)!="")
-						{
-							if (strpos(trim(strtolower($optionallogo)), "NIA.jpg")===false)
+							if(!empty($chargify_subscription_id->subscription))
 							{
-								$mImageURL = $optionallogo;
-								$mImageName = "img_".$catid."_cat_thumbnail.jpg";
-								$mPath = '../images/logos_thumbnail/'.$mImageName;
-								@file_put_contents($mPath, file_get_contents($mImageURL));
-					            @list($width, $height, $type, $attr) = getimagesize($mPath);
+									$credit_card_info = $chargify_subscription_id->subscription;
+									
+									if(!empty($credit_card_info->credit_card->id))
+									{
+										$check_card_data_Qry = dbAbstract::ExecuteObject("SELECT * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id->chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
+										if(empty($check_card_data_Qry))
+										{
+											dbAbstract::Insert(
+													"INSERT INTO chargify_payment_method
+													SET user_id= '".addslashes($owner_name)."'
+															,chargify_customer_id= '".addslashes($chargify_customer_id->chargify_customer_id)."'
+															,Payment_profile_id='".addslashes($credit_card_info->credit_card->id)."'
+															,card_number='".$credit_card_info->credit_card->masked_card_number."'",1
+											);
+										}
+									}				
+					$check_product_premium = dbAbstract::ExecuteObject("SELECT premium_account from chargify_products where product_id = ".$product_details." and user_id = ".$reselelr."",1);
 								
-								if ($height > $width) {
-									@$image = new SimpleImage();
-									@$image->load($mImageURL);
-									@$image->resizeToHeight(500);
-									@$image->save($mPath);
-								} else {
-									@$image = new SimpleImage();
-									@$image->load($mImageURL);
-									@$image->resizeToWidth(600);
-									@$image->save($mPath);
+		
+					$reseller_chargify_id = dbAbstract::ExecuteObject("SELECT chargify_subcription_id FROM users WHERE id=".addslashes($reselelr),1);
+								  $quantity = 0;  
+					$quantity = $chargify->getallocationQuantity($reseller_chargify_id->chargify_subcription_id,$check_product_premium->premium_account);
+	
+										$quantity = $quantity+1;
+										$chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$check_product_premium->premium_account,'activate');
+	
+		
+					 $queryInsertRestaurant = "INSERT INTO resturants
+										SET name= '".prepareStringForMySQL($catname)."'
+												,url_name= '".prepareStringForMySQL($rest_url_name)."'
+												,owner_id='".prepareStringForMySQL($owner_name)."'
+												,license_id='".$license_key."'
+							,status = '1'
+												,email='".prepareStringForMySQL($email)."'
+												,fax='".prepareStringForMySQL($fax)."'
+												,phone='".prepareStringForMySQL($phone)."'
+												,rest_open_close = '1'
+												,delivery_offer = '0'
+							,order_minimum = '".$order_minimum."'
+												,payment_method='".prepareStringForMySQL($payment_method)."'
+												,time_zone_id='".prepareStringForMySQL($time_zone)."'
+												,rest_address= '".prepareStringForMySQL($rest_address)."'
+												,rest_city= '".prepareStringForMySQL($rest_city)."'
+												,rest_state= '".prepareStringForMySQL($rest_state)."'
+												,rest_zip= '".prepareStringForMySQL($rest_zip)."'
+							,premium_account = '".$check_product_premium->premium_account."'
+												,chargify_subscription_id='".$chargify_subscription_id->subscription->id."'
+												,region='" . prepareStringForMySQL(trim($region)) . "'
+							,srid = '".$getSrid."'";
+					$catid = dbAbstract::Insert($queryInsertRestaurant, 1, 2);
+					
+	
+					if($catid>0)
+					{
+						if (isset($optionallogo))
+						{
+							if (trim($optionallogo)!="")
+							{
+								if (strpos(trim(strtolower($optionallogo)), "NIA.jpg")===false)
+								{
+									$mImageURL = $optionallogo;
+									$mImageName = "img_".$catid."_cat_thumbnail.jpg";
+									$mPath = '../images/logos_thumbnail/'.$mImageName;
+									@file_put_contents($mPath, file_get_contents($mImageURL));
+									@list($width, $height, $type, $attr) = getimagesize($mPath);
+									
+									if ($height > $width) {
+										@$image = new SimpleImage();
+										@$image->load($mImageURL);
+										@$image->resizeToHeight(500);
+										@$image->save($mPath);
+									} else {
+										@$image = new SimpleImage();
+										@$image->load($mImageURL);
+										@$image->resizeToWidth(600);
+										@$image->save($mPath);
+									}
+									
+									dbAbstract::Update("UPDATE resturants SET optionl_logo='".$mImageName."' WHERE id=".$catid,1);
 								}
-								
-								dbAbstract::Update("UPDATE resturants SET optionl_logo='".$mImageName."' WHERE id=".$catid,1);
 							}
 						}
+	
+						$mImageStr = "";
+						if ((trim($mImageName)!="") && (trim($mImageName)!="NIA.jpg"))
+						{
+							$mImageStr = " optionl_logo='".$mImageName."', ";
+						}
+						
+						$queryInsertRestaurantAnalytics = 	"INSERT INTO `analytics` SET
+						resturant_id = ".$catid.",
+										first_letter = '".strtoupper(substr($catname,0,1))."',
+										name='".prepareStringForMySQL($catname)."',
+										url_name='".prepareStringForMySQL($rest_url_name)."',
+										status='1',
+										orders_last_month_count='0', ".$mImageStr."
+										orders_last_but_second_month_count='0'";												 
+											dbAbstract::Insert($queryInsertRestaurantAnalytics,1);
+						Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurantAnalytics , 'menu', 1 , 'cpanel');
+										
+	/*-------------------- Insert Query For Main Menu And Sub Menu  ----------------------------------------*/
+										$menuid = dbAbstract::Insert("INSERT INTO menus SET rest_id= ".$catid.", menu_name= '" . "Main Menu" . "', menu_ordering= '" . "0" . "', menu_desc= '" . "Menu Description" . "', status= 1", 1, 2);
+										dbAbstract::Insert("INSERT INTO categories SET parent_id= ".$catid.", menu_id= ". $menuid .", cat_name= '" . "Sub Menu Category" . "', cat_ordering= 1, cat_des= '" . "Sub Menu Description" . "'",1);
+	/*------------------------------------------------------------------------------------------------------*/
+											
+									   
+						for($j = 0; $j< 7; $j++) {
+							//hour and minutes are treaded as string
+							$open_time =  '0800';
+							$close_time = '1700';
+											Log::write("Add restaurant business hours - tab_resturant_add.php", "QUERY --INSERT INTO business_hours 
+								SET rest_id = '".$catid."'
+									,day= '".$j."'
+									,open='$open_time'
+									,close='$close_time'", 'menu', 1 , 'cpanel');
+							dbAbstract::Insert(
+								"INSERT INTO business_hours 
+								SET rest_id = '".$catid."'
+									,day= '".$j."'
+									,open='$open_time'
+									,close='$close_time'",1
+							);
+						}
 					}
-
-					$mImageStr = "";
-					if ((trim($mImageName)!="") && (trim($mImageName)!="NIA.jpg"))
-					{
-						$mImageStr = " optionl_logo='".$mImageName."', ";
-					}
-					
-					$queryInsertRestaurantAnalytics = 	"INSERT INTO `analytics` SET
-					resturant_id = ".$catid.",
-                                	first_letter = '".strtoupper(substr($catname,0,1))."',
-                                	name='".prepareStringForMySQL($catname)."',
-                                	url_name='".prepareStringForMySQL($rest_url_name)."',
-                                	status='1',
-                                	orders_last_month_count='0', ".$mImageStr."
-                                	orders_last_but_second_month_count='0'";												 
-                                        dbAbstract::Insert($queryInsertRestaurantAnalytics,1);
-					Log::write("Adding restaurant - tab_resturant_add.php", "QUERY --".$queryInsertRestaurantAnalytics , 'menu', 1 , 'cpanel');
-                                    
-/*-------------------- Insert Query For Main Menu And Sub Menu  ----------------------------------------*/
-                                    $menuid = dbAbstract::Insert("INSERT INTO menus SET rest_id= ".$catid.", menu_name= '" . "Main Menu" . "', menu_ordering= '" . "0" . "', menu_desc= '" . "Menu Description" . "', status= 1", 1, 2);
-                                    dbAbstract::Insert("INSERT INTO categories SET parent_id= ".$catid.", menu_id= ". $menuid .", cat_name= '" . "Sub Menu Category" . "', cat_ordering= 1, cat_des= '" . "Sub Menu Description" . "'",1);
-/*------------------------------------------------------------------------------------------------------*/
-                                        
-                                   
-					for($j = 0; $j< 7; $j++) {
-						//hour and minutes are treaded as string
-						$open_time =  '0800';
-						$close_time = '1700';
-										Log::write("Add restaurant business hours - tab_resturant_add.php", "QUERY --INSERT INTO business_hours 
-							SET rest_id = '".$catid."'
-								,day= '".$j."'
-								,open='$open_time'
-								,close='$close_time'", 'menu', 1 , 'cpanel');
-						dbAbstract::Insert(
-							"INSERT INTO business_hours 
-							SET rest_id = '".$catid."'
-								,day= '".$j."'
-								,open='$open_time'
-								,close='$close_time'",1
-						);
-					}
+				//When resturant has been created then the granted license status will become activated.
+				dbAbstract::Update("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key,1);
+				dbAbstract::Update("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name,1);
+	
+				if($rest_exist) {
+					$rest_url_name = $rest_url_name.$catid;
+					dbAbstract::Update("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid,1);
+					dbAbstract::Update("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid,1);
 				}
-			//When resturant has been created then the granted license status will become activated.
-			dbAbstract::Update("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key,1);
-			dbAbstract::Update("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name,1);
-
-			if($rest_exist) {
-				$rest_url_name = $rest_url_name.$catid;
-				dbAbstract::Update("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid,1);
-				dbAbstract::Update("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid,1);
-			}
-
-			/////////////////////////Get site owner's email address to send email with resturant URL//////////////////////////////////
-			$rest_owner_query = dbAbstract::Execute("SELECT email FROM users WHERE id ='".$owner_name."'",1);
-			$rest_owner_row = dbAbstract::returnRow($rest_owner_query,1);
-			$rest_owner_email = $rest_owner_row[0];  
-
-			$rest_urlname_query = dbAbstract::Execute("SELECT url_name FROM resturants WHERE id ='".$catid."'",1);
-			$rest_urlname_row = dbAbstract::returnRow($rest_urlname_query,1);
-			$rest_url = $rest_urlname_row[0]; 
-
-			//$from = "From:onlineorder_admin@onlineorder.com";
-			$from = "From:qasim@qualityclix.com";
-			$subject = "Resturant Created";
-			$body="";
-			$body=$body."Your Resturant has been created. Please find the URL below.<br><br>";
-
-			$body=$body."onlineorder.qualityclix.com/".$rest_url;
-			if($rest_owner_email != ""){
-			//$function_obj->Send_Mail($email,$subject,$body,$from);
-			}
-			/////////////////////////////////////////////////////////////////////////////////////////////////////
-?>
-			<script language="javascript">
-				window.location="./?mod=resturant&item=main";
-			</script>
-<?php
-                        }
-                        else
-                            {
-                                $errorMsg = $chargify_subscription_id['errors'];
-                                $errMessage =  $errorMsg[0];
-                            }
-                        }
+	
+				/////////////////////////Get site owner's email address to send email with resturant URL//////////////////////////////////
+				$rest_owner_query = dbAbstract::Execute("SELECT email FROM users WHERE id ='".$owner_name."'",1);
+				$rest_owner_row = dbAbstract::returnRow($rest_owner_query,1);
+				$rest_owner_email = $rest_owner_row[0];  
+	
+				$rest_urlname_query = dbAbstract::Execute("SELECT url_name FROM resturants WHERE id ='".$catid."'",1);
+				$rest_urlname_row = dbAbstract::returnRow($rest_urlname_query,1);
+				$rest_url = $rest_urlname_row[0]; 
+	
+				//$from = "From:onlineorder_admin@onlineorder.com";
+				$from = "From:qasim@qualityclix.com";
+				$subject = "Resturant Created";
+				$body="";
+				$body=$body."Your Resturant has been created. Please find the URL below.<br><br>";
+	
+				$body=$body."onlineorder.qualityclix.com/".$rest_url;
+				if($rest_owner_email != ""){
+				//$function_obj->Send_Mail($email,$subject,$body,$from);
+				}
+				/////////////////////////////////////////////////////////////////////////////////////////////////////
+	?>
+				<script language="javascript">
+					window.location="./?mod=resturant&item=main";
+				</script>
+	<?php
+							}
+							else{
+								$errorMsg = $chargify_subscription_id->errors;
+								$errMessage =  $errorMsg[0];
+							}
+							
+						}
                         else
                         {
                                 $chargify->cancelSubcriptionByRestowner($chargify_subscription_id->subscription->id);
