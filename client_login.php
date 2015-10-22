@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
                     if(dbAbstract::returnRowsCount($resturants, 1) > 0) 
                     {
                         // ask user to update payment of the suspended restaurant licenses
-                        $resturant = mysql_fetch_assoc($resturants);
+                        $resturant = dbAbstract::returnAssoc($resturants);
                         $return_url = $resturant["hosted_page_url"];
                         $subdomain = substr($return_url, 7, strpos($return_url, '.')-strlen($return_url));
                         $message = "update_payment--". $resturant["chargify_subscription_id"] ."--". $resturant["site_shared_key"];
