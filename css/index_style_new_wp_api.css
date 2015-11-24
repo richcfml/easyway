@@ -575,8 +575,9 @@ a:hover {
     min-width: 262px;
     margin: 0 !important;
     margin-right: 10px !important;
-    border:#e4e4e4 1px solid;
-    width: 97% !important;
+    border: #e4e4e4 1px solid;
+    width: 48% !important;
+    float: left;
 }
 .left_col_inner_block .product {
     background-color:#f4f4f4;
