@@ -20,7 +20,6 @@
 		{
 			$host = (empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "https://" : "http://") . $_SERVER["SERVER_NAME"];
 		}
-                echo $host;
 		$settings = $objRestaurant->getRestaurantDesignSettings($host);
 		if($_REQUEST["wp_api"] == "save_settings") 
 		{
