@@ -723,10 +723,19 @@ $.each(attributeRequired, function(index, value) {
             success: function(data)
             {
                 console.log(Date.now());
-                $("#cart").unbind('load').load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
+                $.ajax({
+                    url: "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1",
+                    success: function(html) 
+                    {
+                        console.log(Date.now());
+                        $("#cart").html(html);
+                        console.log(Date.now());
+                    }
+                });
+                /*$("#cart").unbind('load').load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
                 {
                     console.log(Date.now());
-                });
+                });*/
             },
             error: function(data)
             {
