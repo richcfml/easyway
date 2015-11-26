@@ -725,7 +725,8 @@ $.each(attributeRequired, function(index, value) {
                 var mRnd = Math.floor((Math.random() * 1000000) + 1);
                 console.log("<?=$SiteUrl.$objRestaurant->url?>/?item=cart&ajax=1&rndm="+mRnd);
                 console.log(Date.now());
-                $.ajax({
+                $.get({
+                    type:"GET",
                     url: "<?=$SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rndm="+mRnd,
                     success: function(html) 
                     {
