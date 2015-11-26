@@ -722,10 +722,9 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                var mRnd = Math.floor((Math.random() * 1000000) + 1);
                 $.get
                 ({
-                    url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd,
+                    url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
                     async: true,
                     success: function() 
                     {
