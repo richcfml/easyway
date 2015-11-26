@@ -1,10 +1,7 @@
 <?php
 $mPost="";
-$mLogID = mt_rand(0, mt_getrandmax());
-log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 if (isset($_GET['ajax'])) 
 {
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
     extract($_GET);
     if (isset($index)) 
     {
@@ -40,13 +37,11 @@ if (isset($_GET['ajax']))
         $mDM =$DM;
         $loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 }
 ?>
     <div id="your_summery">Your Order Summary</div>
     <div id="contents">
 <?php
-log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 $index = -1;
 foreach ($cart->products as $prod) 
 {
@@ -62,7 +57,6 @@ foreach ($cart->products as $prod)
 		</div>
 <?php 
 }
-log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 ?>
         <!--End flip Div-->
         <div class="subtotal">Subtotal:</div>
@@ -111,7 +105,6 @@ if ($cart->vip_discount > 0)
 		<div style="clear:left"></div>
 		<div class="vertical_line">&nbsp;</div>
 <?php
-log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 if ($objRestaurant->isOpenHour == 1) 
 {
 	if (isset($without_loggin)) 
@@ -152,14 +145,11 @@ if ($objRestaurant->isOpenHour == 1)
 <?php 
 	}
 }
-log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 ?>
     </div>
     <br/>
 <?php
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
     require($site_root_path . "views/customer/favorites.php"); 
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 ?>
 <script type="text/javascript">
 function totalVerified() 
@@ -239,7 +229,6 @@ function postitem(source)
 <?php 
 if (isset($_GET['ajax'])) 
 {
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 ?>
 	jQuery(document).ready(function($) 
 	{
@@ -247,7 +236,6 @@ if (isset($_GET['ajax']))
         $('a[rel*=facebox2]').facebox();
     });
 <?php 
-    log::write("Log ID: ".$mLogID.", Line # ".__LINE__, time() , "debug");
 } 
 ?>
 </script>
