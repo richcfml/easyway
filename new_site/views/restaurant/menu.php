@@ -724,8 +724,10 @@ $.each(attributeRequired, function(index, value) {
             success: function(data)
             {
                 console.log(Date.now());
-                $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1");
-                console.log(Date.now());
+                $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
+                {
+                    console.log(Date.now());
+                });
             },
             error: function(data)
             {
