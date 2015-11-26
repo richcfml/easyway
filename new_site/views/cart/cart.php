@@ -1,12 +1,8 @@
 <?php
 $mPost="";
-$mLogID = mt_rand(1, mt_getrandmax());
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 if (isset($_GET['ajax'])) 
 {
-    Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
     extract($_GET);
-    Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
     if (isset($index)) 
     {
     	$cart->remove_Item($index);
@@ -41,14 +37,12 @@ if (isset($_GET['ajax']))
         $mDM =$DM;
         $loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
-    Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 }
 ?>
     <div id="your_summery">Your Order Summary</div>
     <div id="contents">
 <?php
 $index = -1;
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 foreach ($cart->products as $prod) 
 {
 	$index +=1;
@@ -62,7 +56,6 @@ foreach ($cart->products as $prod)
 			<div style="clear:left"></div>
 		</div>
 <?php 
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 }
 ?>
         <!--End flip Div-->
@@ -70,7 +63,6 @@ Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
         <div class="amount"><?=$currency?><?= number_format($cart->sub_total,2) ?></div>
         <div style="clear:left"></div>
 <?php
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 if ($cart->delivery_type == cart::Delivery) 
 {
 ?>
@@ -113,10 +105,8 @@ if ($cart->vip_discount > 0)
 		<div style="clear:left"></div>
 		<div class="vertical_line">&nbsp;</div>
 <?php
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 if ($objRestaurant->isOpenHour == 1) 
 {
-    Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 	if (isset($without_loggin)) 
 	{
 ?>             
@@ -155,14 +145,11 @@ if ($objRestaurant->isOpenHour == 1)
 <?php 
 	}
 }
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 ?>
     </div>
     <br/>
 <?php
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
     require($site_root_path . "views/customer/favorites.php"); 
-    Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 ?>
 <script type="text/javascript">
 function totalVerified() 
@@ -240,7 +227,6 @@ function postitem(source)
     });
 }
 <?php 
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 if (isset($_GET['ajax'])) 
 {
 ?>
@@ -251,6 +237,5 @@ if (isset($_GET['ajax']))
     });
 <?php 
 } 
-Log::write("Log ID: ".$mLogID.", Line #: ".__LINE__, time()  ,'debug');
 ?>
 </script>
