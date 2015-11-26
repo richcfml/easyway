@@ -713,7 +713,6 @@ $.each(attributeRequired, function(index, value) {
         $($('[id=updateMessage1]')[1]).hide();
         var mUrl = '';
         var mRandom = Math.floor((Math.random() * 1000000) + 1);
-        console.log(Date.now());
         mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
         $.facebox.close();
         $.ajax
@@ -724,7 +723,7 @@ $.each(attributeRequired, function(index, value) {
             success: function(data)
             {
                 console.log(Date.now());
-                $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
+                $("#cart").unbind('load').load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
                 {
                     console.log(Date.now());
                 });
