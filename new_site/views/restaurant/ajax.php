@@ -167,15 +167,18 @@ if (isset($_GET['favoriteindex']))
 }
 else if (isset($_GET['addtocart']))
 {
+    $mLogID = mt_rand(1, mt_getrandmax());
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     extract ($_POST);
     $mObjProduct = new product();
     $product=$mObjProduct->getDetailsByProductId($_GET["ProductID"]);
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     $attribute_index=1;
     $product_to_order=new product();
     if($quantity==''|| $quantity<=0) $quantity=1;
     $product_to_order->prd_id=$product->prd_id;
     $product_to_order->category_id=$product->sub_cat_id;
-
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     $product_to_order->item_code=$product->item_code;
     $product_to_order->cat_name=stripslashes($product->cat_name);
     $product_to_order->quantity=$quantity;
@@ -184,11 +187,11 @@ else if (isset($_GET['addtocart']))
     $product_to_order->sale_price=$product->retail_price;
     $product_to_order->item_for=$item_for;
     $product_to_order->requestnote=$requestnote;
-
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     $product_to_order->associations=array();
     $product_to_order->attributes=array();
     $product_to_order->distinct_attributes=array();
-
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     while($attribute_index<=$totalattributes)
     {
         $aLimit = 0;
@@ -273,9 +276,9 @@ else if (isset($_GET['addtocart']))
         }
         $attribute_index=$attribute_index+1;
     }
-
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     $association_index=1;
-
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     while($association_index<=count($associations))
     {
         $association=new product();
@@ -289,7 +292,9 @@ else if (isset($_GET['addtocart']))
         $association_index+=1;
         $product_to_order->sale_price=$product_to_order->sale_price+$association->retail_price;
     }
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     $cart->addProduct($product_to_order,$cartItemIndex);
+    Log::write("Add to Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     echo("1");
 }
 else if (isset($_GET['showpopup']))
