@@ -1,48 +1,53 @@
 <?php
+$mLogID = mt_rand(1, mt_getrandmax());
+Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
-	extract($_GET);
-	if (isset($index)) 
-	{
+    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
+    extract($_GET);
+    if (isset($index)) 
+    {
     	$cart->remove_Item($index);
     } 
-	else if (isset($delivery_type)) 
-	{
+    else if (isset($delivery_type)) 
+    {
     	$cart->setdelivery_type($delivery_type);
     } 
-	else if (isset($favoritesindex)) 
-	{
+    else if (isset($favoritesindex)) 
+    {
     	if (isset($loggedinuser->arrFavorites[$favoritesindex])) 
-		{
-        	$favoritefood = $loggedinuser->arrFavorites[$favoritesindex]->food;
+        {
+            $favoritefood = $loggedinuser->arrFavorites[$favoritesindex]->food;
             $cart->addfavorites($favoritefood);
         }
     } 
-	else if (isset($removefavoritesindex)) 
-	{
+    else if (isset($removefavoritesindex)) 
+    {
         if (isset($loggedinuser->arrFavorites[$removefavoritesindex])) 
-		{
+        {
             $loggedinuser->removeUserFavoriteOrder($removefavoritesindex);
         }
     } 
-	else if (isset($rapidreorder)) 
-	{
+    else if (isset($rapidreorder)) 
+    {
         $loggedinuser->changeRepidReorderingStatus($rapidreorder, ($status == 1 ? 0 : 1));
     }
-	else if (isset($findex)) 
-	{
-			$mFavoriteID=$loggedinuser->arrFavorites[$findex]->id;
-			$mTip= $tip;
-			$mDM =$DM;
-			$loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
+    else if (isset($findex)) 
+    {
+        $mFavoriteID=$loggedinuser->arrFavorites[$findex]->id;
+        $mTip= $tip;
+        $mDM =$DM;
+        $loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
+    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 }
 ?>
     <div id="your_summery">Your Order Summary</div>
     <div id="contents">
 <?php
 $index = -1;
+Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 foreach ($cart->products as $prod) 
 {
 	$index +=1;
@@ -56,7 +61,8 @@ foreach ($cart->products as $prod)
 			<div style="clear:left"></div>
 		</div>
 <?php 
-} 
+}
+Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 ?>
         <!--End flip Div-->
         <div class="subtotal">Subtotal:</div>
@@ -152,8 +158,10 @@ if ($objRestaurant->isOpenHour == 1)
 ?>
     </div>
     <br/>
-<?php 
+<?php
+Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 	require($site_root_path . "views/customer/favorites.php"); 
+        Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 ?>
 <script type="text/javascript">
 function totalVerified() 
@@ -232,7 +240,8 @@ function postitem(source)
 }
 <?php 
 if (isset($_GET['ajax'])) 
-{ 
+{
+    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 ?>
 	jQuery(document).ready(function($) 
 	{
@@ -240,6 +249,7 @@ if (isset($_GET['ajax']))
         $('a[rel*=facebox2]').facebox();
     });
 <?php 
+Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 } 
 ?>
 </script>
