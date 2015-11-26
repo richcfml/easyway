@@ -713,18 +713,20 @@ $.each(attributeRequired, function(index, value) {
         $($('[id=updateMessage1]')[1]).hide();
         var mUrl = '';
         var mRandom = Math.floor((Math.random() * 1000000) + 1);
-        mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
+        mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
         $.facebox.close();
         $.ajax
         ({
             url: mUrl,
             type: 'POST',
             data: $("#facebox #frmPrd").serialize(),
-            success: function(data)
+            success: function()
             {
+                var mRnd = Math.floor((Math.random() * 1000000) + 1);
+                conole.log("<?=$SiteUrl.$objRestaurant->url?>/?item=cart&ajax=1&rndm="+mRnd);
                 console.log(Date.now());
                 $.ajax({
-                    url: "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1",
+                    url: "<?=$SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rndm="+mRnd,
                     success: function(html) 
                     {
                         console.log(Date.now());
@@ -732,7 +734,7 @@ $.each(attributeRequired, function(index, value) {
                         console.log(Date.now());
                     }
                 });
-                /*$("#cart").unbind('load').load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1", function() 
+                /*$("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1", function() 
                 {
                     console.log(Date.now());
                 });*/
