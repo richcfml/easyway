@@ -722,10 +722,9 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                loadCart("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
-                /*$("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1", function() 
+                $("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1", function() 
                 {
-                });*/
+                });
             },
             error: function()
             {
@@ -735,21 +734,6 @@ $.each(attributeRequired, function(index, value) {
     }
         });
     });
-    
-    function loadCart(pUrl) 
-    {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() 
-        {
-            if (xhttp.readyState == 4 && xhttp.status == 200) 
-            {
-                $("#cart").html(xhttp.responseText);
-                //document.getElementById("cart").innerHTML = xhttp.responseText;
-            }
-        };
-        xhttp.open("GET", pUrl, true);
-        xhttp.send();
-    } 
 	
 	$(document).ready(function()
 	{
