@@ -713,8 +713,7 @@ $.each(attributeRequired, function(index, value) {
         $($('[id=updateMessage1]')[1]).hide();
         var mUrl = '';
         var mRandom = Math.floor((Math.random() * 1000000) + 1);
-        var a = new Date();
-        console.log("A: "+a.getTime());
+        console.log(Date.now());
         mUrl = "<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
         $.facebox.close();
         $.ajax
@@ -724,11 +723,9 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function(data)
             {
-                var b = new Date();
-                console.log("B: "+b.getTime());
+                console.log(Date.now());
                 $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1");
-                var c = new Date();
-                console.log("C: "+c.getTime());
+                console.log(Date.now());
             },
             error: function(data)
             {
@@ -736,8 +733,6 @@ $.each(attributeRequired, function(index, value) {
             }
         });
     }
-    var d = new Date();
-                console.log("D: "+d.getTime());
         });
     });
 	
