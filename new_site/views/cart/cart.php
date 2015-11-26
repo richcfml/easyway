@@ -1,10 +1,7 @@
 <?php
-$mLogID = mt_rand(1, mt_getrandmax());
-Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
-    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
     extract($_GET);
     if (isset($index)) 
     {
@@ -40,14 +37,12 @@ if (isset($_GET['ajax']))
         $mDM =$DM;
         $loggedinuser->updateFavoriteTipAmountDeliveryMethod($mFavoriteID, $mTip, $mDM); 
     }
-    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 }
 ?>
     <div id="your_summery">Your Order Summary</div>
     <div id="contents">
 <?php
 $index = -1;
-Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 foreach ($cart->products as $prod) 
 {
 	$index +=1;
@@ -62,7 +57,6 @@ foreach ($cart->products as $prod)
 		</div>
 <?php 
 }
-Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 ?>
         <!--End flip Div-->
         <div class="subtotal">Subtotal:</div>
@@ -125,18 +119,14 @@ if ($objRestaurant->isOpenHour == 1)
     } 
 	else 
 	{
-			if (is_numeric($loggedinuser->id)) 
-			{
-				$mPost = $SiteUrl.$objRestaurant->url."/?item=checkout";
-           		//redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");
-				//exit;
-       		}
-		    else
-       		{
-				$mPost = $SiteUrl.$objRestaurant->url."/?item=login";
-		       	//redirect($SiteUrl . $objRestaurant->url . "/?item=login");
-			   	//exit;
-       		}	
+            if (is_numeric($loggedinuser->id)) 
+            {
+                $mPost = $SiteUrl.$objRestaurant->url."/?item=checkout";
+            }
+            else
+            {
+                $mPost = $SiteUrl.$objRestaurant->url."/?item=login";
+            }	
 ?>
         <form method="post" name="form1" id="form1" action="<?=$mPost?>">
             <div class="online_ordering">
@@ -159,9 +149,7 @@ if ($objRestaurant->isOpenHour == 1)
     </div>
     <br/>
 <?php
-Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
-	require($site_root_path . "views/customer/favorites.php"); 
-        Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
+    require($site_root_path . "views/customer/favorites.php"); 
 ?>
 <script type="text/javascript">
 function totalVerified() 
@@ -241,7 +229,6 @@ function postitem(source)
 <?php 
 if (isset($_GET['ajax'])) 
 {
-    Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 ?>
 	jQuery(document).ready(function($) 
 	{
@@ -249,7 +236,6 @@ if (isset($_GET['ajax']))
         $('a[rel*=facebox2]').facebox();
     });
 <?php 
-Log::write("Cart, Line Number: ".__LINE__.", Log ID: ".$mLogID, date("l, F j, Y, g:i:s A") , 'debug');
 } 
 ?>
 </script>
