@@ -722,11 +722,8 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                var mRnd = Math.floor((Math.random() * 1000000) + 1);
-                console.log(Date.now());
-                $("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd, function() 
+                $("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1", function() 
                 {
-                    console.log(Date.now());
                 });
             },
             error: function()
@@ -740,6 +737,7 @@ $.each(attributeRequired, function(index, value) {
 	
 	$(document).ready(function()
 	{
+            $("#dvHidden").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
 		$(".clsAssoc").live("change", function() 
 		{
 			var mPrice = $(this).attr("price");			
@@ -1408,6 +1406,7 @@ $.each(attributeRequired, function(index, value) {
         <input type="hidden" id="HasAttributes" name="has_attributes">
 		<input type="hidden" name="totalattributes" id="totalAttributes">
 		<input type="hidden" id="cartItemIndex" name="cartItemIndex" value="-1">
+                <div id="dvHidden" style="display: none; visibility: hidden;"></div>
     </form>
 	<div style=" float:right;right:15px; bottom:10px; position: absolute;">
             <input id="close" type="image" src="<?= $SiteUrl ?>images/closelabel.gif" onclick="$(document).trigger('close.facebox');"/>
