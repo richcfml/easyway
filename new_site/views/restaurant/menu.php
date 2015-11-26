@@ -722,9 +722,7 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                $("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1", function() 
-                {
-                });
+                $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
             },
             error: function()
             {
