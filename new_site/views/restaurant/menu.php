@@ -722,23 +722,13 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function(data)
             {
-                
-                var cart_html = '<div class="flip"><div id="edit_sign"><a href="#" onclick="event.preventDefault();showPopup('+product_id + ',' + hasAssociates + ',' + hasAttributes +',-1);" style="color:#8c1515;"><img border="0" src="../images/gray_edit.gif" height="14px"></a></div>'
-                        + '<div id="counting">' + product_title + '</div>'
-                '<div id="minus_sign" class="remove_cart"><a href="<?= $SiteUrl ?><?= $objRestaurant->url . "/" ?>?item=cart&amp;index=' + index + '"><img src="../images/minus_sign.gif" width="14" height="14" border="0"></a></div>'
-                '<div id="dollor"><?= $currency ?>' + price + '</div>'
-                '<div style="clear:left"></div>'
-                '</div>';
-
-                    $(cart_html).insertAfter('#contents div.flip:last-child');
-                    $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1");
-
-                },
-                error: function(data)
-                {
-                    alert('Error occurred.');
-                }
-            });
+                $("#cart").load("<?= $SiteUrl ?><?= $objRestaurant->url ?>/?item=cart&ajax=1");
+            },
+            error: function(data)
+            {
+                alert('Error occurred.');
+            }
+        });
     }
         });
     });
