@@ -723,11 +723,7 @@ $.each(attributeRequired, function(index, value) {
             success: function()
             {
                 var mRnd = Math.floor((Math.random() * 1000000) + 1);
-                console.log(Date.now());
-                $("#cart").unbind('load').load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd, function() 
-                {
-                    console.log(Date.now());
-                });
+                $.get("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd);
             },
             error: function()
             {
