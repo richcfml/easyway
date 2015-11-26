@@ -1,5 +1,7 @@
 <?php
 $mPost="";
+$mLogID = mt_rand(0, mt_getrandmax());
+log::write("Log ID", $mLogID, "debug");
 if (isset($_GET['ajax'])) 
 {
     extract($_GET);
