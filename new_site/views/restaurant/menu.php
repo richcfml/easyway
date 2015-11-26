@@ -723,7 +723,15 @@ $.each(attributeRequired, function(index, value) {
             success: function()
             {
                 var mRnd = Math.floor((Math.random() * 1000000) + 1);
-                $.get("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd);
+                $.ajax
+                ({
+                    type:"GET",
+                    url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&rnd="+mRnd,
+                    async: true,
+                    success: function() 
+                    {
+                    }
+                });
             },
             error: function()
             {
