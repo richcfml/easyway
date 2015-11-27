@@ -716,9 +716,6 @@ $(function()
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
             mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
             $.facebox.close();
-            mReloadCart = 0;
-            mDieReload = 0;
-            console.log("A: "+ Date.now());
             $.ajax
             ({
                 url: mUrl,
@@ -726,35 +723,21 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function(data)
                 {
-                    console.log("B: "+ Date.now());
-                    mReloadCart = 1;
+                    $.ajax({
+                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
+                        type: "GET",
+                        success: function(data) 
+                        {
+                            $('#cart').html(data);
+                        }
+                    });
+                    //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
                 },
                 error: function()
                 {
-                    mReloadCart = 2;
                     alert('Error occurred.');
                 }
             });
-            
-            function reloadCart()
-            {
-                if ((mReloadCart > 0) && (mDieReload == 0))
-                {
-                    mDieReload = 1;
-                    console.log("C: "+ Date.now());
-                    $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
-                    console.log("D: "+ Date.now());
-                }
-                else
-                {
-                    if (mDieReload == 0)
-                    {
-                        setTimeout(reloadCart, 500);
-                    }
-                }
-            }
-            
-            reloadCart();
         }
     });
 });
