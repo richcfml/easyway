@@ -171,6 +171,7 @@
 	<div id="body">
 		<?php
 		require($include);
+                session_write_close();
 		if(empty($_REQUEST["wp_api"])) 
 		{
 		?>
