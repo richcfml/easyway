@@ -718,6 +718,7 @@ $(function()
             $.facebox.close();
             mReloadCart = 0;
             mDieReload = 0;
+            console.log("A: "+ Date.now());
             $.ajax
             ({
                 url: mUrl,
@@ -725,6 +726,7 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function(data)
                 {
+                    console.log("B: "+ Date.now());
                     mReloadCart = 1;
                 },
                 error: function()
@@ -739,7 +741,9 @@ $(function()
                 if ((mReloadCart > 0) && (mDieReload == 0))
                 {
                     mDieReload = 1;
+                    console.log("C: "+ Date.now());
                     $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
+                    console.log("D: "+ Date.now());
                 }
                 else
                 {
