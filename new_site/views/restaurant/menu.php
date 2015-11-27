@@ -747,6 +747,7 @@ $(function()
 	
 	$(document).ready(function()
 	{
+                $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
 		$(".clsAssoc").live("change", function() 
 		{
 			var mPrice = $(this).attr("price");			
