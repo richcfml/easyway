@@ -745,7 +745,7 @@ $(function()
                 {
                     if (mDieReload == 0)
                     {
-                        setTimeout(reloadCart, 1000);
+                        setTimeout(reloadCart, 500);
                     }
                 }
             }
