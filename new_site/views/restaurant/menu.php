@@ -645,101 +645,115 @@ $loop_index_check = FALSE;
 
     }
 
-    $(function() {
-        $('#facebox #frmPrd').live('submit', function(event) {
-            event.preventDefault();
+$(function() 
+{
+    $('#facebox #frmPrd').live('submit', function(event) 
+    {
+        event.preventDefault();
             
-            mQuantity = $("#quantity").val();
-            mItemFor = $("#item_for").val();
-            mRequestNote = $("#requestnote").val();
-            mTotalAttributes = $("#totalattributes").val();
+        mQuantity = $("#quantity").val();
+        mItemFor = $("#item_for").val();
+        mRequestNote = $("#requestnote").val();
+        mTotalAttributes = $("#totalattributes").val();
 
-            var product_id = $('#product_id_field').val();
-            var product_title = $('#item_title').val();
-            var product_quantity = $('#quantity').val();
-            var product_sale_price = $('#product_sale_price').val();
-            var price = product_sale_price * product_quantity;
-            var index = $('#contents div.flip').length - 1;
-            var hasAttributes = $('#hasAttributes').val();
-            var hasAssociates = $('#hasAssociates').val();
+        var product_id = $('#product_id_field').val();
+        var product_title = $('#item_title').val();
+        var product_quantity = $('#quantity').val();
+        var product_sale_price = $('#product_sale_price').val();
+        var price = product_sale_price * product_quantity;
+        var index = $('#contents div.flip').length - 1;
+        var hasAttributes = $('#hasAttributes').val();
+        var hasAssociates = $('#hasAssociates').val();
             
-var isValid = true;
+        var isValid = true;
 
-$.each(attributeRequired, function(index, value) {
+        $.each(attributeRequired, function(index, value) 
+        {
+            var isAllRequiredSelected = false;
+            var attributeElements = $('[attributeid='+value+']');
   
-  var isAllRequiredSelected = false;
-  var attributeElements = $('[attributeid='+value+']');
-  
-  var filteredAttributeElements = attributeElements.slice(attributeElements.length/2);
-  $.each(filteredAttributeElements, function(index, element) {    
-    
-    if(element.tagName !== "SELECT")
-    {
-        if ($(element).is(':checked')) {
-            isAllRequiredSelected = true;
-        }
-    }
-    else
-    {
-        if ($(element).val() !== "") {
-            isAllRequiredSelected = true;
-        }
-    }
-  });
-    var attributeId = 'attrRequired-'+value;
-    var attributeborderId = 'attrRequiredBorder-'+value;
-    if(!(isAllRequiredSelected))
-    {
-        isValid = false;
-        $($('[id='+attributeId+']')[1]).show();
-        $($('[id='+attributeborderId+']')[1]).css({"display":"block","border":"2px solid #9C0F17","border-collapse":"separate","border-spacing":"2px"});
-
-    }
-    else
-    {
-        $($('[id='+attributeId+']')[1]).hide();
-        $($('[id='+attributeborderId+']')[1]).css({"border":"none"});
-    }
-});
-
-    if(!(isValid))
-    {
-        $($('[id=updateMessage]')[1]).show();
-        $($('[id=updateMessage1]')[1]).show();
-    }
-    else
-    {
-        $($('[id=updateMessage]')[1]).hide();
-        $($('[id=updateMessage1]')[1]).hide();
-        var mUrl = '';
-        var mRandom = Math.floor((Math.random() * 1000000) + 1);
-        mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
-        $.facebox.close();
-        $.ajax
-        ({
-            url: mUrl,
-            type: 'POST',
-            data: $("#facebox #frmPrd").serialize(),
-            success: function(data)
-            {
-                $.ajax({
-                    url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
-                    type: "GET",
-                    success: function(data) 
-                    {
-                        $('#cart').html(data);
+            var filteredAttributeElements = attributeElements.slice(attributeElements.length/2);
+            $.each(filteredAttributeElements, function(index, element) 
+            {    
+                if(element.tagName !== "SELECT")
+                {
+                    if ($(element).is(':checked')) {
+                        isAllRequiredSelected = true;
                     }
-                });
-                //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
-            },
-            error: function()
+                }
+                else
+                {
+                    if ($(element).val() !== "") {
+                        isAllRequiredSelected = true;
+                    }
+                }
+            });
+            var attributeId = 'attrRequired-'+value;
+            var attributeborderId = 'attrRequiredBorder-'+value;
+            if(!(isAllRequiredSelected))
             {
-                alert('Error occurred.');
+                isValid = false;
+                $($('[id='+attributeId+']')[1]).show();
+                $($('[id='+attributeborderId+']')[1]).css({"display":"block","border":"2px solid #9C0F17","border-collapse":"separate","border-spacing":"2px"});
+            }
+            else
+            {
+                $($('[id='+attributeId+']')[1]).hide();
+                $($('[id='+attributeborderId+']')[1]).css({"border":"none"});
             }
         });
-    }
-        });
+
+        if(!(isValid))
+        {
+            $($('[id=updateMessage]')[1]).show();
+            $($('[id=updateMessage1]')[1]).show();
+        }
+        else
+        {
+            $($('[id=updateMessage]')[1]).hide();
+            $($('[id=updateMessage1]')[1]).hide();
+            var mUrl = '';
+            var mRandom = Math.floor((Math.random() * 1000000) + 1);
+            mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
+            $.facebox.close();
+            mReloadCart = 0;
+            mDieReload = 0;
+            $.ajax
+            ({
+                url: mUrl,
+                type: 'POST',
+                data: $("#facebox #frmPrd").serialize(),
+                success: function(data)
+                {
+                    mReloadCart = 1;
+                },
+                error: function()
+                {
+                    mReloadCart = 2;
+                    alert('Error occurred.');
+                }
+            });
+            
+            function reloadCart()
+            {
+                if ((mReloadCart > 0) && (mDieReload == 0))
+                {
+                    mDieReload = 1;
+                    $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
+                }
+                else
+                {
+                    if (mDieReload == 0)
+                    {
+                        setTimeout(reloadCart, 1000);
+                    }
+                }
+            }
+            
+            reloadCart();
+        }
     });
+});
 	
 	$(document).ready(function()
 	{
