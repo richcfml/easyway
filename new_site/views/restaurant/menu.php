@@ -716,18 +716,21 @@ $(function()
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
             mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
             $.facebox.close();
+            console.log("A: "+Date.now());
             $.ajax
             ({
                 url: mUrl,
                 type: 'POST',
                 data: $("#facebox #frmPrd").serialize(),
-                success: function(data)
+                success: function()
                 {
+                    console.log("B: "+Date.now());
                     $.ajax({
-                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
+                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&uyt=12&tmp1=321",
                         type: "GET",
                         success: function(data) 
                         {
+                            console.log("C: "+Date.now());
                             $('#cart').html(data);
                         }
                     });
