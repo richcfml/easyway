@@ -100,7 +100,7 @@ else if (isset($_POST['btnregister']))
     
     $mSalt = hash('sha256', mt_rand(10,1000000));    
     $loggedinuser->salt= $mSalt;
-    $loggedinuser->ePassword= hash('sha256', trim($user_password).$mSalt);
+    $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
     $loggedinuser->cust_your_name = trim($first_name);
     $loggedinuser->LastName = trim($last_name);
     $loggedinuser->street1 = trim($address1);
