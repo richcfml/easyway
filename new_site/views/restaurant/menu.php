@@ -723,9 +723,7 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    console.log("A"+Date.now());
                     $("#cart").load("?item=cart&ajax=1");
-                    console.log("B"+Date.now());
                 },
                 error: function()
                 {

@@ -1,6 +1,4 @@
 <?php
-$mLogID = mt_rand(1, mt_getrandmax());
-log::write("Cart: Log ID: ".$mLogID.", Line #: ".__LINE__, time() , "debug");
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
@@ -239,6 +237,5 @@ if (isset($_GET['ajax']))
     });
 <?php 
 } 
-log::write("Cart: Log ID: ".$mLogID.", Line #: ".__LINE__, time() , "debug");
 ?>
 </script>
