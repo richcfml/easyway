@@ -1,4 +1,5 @@
 <?php
+session_write_close();
 $mLogID = mt_rand(1, mt_getrandmax());
 log::write("Cart: Log ID: ".$mLogID.", Line #: ".__LINE__, time() , "debug");
 $mPost="";
