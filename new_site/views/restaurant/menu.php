@@ -725,7 +725,7 @@ $.each(attributeRequired, function(index, value) {
                 $.ajax
                 (
                     {
-                        type: "GET",
+                        type: "POST",
                         url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
                         cache:false,
                         success: function(data)
