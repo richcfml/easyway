@@ -726,7 +726,7 @@ $(function()
                 {
                     console.log("B: "+Date.now());
                     $.ajax({
-                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1&uyt=12&tmp1=321",
+                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
                         type: "GET",
                         success: function(data) 
                         {
