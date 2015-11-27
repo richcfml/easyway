@@ -722,23 +722,14 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                $.ajax
-                (
+                $.ajax({
+                    url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
+                    type: "POST",
+                    success: function(data) 
                     {
-                        type: "POST",
-                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
-                        cache:false,
-                        success: function(data)
-                        {
-                            $("#cart").html(data);
-                        },
-                        error:function (xhr, textStatus, thrownError)
-                        {
-                            //ret_val=xhr.readyState;
-                            //alert("status=" +xhr.status);
-                        }
+                        $('#cart').html(data);
                     }
-                );
+                });
                 //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
             },
             error: function()
