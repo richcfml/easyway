@@ -723,16 +723,7 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    $.ajaxSetup
-                    ({
-                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
-                        success: function(data)
-                        {
-                            $('#cart').html(data);
-                        }
-                    });
-                    $.ajax();
-                    //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
+                    $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
                 },
                 error: function()
                 {
