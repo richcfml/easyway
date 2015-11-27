@@ -716,14 +716,13 @@ $(function()
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
             mUrl = "?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
             $.facebox.close();
-            var mPostCart = $.ajax
+            $.ajax
             ({
                 url: mUrl,
                 type: 'POST',
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    mPostCart.abort();
                     $("#cart").load("?item=cart&ajax=1");
                 },
                 error: function()
