@@ -722,7 +722,26 @@ $.each(attributeRequired, function(index, value) {
             data: $("#facebox #frmPrd").serialize(),
             success: function()
             {
-                $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
+                $.ajax
+                (
+                    {
+                        type: "GET",
+                        url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
+                        async:true,
+                        cache:false,
+                        dataType: 'html',
+                        success: function(data)
+                        {
+                            $("#cart").html(data);
+                        },
+                        error:function (xhr, textStatus, thrownError)
+                        {
+                            //ret_val=xhr.readyState;
+                            //alert("status=" +xhr.status);
+                        }
+                    }
+                );
+                //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
             },
             error: function()
             {
