@@ -297,7 +297,6 @@
 			}
 			else if($mod=='cart') 
 			{
-                                session_write_close();
 				$include=$site_root_path. "views/cart/cart.php";
 			}
 			else if($mod=='login') 
