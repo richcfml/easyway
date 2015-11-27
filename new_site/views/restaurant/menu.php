@@ -714,7 +714,7 @@ $(function()
             $($('[id=updateMessage1]')[1]).hide();
             var mUrl = '';
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
-            mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
+            mUrl = "?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
             $.facebox.close();
             $.ajax
             ({
@@ -723,7 +723,7 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    $("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
+                    $("#cart").load("?item=cart&ajax=1");
                 },
                 error: function()
                 {
