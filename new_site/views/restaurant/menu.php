@@ -716,7 +716,6 @@ $(function()
             var mRandom = Math.floor((Math.random() * 1000000) + 1);
             mUrl = "<?= $SiteUrl.$objRestaurant->url ?>/?item=favindex&addtocart=1&ProductID=" + product_id + "&rndm=" + mRandom + "&ajax=1";
             $.facebox.close();
-            console.log("A: "+Date.now());
             $.ajax
             ({
                 url: mUrl,
@@ -724,16 +723,15 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    console.log("B: "+Date.now());
-                    $.ajax({
+                    $.ajaxSetup
+                    ({
                         url: "<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1",
-                        type: "GET",
-                        success: function(data) 
+                        success: function(data)
                         {
-                            console.log("C: "+Date.now());
                             $('#cart').html(data);
                         }
                     });
+                    $.ajax();
                     //$("#cart").load("<?= $SiteUrl.$objRestaurant->url ?>/?item=cart&ajax=1");
                 },
                 error: function()
