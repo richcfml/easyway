@@ -173,7 +173,6 @@ class cart
             echo '<pre>'.print_r($this,true).'</pre>';
         }
         $_SESSION['CART']=serialize($this);
-        session_write_close();
     }
 		
     public function updateProduct(&$product,$index)
