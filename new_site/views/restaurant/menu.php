@@ -724,7 +724,7 @@ $(function()
                 success: function()
                 {
                     var timeStamp = Math.floor(Date.now() / 1000);
-                    $("#cart").load("?item=cart&ajax=1&t="+timeStamp);
+                    $("#cart").load("?item=cart&ajax=1&t="+timeStamp+"&l="+mRandom);
                 },
                 error: function()
                 {
