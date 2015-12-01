@@ -290,7 +290,6 @@ else if (isset($_GET['addtocart']))
         $product_to_order->sale_price=$product_to_order->sale_price+$association->retail_price;
     }
     $cart->addProduct($product_to_order,$cartItemIndex);
-    session_write_close();
     echo("1");
 }
 else if (isset($_GET['showpopup']))
