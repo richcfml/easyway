@@ -1,4 +1,12 @@
 <?php
+$mLogID = mt_rand(1, mt_getrandmax());
+$mT = "";
+if (isset($_GET["t"]))
+{
+    $mT = $_GET["t"];
+}
+
+log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$mT, "debug");
 $mPost="";
 if (isset($_GET['ajax'])) 
 {

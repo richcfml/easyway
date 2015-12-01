@@ -723,7 +723,8 @@ $(function()
                 data: $("#facebox #frmPrd").serialize(),
                 success: function()
                 {
-                    $("#cart").load("?item=cart&ajax=1");
+                    var timeStamp = Math.floor(Date.now() / 1000);
+                    $("#cart").load("?item=cart&ajax=1&t="+timeStamp);
                 },
                 error: function()
                 {
