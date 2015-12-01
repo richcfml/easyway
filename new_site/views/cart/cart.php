@@ -2,7 +2,6 @@
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
-    session_start();
     extract($_GET);
     if (isset($index)) 
     {
