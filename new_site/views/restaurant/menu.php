@@ -721,9 +721,9 @@ $(function()
                 url: mUrl,
                 type: 'POST',
                 data: $("#facebox #frmPrd").serialize(),
-                success: function()
+                success: function(data)
                 {
-                    $("#cart").load("?item=cart&ajax=1");
+                    $("#cart").html(data);
                 },
                 error: function()
                 {
