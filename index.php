@@ -1,9 +1,5 @@
 <?php
 require_once "includes/config.php";
-if (isset($_GET["l"]))
-{
-    log::write("index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-}
 if(isset($_GET['session_id']))
 {
 	$currents_session_id = $_GET['session_id'];

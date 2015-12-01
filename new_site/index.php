@@ -1,8 +1,4 @@
 <?php
-if (isset($_GET["l"]))
-{
-    log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-}
 	$site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";
@@ -26,10 +22,7 @@ if (isset($_GET["l"]))
 	{
 		$cart=$_SESSION['CART'];	 
 	}
-	if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
+	
 	if(is_null($cart)) 
 	{
 	   $cart=new cart();
@@ -48,10 +41,7 @@ if (isset($_GET["l"]))
 			$cart=unserializeData($_SESSION['CART']); 
 		}
 	}
-	if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
+	
 	$cart->restaurant_id=$objRestaurant->id;
 	$cart->sales_tax_ratio=$objRestaurant->tax_percent;
 	$loggedinuser->resturant_id=$objRestaurant->id;
@@ -61,10 +51,7 @@ if (isset($_GET["l"]))
 		 $objRestaurant->delivery_charges=$objRestaurant->zone1_delivery_charges;
 		 $objRestaurant->order_minimum=$objRestaurant->zone1_min_total;
 	}
-	if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
+	
 	if($cart->isempty())
 	{
 		$cart->rest_delivery_charges=$objRestaurant->delivery_charges;
@@ -75,20 +62,10 @@ if (isset($_GET["l"]))
 		require($site_root_path . "views/cdyne/index.php");
 		die();
 	}
-	if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
+	
  	require($site_root_path . "includes/abandoned_cart_config.php");
-        if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
  	require($site_root_path . "includes/controller.php");
-	if (isset($_GET["l"]))
-        {
-            log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-        }
+	
 	if(isset($_GET['sso']) && $_GET['sso']!=''){
 		$mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";
 		

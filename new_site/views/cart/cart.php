@@ -1,8 +1,4 @@
 <?php
-if (isset($_GET["l"]))
-{
-    log::write("views/cart/cart.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
-}
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
