@@ -1,49 +1,37 @@
 <?php
-$mLogID = mt_rand(1, mt_getrandmax());
-log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 $mPost="";
 if (isset($_GET['ajax'])) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     extract($_GET);
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     if (isset($index)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     	$cart->remove_Item($index);
     } 
     else if (isset($delivery_type)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     	$cart->setdelivery_type($delivery_type);
     } 
     else if (isset($favoritesindex)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     	if (isset($loggedinuser->arrFavorites[$favoritesindex])) 
         {
-            log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
             $favoritefood = $loggedinuser->arrFavorites[$favoritesindex]->food;
             $cart->addfavorites($favoritefood);
         }
     } 
     else if (isset($removefavoritesindex)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
         if (isset($loggedinuser->arrFavorites[$removefavoritesindex])) 
         {
-            log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
             $loggedinuser->removeUserFavoriteOrder($removefavoritesindex);
         }
     } 
     else if (isset($rapidreorder)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
         $loggedinuser->changeRepidReorderingStatus($rapidreorder, ($status == 1 ? 0 : 1));
     }
     else if (isset($findex)) 
     {
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
         $mFavoriteID=$loggedinuser->arrFavorites[$findex]->id;
         $mTip= $tip;
         $mDM =$DM;
@@ -54,7 +42,6 @@ if (isset($_GET['ajax']))
     <div id="your_summery">Your Order Summary</div>
     <div id="contents">
 <?php
-log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 $index = -1;
 foreach ($cart->products as $prod) 
 {
@@ -70,7 +57,6 @@ foreach ($cart->products as $prod)
 		</div>
 <?php 
 }
-log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
         <!--End flip Div-->
         <div class="subtotal">Subtotal:</div>
@@ -79,7 +65,6 @@ log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(),
 <?php
 if ($cart->delivery_type == cart::Delivery) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 		<div class="subtotal">Delivery Charges:</div>
 		<div class="amount"><?=$currency?><?= number_format($cart->delivery_charges(),2) ?></div>
@@ -88,7 +73,6 @@ if ($cart->delivery_type == cart::Delivery)
 } 
 if ($cart->driver_tip > 0) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 		<div class="subtotal">Driver Tip:</div>
 		<div class="amount"><?=$currency?><?= number_format($cart->driver_tip,2) ?></div>
@@ -97,7 +81,6 @@ if ($cart->driver_tip > 0)
 }
 if ($cart->coupon_discount > 0) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 		<div class="subtotal">Coupon Discount:</div>
 		<div class="amount"><?=$currency?><?= number_format($cart->coupon_discount,2) ?></div>
@@ -106,7 +89,6 @@ if ($cart->coupon_discount > 0)
 } 
 if ($cart->vip_discount > 0) 
 { 
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 		<div class="subtotal">VIP Discount:</div>
 		<div class="amount"><?=$currency?><?= number_format($cart->vip_discount, 2) ?></div>
@@ -125,10 +107,8 @@ if ($cart->vip_discount > 0)
 <?php
 if ($objRestaurant->isOpenHour == 1) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 	if (isset($without_loggin)) 
 	{
-            log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>             
         <form method="post" name="form1" id="form1" action="?item=checkout">
             <div class="online_ordering" style="font-size: 12px">
@@ -139,15 +119,12 @@ if ($objRestaurant->isOpenHour == 1)
     } 
 	else 
 	{
-            log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
             if (is_numeric($loggedinuser->id)) 
             {
-                log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
                 $mPost = $SiteUrl.$objRestaurant->url."/?item=checkout";
             }
             else
             {
-                log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
                 $mPost = $SiteUrl.$objRestaurant->url."/?item=login";
             }	
 ?>
@@ -155,8 +132,7 @@ if ($objRestaurant->isOpenHour == 1)
             <div class="online_ordering">
 <?php 
 		if ($objRestaurant->delivery_offer == 1) 
-		{
-                    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
+		{ 
 ?>
 	            <input type="submit" name="btncheckout" value="Delivery" class="delivery_button" onclick="return totalVerified();"> 
 <?php 
@@ -168,15 +144,12 @@ if ($objRestaurant->isOpenHour == 1)
         <!--End contents Div--> 
 <?php 
 	}
-        log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 }
 ?>
     </div>
     <br/>
 <?php
-log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
     require($site_root_path . "views/customer/favorites.php"); 
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 <script type="text/javascript">
 function totalVerified() 
@@ -256,7 +229,6 @@ function postitem(source)
 <?php 
 if (isset($_GET['ajax'])) 
 {
-    log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 ?>
 	jQuery(document).ready(function($) 
 	{
@@ -264,7 +236,6 @@ if (isset($_GET['ajax']))
         $('a[rel*=facebox2]').facebox();
     });
 <?php 
-log::write("Add to Cart: Log ID = ".$mLogID.", Line Number = ".__LINE__, time(), "debug");
 } 
 ?>
 </script>
