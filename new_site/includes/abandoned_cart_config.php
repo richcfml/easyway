@@ -111,6 +111,10 @@ if($cart->order_created===0)
     } 
     else 
     {
+        if (isset($_GET["l"]))
+        {
+            log::write("abandoned_cart_config.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
+        }
         if(!$cart->isempty())
         {
             if (isset($_GET["l"]))
