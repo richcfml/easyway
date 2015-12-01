@@ -1,4 +1,8 @@
 <?php
+if (isset($_GET["l"]))
+{
+    log::write("includes/controller.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
+}
 	isset($_GET['item']) ? $mod=$_GET['item'] : $mod='resturants';
 	$wp_api = false;
 	$ifrm = false;

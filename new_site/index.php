@@ -1,4 +1,8 @@
 <?php
+if (isset($_GET["l"]))
+{
+    log::write("new_site/index.php: Log ID = ".$_GET["l"].", Line Number = ".__LINE__, "Server Time: ".time()." || Client Time: ".$_GET["t"], "debug");
+}
 	$site_base = '../';
 	$site_root_path = "new_site/";
 	$css_path = $site_base."css/";
