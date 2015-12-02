@@ -532,12 +532,12 @@ class Restaurant
                     your_order_summary_font_size, cell_bg_color, cell_border_color, cell_border_thickness, titles_font_size, titles_font_family, 
                     min_width_of_the_container, vip_progress_bar_color, order_online_button_image, cell_bg_image, cell_bg_image_strech_or_tile, 
                     show_loyalty_box_about_the_cart, appearence, show_item_pictures_and_description, restaurant_slug, status, iframe_height, iframe_height_infinite)
-                    VALUES (".$pRestaurantID.", ".$pGeneralFontSize.", '".$pGeneralTextColor."', '".$pSecondaryTextColor."', 
+                    VALUES (".$pRestaurantID.", '".$pGeneralFontSize."', '".$pGeneralTextColor."', '".$pSecondaryTextColor."', 
                     '".$pMenuBGColor."', '".$pMenuLinkColorOnActive."', '".$pMenuLinkColorOnInactive."', '".$pSubMenuHeadingsColor."', 
                     '".$pSubMenuDescriptionsColor."', '".$pItemsTitleColor."', '".$pItemsPriceColor."', '".$pItemsDscriptionColor."', 
-                    ".$pItemsPricesFontSize.", '".$pYourOrderSummaryColor."', ".$pYourOrderSummaryFontSize.", '".$pCellBGcolor."', 
-                    '".$pCellBorderColor."', ".$pCellBorderThickness.", ".$pTitlesFontSize.", '".$pTitlesFont."',
-                    $pMinWidthOfTheContainer, '".$pColorForVIPProgressBar."', '".$pOrderOnlineButtonImage."', '".$pCellBGImage."', 
+                    '".$pItemsPricesFontSize."', '".$pYourOrderSummaryColor."', '".$pYourOrderSummaryFontSize."', '".$pCellBGcolor."', 
+                    '".$pCellBorderColor."', '".$pCellBorderThickness."', '".$pTitlesFontSize."', '".$pTitlesFont."', 
+                    '".$pMinWidthOfTheContainer."', '".$pColorForVIPProgressBar."', '".$pOrderOnlineButtonImage."', '".$pCellBGImage."', 
                     ".$pCellBGImageStretchTile.", ".$pShowLoyaltyBox.", ".$pLayoutStyle.", ".$pShowPicturesDescription.", '".$pRestaurantSlug."', '".$pStatus."', '".$pIframeHeight."', '".$pIframeHeightInfinite."')";
         return dbAbstract::Insert($mSQLQuery);
     }
