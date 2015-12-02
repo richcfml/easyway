@@ -46,6 +46,8 @@ class Restaurant
     public $optionl_logo;
     public $header_image;
     public $header_vip_image;
+    public $meta_keywords;
+    public $meta_description;
 
     public $active_menu_link_color, 
             $appearence, 
