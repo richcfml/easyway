@@ -132,6 +132,11 @@
 	{ 
 		$admin_include_content = "admin_contents/iframe/iframe_settings.php";
 	}
+        
+        if($mod == 'wordpress_settings')		
+	{ 
+		$admin_include_content = "admin_contents/advanced_settings/wpsettings.php";
+	}
     
 	if($mod == 'reputation')
 	{

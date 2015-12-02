@@ -3,7 +3,7 @@
 <?php
 include "includes/resturant_header.php";
 $mMessage="";
-$mGFS = "12";
+$mGFS = "12px";
 $mGTC = "#000000";
 $mSTC = "#000000";
 $mMBC = "#F4F4F4";
@@ -14,29 +14,29 @@ $mSMDC = "#585858";
 $mITC = "#000000";
 $mIPC = "#000000";
 $mIDC = "#000000";
-$mIPFS = "14";
+$mIPFS = "14px";
 $mYOSC = "#5F5F5F";
-$mYOSFS = "18";
-$mCBC = "#fff";
-$mCBrC = "#e4e4e4";
-$mCBT = "1";
-$mTFS = "12";
+$mYOSFS = "18px";
+$mCBC = "#ffffff";
+$mCBrC = "#F4F4F4";
+$mCBT = "1px";
+$mTFS = "16px";
 $mTF = "Arial,Helvetica,sans-serif";
-$mMWC = "0";
+$mMWC = "1000px";
 $mCVPB = "#00CCFF";
 $mOOBI = "";
 $mCBI="";
-$mCBIST=0;
-$mSLB = 0;
-$mLS = 0;
-$mSPD = 0;
+$mCBIST=2;
+$mSLB = 1;
+$mLS = 1;
+$mSPD = 1;
 $mRbLayout1="";
 $mRbLayout2="";
 $mChkShow="";
 $mShow= " display:none;";
 	
 $mRestaurantID = $Objrestaurant->id;
-$mSettingsCount = $Objrestaurant->CountIframeSettingsByRestaurantID($mRestaurantID);
+$mSettingsCount = $Objrestaurant->CountWordPressSettingsByRestaurantID($mRestaurantID);
 
 function GetFileExt($pFileName)
 {
@@ -44,6 +44,7 @@ function GetFileExt($pFileName)
 	$mExt = strtolower($mExt);
 	return $mExt;
 }
+
 $mOOBIFileName="";
 $mCBIFileName="";
 
@@ -52,267 +53,261 @@ $mCBIFlag = 0;
 
 if (isset($_POST["btnDelOOBI"])) //Delete Order Online Image Button Clicked
 {
-	$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
-	if ($mOOBICBI!=0)
-	{
-		$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
-		if (file_exists(realpath($mTmpOOBI))) 
-		{
-			unlink(realpath($mTmpOOBI));
-		}
-	}
-	$Objrestaurant->UpdateOOBIByRestaurantID($Objrestaurant->id, "");
+    $mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantIDWP($Objrestaurant->id);
+    if ($mOOBICBI!=0)
+    {
+        $mTmpOOBI = $mOOBICBI->order_online_button_image;
+        if (file_exists(realpath($mTmpOOBI))) 
+        {
+            unlink(realpath($mTmpOOBI));
+        }
+    }
+    $Objrestaurant->UpdateOOBIByRestaurantIDWP($Objrestaurant->id, "");
 }
 else if (isset($_POST["btnDelCBI"])) //Delete Cell BG Image Button Clicked
 {
-	$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
-	if ($mOOBICBI!=0)
-	{
-		$mTmpCBI = $mOOBICBI->CellBGImage;
-		if (file_exists(realpath($mTmpCBI))) 
-		{
-			unlink(realpath($mTmpCBI));
-		}
-	}
-	$Objrestaurant->UpdateCBIByRestaurantID($Objrestaurant->id, "");
-}
-else if (isset($_POST["btnDownloadImage"])) //Download Image button clicked
-{
+    $mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantIDWP($Objrestaurant->id);
+    if ($mOOBICBI!=0)
+    {
+        $mTmpCBI = $mOOBICBI->cell_bg_image;
+        if (file_exists(realpath($mTmpCBI))) 
+        {
+            unlink(realpath($mTmpCBI));
+        }
+    }
+    $Objrestaurant->UpdateCBIByRestaurantIDWP($Objrestaurant->id, "");
 }
 else if (isset($_POST["btnSubmit"])) //Submit Button Clicked
 {
-	if($_FILES['fuOOBI']['name'])
-	{
-		if(!$_FILES['fuOOBI']['error'])
-		{
-			$mExt = GetFileExt($_FILES['fuOOBI']['name']);
-			if ((strtolower($mExt)!='.jpg') && (strtolower($mExt)!='.jpeg') && (strtolower($mExt)!='.gif') && (strtolower($mExt)!='.png'))
-			{
-				$mMessage = "Invalid file type for Online Order Button Image, please upload only jpg, gif or png.";
-			}
-			else
-			{
-				if (!file_exists('../images/'.$Objrestaurant->url_name)) 
-				{
-					mkdir('../images/'.$Objrestaurant->url_name, 0777, true);
-				}
-				
-				$mPath = '../images/'.$Objrestaurant->url_name.'/';
-				$mRandom = mt_rand(1, mt_getrandmax());
-				$mOOBIFileName =  $mPath.str_replace(".", "_", str_replace(" ", "_", basename($_FILES['fuOOBI']['name'],$mExt)))."_".$mRandom.$mExt;
-				if (!move_uploaded_file($_FILES['fuOOBI']['tmp_name'] , $mOOBIFileName))
-				{
-					$mMessage = "Error occurred while uploading Online Order Button Image.";
-				}
-				else
-				{
-					$mOOBIFlag = 1;
-				}
-			}
-		}
-		else
-		{
-			$mMessage = "Error occurred while uploading Online Order Button Image.";
-		}
-	}
-	
-	if ($mMessage=="")
-	{
-		if($_FILES['fuCBI']['name'])
-		{
-			if(!$_FILES['fuCBI']['error'])
-			{
-				$mExt = GetFileExt($_FILES['fuCBI']['name']);
-				if ((strtolower($mExt)!='.jpg') && (strtolower($mExt)!='.jpeg') && (strtolower($mExt)!='.gif') && (strtolower($mExt)!='.png'))
-				{
-					$mMessage = "Invalid file type for Cell BG Image, please upload only jpg, gif or png.";
-				}
-				else
-				{
-					if (!file_exists('../images/'.$Objrestaurant->url_name)) 
-					{
-						mkdir('../images/'.$Objrestaurant->url_name, 0777, true);
-					}
-					
-					$mPath = '../images/'.$Objrestaurant->url_name.'/';
-					$mRandom = mt_rand(1, mt_getrandmax());
-					$mCBIFileName =  $mPath.str_replace(".", "_", str_replace(" ", "_", basename($_FILES['fuCBI']['name'],$mExt)))."_".$mRandom.$mExt;
-					if (!move_uploaded_file($_FILES['fuCBI']['tmp_name'] , $mCBIFileName))
-					{
-						$mMessage = "Error occurred while uploading Cell BG Image.";
-					}
-					else
-					{
-						$mCBIFlag = 1;
-					}
-				}
-			}
-			else
-			{
-				$mMessage = "Error occurred while uploading Cell BG Image.";
-			}
-		}
-	}
-	
-	if ($mMessage=="")
-	{
-		if ($mSettingsCount==0) //No Settings Exist, Do Insert
-		{
-			if ($Objrestaurant->InsertIframeDetailsByRestaurantID($mRestaurantID, $_POST["txtGFS"], $_POST["txtGTC"], $_POST["txtSTC"], $_POST["txtMBC"], $_POST["txtMLCA"], $_POST["txtMLCI"], $_POST["txtSMHC"], $_POST["txtSMDC"], $_POST["txtITC"], $_POST["txtIPC"], $_POST["txtIDC"], $_POST["txtIPFS"], $_POST["txtYOSC"], $_POST["txtYOSFS"], $_POST["txtCBC"], $_POST["txtCBrC"], $_POST["txtCBT"], $_POST["txtTFS"], $_POST["txtTF"], $_POST["txtMWC"], $_POST["txtCVPB"], $mOOBIFileName, $mCBIFileName, $_POST["rbST"], ((isset($_POST["chkSLB"]))?1:0) ,$_POST["rbLayout"], ((isset($_POST["chkShow"]))?1:0)))
-			{
-				$mMessage = "Facebook Ordering settings saved successfully.";
-			}
-			else
-			{
-				$mMessage = "Error occurred.";
-			}
-		}
-		else if ($mSettingsCount > 0) //Settings Exist, Do Update
-		{
-			$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
-			if ($mOOBICBI!=0)
-			{
-				$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
-				$mTmpCBI = $mOOBICBI->CellBGImage;
-				if ($mOOBIFlag == 1)
-				{
-					if (file_exists(realpath($mTmpOOBI))) 
-					{
-						unlink(realpath($mTmpOOBI));
-					}
-				}
-				else
-				{
-					$mOOBIFileName = $mTmpOOBI;
-				}
-				
-				if ($mCBIFlag == 1)
-				{
-					if (file_exists(realpath($mTmpCBI))) 
-					{
-						unlink(realpath($mTmpCBI));
-					}
-				}
-				else
-				{
-					$mCBIFileName = $mTmpCBI;
-				}
-			}
-			
-			if ($Objrestaurant->UpdateIframeDetailsByRestaurantID($mRestaurantID, $_POST["txtGFS"], $_POST["txtGTC"], $_POST["txtSTC"], $_POST["txtMBC"], $_POST["txtMLCA"], $_POST["txtMLCI"], $_POST["txtSMHC"], $_POST["txtSMDC"], $_POST["txtITC"], $_POST["txtIPC"], $_POST["txtIDC"], $_POST["txtIPFS"], $_POST["txtYOSC"], $_POST["txtYOSFS"], $_POST["txtCBC"], $_POST["txtCBrC"], $_POST["txtCBT"], $_POST["txtTFS"], $_POST["txtTF"], $_POST["txtMWC"], $_POST["txtCVPB"], $mOOBIFileName, $mCBIFileName, $_POST["rbST"], ((isset($_POST["chkSLB"]))?1:0) ,$_POST["rbLayout"], ((isset($_POST["chkShow"]))?1:0)))
-			{
-				$mMessage = "Facebook Ordering settings updated successfully.";
-			}
-			else
-			{
-				$mMessage = "Error occurred.";
-			}
-		}
-		else //Error
-		{
-			$mMessage = "Error occurred.";
-		}
-	}
+    $_POST["txtGFS"] = $_POST["txtGFS"]."px";
+    $_POST["txtIPFS"] = $_POST["txtIPFS"]."px";
+    $_POST["txtYOSFS"] = $_POST["txtYOSFS"]."px";
+    $_POST["txtCBT"] = $_POST["txtCBT"]."px";
+    $_POST["txtTFS"] = $_POST["txtTFS"]."px";
+    $_POST["txtMWC"] = $_POST["txtMWC"]."px";
+    
+    if($_FILES['fuOOBI']['name'])
+    {
+        if(!$_FILES['fuOOBI']['error'])
+        {
+            $mExt = GetFileExt($_FILES['fuOOBI']['name']);
+            if ((strtolower($mExt)!='.jpg') && (strtolower($mExt)!='.jpeg') && (strtolower($mExt)!='.gif') && (strtolower($mExt)!='.png'))
+            {
+                $mMessage = "Invalid file type for Online Order Button Image, please upload only jpg, gif or png.";
+            }
+            else
+            {
+                if (!file_exists('../images/'.$Objrestaurant->url_name)) 
+                {
+                    $oldmask = umask(0);
+                    mkdir('../images/'.$Objrestaurant->url_name, 0777, true);
+                    umask($oldmask);
+                }
+
+                $mPath = '../images/'.$Objrestaurant->url_name.'/';
+                $mRandom = mt_rand(1, mt_getrandmax());
+                $mOOBIFileName =  $mPath.str_replace(".", "_", str_replace(" ", "_", basename($_FILES['fuOOBI']['name'],$mExt)))."_".$mRandom.$mExt;
+                if (!move_uploaded_file($_FILES['fuOOBI']['tmp_name'] , $mOOBIFileName))
+                {
+                    $mMessage = "Error occurred while uploading Online Order Button Image.";
+                }
+                else
+                {
+                    $mOOBIFlag = 1;
+                }
+            }
+        }
+        else
+        {
+            $mMessage = "Error occurred while uploading Online Order Button Image.";
+        }
+    }
+
+    if ($mMessage=="")
+    {
+        if($_FILES['fuCBI']['name'])
+        {
+            if(!$_FILES['fuCBI']['error'])
+            {
+                $mExt = GetFileExt($_FILES['fuCBI']['name']);
+                if ((strtolower($mExt)!='.jpg') && (strtolower($mExt)!='.jpeg') && (strtolower($mExt)!='.gif') && (strtolower($mExt)!='.png'))
+                {
+                    $mMessage = "Invalid file type for Cell BG Image, please upload only jpg, gif or png.";
+                }
+                else
+                {
+                    if (!file_exists('../images/'.$Objrestaurant->url_name)) 
+                    {
+                        $oldmask = umask(0);
+                        mkdir('../images/'.$Objrestaurant->url_name, 0777, true);
+                        umask($oldmask);
+                    }
+
+                    $mPath = '../images/'.$Objrestaurant->url_name.'/';
+                    $mRandom = mt_rand(1, mt_getrandmax());
+                    $mCBIFileName =  $mPath.str_replace(".", "_", str_replace(" ", "_", basename($_FILES['fuCBI']['name'],$mExt)))."_".$mRandom.$mExt;
+                    if (!move_uploaded_file($_FILES['fuCBI']['tmp_name'] , $mCBIFileName))
+                    {
+                        $mMessage = "Error occurred while uploading Cell BG Image.";
+                    }
+                    else
+                    {
+                        $mCBIFlag = 1;
+                    }
+                }
+            }
+            else
+            {
+                $mMessage = "Error occurred while uploading Cell BG Image.";
+            }
+        }
+    }
+
+    if ($mMessage=="")
+    {
+        if ($mSettingsCount==0) //No Settings Exist, Do Insert
+        {
+            if ($Objrestaurant->InsertWordPressDetailsByRestaurantID($mRestaurantID, $_POST["txtGFS"], $_POST["txtGTC"], $_POST["txtSTC"], $_POST["txtMBC"], $_POST["txtMLCA"], $_POST["txtMLCI"], $_POST["txtSMHC"], $_POST["txtSMDC"], $_POST["txtITC"], $_POST["txtIPC"], $_POST["txtIDC"], $_POST["txtIPFS"], $_POST["txtYOSC"], $_POST["txtYOSFS"], $_POST["txtCBC"], $_POST["txtCBrC"], $_POST["txtCBT"], $_POST["txtTFS"], $_POST["txtTF"], $_POST["txtMWC"], $_POST["txtCVPB"], $mOOBIFileName, $mCBIFileName, $_POST["rbST"], ((isset($_POST["chkSLB"]))?1:0) ,$_POST["rbLayout"], ((isset($_POST["chkShow"]))?1:0), $Objrestaurant->url_name, "active", "550px", "1"))
+            {
+                $mMessage = "WordPress settings saved successfully.";
+            }
+            else
+            {
+                $mMessage = "Error occurred.";
+            }
+        }
+        else if ($mSettingsCount > 0) //Settings Exist, Do Update
+        {
+            if ($Objrestaurant->UpdateWordPressDetailsByRestaurantID($mRestaurantID, $_POST["txtGFS"], $_POST["txtGTC"], $_POST["txtSTC"], $_POST["txtMBC"], $_POST["txtMLCA"], $_POST["txtMLCI"], $_POST["txtSMHC"], $_POST["txtSMDC"], $_POST["txtITC"], $_POST["txtIPC"], $_POST["txtIDC"], $_POST["txtIPFS"], $_POST["txtYOSC"], $_POST["txtYOSFS"], $_POST["txtCBC"], $_POST["txtCBrC"], $_POST["txtCBT"], $_POST["txtTFS"], $_POST["txtTF"], $_POST["txtMWC"], $_POST["txtCVPB"], $mOOBIFileName, $mCBIFileName, $_POST["rbST"], ((isset($_POST["chkSLB"]))?1:0) ,$_POST["rbLayout"], ((isset($_POST["chkShow"]))?1:0), $Objrestaurant->url_name, "active", "550px", "1"))
+            {
+                $mMessage = "WordPress settings updated successfully.";
+            }
+            else
+            {
+                $mMessage = "Error occurred.";
+            }
+        }
+        else //Error
+        {
+            $mMessage = "Error occurred.";
+        }
+    }
+    else
+    {
+        $mMessage = "Error occurred.";
+    }
 }
 else if (isset($_POST["btnDefault"])) //Default Button Clicked
 {
-	if ($mSettingsCount==0) //No Settings Exist, Do Insert
-	{
-		if ($Objrestaurant->InsertIframeDetailsByRestaurantID($mRestaurantID, $mGFS, $mGTC, $mSTC, $mMBC, $mMLCA, $mMLCI, $mSMHC, $mSMDC, $mITC, $mIPC, $mIDC, $mIPFS, $mYOSC, $mYOSFS, $mCBC, $mCBrC, $mCBT, $mTFS, $mTF, $mMWC, $mCVPB, $mOOBIFileName, $mCBIFileName, $mCBIST, $mSLB, $mLS, $mSPD))
-		{
-			$mMessage = "Facebook Ordering settings saved successfully.";
-		}
-		else
-		{
-			$mMessage = "Error occurred.";
-		}
-	}
-	else if ($mSettingsCount > 0) //Settings Exist, Do Update
-	{
-		$mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantID($Objrestaurant->id);
-		if ($mOOBICBI!=0)
-		{
-			$mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
-			$mTmpCBI = $mOOBICBI->CellBGImage;
-			if (file_exists(realpath($mTmpOOBI))) 
-			{
-				unlink(realpath($mTmpOOBI));
-			}
-			
-			if (file_exists(realpath($mTmpCBI))) 
-			{
-				unlink(realpath($mTmpCBI));
-			}
-		}
-		
-		if ($Objrestaurant->UpdateIframeDetailsByRestaurantID($mRestaurantID, $mGFS, $mGTC, $mSTC, $mMBC, $mMLCA, $mMLCI, $mSMHC, $mSMDC, $mITC, $mIPC, $mIDC, $mIPFS, $mYOSC, $mYOSFS, $mCBC, $mCBrC, $mCBT, $mTFS, $mTF, $mMWC, $mCVPB, $mOOBIFileName, $mCBIFileName, $mCBIST, $mSLB, $mLS, $mSPD))
-		{
-			$mMessage = "Facebook Ordering settings updated successfully.";
-		}
-		else
-		{
-			$mMessage = "Error occurred.";
-		}
-	}
-	else //Error
-	{
-		$mMessage = "Error occurred.";
-	}
+    if ($mSettingsCount==0) //No Settings Exist, Do Insert
+    {
+        if ($Objrestaurant->InsertWordPressDetailsByRestaurantID($mRestaurantID, $mGFS, $mGTC, $mSTC, $mMBC, $mMLCA, $mMLCI, $mSMHC, $mSMDC, $mITC, $mIPC, $mIDC, $mIPFS, $mYOSC, $mYOSFS, $mCBC, $mCBrC, $mCBT, $mTFS, $mTF, $mMWC, $mCVPB, $mOOBIFileName, $mCBIFileName, $mCBIST, $mSLB, $mLS, $mSPD))
+        {
+            $mMessage = "WordPress settings saved successfully.";
+        }
+        else
+        {
+            $mMessage = "Error occurred.";
+        }
+    }
+    else if ($mSettingsCount > 0) //Settings Exist, Do Update
+    {	
+        $mOOBICBI = $Objrestaurant->getOOBICBIByRestaurantIDWP($Objrestaurant->id);
+        if ($mOOBICBI!=0)
+        {
+                $mTmpOOBI = $mOOBICBI->OrderOnlineButtonImage;
+                $mTmpCBI = $mOOBICBI->CellBGImage;
+                if (file_exists(realpath($mTmpOOBI))) 
+                {
+                        unlink(realpath($mTmpOOBI));
+                }
+
+                if (file_exists(realpath($mTmpCBI))) 
+                {
+                        unlink(realpath($mTmpCBI));
+                }
+        }
+                
+        if ($Objrestaurant->UpdateWordPressDetailsByRestaurantID($mRestaurantID, $mGFS, $mGTC, $mSTC, $mMBC, $mMLCA, $mMLCI, $mSMHC, $mSMDC, $mITC, $mIPC, $mIDC, $mIPFS, $mYOSC, $mYOSFS, $mCBC, $mCBrC, $mCBT, $mTFS, $mTF, $mMWC, $mCVPB, $mOOBIFileName, $mCBIFileName, $mCBIST, $mSLB, $mLS, $mSPD))
+        {
+            $mMessage = "WordPress settings updated successfully.";
+        }
+        else
+        {
+            $mMessage = "Error occurred.";
+        }
+    }
+    else //Error
+    {
+        $mMessage = "Error occurred.";
+    }
 }
 
-$mIframeSettings = $Objrestaurant->getIframeDetailsByRestaurantID($Objrestaurant->id);
-if ($mIframeSettings!=0)
+$mWordPressSettings = $Objrestaurant->getWordPressDetailsByRestaurantID($Objrestaurant->id);
+if ($mWordPressSettings!=0)
 {
-	$mGFS = $mIframeSettings->GeneralFontSize;
-	$mGTC = $mIframeSettings->GeneralTextColor;
-	$mSTC = $mIframeSettings->SecondaryTextColor;
-	$mMBC = $mIframeSettings->MenuBGColor;
-	$mMLCA = $mIframeSettings->MenuLinkColorOnActive;
-	$mMLCI = $mIframeSettings->MenuLinkColorOnInactive;
-	$mSMHC = $mIframeSettings->SubMenuHeadingsColor;
-	$mSMDC = $mIframeSettings->SubMenuDescriptionsColor;
-	$mITC = $mIframeSettings->ItemsTitleColor;
-	$mIPC = $mIframeSettings->ItemsPriceColor;
-	$mIDC = $mIframeSettings->ItemsDscriptionColor;
-	$mIPFS = $mIframeSettings->ItemsPricesFontSize;
-	$mYOSC = $mIframeSettings->YourOrderSummaryColor;
-	$mYOSFS = $mIframeSettings->YourOrderSummaryFontSize;
-	$mCBC = $mIframeSettings->CellBGColor;
-	$mCBrC = $mIframeSettings->CellBorderColor;
-	$mCBT = $mIframeSettings->CellBorderThickness;
-	$mTFS = $mIframeSettings->TitlesFontSize;
-	$mTF = $mIframeSettings->TitlesFont;
-	$mMWC = $mIframeSettings->MinWidthOfTheContainer;
-	$mCVPB = $mIframeSettings->ColorForVIPProgressBar;
-	$mOOBI = $mIframeSettings->OrderOnlineButtonImage;
-	$mCBI = $mIframeSettings->CellBGImage;
-	$mCBIST = $mIframeSettings->CellBGImageStretchTile;
-	$mSLB = $mIframeSettings->ShowLoyaltyBox;
-	$mLS = $mIframeSettings->LayoutStyle;
-	$mSPD = $mIframeSettings->ShowPicturesDescription;
+	$mGFS = $mWordPressSettings->general_font_size;
+	$mGTC = $mWordPressSettings->general_text_color;
+	$mSTC = $mWordPressSettings->secondary_text_color;
+	$mMBC = $mWordPressSettings->menu_bg_color;
+	$mMLCA = $mWordPressSettings->active_menu_link_color;
+	$mMLCI = $mWordPressSettings->inactive_menu_link_color;
+	$mSMHC = $mWordPressSettings->sub_menu_headings_color;
+	$mSMDC = $mWordPressSettings->sub_menu_descriptions_color;
+	$mITC = $mWordPressSettings->items_title_color;
+	$mIPC = $mWordPressSettings->items_price_color;
+	$mIDC = $mWordPressSettings->items_description_color;
+	$mIPFS = $mWordPressSettings->items_and_prices_font_size;
+	$mYOSC = $mWordPressSettings->your_order_summary_color;
+	$mYOSFS = $mWordPressSettings->your_order_summary_font_size;
+	$mCBC = $mWordPressSettings->cell_bg_color;
+	$mCBrC = $mWordPressSettings->cell_border_color;
+	$mCBT = $mWordPressSettings->cell_border_thickness;
+	$mTFS = $mWordPressSettings->titles_font_size;
+	$mTF = $mWordPressSettings->titles_font_family;
+	$mMWC = $mWordPressSettings->min_width_of_the_container;
+	$mCVPB = $mWordPressSettings->vip_progress_bar_color;
+	$mOOBI = $mWordPressSettings->order_online_button_image;
+	$mCBI = $mWordPressSettings->cell_bg_image;
+	$mCBIST = $mWordPressSettings->cell_bg_image_strech_or_tile;
+	$mSLB = $mWordPressSettings->show_loyalty_box_about_the_cart;
+	$mLS = $mWordPressSettings->appearence;
+	$mSPD = $mWordPressSettings->show_item_pictures_and_description;
 }
 
-if ($mLS == 0)
+$mGFS = str_replace("px", "", $mGFS);
+$mIPFS = str_replace("px", "", $mIPFS);
+$mYOSFS = str_replace("px", "", $mYOSFS);
+$mCBT = str_replace("px", "", $mCBT);
+$mTFS = str_replace("px", "", $mTFS);
+$mMWC = str_replace("px", "", $mMWC);
+
+$mLayOut1Checked = "";
+$mLayOut2Show = " style='display:none;' ";
+$mLayOut2Checked = "";
+if ($mLS == 1)
 {
-	$mRbLayout1=" checked='checked' ";
+    $mLayOut1Show = "display:inline;";
+    $mLayOut1Checked = " checked='checked' ";
 }
-else if ($mLS == 1)
+else if ($mLS == 2)
 {
-	$mShow= "display:inline;";
-	$mRbLayout2=" checked='checked' ";
-	if ($mSPD == 1)
-	{
-		$mChkShow=" checked='checked' ";
-	}
+    $mLayOut2Show = "display:inline;";
+    $mLayOut2Checked = " checked='checked' ";
+    if ($mSPD == 1)
+    {
+        $mChkShow=" checked='checked' ";
+    }
 }
 
 if ($mSLB==1)
 {
-	$mChkSLB=" checked='checked' ";
+    $mChkSLB=" checked='checked' ";
 }
 ?>
 <script language="javascript" type="application/javascript">
-$(document).ready( function($) {
+$(document).ready( function($) 
+{
 	$('#txtGTC').ColorPicker({
 		color: $('#txtGTC').val(),
 		onShow: function (colpkr) {
@@ -539,243 +534,6 @@ $(document).ready( function($) {
 					<td style="width: 98%;" colspan="2">
 						<span style="color: red;"><?php echo($mMessage); ?></span>
 					</td>
-				</tr>
-				<tr style="display: none;">
-					<td colspan="3">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">
-						<div style="width: 100%;">
-							<table style="width: 100%; margin: 0px; border: 1px solid #CCCCCC;" cellpadding="0" cellspacing="0">
-								<tr style="height: 60px;background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td>
-										<span style="font-size: 18px; font-weight: bold; color: #039;">Facebook App Settings</span>
-									</td>
-								</tr>
-								<tr style="background-color: #F6F7F8; height: 60px;">
-									<td style="width: 2%;">
-									</td>
-									<td colspan="3">
-										<span style="margin-bottom: 100px !important; font-size: 15px; font-weight: bold;">Page Tab</span>
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important; height: 10px;">
-									<td colspan="4">
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 48%;">
-										<span style="margin-bottom: 100px !important; font-size: 15px;">Page Tab Name</span>
-									</td>
-									<td style="width: 48%;">
-										<span style="margin-bottom: 100px !important; font-size: 15px;">Page Tab URL</span>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="height: 40px; background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 48%;">
-										<input type="text" style="width: 95%; height: 25px; border: 1px solid #CCCCCC;" value="<?=$Objrestaurant->name?> Online Ordering" readonly="readonly"/>
-									</td>
-									<td style="width: 48%;">
-										<input type="text" style="width: 95%; height: 25px; border: 1px solid #CCCCCC;" value="<?=$SiteUrl?>/<?=$Objrestaurant->url_name?>/?item=resturants&ifrm=load_resturant" readonly="readonly"/>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important; height: 10px;">
-									<td colspan="4">
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 48%;">
-										<span style="margin-bottom: 100px !important; font-size: 15px;">Secure Page Tab URL</span>
-									</td>
-									<td style="width: 48%;">
-										<span style="margin-bottom: 100px !important; font-size: 15px;">Page Tab Edit URL</span>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="height: 40px; background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 48%;">
-										<input type="text" style="width: 95%; height: 25px; border: 1px solid #CCCCCC;" value="https://<?=str_replace("https://", "", str_replace("http://", "", $SiteUrl))?><?=$Objrestaurant->url_name?>/?item=resturants&ifrm=load_resturant" readonly="readonly"/>
-									</td>
-									<td style="width: 48%;">
-										<input type="text" style="width: 95%; height: 25px; border: 1px solid #CCCCCC;" value="https://<?=str_replace("https://", "", str_replace("http://", "", $AdminSiteUrl))?>" readonly="readonly"/>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important; height: 10px;">
-									<td colspan="4">
-									</td>
-								</tr>
-								<tr style="height: 40px; background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 96%;" colspan="2">
-										<span style="margin-bottom: 100px !important; font-size: 15px;">Page Tab Image</span>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="height: 40px; background-color: #FFFFFF !important;">
-									<td style="width: 2%;">
-									</td>
-									<td style="width: 96%;" colspan="2">
-										<table style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
-											<tr style="background-color: #FFFFFF;">
-												<td style="width: 15%;">
-													<img src="../images/ewo_order_online.png" border="0" />
-												</td>
-												<td valign="bottom">
-													<a href="download.php" target="_blank">Click to download image file</a>
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td style="width: 2%;">
-									</td>
-								</tr>
-								<tr style="background-color: #FFFFFF !important; height: 10px;">
-									<td colspan="4">
-									</td>
-								</tr>
-							</table>
-						</div>
-					</td>
-				</tr>
-				<tr style="height: 20px; display: none;">
-					<td colspan="3">
-					</td>
-				</tr>
-				<tr style="background-color: #FFFFFF !important;">
-					<td colspan="3" valign="top">
-						<script type="text/javascript" language="javascript">
-							$(document).ready(function()
-							{
-								$("#txtAppID").focus(function()
-								{
-									if ($.trim($("#txtAppID").val())=="Your AppID")
-									{
-										$("#txtAppID").val("");
-										$("#txtAppID").css("color", "#000000");
-									}
-								});
-								
-								$("#txtAppID").focusout(function()
-								{
-									if ($.trim($("#txtAppID").val())=="")
-									{
-										$("#txtAppID").val("Your AppID");
-										$("#txtAppID").css("color", "#888888");
-									}
-									else
-									{
-										if (!($.isNumeric($('#txtAppID').val())))
-										{
-											$('#spnNumber').show();
-										}
-										else
-										{
-											$('#spnNumber').hide();
-										}
-									}
-								});
-								
-								$('#txtAppID').bind('#txtAppID propertychange', function() 
-								{
-									if (!($.isNumeric($('#txtAppID').val())))
-									{
-										$('#spnNumber').show();
-									}
-									else
-									{
-										$('#spnNumber').hide();
-									}
-								});
-								
-								$('#btnAppID').click(function() 
-								{
-									if (!($.isNumeric($('#txtAppID').val())))
-									{
-										$('#spnNumber').show();
-									}
-									else
-									{
-										$('#spnNumber').hide();
-										window.open("https://www.facebook.com/dialog/pagetab?app_id="+$('#txtAppID').val()+"&display=popup&next=http://www.facebook.com", "_blank");
-									}
-								});
-							});
-						</script>
-						<table style="background-color: #FFFFFF !important; width: 100%; height: 100px; margin: 0px; border: 1px solid #CCCCCC;" cellpadding="0" cellspacing="0">
-							<tr style="height: 25px; background-color: #FFFFFF !important;">
-								<td colspan="3">
-								</td>
-							</tr>
-							<tr style="background-color: #FFFFFF !important;">
-								<td style="width: 2%;">
-								</td>
-								<td valign="top">
-									<span style="font-size: 18px; font-weight: bold; color: #039;">Widget to Add your App to Facebook page.</span>
-								</td>
-								<td style="width: 2%;">
-								</td>
-							</tr>
-							<tr style="height: 10px; background-color: #FFFFFF !important;">
-								<td colspan="3">
-								</td>
-							</tr>
-							<tr style="background-color: #FFFFFF !important;">
-								<td style="width: 2%;">
-								</td>
-								<td valign="top">
-									<span style="font-size: 13px; font-weight: bold; color: #000000">Write/Paste your AppID in the textbox below and click "Add to Page". This will open a facbook popup/tab where you can choose the page where you want to add the App.</span> <br /><br /><span style="font-size: 13px; font-weight: bold; color: #B80000;">NOTE: If you are not logged in to your Facebook account then popup/tab will require you to login. Its AppID not Page ID.</strong>
-								</td>
-								<td style="width: 2%;">
-								</td>
-							</tr>
-							<tr style="height: 10px; background-color: #FFFFFF !important;">
-								<td colspan="3">
-								</td>
-							</tr>
-							<tr style="background-color: #FFFFFF !important;">
-								<td style="width: 2%;">
-								</td>
-								<td valign="top">
-									<input type="text" id="txtAppID" size="40" value="Your AppID" style="color: #888888; height: 30px;" />&nbsp;&nbsp;&nbsp;<input type="button" id="btnAppID" value="Add to Page" style="height: 35px;" />
-								</td>
-								<td style="width: 2%;">
-								</td>
-							</tr>
-							<tr style="background-color: #FFFFFF !important;">
-								<td style="width: 2%;">
-								</td>
-								<td valign="top">
-									<span style="color: #FF0000; display: none;" id="spnNumber">Numbers Only</span>
-								</td>
-								<td style="width: 2%;">
-								</td>
-							</tr>
-							<tr style="height: 25px; background-color: #FFFFFF !important;">
-								<td colspan="3">
-								</td>
-							</tr>
-						</table>
-					</td>
 				</tr>	
 				<tr style="height: 20px; display: none;">
 					<td colspan="3">
@@ -784,13 +542,67 @@ $(document).ready( function($) {
 				<tr style="height: 60px; vertical-align: middle;">
 					<td style="width: 2%;">
 					</td>
-					<td style="width: 30%; font-weight: bold;">
+					<td style="width: 30%; font-weight: bold; vertical-align: top;">
 						Layout style:
 					</td>
-					<td style="width: 68%;">	
-						<input type="radio" name="rbLayout" value="0" id="rbLayout1" style="display: none;"/>
-						<input type="radio" name="rbLayout" value="1" id="rbLayout2" checked="checked" style="display: none;" />
-					   <input type="checkbox" name="chkShow" id="chkShow" <?php echo($mChkShow); ?> />Show item pictures and description
+					<td style="width: 68%;">
+                                            <script type="text/javascript" language="javascript">
+                                                $(document).ready(function()
+                                                {
+                                                    $("#imgLayout1").click(function()
+                                                    {
+                                                        $("#rbLayout1").prop("checked", true);
+                                                        $("#rbLayout2").prop("checked", false);
+                                                        
+                                                        $("#chkShow").hide();
+                                                        $("#lblShow").hide();
+                                                    })
+                                                    
+                                                    $("#imgLayout2").click(function()
+                                                    {
+                                                        $("#rbLayout1").prop("checked", false);
+                                                        $("#rbLayout2").prop("checked", true);
+                                                        
+                                                        $("#chkShow").show();
+                                                        $("#lblShow").show();
+                                                    });
+                                                    
+                                                    $("#rbLayout1, #rbLayout2").change(function()
+                                                    {
+                                                        if (document.getElementById('rbLayout2').checked)
+                                                        {
+                                                            $("#chkShow").show();
+                                                            $("#lblShow").show();
+                                                        }
+                                                        else
+                                                        {
+                                                            $("#chkShow").hide();
+                                                            $("#lblShow").hide();
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                            <table width="100%" border="0" cellpadding="4" cellspacing="0">
+                                                <tr style="background-color: #FFFFFF;">
+                                                    <td style="vertical-align: top;">
+                                                        <input type="radio" name="rbLayout" value="1" id="rbLayout1" <?=$mLayOut1Checked?>/>
+                                                    </td>
+                                                    <td style="vertical-align: top;">
+                                                        <img id="imgLayout1" src="images/layout_1.png" alt="Two Columns" title="Two Columns" />
+                                                    </td>
+                                                    <td style="vertical-align: top;">
+                                                        <input type="radio" name="rbLayout" value="2" id="rbLayout2" <?=$mLayOut2Checked?> />
+                                                    </td>
+                                                    <td style="vertical-align: top;">
+                                                        <img id="imgLayout2" src="images/layout_2.png" alt="One Column" title="One Column" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <input type="checkbox" name="chkShow" id="chkShow" <?=$mLayOut2Show?> <?=$mChkShow?> /><label for="chkShow" id="lblShow" <?=$mLayOut2Show?>>Show item pictures and description</label>
+                                                    </td>
+                                                </tr>
+                                            </table>
 					</td>
 				</tr>
 				<tr style="height: 60px; vertical-align: middle;">
@@ -1034,7 +846,7 @@ $(document).ready( function($) {
 						Cell BG image stretch / tile
 					</td>
 					<td style="width: 68%;">
-						<input type="radio" name="rbST" value="0" <?php if ($mCBIST==0) { echo(' checked="checked" '); } ?>/>Stretch&nbsp;&nbsp;&nbsp;<input type="radio" name="rbST" value="1"  <?php if ($mCBIST==1) { echo(' checked="checked" ');} ?>/>Tile
+						<input type="radio" name="rbST" value="1" <?php if ($mCBIST==1) { echo(' checked="checked" '); } ?>/>Stretch&nbsp;&nbsp;&nbsp;<input type="radio" name="rbST" value="2"  <?php if ($mCBIST==2) { echo(' checked="checked" ');} ?>/>Tile
 					</td>
 				</tr>
 				<tr style="height: 60px; vertical-align: middle;">

@@ -378,13 +378,32 @@ class Restaurant
     /*
      * count iframe setting
      */
-    function CountIframeSettingsByRestaurantID($pRestaurantID) {
+    function CountIframeSettingsByRestaurantID($pRestaurantID) 
+    {
         $mSQLQuery = "SELECT COUNT(*) AS SettingsCount FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
         $mResult = dbAbstract::Execute($mSQLQuery);
-        if (dbAbstract::returnRowsCount($mResult)>0) {
+        if (dbAbstract::returnRowsCount($mResult)>0) 
+        {
             $mRow = dbAbstract::returnObject($mResult);
             return $mRow->SettingsCount;
-        } else {
+        } 
+        else 
+        {
+            return -1;
+        }
+    }
+    
+    function CountWordPressSettingsByRestaurantID($pRestaurantID) 
+    {
+        $mSQLQuery = "SELECT COUNT(*) AS SettingsCount FROM wp_restaurent_design_settings WHERE restaurant_id=".$pRestaurantID;
+        $mResult = dbAbstract::Execute($mSQLQuery);
+        if (dbAbstract::returnRowsCount($mResult)>0) 
+        {
+            $mRow = dbAbstract::returnObject($mResult);
+            return $mRow->SettingsCount;
+        } 
+        else 
+        {
             return -1;
         }
     }
@@ -417,6 +436,34 @@ class Restaurant
                 return 0;
             }
     }
+    
+    function getWordPressDetailsByRestaurantID($pRestaurantID) {
+            $mSQLQuery = "SELECT IFNULL(show_loyalty_box_about_the_cart, 1) AS show_loyalty_box_about_the_cart, IFNULL(appearence, 1) AS appearence, 
+                         IFNULL(show_item_pictures_and_description, 1) AS show_item_pictures_and_description, IFNULL(cell_bg_image_strech_or_tile, 2) AS cell_bg_image_strech_or_tile, 
+                         IFNULL(order_online_button_image, '') AS order_online_button_image, IFNULL(cell_bg_image, '') AS cell_bg_image, 
+                         IFNULL(general_font_size, '12px') AS general_font_size, IFNULL(general_text_color, '#000000') AS general_text_color, 
+                         IFNULL(secondary_text_color, '#000000') AS secondary_text_color, IFNULL(menu_bg_color, '#F4F4F4') AS menu_bg_color, 
+                         IFNULL(active_menu_link_color, '#CC0000') AS active_menu_link_color, IFNULL(inactive_menu_link_color, '#333333') AS inactive_menu_link_color, 
+                         IFNULL(sub_menu_headings_color, '#585858') AS sub_menu_headings_color, IFNULL(sub_menu_descriptions_color, '#585858') AS sub_menu_descriptions_color, 
+                         IFNULL(items_title_color, '#000000') AS items_title_color, IFNULL(items_price_color, '#000000') AS items_price_color, 
+                         IFNULL(items_description_color, '#000000') AS items_description_color,
+                         IFNULL(items_and_prices_font_size, '14px') AS items_and_prices_font_size, IFNULL(your_order_summary_color, '5F5F5F') AS your_order_summary_color, 
+                         IFNULL(your_order_summary_font_size, '18px') AS your_order_summary_font_size, IFNULL(cell_bg_color, '#ffffff') AS cell_bg_color, 
+                         IFNULL(cell_border_color, '#F4F4F4') AS cell_border_color, IFNULL(cell_border_thickness, '1px') AS cell_border_thickness, 
+                         IFNULL(titles_font_size, '16px') AS titles_font_size, IFNULL(titles_font_family, 'Arial,Helvetica,sans-serif') AS titles_font_family, 
+                         IFNULL(min_width_of_the_container, '1000px') AS min_width_of_the_container, IFNULL(vip_progress_bar_color, '#00CCFF') AS vip_progress_bar_color 
+                         FROM wp_restaurent_design_settings WHERE restaurant_id=".$pRestaurantID; 
+            $mResult = dbAbstract::Execute($mSQLQuery);
+            
+            if (dbAbstract::returnRowsCount($mResult)>0) 
+            {
+                return dbAbstract::returnObject($mResult);
+            } 
+            else 
+            {
+                return 0;
+            }
+    }
 	
     function getOOBICBIByRestaurantID($pRestaurantID) {
         $mSQLQuery = "SELECT IFNULL(OrderOnlineButtonImage, '') AS OrderOnlineButtonImage, IFNULL(CellBGImage, '') AS CellBGImage FROM iframe_settings WHERE RestaurantID=".$pRestaurantID; 
@@ -429,9 +476,17 @@ class Restaurant
         }
     }
     
-    /**
-     * Insert iframe settings
-     */
+    function getOOBICBIByRestaurantIDWP($pRestaurantID) {
+        $mSQLQuery = "SELECT IFNULL(order_online_button_image, '') AS order_online_button_image, IFNULL(cell_bg_image, '') AS cell_bg_image FROM wp_restaurent_design_settings WHERE restaurant_id=".$pRestaurantID; 
+
+        $mResult = dbAbstract::Execute($mSQLQuery);
+        if (dbAbstract::returnRowsCount($mResult)>0) {
+            return dbAbstract::returnObject($mResult);
+        } else {
+            return 0;
+        }
+    }
+    
     function InsertIframeDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription)
     {
         $mSQLQuery = "INSERT INTO iframe_settings (RestaurantID, GeneralFontSize, GeneralTextColor, SecondaryTextColor, 
@@ -450,9 +505,6 @@ class Restaurant
         return dbAbstract::Insert($mSQLQuery);
     }
     
-    /**
-     * Update iframe settings
-     */
     function UpdateIframeDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription)
     {
         $mSQLQuery = "UPDATE iframe_settings SET GeneralFontSize=".$pGeneralFontSize.", GeneralTextColor='".$pGeneralTextColor."', 
@@ -471,6 +523,43 @@ class Restaurant
                                                  ShowPicturesDescription=".$pShowPicturesDescription." WHERE RestaurantID=".$pRestaurantID;
         return dbAbstract::Update($mSQLQuery);
     }
+    
+    function InsertWordPressDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription, $pRestaurantSlug, $pStatus, $pIframeHeight, $pIframeHeightInfinite)
+    {
+        $mSQLQuery = "INSERT INTO wp_restaurent_design_settings (restaurant_id,	general_font_size, general_text_color, secondary_text_color, 
+                    menu_bg_color, active_menu_link_color, inactive_menu_link_color, sub_menu_headings_color, sub_menu_descriptions_color, 
+                    items_title_color, items_price_color, items_description_color, items_and_prices_font_size, your_order_summary_color, 
+                    your_order_summary_font_size, cell_bg_color, cell_border_color, cell_border_thickness, titles_font_size, titles_font_family, 
+                    min_width_of_the_container, vip_progress_bar_color, order_online_button_image, cell_bg_image, cell_bg_image_strech_or_tile, 
+                    show_loyalty_box_about_the_cart, appearence, show_item_pictures_and_description, restaurant_slug, status, iframe_height, iframe_height_infinite)
+                    VALUES (".$pRestaurantID.", ".$pGeneralFontSize.", '".$pGeneralTextColor."', '".$pSecondaryTextColor."', 
+                    '".$pMenuBGColor."', '".$pMenuLinkColorOnActive."', '".$pMenuLinkColorOnInactive."', '".$pSubMenuHeadingsColor."', 
+                    '".$pSubMenuDescriptionsColor."', '".$pItemsTitleColor."', '".$pItemsPriceColor."', '".$pItemsDscriptionColor."', 
+                    ".$pItemsPricesFontSize.", '".$pYourOrderSummaryColor."', ".$pYourOrderSummaryFontSize.", '".$pCellBGcolor."', 
+                    '".$pCellBorderColor."', ".$pCellBorderThickness.", ".$pTitlesFontSize.", '".$pTitlesFont."',
+                    $pMinWidthOfTheContainer, '".$pColorForVIPProgressBar."', '".$pOrderOnlineButtonImage."', '".$pCellBGImage."', 
+                    ".$pCellBGImageStretchTile.", ".$pShowLoyaltyBox.", ".$pLayoutStyle.", ".$pShowPicturesDescription.", '".$pRestaurantSlug."', '".$pStatus."', '".$pIframeHeight."', '".$pIframeHeightInfinite."')";
+        return dbAbstract::Insert($mSQLQuery);
+    }
+    
+    function UpdateWordPressDetailsByRestaurantID($pRestaurantID, $pGeneralFontSize, $pGeneralTextColor, $pSecondaryTextColor, $pMenuBGColor, $pMenuLinkColorOnActive, $pMenuLinkColorOnInactive, $pSubMenuHeadingsColor, $pSubMenuDescriptionsColor, $pItemsTitleColor, $pItemsPriceColor, $pItemsDscriptionColor, $pItemsPricesFontSize, $pYourOrderSummaryColor, $pYourOrderSummaryFontSize, $pCellBGcolor, $pCellBorderColor, $pCellBorderThickness, $pTitlesFontSize, $pTitlesFont, $pMinWidthOfTheContainer, $pColorForVIPProgressBar, $pOrderOnlineButtonImage, $pCellBGImage, $pCellBGImageStretchTile, $pShowLoyaltyBox, $pLayoutStyle, $pShowPicturesDescription, $pRestaurantSlug, $pStatus, $pIframeHeight, $pIframeHeightInfinite)
+    {
+        $mSQLQuery = "UPDATE wp_restaurent_design_settings SET general_font_size='".$pGeneralFontSize."', general_text_color='".$pGeneralTextColor."', 
+                    secondary_text_color='".$pSecondaryTextColor."',menu_bg_color='".$pMenuBGColor."', 
+                    active_menu_link_color='".$pMenuLinkColorOnActive."',inactive_menu_link_color='".$pMenuLinkColorOnInactive."', 
+                    sub_menu_headings_color='".$pSubMenuHeadingsColor."',sub_menu_descriptions_color='".$pSubMenuDescriptionsColor."', 
+                    items_title_color='".$pItemsTitleColor."',items_price_color='".$pItemsPriceColor."', 
+                    items_description_color='".$pItemsDscriptionColor."',items_and_prices_font_size='".$pItemsPricesFontSize."', 
+                    your_order_summary_color='".$pYourOrderSummaryColor."',your_order_summary_font_size='".$pYourOrderSummaryFontSize."', 
+                    cell_bg_color='".$pCellBGcolor."', cell_border_color='".$pCellBorderColor."', 
+                    cell_border_thickness='".$pCellBorderThickness."', titles_font_size='".$pTitlesFontSize."', 
+                    titles_font_family='".$pTitlesFont."',  min_width_of_the_container='".$pMinWidthOfTheContainer."',
+                    vip_progress_bar_color='".$pColorForVIPProgressBar."', order_online_button_image='".$pOrderOnlineButtonImage."', 
+                    cell_bg_image='".$pCellBGImage."', cell_bg_image_strech_or_tile=".$pCellBGImageStretchTile.", 
+                    show_loyalty_box_about_the_cart=".$pShowLoyaltyBox.", appearence=".$pLayoutStyle.", 
+                    show_item_pictures_and_description=".$pShowPicturesDescription.", restaurant_slug='".$pRestaurantSlug."', status='".$pStatus."', iframe_height='".$pIframeHeight."', iframe_height_infinite='".$pIframeHeightInfinite."'  WHERE restaurant_id=".$pRestaurantID;
+        return dbAbstract::Update($mSQLQuery);
+    }
 	
     function UpdateOOBIByRestaurantID($pRestaurantID, $pOrderOnlineButtonImage) {
         $mSQLQuery = "UPDATE iframe_settings SET OrderOnlineButtonImage='".$pOrderOnlineButtonImage."' WHERE RestaurantID=".$pRestaurantID;
@@ -479,6 +568,18 @@ class Restaurant
 
     function UpdateCBIByRestaurantID($pRestaurantID, $pCellBGImage) {
         $mSQLQuery = "UPDATE iframe_settings SET CellBGImage='".$pCellBGImage."' WHERE RestaurantID=".$pRestaurantID;
+        return dbAbstract::Update($mSQLQuery);
+    }
+    
+    function UpdateOOBIByRestaurantIDWP($pRestaurantID, $pOrderOnlineButtonImage) 
+    {
+        $mSQLQuery = "UPDATE wp_restaurent_design_settings SET order_online_button_image='".$pOrderOnlineButtonImage."' WHERE restaurant_id=".$pRestaurantID;
+        return dbAbstract::Update($mSQLQuery);
+    }
+
+    function UpdateCBIByRestaurantIDWP($pRestaurantID, $pCellBGImage) 
+    {
+        $mSQLQuery = "UPDATE wp_restaurent_design_settings SET cell_bg_image='".$pCellBGImage."' WHERE restaurant_id=".$pRestaurantID;
         return dbAbstract::Update($mSQLQuery);
     }
     
