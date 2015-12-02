@@ -38,7 +38,7 @@ Log::write("Delete all duplicate abandoned carts - get_abandoned_orders_analytic
 					AND ac2.date_added BETWEEN SUBDATE(ac2.date_added, INTERVAL 60 MINUTE) AND ADDDATE(ac2.date_added, INTERVAL 60 MINUTE)
 			);
 	DELETE FROM abandoned_carts WHERE id IN (SELECT id FROM temp);
-	DROP TEMPORARY TABLE IF EXISTS tmep;
+	DROP TEMPORARY TABLE IF EXISTS temp;
 	", 'order', 1 , 'cpanel');
 // delete all duplicate abandoned carts
 dbAbstract::Execute("
@@ -57,7 +57,7 @@ dbAbstract::Execute("
 					AND ac2.date_added BETWEEN SUBDATE(ac2.date_added, INTERVAL 60 MINUTE) AND ADDDATE(ac2.date_added, INTERVAL 60 MINUTE)
 			);
 	DELETE FROM abandoned_carts WHERE id IN (SELECT id FROM temp);
-	DROP TEMPORARY TABLE IF EXISTS tmep;
+	DROP TEMPORARY TABLE IF EXISTS temp;
 	",1
 );
 
@@ -145,8 +145,8 @@ while($data = dbAbstract::returnAssoc($result,1)) {
 echo "Abandoned Carts Analytics extracted.";
 
 // send email to author about the cron job execution
-$to      = 'aliraza@qualityclix.com';
-$subject = 'EasyWay - Abandoned Carts Analytics extracted';
+$to      = 'gulfam@qualityclix.com';
+$subject = 'LIVE - EasyWay - Abandoned Carts Analytics extracted';
 $message = 'EasyWay - Abandoned Carts Analytics extracted. @ ' . date("F j, Y, g:i a");
 
 $testmail=new testmail();
