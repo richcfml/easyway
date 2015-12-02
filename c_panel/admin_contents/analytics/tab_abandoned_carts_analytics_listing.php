@@ -4,7 +4,7 @@
 	
 
 	if(!empty($abandoned_cartss) && dbAbstract::returnRowsCount($abandoned_cartss, 1) > 0) {
-		$abandoned_carts->updateAbandonedCarts_count($resturant_id, dbAbstract::returnRowsCount($abandoned_cartss, 1));
+		//$abandoned_carts->updateAbandonedCarts_count($resturant_id, dbAbstract::returnRowsCount($abandoned_cartss, 1));
 ?>
 		<style type="text/css">
 		
