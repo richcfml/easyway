@@ -113,7 +113,10 @@ if($cart->order_created===0)
     {
         if(!$cart->isempty())
         {
-            $_SESSION["abandoned_cart_id"] = $abandoned_carts->addNewAbandonedCart($user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);		
+            $mLogID = mt_rand(0, mt_getrandmax());
+            log::write("Abandoned Cart Config Before Calling addNewAbandonedCart, Log ID: ".$mLogID, time(), "debug");
+            $_SESSION["abandoned_cart_id"] = $abandoned_carts->addNewAbandonedCart($user_id, $resturant_id, $cartt, $date_added, $referral_source, $session_duration_in_seconds,$last_user_action,$cart_total_amount,$reason,$platform_used,$status);
+            log::write("Abandoned Cart Config After Calling addNewAbandonedCart, Log ID: ".$mLogID.", Abandoned Cart ID: ".$_SESSION["abandoned_cart_id"]."|", time(), "debug");
         }
     }
 }
