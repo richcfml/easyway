@@ -4008,7 +4008,7 @@
             var input_type = $(element).attr('data-type')
             if(EasyWay.Footer.$footerActionTag.text()=='Place order')
                 return $('.cart__place-order').click()
-            console.log(req)
+            
             if (req == '1') {
                 var req_field;
                 if (input_type == '1')
@@ -4036,7 +4036,7 @@
             var req = $(element).attr('data-req')
             var input_type = $(element).attr('data-type')
 
-            console.log(req)
+           
             if (req == '1') {
                 var req_field;
                 if (input_type == '1')
