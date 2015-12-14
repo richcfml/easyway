@@ -106,12 +106,7 @@
 		} //CUSTOMER HAVE CARD	
 	}//RESTAURANT HAVE CARD SYSTEM
 	
-	if(!is_numeric($loggedinuser->id) || $loggedinuser->id==0)
-	{
-		$loggedinuser->createNewUser();
-		Log::write("Loginuser id is z or not numeric","LoggedinUser Data:".print_r($loggedinuser,true),'order', 0 , 'user');
-		$is_guest = 1;
-	}
+	
 	 
 	$serving_time=$_POST['serving_time'];
 	$serving_date=date("m-d-Y",$_POST['serving_date']);

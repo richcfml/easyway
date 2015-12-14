@@ -36,6 +36,13 @@ if(isset($_POST['btnconfirmorder1']))
 	{
 		$objRestaurant->payment_gateway="AuthorizeNet";
 	}
+        if(!is_numeric($loggedinuser->id) || $loggedinuser->id==0)
+	{
+                $is_guest = 1;
+		$loggedinuser->createNewUser($is_guest);
+		Log::write("Loginuser id is z or not numeric","LoggedinUser Data:".print_r($loggedinuser,true),'order', 0 , 'user');
+		
+	}
 		 
  	require_once 'classes/gateways/'.$objRestaurant->payment_gateway.'.php';
 	if($success==1) 
