@@ -1020,6 +1020,16 @@ class testmail  {
 						  
 						  }
 						  
+					public function sendEmailTo($from,$message,$subject,$to,$html=true) {
+							$this->customermail->ClearAllRecipients();
+							$this->customermail->AddAddress($to);
+							$this->customermail->IsHTML($html);
+							$this->customermail->Subject = $subject;
+							$this->customermail->Body = $message;
+                                                        $this->customermail->From = $from;
+							$this->customermail->Send();
+              }
+			  	  
 		public function sendTo($message,$subject,$to,$html=true) 
                 {
                     Log::write("Function = sendTo, Line # = 1024, File = includes/function.php", "Message: ".$message.", \nSubject: ".$subject.", \nTo: ".$to.", \nFrom: ".$this->from, 'Mails');
@@ -1058,31 +1068,7 @@ function redirect($to){
 	
 function prepareStringForMySQL($string)
 {
-    if (strtolower(substr(php_uname('s'), 0, 3))=="win")
-    {
-        $string = str_replace("\r\n", "<br/>", $string);
-    }
-    else if (strtolower(php_uname('s'))=='linux')
-    {
-        $string = str_replace("\n", "<br/>", $string);
-    }
-    else if (strtolower(php_uname('s'))=='unix')
-    {
-        $string = str_replace("\n", "<br/>", $string);
-    }
-    else if (strtolower(substr(php_uname('s'), 0, 6))=="darwin")
-    {
-        $string = str_replace("\r", "<br/>", $string);
-    }
-    else if (strtolower(substr(php_uname('s'), 0, 3))=="mac")
-    {
-        $string = str_replace("\r", "<br/>", $string);
-    }
-    else
-    {
-        $string=str_replace("\n" , "<br/>",$string);
-    }
-    
+    $string = str_replace("\n", "<br/>", $string);
     $string=str_replace ( "\t" , " ",$string);
     $string=dbAbstract::returnRealEscapedString($string);
     return $string;
@@ -1123,8 +1109,39 @@ function getProductDescription($description){
 	return preg_replace_callback('|@[0-9]+|', 
 			function ($matches) {
 				$code = str_replace('@','',$matches[0]);
-				$result=dbAbstract::ExecuteObject("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
-				return $result->ItemName;
+				$result=dbAbstract::Execute("SELECT * FROM bh_items where ItemCode='$code' order by id desc limit 1");
+                                if (dbAbstract::returnRowsCount($result)>0)
+                                {
+                                    $result = dbAbstract::returnObject($result);
+                                    if ($result)
+                                    {
+                                        if (trim(($result->ItemName)!=""))
+                                        {
+                                            return $result->ItemName;
+                                        }
+                                        else
+                                        {
+                                            return "@".$code;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return "@".$code;
+                                    }
+                                }
+                                else
+                                {
+                                    return "@".$code;
+                                }
 			}, $description);
+}
+
+function startsWith($pString, $pFind) 
+{
+    return $pFind === "" || strrpos($pString, $pFind, -strlen($pString)) !== FALSE;
+}
+function endsWith($pString, $pFind) 
+{
+    return $pFind === "" || (($temp = strlen($pString) - strlen($pFind)) >= 0 && strpos($pString, $pFind, $temp) !== FALSE);
 }
 ?>
