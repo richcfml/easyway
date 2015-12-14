@@ -577,6 +577,14 @@ class cart
             unset($_SESSION['ClONECART']);
         }
     }
+    
+    public function increaseQuantity($qty,$item_Index)
+    {
+        $this->sub_total -=($this->products[$item_Index]->sale_price   * $this->products[$item_Index]->quantity);
+        $this->sub_total +=($this->products[$item_Index]->sale_price   * $qty);
+        $this->products[$item_Index]->quantity = $qty;
+        $this->save();
+    }
  }//CLASS
  
 ?>
