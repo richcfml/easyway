@@ -400,7 +400,7 @@ if(isset($_GET['changeDefaultAddress'])){
 if(isset($_GET['getAuthenticationHtml'])){
 ?>
 <!--	Register -->
-<div style="position: absolute; height: 0px" class="notification" id="register">
+<div class="notification" id="register">
     <p class=sign__link> Already a member? <a class=js-sign href="#login" onClick="changeHash('#login')">Log in</a> </p>
     <div class=notification__box>
         <header class='notification__box-header center-text'> <a class=notification__box-action href="#">X</a>
@@ -454,7 +454,7 @@ if(isset($_GET['getAuthenticationHtml'])){
 </div>
 
 <!--	Login -->
-<div style="position: absolute; height: 0px" class="notification" id="login">
+<div class="notification" id="login">
     <p class=sign__link> Not a member? <a class=js-sign href="#register" onClick="changeHash('#register')">Register</a> </p>
     <div class=notification__box>
         <header class='notification__box-header center-text'> <a class=notification__box-action href="#">X</a>
