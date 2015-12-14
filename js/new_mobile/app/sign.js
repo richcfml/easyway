@@ -1,0 +1,1 @@
+(function(){window.EasyWay||(window.EasyWay={}),EasyWay.Sign=function(){function e(){}return e.setup=function(){return $(".js-sign").on("click",function(e){return function(e){return window.location.hash=e.currentTarget.hash,EasyWay.Notification.open()}}(this)),$(".js-continue-checkout").on("click",function(){return window.location.href="/checkout.html"})},e}()}).call(this);

@@ -382,7 +382,7 @@ class Users
     {
         $this->resturant_id = $objRestaurant->id;
         
-        $mSQL     = "SELECT cust_email FROM customer_registration WHERE cust_email='" . prepareStringForMySQL($this->cust_email) . "' AND resturant_id='" . $objRestaurant->id . "' AND epassword !='NULL'";
+        $mSQL     = "SELECT cust_email FROM customer_registration WHERE cust_email='" . prepareStringForMySQL($this->cust_email) . "' AND resturant_id='" . $objRestaurant->id . "' AND epassword !='NULL' AND as_guest!=1";
         $user_qry = dbAbstract::Execute($mSQL);
         
         if (dbAbstract::returnRowsCount($user_qry) > 0) {
@@ -406,7 +406,7 @@ class Users
 	/*
 	*	create new user
 	*/
-    public function createNewUser()
+    public function createNewUser($is_guest=0)
     {
         $mFBID = '';
         if (isset($this->facebook_id)) {
@@ -415,6 +415,9 @@ class Users
         $this->cust_odr_address  = $this->street1 . '~' . $this->street2;
         $this->delivery_address1 = $this->delivery_street1 . '~' . $this->delivery_street2;
         
+        $as_guest = 0;
+        if($is_guest == 1)
+            $as_guest=1;
         $qry = "insert into customer_registration set
                  cust_email='" . prepareStringForMySQL($this->cust_email) . "'
                 
@@ -430,6 +433,7 @@ class Users
                 , delivery_state1='" . prepareStringForMySQL($this->delivery_state1) . "'
                 , deivery1_zip='" . prepareStringForMySQL($this->deivery1_zip) . "'" . $mFBID . "
                 ,resturant_id=" . $this->resturant_id . "
+                ,as_guest=" . $as_guest . "
                 ,epassword='" . $this->epassword . "'
                 ,salt='" . $this->salt . "'";
         
@@ -599,13 +603,14 @@ class Users
         $cc   = substr($secure_data, -4, 4);
         
         $mSQL   = "SELECT COUNT(*) AS total FROM general_detail WHERE id_2=" . $this->id . " AND data_type=$type AND data_1=$cc";
+        
         $result = dbAbstract::ExecuteObject($mSQL);
         if (($result->total == 0) && ($type != 0) && ($cc != 0)) {
             $mSQL = "INSERT INTO general_detail (id_2,data_type,data_1,data_2,card_expiry) VALUES(" . $this->id . " ,'$type' ,'$cc','$token'," . $pCardExpiry . ")";
-			
-			if($loggedinuser->ssoUserId > 0){
-				$mSQL = "insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2) values('".$loggedinuser->ssoUserId."' $userId ,'$type' ,'$cc','$data_2')";
-			}
+	
+            if($loggedinuser->ssoUserId > 0){
+                    $mSQL = "insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2) values('".$loggedinuser->ssoUserId."' $userId ,'$type' ,'$cc','$data_2')";
+            }
 			
             dbAbstract::Insert($mSQL);
             if ($default == 1) {
@@ -641,6 +646,20 @@ class Users
     }
     
 	/*
+	*	select user id by twitter id and restaurant id
+	*/
+    public function selectUserIDByTwittwerIDRestaurantID($pFBID, $pRID)
+    {
+        $mSQL   = "SELECT IFNULL(id, 0) AS UserID, IFNULL(cust_email, '') AS Email FROM customer_registration WHERE twitter_id='" . $pFBID . "' AND resturant_id=" . $pRID;
+        $mQuery = dbAbstract::Execute($mSQL);
+        if (dbAbstract::returnRowsCount($mQuery) > 0) {
+            return dbAbstract::returnObject($mQuery);
+        } else {
+            return 0;
+        }
+    }
+    
+	/*
 	*	select user id by email and restaurant id
 	*/
     public function selectUserIdByEmailRestaurantId($pEmail, $pRID)
@@ -664,6 +683,15 @@ class Users
     }
     
 	/*
+	*	update customer twitter id
+	*/
+    public function updateCustomerTwitterID($pUID, $pFBID)
+    {
+        $mSQL = "UPDATE customer_registration SET twitter_id='" . $pFBID . "' WHERE id=" . $pUID;
+        dbAbstract::Update($mSQL);
+    }
+    
+	/*
 	*	get loggedin user email id
 	*/
     public static function getLoggedinUserEmailID()
@@ -673,6 +701,32 @@ class Users
             return $user->cust_email;
         } else {
             return "";
+        }
+    }
+    
+    public function saveCCTokenForMobile($secure_data, $token, $default, $pCardExpiry,$x_card_name)
+    {
+		global $loggedinuser;
+        $type = substr($secure_data, 0, 1);
+        $cc   = substr($secure_data, -4, 4);
+        
+        $mSQL   = "SELECT COUNT(*) AS total FROM general_detail WHERE id_2=" . $this->id . " AND data_type=$type AND data_1=$cc";
+        
+        $result = dbAbstract::ExecuteObject($mSQL);
+        if (($result->total == 0) && ($type != 0) && ($cc != 0)) {
+            $mSQL = "INSERT INTO general_detail (id_2,data_type,data_1,data_2,card_expiry,card_name) VALUES(" . $this->id . " ,'$type' ,'$cc','$token'," . $pCardExpiry . ",'".$x_card_name."')";
+	
+            if($loggedinuser->ssoUserId > 0){
+                    $mSQL = "insert into general_detail(sso_user_id, id_2,data_type,data_1,data_2,card_expiry,card_name) values('".$loggedinuser->ssoUserId."', '".$this->id."' ,'$type' ,'$cc','$token', '$pCardExpiry', '".$x_card_name."')";
+            }
+			
+            $insertID = dbAbstract::Insert($mSQL,0,2);
+            if ($default == 1) {
+                $this->setUserDefaultCard($token);
+            }
+            return $insertID;
+        } else {
+            return false;
         }
     }
 }

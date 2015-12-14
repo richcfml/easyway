@@ -114,7 +114,7 @@ else if(isset($_POST['x_sid']))
             if ($mobileapp)
             {
 		$platform_used = 2;
-		include("mobile/index.php");
+		include("new_mobile/index.php");
             }
             else 
             {

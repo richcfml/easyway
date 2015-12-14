@@ -1,0 +1,137 @@
+/* CSS Document */
+.relative{ position: relative; }
+.invalidVal, .validVal{
+	position: absolute;
+    right: 12px;
+    top: 48px;
+}
+.hide{ display:none; }
+.show{ display:block; }
+
+.redtxt{ color:#F00; }
+
+
+.menu_list_wrapper {
+    margin: 0 auto;
+    width: 97%;
+    left:15px;
+    /*position: relative;
+    overflow: visible;
+    top: 368px;*/
+
+}
+.one-fourth, .four-columns {
+    width:22%
+}
+.column-last {
+    margin-right:0px
+}
+.bold {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+div.hour_row{
+    background-color: #FFFFFF;
+    border: 1px solid rgba(118,120,121,0.26);
+    padding: 12px 6px 12px 90px;
+    margin-bottom: 5px;
+    position: relative;
+	color: #3e4142;
+}
+
+.left {
+    float:left;
+    width:18%;
+
+}
+.alert-error {
+background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 6px 5px;
+    border-radius: 0px;
+    margin: 0px -5px;
+
+}
+.alert-error img{
+	    vertical-align: middle;
+    margin-right: 10px;	
+}
+
+.alert-error h2{
+    width: auto;
+    padding-top: 15px;
+    display: inline-block;
+}
+
+.close_h1{
+	    margin-bottom: 10px;
+    display: block;
+    margin-top: 30px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.vipcard{
+    margin-top: 5px;
+    padding: 15px;
+    border: 1px solid #bfc4cb;
+    background: #E5EAF0;
+    color: #333;
+    border-radius: 5px;
+}
+.main-menu__container{
+	display: block !important;
+}
+
+.header__banner{
+	padding: 15px 20px !important;	
+}
+@media only screen and (max-width:380px){
+.header__store-title{
+	width:195px !important;
+	text-align:center !important
+}
+}
+
+.menu-item{ padding: 20px 20px 5px 20px; }
+.menu-item__info i{
+	margin-top: -5px;
+}
+
+.menu-item__info h3{
+	margin-bottom: 10px;
+}
+
+.si_legend{
+	padding:28px 0px 0px 0px !important;
+}
+
+article.menu-item{
+	background-color: inherit !important;
+}
+
+.menu-item__info{ margin-top:-14px; }
+.menu-item.open header hgroup{	margin-top:0px; }
+.menu-item.open .menu-item__header:after{
+	position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.menu-item.open .menu-item__header {
+	position: relative;
+	background: #FFF;
+    padding: 20px 20px 0px 20px;
+}
+.cart-empty__favorites:after {
+    width: 0px;
+}
+body{
+    overflow-x: hidden;
+}
