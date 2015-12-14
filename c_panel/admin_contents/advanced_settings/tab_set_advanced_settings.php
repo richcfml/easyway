@@ -9,7 +9,8 @@ if(isset($_POST['submit']))
 	$payment_gateway_login_id	 = @$_POST['payment_gateway_login_id'];
 	$payment_gateway_trans_Key	 = @$_POST['payment_gateway_trans_Key']; 
 	$vendor_id					 = @$_POST['vendor_id']; 
-        $mURL					 = @$_POST['txtURL'];
+    $mURL					 	 = @$_POST['txtURL'];
+	$theme_name					 = @$_POST['theme_name'];
 	
 	$did_number=$_POST['did_number']; 
  	$refund_password= @$_POST['refund_password']; 
@@ -39,13 +40,13 @@ if(isset($_POST['submit']))
 	
 	if (!$mDupFlag)
 	{
-		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number' WHERE id= ". $Objrestaurant->id, 1);
+		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."', order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password',did_number='$did_number', theme_name='$theme_name' WHERE id= ". $Objrestaurant->id, 1);
 		$Objrestaurant->did_number=$did_number;
 		$mMessage = "Restaurant updated successfully.";
 	}
 	else
 	{
-		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password' WHERE id= ". $Objrestaurant->id, 1);
+		dbAbstract::Update("UPDATE resturants SET URL='".$mURL."', VendorID='".$vendor_id."',  order_destination='".$order_destination."', rest_order_email_fromat='$email_fromat', payment_gateway='$payment_gateway', tokenization= '$tokenization',authoriseLoginID='$payment_gateway_login_id', transKey= '$payment_gateway_trans_Key' ,refund_password='$refund_password', theme_name='$theme_name' WHERE id= ". $Objrestaurant->id, 1);
 	}
 
 	$Objrestaurant->order_destination=$order_destination;
@@ -56,7 +57,9 @@ if(isset($_POST['submit']))
 	$Objrestaurant->transKey=$payment_gateway_trans_Key;
 	$Objrestaurant->refund_password=$refund_password;
 	$Objrestaurant->VendorID=$vendor_id;
-        $Objrestaurant->URL=$mURL;
+    $Objrestaurant->URL=$mURL;
+	$Objrestaurant->theme_name = $theme_name;
+		
 	$Objrestaurant->saveToSession();
 }
  
@@ -235,6 +238,32 @@ include "nav.php"; ?>
                     <input name="txtURL" type="text" size="45" maxlength="200" id="txtURL" value="<?=$Objrestaurant->URL?>" />
                 </td>
             </tr>
+            
+            <tr align="left" valign="top">
+                <td> 
+                    Choose Mobile Theme
+                </td>
+                <?php
+                $themeArr = array('default'=>'Default', 
+									'cafe'=>'Cafe', 
+									'ewo'=>'Ewo', 
+									'italiano'=>'Italiano', 
+									'merlot'=>'Merlot',
+									'piruli'=>'Piruli', 
+									'salsa'=>'Salsa', 
+									'sangria'=>'Sangria', 
+									'umi'=>'Umi');
+				?>
+                <td>
+                    <select name="theme_name">
+                    	<?php foreach($themeArr as $key=>$val){
+                        echo '<option value="'.$key.'" '.(($key==$Objrestaurant->theme_name)? 'selected':'').'>'.$val.'</option>';
+                        } 
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            
             <tr>
                 <td></td>
                 <td>
