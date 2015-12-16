@@ -156,7 +156,7 @@
               </div>
               
               <label for="pickup_instructions"> Got any delivery instructions? </label>
-              <textarea name="special_notes" id="special_notes_d" rows="" cols=""></textarea>
+              <textarea  id="special_notes_d" rows="" cols=""></textarea>
             </fieldset>
           </div>
         </div>
