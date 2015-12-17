@@ -3795,7 +3795,7 @@
                                             html = html + '</fieldset>'
                                         }
                                     }
-                                    html = html + '<fieldset class="js-slide" data-name="Special instructions" style="float: left; list-style: none; position: relative; width: 10%; margin-right: 20px;padding: 25px 20px; background: #FFF; margin-top: -30px;"> <legend class="si_legend">Special Instructions</legend> <textarea  name="requestnote" id="requestnote" rows="5" cols="" class="menu-item__special-instructions" style="width:90%">'+ $('#requestnote').text(); +'</textarea> </fieldset>';
+                                    html = html + '<fieldset class="js-slide" data-name="Special instructions" style="padding-bottom:10px;background: #FFF;"><label style="padding: 10px 20px;">Special Instructions</label><textarea  name="requestnote" id="requestnote" rows="5" cols="" class="menu-item__special-instructions" style="width:90%;margin-left:20px">'+ $('#requestnote').text(); +'</textarea> </fieldset>';
                                     e.activeForm.find('#cartItemIndex').after(html);
                                     e.activeForm.addClass('open')
                                     e.createStepper();
@@ -3831,7 +3831,7 @@
                                 success: function (data)
                                 {
                                     html = '<fieldset class="js-slide" data-name="Quantity"  style="float: left; list-style: none; position: relative; width: 242px; margin-right: 20px; background:#FFF; padding:0px 20px 20px 20px;"><p style="min-height:34px; margin-right:40px; text-align:justify;">'+productDetails.item_des+'</p><div class="menu-item__quantity"> <label for="quantity">Quantity: </label> <input type="button" value="-" class="menu-item__quantity-update js-minus"> <input id="quantity" name="quantity" maxlength="3" value="1" min="1" class="menu-item__quantity-input"> <input type="button" value="+" class="menu-item__quantity-update js-plus"> </div></fieldset>';
-                                    html = html + '<fieldset class="js-slide" data-name="Special instructions" style="float: left; list-style: none; position: relative; width: 242px; margin-right: 20px;padding: 25px 20px; background: #FFF; margin-top: -30px;"> <legend class="si_legend">Special Instructions</legend> <textarea  name="requestnote" id="requestnote" rows="5" cols="" class="menu-item__special-instructions" style="width:90%"></textarea> </fieldset>';
+                                    html = html + '<fieldset class="js-slide" data-name="Special instructions" style="padding-bottom:10px;background: #FFF;"><label style="padding: 10px 20px;">Special Instructions</label><textarea  name="requestnote" id="requestnote" rows="5" cols="" class="menu-item__special-instructions" style="width:90%; margin-left:20px"></textarea> </fieldset>';
                                     e.activeForm.find('#cartItemIndex').after(html);
                                     e.closeAllForms()
                                     e.activeForm.addClass('open')
