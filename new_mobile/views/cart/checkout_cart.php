@@ -164,9 +164,10 @@
         <?php
 		  $cardName=''; $cardNum=''; $cardExpM=''; $cardExpY='';  $cardCVV='';
 		  $card_token=0;
-		  
+		  $show_savecc_chk = 0;
 		  foreach($loggedinuser->arrTokens as $token){
 			if($token->data_3 == 1){
+			  $show_savecc_chk = 1;
 			  if($token->data_type==AMEX)
 			  {
 				  $cardName="American Express";
@@ -236,14 +237,19 @@
                   </div>
                   <div class=credit-card__name>
                     <label for=card_name>Card name: </label>
-                    <input name="cc_name" id="card_name" value="<?=$cardName?>" placeholder="Card Name" autocomplete="cc-name" />
+                    <input name="cc_name" id="card_name" value="<?=$cardName?>" placeholder="Name This Card" autocomplete="cc-name" />
                   </div>
+                  
+                  <div class=credit-card__name style="margin-top:10px">
+                    <input type="checkbox" name="save_cc" value="1" checked> <span style="color:#3e4142">Save For Future Use</span>
+                  </div>
+                  
                 </div>
               </div>
               
               <? 
-              $objRestaurant->useValutec = true;
-              include "views/valutec.php";
+              //$objRestaurant->useValutec = true;
+              //include "views/valutec.php";
               ?>
             </fieldset>
           </div>

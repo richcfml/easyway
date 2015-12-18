@@ -127,27 +127,32 @@ if($_POST['btnCheckout']==1){
 			$cc = substr($secure_data, -4, 4);
 			
 			if($card_token == 0){
-				$creditCardType = substr($_POST['x_card_num'], 0,1);
-				if($creditCardType==AMEX)
-				{
-					$cardName="American Express";
+				if(isset($_POST['cc_name']) && $_POST['cc_name'] != ''){
+					$cardName=$_POST['cc_name'];
+				}else{
+				  $creditCardType = substr($_POST['x_card_num'], 0,1);
+				  if($creditCardType==AMEX)
+				  {
+					  $cardName="American Express";
+				  }
+				  else if($creditCardType==VISA)
+				  {
+					  $cardName="VISA";
+				  }
+				  else  if($creditCardType==MASTER)
+				  {
+					  $cardName="MasterCard";
+				  }
+				  else  if($creditCardType==DISCOVER)
+				  {
+					  $cardName="Discover";
+				  }
 				}
-				else if($creditCardType==VISA)
-				{
-					$cardName="VISA";
+				if(isset($_POST['save_cc']) && $_POST['save_cc']==1){
+				  $resp = $loggedinuser->saveCCTokenForMobile($_POST['x_card_num'], $gateway_token, 0, $pCardExpiry,$cardName);
+				  $loggedinuser->getUserCCTokens();
+				  $loggedinuser->saveToSession();
 				}
-				else  if($creditCardType==MASTER)
-				{
-					$cardName="MasterCard";
-				}
-				else  if($creditCardType==DISCOVER)
-				{
-					$cardName="Discover";
-				}
-
-				$resp = $loggedinuser->saveCCTokenForMobile($_POST['x_card_num'], $gateway_token, 0, $pCardExpiry,$cardName);
-				$loggedinuser->getUserCCTokens();
-				$loggedinuser->saveToSession();
 			}
 			
 			$_POST['x_card_num'] = '';
