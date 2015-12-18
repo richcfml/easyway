@@ -146,6 +146,8 @@ if($_POST['btnCheckout']==1){
 				}
 
 				$resp = $loggedinuser->saveCCTokenForMobile($_POST['x_card_num'], $gateway_token, 0, $pCardExpiry,$cardName);
+				$loggedinuser->getUserCCTokens();
+				$loggedinuser->saveToSession();
 			}
 			
 			$_POST['x_card_num'] = '';
