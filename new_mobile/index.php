@@ -89,7 +89,7 @@ if(isset($_GET['sso']) && $_GET['sso']!=''){
 <?php
 			}
 			else{
-				echo '<div style="width=100%; text-align:center; color:#F00; height:20px; width:982px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid E-mail or Password.</div>';
+				echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid E-mail or Password.</div>';
 			}
 		}
 		else{
@@ -114,14 +114,19 @@ if(isset($_GET['sso']) && $_GET['sso']!=''){
 		  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
 		  
 		  $loggedinuser->resturant_id =$objRestaurant->id;
+		  $loggedinuser->ssoUserId = $sso_row->id;
+		  
 		  $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
 		  if($result===true){
-			header("location: ". $SiteUrl .$objRestaurant->url);
+			$loggedinuser->getUserCCTokens();
+		  	$loggedinuser->saveToSession();
+			
+			header("location: ". $SiteUrl .$objRestaurant->url.'/');
 			exit;	
 		  }
 		}
 	}else{
-		echo '<div style="width=100%; text-align:center; color:#F00; height:20px; width:982px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid session id or session id has been expired.</div>';
+		echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid session id or session id has been expired.</div>';
 	}
 }
 

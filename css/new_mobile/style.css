@@ -135,3 +135,29 @@ article.menu-item{
 body{
     overflow-x: hidden;
 }
+
+.select{
+	webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-clip: padding-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #767879;
+    color: #767879;
+    padding: 10px;
+    width: 100%;
+}
+
+.choose_cc{
+	webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-clip: padding-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: #e5eaf0;
+    border: 1px solid #bfc4cb;
+	padding: 15px;
+    margin-bottom: 10px;
+}

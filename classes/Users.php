@@ -296,8 +296,9 @@ class Users
 		global $loggedinuser;
         $this->arrTokens = array();
         $mSQL            = "SELECT * FROM general_detail WHERE id_2=" . $this->id . " ORDER BY data_3 DESC";
-		if($ssoUserId > 0){
-			$mSQL            = "SELECT * FROM general_detail WHERE id_2=" . $this->id . " OR sso_user_id='$ssoUserId' ORDER BY data_3 DESC";
+		if($ssoUserId > 0 || $loggedinuser->ssoUserId > 0){
+			$ssoUserId = ($ssoUserId==0 && $loggedinuser->ssoUserId > 0)? $loggedinuser->ssoUserId:$ssoUserId;
+			$mSQL            = "SELECT * FROM general_detail WHERE (id_2=" . $this->id . ") OR (sso_user_id='$ssoUserId') ORDER BY data_3 DESC";
 		}
 		$tokens          = dbAbstract::Execute($mSQL);
         while ($token = dbAbstract::returnObject($tokens)) {
