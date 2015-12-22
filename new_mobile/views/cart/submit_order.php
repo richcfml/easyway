@@ -29,10 +29,12 @@
 	////header("location: ". $SiteUrl .$objRestaurant->url ."/?item=cart" );exit;
 	//}
 	//---------------------------------------------//
+	$loggedinuser->as_guest = 0;
 	$is_guest = 0;
 	if(!is_numeric($loggedinuser->id))
 	{
-		$loggedinuser->createNewUser();
+		$loggedinuser->as_guest = 1;
+		$loggedinuser->createNewUser(1);
 		$loggedinuser->saveToSession();
 		$is_guest = 1;
 	}
@@ -463,6 +465,6 @@
 	}
 	else
 	{
-		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&orderid=".$cart->order_id );
+		redirect($SiteUrl .$objRestaurant->url ."/?item=thankyou&orderid=".$cart->order_id);
 	}
 ?>

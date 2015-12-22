@@ -175,6 +175,7 @@
               <div class=checkout__supported-cards > <i style="background-position-x: -80px; width: 46px" class=master-card></i> <i style="background-position-x: -146px; width: 47px " class=amex></i> <i style="background-position-x: -11px; width: 47px" class=visa></i> <i class=visa style="background-size: 44px auto; background:url('../css/new_mobile/discover.svg')  no-repeat;     background-position-x: 4px; width: 58px; background-size: 44px 34px;"></i> </div>
             <fieldset>
               <legend></legend>
+              <?php if($loggedinuser->cust_email != ''){ ?>
               <div class="choose_cc">
                 <label for="choose_cc">Choose Saved Card</label>
                 <select name="card_token" id="card_token" class="select">
@@ -207,6 +208,7 @@
                 <option value="0">Add New</option>
                 </select>
               </div>
+              <?php } ?>
               
               <div class=credit-card style="display:<?=(count($loggedinuser->arrTokens)>0)? 'none':'block'?>">
                 <div class=credit-card__stripe></div>
@@ -242,9 +244,11 @@
                     <input name="cc_name" id="card_name" placeholder="Name This Card" autocomplete="cc-name" />
                   </div>
                   
+                  <?php if($loggedinuser->cust_email != ''){ ?>
                   <div class=credit-card__name style="margin-top:10px">
                     <input type="checkbox" name="save_cc" value="1" checked> <span style="color:#3e4142">Save For Future Use</span>
                   </div>
+                  <?php } ?>
                   
                 </div>
               </div>

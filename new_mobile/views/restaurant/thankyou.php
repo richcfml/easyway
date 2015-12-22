@@ -137,7 +137,7 @@ else
           emailed to you: </p>
         
         <?php
-		if(is_numeric($loggedinuser->id))
+		if(is_numeric($loggedinuser->id) && $loggedinuser->as_guest==0)
 		{ 
 		?>
         <form method="post" id="favoritesform"  action="">

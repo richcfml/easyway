@@ -68,9 +68,11 @@ if($_POST['btnCheckout']==1){
 			$loggedinuser->cust_ord_zip = trim($customer_zip);
 			$loggedinuser->delivery_address = $loggedinuser->street1 . ", " . $loggedinuser->cust_ord_city . ", " . $loggedinuser->cust_ord_state;
 		}
-
-		$loggedinuser->updateCustomerRegistration();
-		$loggedinuser->saveToSession();
+		
+		if($loggedinuser->id > 0){
+		  $loggedinuser->updateCustomerRegistration();
+		  $loggedinuser->saveToSession();
+		}
 	}
 
 	// Order Form Code
