@@ -161,40 +161,9 @@
           </div>
         </div>
         
-        <?php
-		  $cardName=''; $cardNum=''; $cardExpM=''; $cardExpY='';  $cardCVV='';
-		  $card_token=0;
-		  $show_savecc_chk = 0;
-		  foreach($loggedinuser->arrTokens as $token){
-			if($token->data_3 == 1){
-			  $show_savecc_chk = 1;
-			  if($token->data_type==AMEX)
-			  {
-				  $cardName="American Express";
-			  }
-			  else if($token->data_type==VISA)
-			  {
-				  $cardName="VISA";
-			  }
-			  else  if($token->data_type==MASTER)
-			  {
-				  $cardName="MasterCard";
-			  }
-			  else  if($token->data_type==DISCOVER)
-			  {
-				  $cardName="Discover";
-			  }
-			  
-			  $cardNum = "Ending in ".$token->data_1;
-			  $cardExpM = ($token->card_expiry != '')? substr($token->card_expiry, 0,2):'';
-			  $cardExpY = ($token->card_expiry != '')? substr($token->card_expiry, 2, 3):'';
-			  $card_token = $token->data_2;
-			}
-		  }
-		?>
         <div class=checkout__step data-name=Payment>
           <fieldset>
-            <legend>Payment method</legend>
+            <legend></legend>
             <div class=checkout-radio__group>
               <input type="radio" name="method" value="credit_card" id="credit_card" checked class="checkout-radio" />
               <label class="checkout-radio__label" for="credit_card">Credit Card</label>
@@ -203,29 +172,62 @@
             </div>
           </fieldset>
           <div id=credit_card>
-            <div class=checkout__supported-cards> <i class=master-card></i> <i class=amex></i> <i class=visa></i> </div>
+              <div class=checkout__supported-cards > <i style="background-position-x: -80px; width: 46px" class=master-card></i> <i style="background-position-x: -146px; width: 47px " class=amex></i> <i style="background-position-x: -11px; width: 47px" class=visa></i> <i class=visa style="background-size: 44px auto; background:url('../css/new_mobile/discover.svg')  no-repeat;     background-position-x: 4px; width: 58px; background-size: 44px 34px;"></i> </div>
             <fieldset>
-              <legend>Card information</legend>
-              <div class=credit-card>
+              <legend></legend>
+              <div class="choose_cc">
+                <label for="choose_cc">Choose Saved Card</label>
+                <select name="card_token" id="card_token" class="select">
+                <?php
+                foreach($loggedinuser->arrTokens as $token){
+				  if($token->data_type==AMEX)
+				  {
+					  $cardType="American Express";
+				  }
+				  else if($token->data_type==VISA)
+				  {
+					  $cardType="VISA";
+				  }
+				  else  if($token->data_type==MASTER)
+				  {
+					  $cardType="MasterCard";
+				  }
+				  else  if($token->data_type==DISCOVER)
+				  {
+					  $cardType="Discover";
+				  }
+				  
+				  if($token->data_2!=''){
+                  ?>
+				  <option value="<?=$token->data_2?>" <?=(($token->data_3 == 1)? 'selected':'')?>><?=$cardType." (Ending in ".$token->data_1.")"?></option>
+                  <?php
+				  }
+                }
+                ?>
+                <option value="0">Add New</option>
+                </select>
+              </div>
+              
+              <div class=credit-card style="display:<?=(count($loggedinuser->arrTokens)>0)? 'none':'block'?>">
                 <div class=credit-card__stripe></div>
                 <div class=credit-card__content>
                   <div class='credit-card__number input'>
                     <label for="card_number">Card number: </label>
-                    <input name="x_card_num" id="card_number" value="<?=$cardNum?>" maxlength="16" placeholder="Card Number" autocomplete="cc-number" />
-                    <input type="hidden" name="card_token" id="card_token" value="<?=$card_token?>">
+                    <input name="x_card_num" id="card_number" maxlength="16" placeholder="Card Number" autocomplete="cc-number" />
+                    <!--<input type="hidden" name="card_token" id="card_token" value="<?=$card_token?>">-->
                     <span class=input-error>Please provide a valid card number</span> 
                   </div>
                   
                   <div class=credit-card__validation>
                     <div class='credit-card__exp-month input'>
                       <label for="expiration_month">Expiration month: </label>
-                      <input name="cc_exp_month" id="expiration_month" value="<?=$cardExpM?>" placeholder="MM" autocomplete="cc-exp-month" />
+                      <input name="cc_exp_month" id="expiration_month" placeholder="MM" autocomplete="cc-exp-month" />
                       <span class=input-error>Invalid</span> 
                     </div>
                     
                     <div class='credit-card__exp-year input'>
                       <label for="expiration_year">Expiration year: </label>
-                      <input name="cc_exp_year" id="expiration_year" value="<?=$cardExpY?>" placeholder="YY" autocomplete="cc-exp-year" />
+                      <input name="cc_exp_year" id="expiration_year" placeholder="YY" autocomplete="cc-exp-year" />
                       <span class=input-error>Invalid</span> 
                     </div>
                     
@@ -237,7 +239,7 @@
                   </div>
                   <div class=credit-card__name>
                     <label for=card_name>Card name: </label>
-                    <input name="cc_name" id="card_name" value="<?=$cardName?>" placeholder="Name This Card" autocomplete="cc-name" />
+                    <input name="cc_name" id="card_name" placeholder="Name This Card" autocomplete="cc-name" />
                   </div>
                   
                   <div class=credit-card__name style="margin-top:10px">
@@ -409,6 +411,15 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		
 	});
 	
+	$("#card_token").change(function(){
+		if($(this).val()==0){
+			$(".bx-viewport").css('height','auto');
+			$('.credit-card').show();
+		}else{
+			$('.credit-card').hide();
+		}
+	});
+	
 	// Checkout Submit Form Start
 	$("#checkout-form").submit(function(e){
 	  var regEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -571,20 +582,7 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		  }
 		}
 	  
-	  
-	  if($("#card_number").val() != '<?=$cardNum?>'){
-		  $("#card_token").val(0);
-	  }
-	  
-	  if($("#expiration_month").val() != '<?=$cardExpM?>'){
-		  $("#card_token").val(0);
-	  }
-	  
-	  if($("#expiration_year").val() != '<?=$cardExpY?>'){
-		  $("#card_token").val(0);
-	  }
-	  
-	  if($('#credit_card').is(':checked')){
+	  if($('#credit_card').is(':checked') && $("#card_token").val()==0){
 		if(($("#card_number").val()=='') || ($("#card_number").val().length < 15 && $("#card_number").val() != '<?=$cardNum?>')){
 			$("#card_number").siblings('.input-error').show();
 			$("#error").html('Invalid credit card number');
@@ -820,19 +818,7 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		
 		// Varify CC Info
 		if($.trim($(".footer__stepper-next").html())=='Review order'){
-			if($("#card_number").val() != '<?=$cardNum?>'){
-				$("#card_token").val(0);
-			}
-			
-			if($("#expiration_month").val() != '<?=$cardExpM?>'){
-				$("#card_token").val(0);
-			}
-			
-			if($("#expiration_year").val() != '<?=$cardExpY?>'){
-				$("#card_token").val(0);
-			}
-			
-			if($('#credit_card').is(':checked')){
+			if($('#credit_card').is(':checked') && $("#$card_token").val()==0){
 			  if(($("#card_number").val()=='') || ($("#card_number").val().length < 15 && $("#card_number").val() != '<?=$cardNum?>')){
 				  $("#card_number").siblings('.input-error').show();
 				  $("#error").html('Invalid credit card number');
