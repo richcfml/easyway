@@ -160,7 +160,7 @@ if ($mVerifyRequest==1) //Valid Session
 
                                   //if(isset($_GET['slug']) && !empty($_GET['slug'])){
                                         // Getting CC Info Start
-                                        $stmt = "select g.id, g.data_type, g.data_1, g.data_2, c.id as cust_id, r.url_name
+                                        $stmt = "select g.id, g.data_type, g.data_1, g.data_2, g.card_expiry, c.id as cust_id, r.url_name
                                                         From general_detail g, resturants r, customer_registration c
                                                         where g.id_2=c.id and c.resturant_id=r.id and g.sso_user_id='".$userResult->id."'";
 														
@@ -168,11 +168,29 @@ if ($mVerifyRequest==1) //Valid Session
 										$rs = dbAbstract::Execute($stmt);
 										$ccinfo_arr = array();
                                         while($row = dbAbstract::returnObject($rs)){
+												if($row->data_type==3)
+												{
+													$cardType="American Express";
+												}
+												else if($row->data_type==4)
+												{
+													$cardType="VISA";
+												}
+												else  if($row->data_type==5)
+												{
+													$cardType="MasterCard";
+												}
+												else  if($row->data_type==6)
+												{
+													$cardType="Discover";
+												}
+												
                                                 $ccinfo_arr[] = array('restaurant' => $row->url_name,
 																	  'cc_id' => urlencode(base64_encode($row->id)),
-																	  'cc_type' => $row->data_type,
+																	  'cc_type' => $cardType,
 																	  'cc_endwith' => $row->data_1,
-																	  'cc_token' => $row->data_2);
+																	  'cc_token' => $row->data_2,
+																	  'cc_exp(mmyy)' => $row->card_expiry);
                                         }
                                         // Getting CC Info End
 
