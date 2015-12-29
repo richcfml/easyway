@@ -15,6 +15,7 @@
         <input type="hidden" name="customer_phone" id="customer_phone" value="<?=$loggedinuser->cust_phone1?>" />
         <input type="hidden" name="customer_email" id="customer_email" value="<?=$loggedinuser->cust_email ?>" />
         <input type="hidden" name="special_notes" id="special_notes" />
+        <input type="hidden" id="card_type" name="card_type"/>
         
         <div class='checkout__step open' data-name='Pickup details'>
           <fieldset>
@@ -165,12 +166,27 @@
           <fieldset>
             <legend></legend>
             <div class=checkout-radio__group>
+                <?php 
+              $payment_Cash=$payment_Card='';
+              $payment_method_no=0;
+                    if($objRestaurant->credit_card==1 ){$payment_Card=true;$payment_method_no++;} else $payment_Card=false;
+                    if($objRestaurant->cash==1) {$payment_Cash=true ; $payment_method_no++;} else $payment_Cash=false;
+                    
+                    if($payment_method_no!=2)
+                        $paymentClass='payment_methods';
+                    
+              ?>
+              <?php if($payment_Card):?>  
               <input type="radio" name="method" value="credit_card" id="credit_card" checked class="checkout-radio" />
-              <label class="checkout-radio__label" for="credit_card">Credit Card</label>
-              <input type="radio" name="method" value="cash" id="cash" class="checkout-radio right"/>
-              <label class="checkout-radio__label" for="cash">Cash</label>
+              <label class="checkout-radio__label <?=$paymentClass?>" for="credit_card">Credit Card</label>
+              <?php endif; ?>
+              <?php if($payment_Cash):?>
+              <input type="radio" name="method" value="cash" id="cash"  <?php if(!$payment_Card) echo 'checked';?>    class="checkout-radio right"/>
+              <label class="checkout-radio__label  <?=$paymentClass?>" for="cash">Cash</label>
+              <?php endif;?>
             </div>
           </fieldset>
+          <?php if($payment_Card):?>  
           <div id=credit_card>
               <div class=checkout__supported-cards > <i style="background-position-x: -80px; width: 46px" class=master-card></i> <i style="background-position-x: -146px; width: 47px " class=amex></i> <i style="background-position-x: -11px; width: 47px" class=visa></i> <i class=visa style="background-size: 44px auto; background:url('../css/new_mobile/discover.svg')  no-repeat;     background-position-x: 4px; width: 58px; background-size: 44px 34px;"></i> </div>
             <fieldset>
@@ -191,16 +207,18 @@
 				  }
 				  else  if($token->data_type==MASTER)
 				  {
-					  $cardType="MasterCard";
+					  $cardType="Master Card";
 				  }
 				  else  if($token->data_type==DISCOVER)
 				  {
-					  $cardType="Discover";
+					  $cardType="Discover Card";
 				  }
 				  
 				  if($token->data_2!=''){
                   ?>
-				  <option value="<?=$token->data_2?>" <?=(($token->data_3 == 1)? 'selected':'')?>><?=$cardType." (Ending in ".$token->data_1.")"?></option>
+				  <option value="<?=$token->data_2?>" type="<?=$cardType?>" <?=(($token->data_3 == 1)? 'selected':'')?>>
+				  <?=(($token->card_name=='')? $cardType:$token->card_name)." (Ending in ".$token->data_1.")"?>
+                  </option>
                   <?php
 				  }
                 }
@@ -259,11 +277,14 @@
               ?>
             </fieldset>
           </div>
-          <fieldset class='checkout__cash hidden' id=cash>
+            <?php endif;?>
+          <?php if($payment_Cash):?>  
+          <fieldset class='checkout__cash <?php if($payment_Card) echo 'hidden';?>' id=cash>
             <i class=checkout__cash-icon></i>
             <p> You will be paying with cash, <br>
               payment due on receipt. </p>
           </fieldset>
+            <?php endif;?>
         </div>
         
         <div class='checkout__step' data-name='Review order'>
@@ -349,9 +370,18 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 <script>
   var totalerror = 0;
   var deliveryType = '<?=$cart->delivery_type?>';
-  
+  var Payment_methods= '<?= $payment_method_no?>';
   $(document).ready(function() {
 	EasyWay.Checkout.setup();
+	$("#card_type").val($('option:selected', $("#card_token")).attr('type'));
+	
+	$("#card_token").change(function(){
+		$("#card_type").val($('option:selected', this).attr('type'));
+	});
+	
+	$("#pcustomer_phone, #dcustomer_phone").change(function(){
+		$("#customer_phone").val($(this).val());
+	});
 	
 	$("#pcustomer_name,#pcustomer_last_name,#pcustomer_email,#pcustomer_phone,#dcustomer_name,#dcustomer_last_name,#dcustomer_email,#dcustomer_phone,#customer_address,#customer_zip,#customer_city,#customer_state").change(function(){
 		$("#address_option").val(0);

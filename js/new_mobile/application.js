@@ -3094,7 +3094,7 @@
             }(this)), this.$deliveryOptions.on("change", function () {
                 return $(".bx-viewport").height("100%"), $("#pickup, #delivery").toggleClass("hidden")
             }), this.$methodOptions.on("change", function () {
-                return $("#cash, #credit_card").toggleClass("hidden")
+                 if(Payment_methods!=1){ return $("#cash, #credit_card").toggleClass("hidden")}
             }), $(".js-pickup").on("focus", function () {
                 return $(this).attr({type: "datetime-local", value: null})
             }), $(".js-pickup").on("blur", function () {

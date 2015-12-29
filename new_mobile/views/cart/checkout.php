@@ -73,6 +73,18 @@ if($_POST['btnCheckout']==1){
 		  $loggedinuser->updateCustomerRegistration();
 		  $loggedinuser->saveToSession();
 		}
+		
+		if($loggedinuser->ssoUserId > 0){
+			$_POST['x_first_name']=$_POST['customer_name'];
+			$_POST['x_last_name']=$_POST['customer_last_name'];
+			$_POST['x_address']=$_POST['customer_address'];
+			$_POST['x_city']=$_POST['customer_city'];
+			$_POST['x_state']=$_POST['customer_state'];
+			$_POST['x_zip']=$_POST['customer_zip'];
+			$_POST['x_phone']=$_POST['customer_phone'];
+			$loggedinuser->updateSSOUserProfile();
+		}
+		
 	}
 
 	// Order Form Code
