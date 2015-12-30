@@ -161,6 +161,25 @@ body{
 	padding: 15px;
     margin-bottom: 10px;
 }
+
 .payment_methods{
     border-radius: 5px !important;
+}
+
+.red_widget{
+    padding: 10px;
+    text-align: center;
+    color: #FFF;
+    font-size: 18px;
+    background: #f00;
+    line-height: 25px;
+	display:none;
+}
+.agree_widget{
+	padding: 10px 0px;
+    text-align: center;
+    color: #FFF;
+    font-size: 18px;
+    background: #AB3321;
+	display:none;
 }

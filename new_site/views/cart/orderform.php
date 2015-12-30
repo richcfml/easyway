@@ -173,7 +173,8 @@ span.alert-error
 			<h4>Choose card on file</h4>
 			<div class="unit">
 				<div class="left col_heading" style="width: 130px;">Choose card on file</div>
-				<div  class="left normal"><select id="card_token" name="card_token">
+				<div  class="left normal">
+                <select id="card_token" name="card_token">
 				<?php 
 					foreach($loggedinuser->arrTokens as $token) 
 					{
@@ -197,7 +198,7 @@ span.alert-error
 							$card_type="Discover";
 						}
 				 ?>
-						<option value="<?= $token->data_2 ?>"><?= $card_type . " ending in ".$token->data_1 ?></option>
+						<option value="<?=$token->data_2?>" exp="<?=$token->card_expiry?>"><?= $card_type . " ending in ".$token->data_1 ?></option>
 				<?php 
 					} 
 					$newcard=' hidden'; 
@@ -205,10 +206,14 @@ span.alert-error
 					$card_ed='0000' 
 				?>
 					<option value="0">New Card</option>
-				   </select><a href="#">manage payment methods</a> <input type="hidden" value="<?=$card_type?>"  id="card_type" name="card_type"/>
+				   </select>
+                   <a href="#">manage payment methods</a> 
+                   <input type="hidden" value="<?=$card_type?>"  id="card_type" name="card_type"/>
+                   <input type="hidden" id="x_exp_date1" name="x_exp_date1" />
 				</div>
 			</div>
-			<div class="unit">
+            
+			<!--<div class="unit">
 				<div id="dvExp" name="dvExp">
 					<?php 
 					if ($objRestaurant->payment_gateway=="gge4")
@@ -225,7 +230,7 @@ span.alert-error
 					}
 					?>
 				</div>
-			</div>
+			</div>-->
 		<?php 
 		} 
 		?>
@@ -360,6 +365,8 @@ span.alert-error
 <script type="text/javascript">
 $(function()
 {
+	$("#x_exp_date1").val($('option:selected', $("#card_token")).attr('exp'));
+	
 	$("#card_token").change(function()
 	{
 		if($(this).val()=="0")
@@ -371,6 +378,8 @@ $(function()
 		}
 		else
 		{
+			$("#x_exp_date1").val($('option:selected', this).attr('exp'));
+			
 			$("#dvExp").show('slow');	
 	    	$(".newcard").hide('slow',function()
 			{

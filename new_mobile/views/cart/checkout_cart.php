@@ -2,6 +2,8 @@
 <div class=notification__overlay></div>
 <?php require($mobile_root_path . "includes/header.php"); ?>
 <main class=main>
+	<div class="red_widget"></div>
+    <div class="agree_widget"></div>
   <div class=main__container>
     <section class=section__article>
       <p class="redtxt" id="googleerror"></p>
@@ -985,7 +987,7 @@ window.verifylocation = function() {
                         drawzones(restaurantlocation);
 
                         if (Zone1_enabled && Zone1.containaddress(customerlatlang)) {
-                            showConfirmation(1, customer_location)
+                            //showConfirmation(1, customer_location)
                         } else if (Zone2_enabled && Zone2.containaddress(customerlatlang)) {
                             showConfirmation(2, customer_location)
                         } else if (Zone3_enabled && Zone3.containaddress(customerlatlang)) {
@@ -1008,7 +1010,8 @@ function showConfirmation(zone, location) {
     
     if (zone == 4) {
         var msgg = 'You are out side of our delivery zones';
-        $("#googleerror").html("<strong>" + msgg + "</strong>");
+        $(".red_widget").html("<strong>" + msgg + "</strong>");
+		$(".red_widget").show();
 		$("#out-of-delivery").children('.notification__box').children('.notification__box-content').children('p').html(msgg);
 		window.location.hash = "#out-of-delivery", EasyWay.Notification.open()
 		totalerror = totalerror + 1;
@@ -1036,12 +1039,15 @@ function showConfirmation(zone, location) {
         msg = '<br/><br/><b><?=$java_currency?>' + restMinTotal + '</b> of food required to checkout. Please add more items <br/><br/> ';
 		totalerror = totalerror + 1;
     }else {
-        msg = '"<a href="javascript:iagree(' + charges + ');">I Agree</a>"';
+        //msg = '"<a href="javascript:iagree(' + charges + ');">I Agree</a>"';
+		$(".agree_widget").html('<label><input type="checkbox" onclick="iagree(' + charges + ');"> <strong>"I Aggree"</strong></label>');
+		$(".agree_widget").show();
 		totalerror = totalerror + 1;
     }
-    
-    msg = 'You are in extended delivery zone. <?=$java_currency?>' + charges + ' delivery charges will be charged. ' + msg;
-    $("#googleerror").html("<strong>" + msg + "</strong>");
+    $(".red_widget").html("You are in extended delivery zone. <br> <strong><?=$java_currency?>" + charges + "  delivery charges will be charged.</strong>" + msg);
+	$(".red_widget").show();
+    //msg = 'You are in extended delivery zone. <?=$java_currency?>' + charges + ' delivery charges will be charged. ' + msg;
+    //$("#googleerror").html("<strong>" + msg + "</strong>");
 }
 
 function drawzones(restaurantlocation) {        
@@ -1088,7 +1094,8 @@ function calculateDistance(radius){
         if (radius < miledistance) {
 			var msg = '<strong>Sorry! We only deliver within ' + radius + ' miles radius. You are ' + miledistance + ' miles away from the resturant.</strong>'
 			
-			$("#googleerror").html(msg);
+			$(".red_widget").html(msg);
+			$(".red_widget").show();
 			$("#out-of-delivery").children('.notification__box').children('.notification__box-content').children('p').html(msg);
 			window.location.hash = "#out-of-delivery", EasyWay.Notification.open()
 			totalerror = totalerror + 1;
@@ -1100,7 +1107,8 @@ function calculateDistance(radius){
     }    
     catch (error)
     {
-        $("#googleerror").html(error);
+        $(".red_widget").html(error);
+		$(".red_widget").show();
 		totalerror = totalerror + 1;
         return false;
     }

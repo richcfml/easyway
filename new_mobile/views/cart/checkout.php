@@ -101,7 +101,16 @@ if($_POST['btnCheckout']==1){
 		$success = 0;
 		$CardTokenOrderTbl = "";
 		
-		$_POST['x_exp_date'] = $pCardExpiry = $cc_exp_month.$cc_exp_year;
+		if($card_token > 0){
+		  foreach($loggedinuser->arrTokens as $arrToken){
+		  	if($arrToken->data_2 == $card_token){
+			  $_POST['x_exp_date'] = $pCardExpiry = $arrToken->card_expiry;
+			}
+		  }
+		}else{
+			$_POST['x_exp_date'] = $pCardExpiry = $cc_exp_month.$cc_exp_year;
+		}
+		
 		$_POST['cart_total'] = $cart->grand_total();
 		
 		$nameArr = explode(' ',$customer_name);
