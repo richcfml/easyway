@@ -9,11 +9,13 @@ if ($objRestaurant->status == 1) {
     $currentMenuTimings = "";
 	?>
     <div class=notification__overlay></div>
-        <header class=header style="background-image:url(<?php echo $objRestaurant->header_image; ?>);">
+        <header class=header style="background-image:url(<?php echo $objRestaurant->bh_banner_image; ?>);">
          <div class=header__top-bar>
             <div class=header__distributor> <i class=header__menu-icon></i> <a class=header__store-title href='?item=menu' title='<?= $objRestaurant->name ?> Home'><?= $objRestaurant->name ?></a> <a class=header__cart href='/cart' title='Show Cart'><?=($_GET['item']=='grouporderthankyou' || $_GET['item']=='thankyou')? 0:$cart->totalItems()?></a> <a class=header__account href='?item=account' title='Login/Register'>Login/Register</a> </div>
          </div>
+         <?php if($objRestaurant->logo):?>   
          <div class=header__banner> <img alt='Such Restaurant Logo' class=header__logo src='<?= $SiteUrl . 'images/resturant_logos/' . $objRestaurant->logo ?>'> </div>
+         <?php endif;?>
          <?php
          if ($objRestaurant->announcement != "" && $objRestaurant->announce_status == '1'):
          ?>
