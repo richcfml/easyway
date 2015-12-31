@@ -164,6 +164,13 @@ class Restaurant
         else {
             $objRestaurant->header_image = "../images/resturant_headers/" . $objRestaurant->header_image;
         }
+        
+        if(empty($objRestaurant->bh_banner_image)) {
+            $objRestaurant->bh_banner_image = "../images/default_200_by_200.jpg";
+        } 
+        else {
+            $objRestaurant->bh_banner_image = "../images/resturant_bh_banner/" . $objRestaurant->bh_banner_image;
+        }
 
         if($objRestaurant->isDoubleReward==true) {
             $objRestaurant->VIPMessage='Join our V.I.P. Card program and earn 1 point for every $1 you spend in the restaurant and Double Points for every $1 you spend online!';
