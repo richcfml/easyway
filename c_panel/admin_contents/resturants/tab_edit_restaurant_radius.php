@@ -954,7 +954,10 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
             </tr>
             <tr align="left" valign="top" id="delivery_zone" <?= $Objrestaurant->delivery_option == 'radius' ? 'class="hidden"' : '' ?>> 
                 <td>&nbsp;</td>
-                <td> <a href="ajax.php?mod=resturant&item=delivery_zone&cid=<?=$mRestaurantIDCP?>"  id="lnkdelivery_zones" rel="facebox"><img src="images/zones.png" title="Draw Delivery Zones"/></a>
+                <td> 
+                  <a href="ajax.php?mod=resturant&item=delivery_zone&cid=<?=$mRestaurantIDCP?>" id="lnkdelivery_zones" rel="facebox" onClick="window.scrollTo('0px', '0px');">
+                	<img src="images/zones.png" title="Draw Delivery Zones"/>
+                  </a>
                 </td>
             </tr>
 

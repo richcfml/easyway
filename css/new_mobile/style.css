@@ -94,7 +94,7 @@ background-color: #f2dede;
 }
 @media only screen and (max-width:380px){
 .header__store-title{
-	width:195px !important;
+	width:185px !important;
 	text-align:center !important
 }
 }

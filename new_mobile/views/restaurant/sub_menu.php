@@ -136,8 +136,8 @@
                                                             echo('<i class="identifier__spicy"></i><i class="identifier__spicy"></i><i class="identifier__spicy"></i>');
                                                         }
                                                         if (strpos('x'.$product->item_type, 'B') ) {
-                                                            $bhBack="../css/new_mobile/images/bh.png";
-                                                            echo('<i class="identifier__low-fat" style=" background:url(../css/new_mobile/images/bh.png);    background-size: cover;"  ></i>');
+                                                            $bhBack="../css/new_mobile/images/bh.svg";
+                                                            echo('<i class="identifier__bh"   ></i>');
                                                         }
                                                     }
                                                     ?>
@@ -268,7 +268,7 @@
                     $('.active_form  #retail_price').after('<i class="identifier__spicy"></i><i class="identifier__spicy"></i><i class="identifier__spicy"></i>' )
                 }
                 if (product_item_type.indexOf('B') !== -1) {
-                   $('.active_form  #retail_price').after('<i class="identifier__low-fat" style=" background:url(../css/new_mobile/images/bh.png);background-size: cover;"  ></i>' )
+                   $('.active_form  #retail_price').after('<i class="identifier__bh"   ></i>' )
                 }
                 }
             }

@@ -1040,7 +1040,7 @@ function showConfirmation(zone, location) {
 		totalerror = totalerror + 1;
     }else {
         //msg = '"<a href="javascript:iagree(' + charges + ');">I Agree</a>"';
-		$(".agree_widget").html('<label><input type="checkbox" onclick="iagree(' + charges + ');"> <strong>"I Aggree"</strong></label>');
+		$(".agree_widget").html('<label><input type="checkbox" onclick="iagree(' + charges + ');"> <strong>"I Agree"</strong></label>');
 		$(".agree_widget").show();
 		totalerror = totalerror + 1;
     }

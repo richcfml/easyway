@@ -9,6 +9,16 @@
 	vertical-align: middle;
 	width: 34px
 }
+.identifier__bh{
+	background:url(../new_mobile/images/bh.svg) no-repeat;
+	content: '';
+	display: inline-block;
+	height: 31px;
+	position: relative;
+	vertical-align: middle;
+	width: 47px;
+        margin-left: 5px;
+}
 .header__store-phone:before {
 	background-position-x: -34px;
 	background-position-y: 0px
