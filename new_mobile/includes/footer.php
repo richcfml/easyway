@@ -146,7 +146,7 @@ $(document).ready(function(e) {
     {
         FB.init
                 ({
-                    appId: /*'569304429756200',*/ '1457406827814198',
+                    appId: '569304429756200',// '1457406827814198',
                     status: false, // check login status
                     cookie: true, // enable cookies to allow the server to access the session
                     xfbml: true  // parse XFBML
