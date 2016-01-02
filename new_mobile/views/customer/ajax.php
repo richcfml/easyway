@@ -398,6 +398,43 @@ if(isset($_GET['changeDefaultAddress'])){
 }
 
 if(isset($_GET['getAuthenticationHtml'])){
+    $consumerKey = 'mDgYyzTy13qEuT2ScvzJzn5yc';
+$consumerSecret = 'kl08xfXOGUgDRf3h7aQhiGwMWC3bwsg6EICrY627TS3lk0p6Sr';
+$OAUTH_CALLBACK = $SiteUrl . $objRestaurant->url . "/?item=checktwitter&checktwitter=1&ajax=1";
+$oAuthToken = '';
+$oAuthSecret = '';
+$twitter_url = '';
+
+$qq = include $mobile_root_path . 'includes/twitteroauth/OAuth.php';
+$qqq = include $mobile_root_path . 'includes/twitteroauth/twitteroauth.php';
+$connection = new TwitterOAuth($consumerKey, $consumerSecret);
+//var_dump($connection);
+$request_token = $connection->getRequestToken($OAUTH_CALLBACK);
+
+if ($request_token) {
+    $_SESSION['oauth_token'] = $request_token['oauth_token'];
+    $_SESSION['oauth_token_secret'] = $request_token['oauth_token_secret'];
+
+//    $defaultNamespace = new Zend_Session_Namespace('Default');
+    $token = $request_token['oauth_token'];
+
+    $_SESSION['request_token'] = $token;
+
+    $_SESSION['request_token_secret'] = $request_token['oauth_token_secret'];
+
+    switch ($connection->http_code) {
+        case 200:
+            $twitter_url = $connection->getAuthorizeURL($token);
+            //redirect to Twitter .
+            //header('Location: ' . $url);
+            //echo $url;
+            break;
+        default:
+            echo "Coonection with twitter Failed";
+            break;
+    }
+}
+    
 ?>
 <!--	Register -->
 <div class="notification" id="register" style="height: 100%; overflow: auto">
