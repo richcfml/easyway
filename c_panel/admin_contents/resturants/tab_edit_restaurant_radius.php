@@ -747,7 +747,7 @@ else if (isset($_POST["btnRemoveBhBanner"]))
     {
         unlink(realpath("../images/resturant_bh_banner/".$Objrestaurant->bh_banner_image));
     }
-    $errMessage = "BH banner image removed successfully.";
+    $errMessage = "Mobile Header image removed successfully.";
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
 }
 else if (isset($_POST["btnRemoveOptionalLogo"]))
@@ -1110,14 +1110,11 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
                 </td>
             </tr>
             <!--//--------------VIP LIST Image End----------------------------->
-            <?php
-            if ($Objrestaurant->bh_restaurant==1)
-            {
-            ?>
-            <!----------------BH Banner Image Start----------------------------->
+           
+            <!----------------Mobile Header Image Start----------------------------->
             <tr align="left" valign="top">
                 <td>&nbsp;</td>
-                <td><strong>BH Banner Image</strong><br> <font color="#666666"><!--(system will
+                <td><strong>Mobile Header Image</strong><br> <font color="#666666"><!--(system will
                     resize to 1200x600)--></font>
                     <input name="userfile6" type="file" id="userfile6">
                     <?php
@@ -1130,9 +1127,6 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
                     ?>
                 </td>
             </tr>
-            <?php
-            }
-            ?>
             <!--//--------------BH Banner Image End----------------------------->
             <tr align="left" valign="top">
                 <td></td>

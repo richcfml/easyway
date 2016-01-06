@@ -117,7 +117,11 @@ article.menu-item{
 }
 
 .menu-item__info{ margin-top:-14px; }
-.menu-item.open header hgroup{	margin-top:0px; }
+.menu-item.open header hgroup{	
+	margin-top:0px; 
+	display: block !important;
+}
+
 .menu-item.open .menu-item__header:after{
 	position: absolute;
     right: 20px;
@@ -128,6 +132,7 @@ article.menu-item{
 	position: relative;
 	background: #FFF;
     padding: 20px 20px 0px 20px;
+	display: block !important;
 }
 .cart-empty__favorites:after {
     width: 0px;
