@@ -125,7 +125,8 @@ class chargifyMeteredUsage
 
         if ($curl_error) 
         {
-                throw Exception('An error occurred while connecting to Chargify: ' . $curl_error);
+            Log::write('CHARGIFY Error  - Create Chargify Metered Usage', $curl_error, 'chargify');
+            //throw Exception('An error occurred while connecting to Chargify: ' . $curl_error);
         }
 
         Log::write('CHARGIFY Response Array - Create Chargify Metered Usage', print_r($result,true), 'chargify');

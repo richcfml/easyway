@@ -136,7 +136,7 @@
               
               <label for="apt">Apt: </label>
               <div class=input>
-                <input name="apt" id="apt" />
+                <input name="apt" id="apt"  value="<?=$loggedinuser->cust_apt1?>"/>
                 <span class=input-error>Error</span> 
               </div>
               
@@ -306,7 +306,7 @@
               <dt>Delivery:</dt>
               <dd>
                 <span id="deliverchrgs">
-                <?=$currency.number_format($cart->rest_delivery_charges,2)?>
+                <?=$currency.number_format($objRestaurant->delivery_charges,2)?>
                 </span>
               </dd>
               <?php } ?>
@@ -323,7 +323,7 @@
               </dd>
               <?php } ?>
               <input type="hidden" id="cart_total" name="cart_total" value="<?= $cart->grand_total() ?>" />
-              <input type="hidden" id="cart_delivery_charges" name="cart_delivery_charges" value="<?= $cart->rest_delivery_charges ?>" />
+              <input type="hidden" id="cart_delivery_charges" name="cart_delivery_charges" value="<?= $objRestaurant->delivery_charges; ?>" />
             </dl>
             <div class=checkout__coupon>
               <label for="tip">Got a coupon?</label>
@@ -435,6 +435,7 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 			$("#customer_zip").val('<?=$loggedinuser->deivery1_zip?>');
 			$("#customer_city").val('<?=$loggedinuser->delivery_city1?>');
 			$("#customer_city").val('<?=$loggedinuser->delivery_state1?>');
+                        $("#apt").val('<?=$loggedinuser->cust_apt1?>');
 			$("#address_option").val(2);
 		}else{
 			$("#dcustomer_phone").val('<?=$loggedinuser->cust_phone1?>');
@@ -442,6 +443,7 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 			$("#customer_zip").val('<?=$loggedinuser->cust_ord_zip?>');
 			$("#customer_city").val('<?=$loggedinuser->cust_ord_city?>');
 			$("#customer_city").val('<?=$loggedinuser->cust_ord_state?>');
+                        $("#apt").val('<?=$loggedinuser->cust_apt2?>');
 			$("#address_option").val(1);
 		}
 		

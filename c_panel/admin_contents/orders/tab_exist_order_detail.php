@@ -103,7 +103,7 @@ function updateOrder(id){
                 </tr>
                 <? }?>
                 <tr>
-                  <td colspan="3" ><strong>Deliver Date &amp; Time: </strong><? echo $Ord_RS["DesiredDeliveryDate"]?> </td>
+                  <td colspan="3" ><strong>Deliver Date &amp; Time: </strong><?=(($Ord_RS['asap_order']==1)? 'As soon as possible' : $Ord_RS["DesiredDeliveryDate"])?></td>
                   <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -114,7 +114,24 @@ function updateOrder(id){
                   <td colspan="3" ><strong>Special Requests/Notes: </strong><? echo stripslashes( stripcslashes( $Ord_RS["DelSpecialReq"] ) ) ?> </td>
                   <td>&nbsp;</td>
                 </tr>
-
+                
+                <?php
+                $platform = '';
+				switch($Ord_RS["platform_used"]){
+					case 1: $platform = 'Desktop Website'; break;
+					case 2: $platform = 'Mobile'; break;
+					case 3: $platform = 'Rapid Order'; break;
+					case 4: $platform = 'Kiosk'; break;
+					case 5: $platform = 'Wordpress'; break;
+					case 6: $platform = 'Facebook'; break;
+				}
+				?>
+                
+				<tr>
+                  <td colspan="3" ><strong>Platform: </strong><?=$platform?> </td>
+                  <td>&nbsp;</td>
+                </tr>
+				
                 <tr>
                   <td colspan="3" class="style1"><HR width="100%" noShade SIZE=1></td>
                   <td>&nbsp;</td>

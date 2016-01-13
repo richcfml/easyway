@@ -831,7 +831,12 @@ function writePdf($arrCustomer,$arrRestaurant,$arrOrder,$arrSummary,$pdfHeaderIm
 		$Template =	str_replace("[ORDER]",$OrderTemplate,$Template);
 		$Template =	str_replace("[ORDERTOTAL]",$OrderSummaryTemplate,$Template);
 		if($pdfHeaderImage!="")
-			$pdfHeaderImage= '<img  src="images/resturant_headers/'.$pdfHeaderImage .'"  height="2in;"  width="10in"/>';
+                {
+                    if (file_exists(realpath("images/resturant_headers/".$pdfHeaderImage)))
+                    {
+                        $pdfHeaderImage= '<img  src="images/resturant_headers/'.$pdfHeaderImage .'"  height="2in;"  width="10in"/>';
+                    }
+                }
 			
 		$Template =	str_replace("[HEADER_IMAGE]",$pdfHeaderImage,$Template);
 		// output the HTML content
