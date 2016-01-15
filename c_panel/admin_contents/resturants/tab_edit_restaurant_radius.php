@@ -1194,7 +1194,6 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
 } ?>>Close
                 </td>
             </tr>
-<?php if ($_SESSION['admin_type'] == 'admin') { ?>
                 <tr align="left" valign="top" style="display: none;"> 
                     <td width="76"></td>
                     <td><strong>Voice Confirmation Phone:</strong><br />
@@ -1213,6 +1212,7 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
     } ?>>Off
                     </td>
                 </tr>
+<?php if ($_SESSION['admin_type'] == 'admin') { ?>
                 <tr align="left" valign="top">
                     <td></td>
                     <td>
