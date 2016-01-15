@@ -581,6 +581,7 @@ if (isset($_POST['submit'])) {
 						,announce_status=$announce_status
 						,rest_open_close =$rest_open_close
 						,delivery_offer=$delivery_offer
+                                                ,phone_notification='$phone_notification_status'
 						,rest_address= '$rest_address'
 						,rest_city= '$rest_city'
 						,rest_state= '$rest_state'
