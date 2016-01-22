@@ -25,11 +25,20 @@ if (isset($_POST['rememberme']))
 $result = -1;
 if (isset($_POST['login'])) 
 {
+    $mTmpEcommerceID = 0;
+    if (isset($_SESSION["EcommerceID"]))
+    {
+        if ($_SESSION["EcommerceID"] > 0)
+        {
+            $mTmpEcommerceID = $_SESSION["EcommerceID"];
+        }
+    }
+    
     $user_email = $_POST['email'];
 	
     if($_POST['login']=='sso')
     {
-		$user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id, $_POST['ssoUserId']);
+        $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id, $_POST['ssoUserId']);
     }
     else
     {
@@ -103,6 +112,10 @@ if (isset($_POST['login']))
         }
         redirect($SiteUrl .$objRestaurant->url );
         exit;
+    }
+    if ($mTmpEcommerceID>0)
+    { 
+        $_SESSION["EcommerceID"] = $mTmpEcommerceID;
     }
 }
  

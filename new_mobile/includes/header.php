@@ -1,4 +1,31 @@
 <?php
+$mIPAddress = "Unknown";
+$mSessionID = session_id();
+$mRestaurantID = $objRestaurant->id;
+if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARTDED_FOR'] != '') 
+{
+    $mIPAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+} 
+else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != '') 
+{
+    $mIPAddress = $_SERVER['REMOTE_ADDR'];
+}
+
+if ((trim($mIPAddress)!="Unknown") && (trim($mIPAddress)!=""))
+{
+    $mResult = dbAbstract::Execute("SELECT COUNT(*) AS VisitCount FROM mobilevisits WHERE RestaurantID=".$mRestaurantID." AND IPAddress='".$mIPAddress."' AND SessionID='".$mSessionID."'");
+    if (dbAbstract::returnRowsCount($mResult)>0)
+    {
+        $mRow = dbAbstract::returnObject($mResult);
+        if (is_numeric($mRow->VisitCount))
+        {
+            if ($mRow->VisitCount<1) //No Entry for this visit, Record this visit
+            {
+                $mResult = dbAbstract::Insert("INSERT INTO mobilevisits (RestaurantID, IPAddress, SessionID) VALUES (".$mRestaurantID.", '".$mIPAddress."', '".$mSessionID."')");
+            }
+        }
+    }
+}
 if ($objRestaurant->status == 1) {
     $objMenu->restaurant_id = $objRestaurant->id;
     $menuid = (isset($_GET['menuid']) ? $_GET['menuid'] : "");

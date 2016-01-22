@@ -547,6 +547,11 @@ class cart
         {
             unset($_SESSION['CART']);
         }
+        
+        if(isset($_SESSION["EcommerceID"]))
+        {
+            unset($_SESSION["EcommerceID"]);
+        }
     }
 	
 	

@@ -60,75 +60,85 @@ if(isset($_POST['rememberme'])){
 	setcookie("user", $_POST['email'], $expire);
 }
 
-if(isset($_GET['sso']) && $_GET['sso']!=''){
-	$mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";
-		
-	Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
-	$sso_rs = dbAbstract::Execute($mSQL);
-	if(dbAbstract::returnRowsCount($sso_rs) > 0){
-		$sso_row = dbAbstract::returnObject($sso_rs);
-		
-		$mSQL = "select * from customer_registration where cust_email='".$sso_row->email."' and resturant_id='".$objRestaurant->id."'";
-		Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
-		$cust_rs = dbAbstract::Execute($mSQL);
+if(isset($_GET['sso']) && $_GET['sso']!='')
+{
+    $mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";		
+    Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
+    $sso_rs = dbAbstract::Execute($mSQL);
+    if(dbAbstract::returnRowsCount($sso_rs) > 0)
+    {
+        $sso_row = dbAbstract::returnObject($sso_rs);	
+        $mSQL = "select * from customer_registration where cust_email='".$sso_row->email."' and resturant_id='".$objRestaurant->id."'";
+        Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
+        $cust_rs = dbAbstract::Execute($mSQL);
 	
-		// if customer record exist than login
-		if(dbAbstract::returnRowsCount($cust_rs) > 0){
-			$cust_row = dbAbstract::returnObject($cust_rs);
-			if($cust_row->cust_email != '' && $cust_row->epassword != ''){
-                            dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
+        // if customer record exist than login
+        if(dbAbstract::returnRowsCount($cust_rs) > 0)
+        {
+            $cust_row = dbAbstract::returnObject($cust_rs);
+            if($cust_row->cust_email != '' && $cust_row->epassword != '')
+            {
+                $mECommerceID = dbAbstract::Insert("INSERT INTO bh_ecommerce (SSOUserID, CustomerID) VALUES (".$sso_row->id.", ".$cust_row->id.")", 1, 2);
+                $_SESSION["EcommerceID"] = $mECommerceID;
+                dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
 ?>
-			<form method="post" name="sso_login" action="<?= $SiteUrl . $objRestaurant->url ?>/?item=login">
-            	<input type="hidden" name="ssoUserId" value="<?=$sso_row->id?>"/>
-				<input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
-				<input type="hidden" name="login" value="sso"/>
-			</form>
-			<script language="javascript">
-				document.sso_login.submit();
-			</script>
+                <form method="post" name="sso_login" action="<?= $SiteUrl . $objRestaurant->url ?>/?item=login">
+                    <input type="hidden" name="ssoUserId" value="<?=$sso_row->id?>"/>
+                    <input type="hidden" name="email" value="<?=$cust_row->cust_email?>"/>
+                    <input type="hidden" name="login" value="sso"/>
+                </form>
+                <script language="javascript">
+                    document.sso_login.submit();
+                </script>
 <?php
-			}
-			else{
-				echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid E-mail or Password.</div>';
-			}
-		}
-		else{
-		  // if customer record not exist than register & login
-		  $loggedinuser->cust_email=  $sso_row->email;
-		  $mSalt = hash('sha256', mt_rand(10,1000000));    
-		  $loggedinuser->salt= $mSalt;
-		  $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
-		  
-		  $loggedinuser->cust_your_name= trim($sso_row->firstName);
-		  $loggedinuser->LastName= trim($sso_row->lastName);
-		  $loggedinuser->street1= trim($sso_row->address1) ;
-		  $loggedinuser->street2= trim($sso_row->address2) ;
-		  $loggedinuser->cust_ord_city= trim($sso_row->city) ;
-		  $loggedinuser->cust_ord_state= trim($sso_row->state) ;
-		  $loggedinuser->cust_ord_zip= trim($sso_row->zip) ;
-		  $loggedinuser->cust_phone1= trim($sso_row->phone) ;
-		  
-		  $loggedinuser->delivery_street1= trim($sso_row->address1) ;
-		  $loggedinuser->delivery_street2= trim($sso_row->address2) ;
-		  $loggedinuser->delivery_city1= trim($sso_row->city) ;
-		  $loggedinuser->delivery_state1= trim($sso_row->state) ;
-		  $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
-		  
-		  $loggedinuser->resturant_id =$objRestaurant->id;
-		  $loggedinuser->ssoUserId = $sso_row->id;
-		  
-		  $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
-		  if($result===true){
-			$loggedinuser->getUserCCTokens();
-		  	$loggedinuser->saveToSession();
-			
-			header("location: ". $SiteUrl .$objRestaurant->url.'/');
-			exit;	
-		  }
-		}
-	}else{
-		echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid session id or session id has been expired.</div>';
-	}
+            }
+            else
+            {
+                echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid E-mail or Password.</div>';
+            }
+        }
+        else
+        {
+            // if customer record not exist than register & login
+            $loggedinuser->cust_email=  $sso_row->email;
+            $mSalt = hash('sha256', mt_rand(10,1000000));    
+            $loggedinuser->salt= $mSalt;
+            $loggedinuser->epassword= hash('sha256', trim($sso_row->password).$mSalt);
+
+            $loggedinuser->cust_your_name= trim($sso_row->firstName);
+            $loggedinuser->LastName= trim($sso_row->lastName);
+            $loggedinuser->street1= trim($sso_row->address1) ;
+            $loggedinuser->street2= trim($sso_row->address2) ;
+            $loggedinuser->cust_ord_city= trim($sso_row->city) ;
+            $loggedinuser->cust_ord_state= trim($sso_row->state) ;
+            $loggedinuser->cust_ord_zip= trim($sso_row->zip) ;
+            $loggedinuser->cust_phone1= trim($sso_row->phone) ;
+
+            $loggedinuser->delivery_street1= trim($sso_row->address1) ;
+            $loggedinuser->delivery_street2= trim($sso_row->address2) ;
+            $loggedinuser->delivery_city1= trim($sso_row->city) ;
+            $loggedinuser->delivery_state1= trim($sso_row->state) ;
+            $loggedinuser->deivery1_zip= trim($sso_row->zip) ;
+
+            $loggedinuser->resturant_id =$objRestaurant->id;
+            $loggedinuser->ssoUserId = $sso_row->id;
+
+            $result=$loggedinuser->customerRegistration($objRestaurant,$objMail);
+            $mECommerceID = dbAbstract::Insert("INSERT INTO bh_ecommerce (SSOUserID, CustomerID) VALUES (".$sso_row->id.", ".$loggedinuser->id.")", 2);
+            $_SESSION["EcommerceID"] = $mECommerceID;
+            if($result===true)
+            {
+                $loggedinuser->getUserCCTokens();
+                $loggedinuser->saveToSession();
+                header("location: ". $SiteUrl .$objRestaurant->url.'/');
+                exit;	
+            }
+        }
+    }
+    else
+    {
+        echo '<div style="width=100%; text-align:center; color:#F00; height:20px; background-color:#F3B5B5; border:1px solid #C37D7D; margin: 0 auto;">Sorry! Invalid session id or session id has been expired.</div>';
+    }
 }
 
 if(isset($_GET['ajax']))

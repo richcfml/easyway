@@ -12,6 +12,14 @@ $result = -1;
 $register_result = -1;
 if (isset($_POST['login'])) 
 {
+    $mTmpEcommerceID = 0;
+    if (isset($_SESSION["EcommerceID"]))
+    {
+        if ($_SESSION["EcommerceID"] > 0)
+        {
+            $mTmpEcommerceID = $_SESSION["EcommerceID"];
+        }
+    }
     $user_email = $_POST['email'];
     if($_POST['login']=='sso')
     {
@@ -30,7 +38,7 @@ if (isset($_POST['login']))
     {
         $loggedinuser->destroyUserSession();
         $loggedinuser = $user;
-
+       
         require($site_root_path . "includes/abandoned_cart_config.php");
 
         if ($objRestaurant->useValutec == 1)  //ValuTec
@@ -87,19 +95,34 @@ if (isset($_POST['login']))
         redirect($SiteUrl .$objRestaurant->url ."/?item=menu" );
         exit;
     }
+    if ($mTmpEcommerceID>0)
+    { 
+        $_SESSION["EcommerceID"] = $mTmpEcommerceID;
+    }
 }
 else if (isset($_POST['btnregister'])) 
 {
+    $mTmpEcommerceID = 0;
+    if (isset($_SESSION["EcommerceID"]))
+    {
+        if ($_SESSION["EcommerceID"] > 0)
+        {
+            $mTmpEcommerceID = $_SESSION["EcommerceID"];
+        }
+    }
+    
     extract($_POST);
-	$mFBID='';
-	if (isset($_POST["txtFBID"]))
-	{
-		$mFBID=$_POST["txtFBID"];
-	}
+    $mFBID='';
+    if (isset($_POST["txtFBID"]))
+    {
+        $mFBID=$_POST["txtFBID"];
+    }
+
     $loggedinuser->cust_email = $email;
     
     $mSalt = hash('sha256', mt_rand(10,1000000));    
     $loggedinuser->salt= $mSalt;
+	
     $loggedinuser->epassword= hash('sha256', trim($user_password).$mSalt);
     $loggedinuser->cust_your_name = trim($first_name);
     $loggedinuser->LastName = trim($last_name);
@@ -115,18 +138,25 @@ else if (isset($_POST['btnregister']))
     $loggedinuser->delivery_state1 = trim($cstate);
     $loggedinuser->deivery1_zip = trim($czip);
     $loggedinuser->resturant_id = $objRestaurant->id;
-	$loggedinuser->facebook_id = $mFBID;
+    $loggedinuser->facebook_id = $mFBID;
+	
     $register_result = $loggedinuser->customerRegistration($objRestaurant, $objMail);
+	
     if ($register_result === true) 
-	{
-		$itemcount = $cart->totalItems();
-		if ($itemcount > 0) 
-		{
-			redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");
-			exit;
-		}
+    {
+        $itemcount = $cart->totalItems();
+        if ($itemcount > 0) 
+        {
+            redirect($SiteUrl . $objRestaurant->url . "/?item=checkout");
+            exit;
+        }
         redirect($SiteUrl . $objRestaurant->url . "/?item=resturants");
         exit;
+    }
+    
+    if ($mTmpEcommerceID>0)
+    { 
+        $_SESSION["EcommerceID"] = $mTmpEcommerceID;
     }
 } 
 else if (is_numeric($loggedinuser->id)) 

@@ -72,27 +72,30 @@ if (strtolower(trim($_GET["item"]))!="login")
 	$mIPAddress = "Unknown";
 	$mSessionID = session_id();
 	$mRestaurantID = $objRestaurant->id;
-	if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARTDED_FOR'] != '') 
+	if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARTDED_FOR'] != '') 
 	{
-    	$mIPAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $mIPAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} 
-	else 
+	else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != '') 
 	{
-    	$mIPAddress = $_SERVER['REMOTE_ADDR'];
+            $mIPAddress = $_SERVER['REMOTE_ADDR'];
 	}
 	
-	$mResult = dbAbstract::Execute("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$mRestaurantID." AND IPAddress='".$mIPAddress."' AND SessionID='".$mSessionID."'");
-	if (dbAbstract::returnRowsCount($mResult)>0)
-	{
-		$mRow = dbAbstract::returnObject($mResult);
-		if (is_numeric($mRow->VisitCount))
-		{
-			if ($mRow->VisitCount<1) //No Entry for this visit, Record this visit
-			{
-				$mResult = dbAbstract::Insert("INSERT INTO facebookvisits (RestaurantID, IPAddress, SessionID) VALUES (".$mRestaurantID.", '".$mIPAddress."', '".$mSessionID."')");
-			}
-		}
-	}
+        if ((trim($mIPAddress)!="Unknown") && (trim($mIPAddress)!=""))
+        {
+            $mResult = dbAbstract::Execute("SELECT COUNT(*) AS VisitCount FROM facebookvisits WHERE RestaurantID=".$mRestaurantID." AND IPAddress='".$mIPAddress."' AND SessionID='".$mSessionID."'");
+            if (dbAbstract::returnRowsCount($mResult)>0)
+            {
+                $mRow = dbAbstract::returnObject($mResult);
+                if (is_numeric($mRow->VisitCount))
+                {
+                    if ($mRow->VisitCount<1) //No Entry for this visit, Record this visit
+                    {
+                        $mResult = dbAbstract::Insert("INSERT INTO facebookvisits (RestaurantID, IPAddress, SessionID) VALUES (".$mRestaurantID.", '".$mIPAddress."', '".$mSessionID."')");
+                    }
+                }
+            }
+        }
 	
 	//Code For Tracking Visits Ends Here// Gulfam 27 March 2014
 	$mGFS = "12";
