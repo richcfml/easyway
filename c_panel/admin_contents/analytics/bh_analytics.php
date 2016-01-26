@@ -62,7 +62,7 @@ if ($mResWebsiteVisits)
     }
 }
 
-$mSQLTopDelis = "SELECT COUNT(O.OrderID) AS OrderCount, R.name AS DeliName FROM ordertbl O INNER JOIN resturants R ON O.cat_id = R.id WHERE R.status = 1 AND R.bh_restaurant = 1 AND DATEDIFF(O.CreateDate, NOW()) < 60 GROUP BY R.name ORDER BY OrderCount DESC LIMIT 5";
+$mSQLTopDelis = "SELECT O.cat_id AS RestaurantID, COUNT(O.OrderID) AS OrderCount, SUM(O.Totel) AS OrderTotal, R.name AS DeliName FROM ordertbl O INNER JOIN resturants R ON O.cat_id = R.id WHERE R.status = 1 AND R.bh_restaurant = 1 AND DATEDIFF(O.CreateDate, NOW()) < 60 GROUP BY R.name ORDER BY OrderCount DESC LIMIT 5";
 $mResTopDelis = dbAbstract::Execute($mSQLTopDelis, 1);
 $mTopDeliStr = "";
 if ($mResTopDelis)
@@ -72,7 +72,7 @@ if ($mResTopDelis)
         $mTopDeliCount = 1;
         while ($mRowTopDelis = dbAbstract::returnObject($mResTopDelis, 1))
         {
-            $mTopDeliStr .= "<strong>".$mTopDeliCount.". </strong>".$mRowTopDelis->DeliName."<br /><br />";
+            $mTopDeliStr .= "<strong>".$mTopDeliCount.". </strong><a href='?mod=resturant&item=restedit&cid=".$mRowTopDelis->RestaurantID."'>".$mRowTopDelis->DeliName."&nbsp;(".$mRowTopDelis->OrderCount." Orders, ".$currency.$mRowTopDelis->OrderTotal.")</a><br /><br />";
             $mTopDeliCount = $mTopDeliCount + 1;
         }
     }
@@ -528,7 +528,7 @@ if ($mAbandonedCount > 0)
                                             </td>
                                         </tr>
                                         <tr style="height: 30px; background-color: #FFFFFF;">
-                                            <td style="width: 30%;">
+                                            <td style="width: 20%;">
                                                 
                                             </td>
                                             <td style="text-align: left !important;">
