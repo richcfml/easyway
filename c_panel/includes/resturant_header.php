@@ -185,11 +185,11 @@ if($Objrestaurant)
             <div class="links <?=$mod=='advanced_settings' ? 'selected' : ''?>"><a href="?mod=advanced_settings&cid=<?=$mRestaurantIDCP?>"class="">Advanced Settings</a></div>
         <?php 
         }
-        if($_SESSION['admin_type'] == "admin" || $_SESSION['admin_type'] == "reseller" || $_SESSION['admin_type'] == "store owner") 
-        { 
         ?>
-            <div class="links <?=$mod=='analytics' ? 'selected' : ''?>"><a href="?mod=analytics&cid=<?=$mRestaurantIDCP?>"class="">Analytics</a></div>
+        <div class="links <?=$mod=='analytics' ? 'selected' : ''?>"><a href="?mod=analytics&cid=<?=$mRestaurantIDCP?>"class="">Analytics</a></div>
         <?php
+        if($_SESSION['admin_type'] == "admin" || $_SESSION['admin_type'] == "reseller" || $_SESSION['admin_type'] == "store owner") 
+        {
             $qry = "SELECT * FROM resturants WHERE id=".$mRestaurantIDCP;
             $result=dbAbstract::ExecuteObject($qry,1);
             if($result->premium_account == 1)
