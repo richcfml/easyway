@@ -14,7 +14,7 @@ $mMobileOrders = "0";
 $mCashPercentage = "0";
 $mCreditCardPercentage = "0";
 
-$mSQLSSO = "SELECT COUNT(*) AS UserCount FROM bh_sso_accounts WHERE DATEDIFF(CreateDate, NOW()) < 60";
+$mSQLSSO = "SELECT COUNT(*) AS UserCount FROM bh_sso_user WHERE DATEDIFF(CreateDate, NOW()) < 60";
 $mResSSO = dbAbstract::Execute($mSQLSSO, 1);
 
 if ($mResSSO)
