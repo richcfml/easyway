@@ -72,7 +72,7 @@ if ($mResTopDelis)
         $mTopDeliCount = 1;
         while ($mRowTopDelis = dbAbstract::returnObject($mResTopDelis, 1))
         {
-            $mTopDeliStr .= "<strong>".$mTopDeliCount.". </strong><a href='?mod=resturant&item=restedit&cid=".$mRowTopDelis->RestaurantID."'>".$mRowTopDelis->DeliName."&nbsp;(".$mRowTopDelis->OrderCount." Orders, ".$currency.$mRowTopDelis->OrderTotal.")</a><br /><br />";
+            $mTopDeliStr .= "<strong>".$mTopDeliCount.". </strong><a href='?mod=resturant&item=restedit&cid=".$mRowTopDelis->RestaurantID."'>".$mRowTopDelis->DeliName."&nbsp;(".$mRowTopDelis->OrderCount." Orders, $".$mRowTopDelis->OrderTotal.")</a><br /><br />";
             $mTopDeliCount = $mTopDeliCount + 1;
         }
     }
