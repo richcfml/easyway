@@ -344,8 +344,8 @@ if ($mVerifyRequest==1) //Valid Session
             $mStartTime = strtotime(date("Y-m-d H:i:s"));
             if (isset($_GET["slug"]))
             {
-                if (isset($_GET["options"]) && count($_GET["options"])>0)
-                {
+                //if (isset($_GET["options"]) && count($_GET["options"])>0)
+                //{
                     $mSQL = "SELECT * FROM resturants WHERE LOWER(TRIM(url_name))='".strtolower(trim($_GET["slug"]))."'";
                     $rest_url = dbAbstract::ExecuteObject($mSQL);
                     if ($rest_url)
@@ -354,8 +354,11 @@ if ($mVerifyRequest==1) //Valid Session
                         
                         $mDislikeComments = "";
                         $mDislikeEmail = "";
-                        $mDislikeOptions = prepareStringForMySQL(implode(", ", $_GET["options"]));
-                        
+						$mDislikeOptions = "";
+						
+						if (isset($_GET["options"]) && count($_GET["options"]) > 0){
+                        	$mDislikeOptions = prepareStringForMySQL(implode(", ", $_GET["options"]));
+						}
 
                         if (isset($_GET["comments"]))
                         {
@@ -409,11 +412,11 @@ if ($mVerifyRequest==1) //Valid Session
                                 "satisfactionPercentage" => $mLikePercentage
                             );
                     }
-                }
+                /*}
                 else
                 {
                     $mReturn = errorFunction("4", "Please specify at least one Option.", "Please specify at least one Option.", "Attribute Error");
-                }
+                }*/
             }
             else
             {

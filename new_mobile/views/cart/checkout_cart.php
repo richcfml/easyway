@@ -1,3 +1,16 @@
+<style>
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+</style>
 <body class=checkout>
 <div class=notification__overlay></div>
 <?php require($mobile_root_path . "includes/header.php"); ?>
@@ -168,14 +181,18 @@
           <fieldset>
             <legend></legend>
             <div class=checkout-radio__group>
-                <?php 
-              $payment_Cash=$payment_Card='';
+            <?php 
+			  $payment_Cash=$payment_Card='';
               $payment_method_no=0;
-                    if($objRestaurant->credit_card==1 ){$payment_Card=true;$payment_method_no++;} else $payment_Card=false;
-                    if($objRestaurant->cash==1) {$payment_Cash=true ; $payment_method_no++;} else $payment_Cash=false;
-                    
-                    if($payment_method_no!=2)
-                        $paymentClass='payment_methods';
+			  if($objRestaurant->credit_card==1 && $objRestaurant->payment_gateway!='' && $objRestaurant->authoriseLoginID!='' && $objRestaurant->transKey!=''){
+				  $payment_Card=true;$payment_method_no++;
+			  }
+			  else $payment_Card=false;
+			  
+			  if($objRestaurant->cash==1) {$payment_Cash=true ; $payment_method_no++;} else $payment_Cash=false;
+			  
+			  if($payment_method_no!=2)
+				  $paymentClass='payment_methods';
                     
               ?>
               <?php if($payment_Card):?>  
@@ -287,6 +304,8 @@
               payment due on receipt. </p>
           </fieldset>
             <?php endif;?>
+            
+            <?=($payment_Card==false && $payment_Cash==false)? "<div class='alert alert-danger'><b>Sorry!</b> No Payment Method Is Available.</div><script>var Payment_methods=-1;</script>":''?>
         </div>
         
         <div class='checkout__step' data-name='Review order'>
@@ -372,7 +391,9 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 <script>
   var totalerror = 0;
   var deliveryType = '<?=$cart->delivery_type?>';
-  var Payment_methods= '<?= $payment_method_no?>';
+  if(Payment_methods!= -1){
+  	var Payment_methods= '<?= $payment_method_no?>';
+  }
   $(document).ready(function() {
 	EasyWay.Checkout.setup();
 	$("#card_type").val($('option:selected', $("#card_token")).attr('type'));
@@ -672,7 +693,12 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		  $("#error").html('');
 		  add_delivery_tip($('#tip').val());
 	  }
-	  if(totalerror == 0) return true;
+	  
+	  if(totalerror == 0){ 
+	  	$(".footer__stepper-next").removeClass('js-submit');
+		$(".footer__stepper-next").css('color','#000');
+	  	return true;
+	  }
 	  else{
 		return false;
 	  }
@@ -856,6 +882,11 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		
 		// Varify CC Info
 		if($.trim($(".footer__stepper-next").html())=='Review order'){
+			if(Payment_methods == -1){
+				$("#error").html('Sorry no payment method is available.');
+				return false;
+			}
+			
 			if($('#credit_card').is(':checked') && $("#$card_token").val()==0){
 			  if(($("#card_number").val()=='') || ($("#card_number").val().length < 15 && $("#card_number").val() != '<?=$cardNum?>')){
 				  $("#card_number").siblings('.input-error').show();
@@ -902,6 +933,10 @@ if(isset($_GET["grp_userid"]) && isset($_GET["grpid"]) && isset($_GET["uid"]) &&
 		}
 	});
   });
+  
+  function setPaymentFalse(){
+  	Payment_methods=-1;
+  }
   
   function redeemCoupon(){
 	  var coupon_code=$("#coupon_code").val();
