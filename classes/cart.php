@@ -158,15 +158,83 @@ class cart
         $this->products=array_values($this->products);
         $cartProducts=$this->products;
         $cartSubTotal=0;
-        foreach($cartProducts as $cartProduct)
+        $arr_tmp = array();
+	//var_dump($cartProducts);
+	//echo "<br/> earlierObject: " . $earlierCartObj->prd_id . "<br/>";
+	$myurl = $_SERVER['REQUEST_URI'];
+	$url = explode('/', $myurl);
+	$is_rest_bh_new_promo = product::isRestPartOfNewBHPromo($url[1]);
+	$lrgr_ordr_id = array();
+	if(isset($is_rest_bh_new_promo) && $is_rest_bh_new_promo->bh_new_promotion == 1){
+		foreach($cartProducts as $cartProduct)
+        	{
+            		$arr_tmp[$cartProduct->prd_id] = $cartProduct->sale_price * $cartProduct->quantity;
+        	}
+		$maxprice = max($arr_tmp);
+		$product_key = array_search($maxprice, $arr_tmp);
+	}
+	foreach($cartProducts as $cartProduct)
         {
             if($debug) 
             {
                 "cartSubTotal:".$cartSubTotal." item total:".($cartProduct->sale_price * $cartProduct->quantity);
             }
-            $cartSubTotal +=($cartProduct->sale_price * $cartProduct->quantity);
-        }
-            
+		//echo "<br/>cartSubTotal:".$cartSubTotal." item total:".($cartProduct->retail_price * $cartProduct->quantity);
+		//echo "<br/> cart prd id: " . $cartProduct->prd_id ." product key: ".$product_key; 
+	    if(isset($is_rest_bh_new_promo) && $is_rest_bh_new_promo->bh_new_promotion == 1){
+	    	//$sub_price = ($cartProduct->sale_price * $cartProduct->quantity)/2;
+		if($cartProduct->prd_id == $product_key){
+	   		$is_bh_item = product::productIsBH($product_key);
+			$bh_flag =  (strstr( $is_bh_item->item_type, "B" ) ? 1 : 0 );
+        		$my_quantity =  number_format($cartProduct->sale_price * $cartProduct->quantity,2);
+        		array_push($lrgr_ordr_id, $is_bh_item->prd_id, $my_quantity);
+			$pid_counts = array_count_values($lrgr_ordr_id);
+			if($bh_flag){
+				if($cartProduct->quantity > 1){
+					$sub_price = (($cartProduct->sale_price * ($cartProduct->quantity - 1)) + (($cartProduct->sale_price * ($cartProduct->quantity - ($cartProduct->quantity - 1)))/2));
+				}else{
+					$count = $pid_counts[$cartProduct->prd_id];
+                                        $keys = array_keys($lrgr_ordr_id, $cartProduct->prd_id);
+                                        if($count > 1){
+                                        	$n_arr = array();
+                                                foreach($keys as $v){
+                                                	$k = $v + 1;
+                                                        array_push($n_arr, $lrgr_ordr_id[$k]);
+                                               	}
+                                                $mx = max($n_arr);
+                                        	if(number_format($cartProduct->sale_price * $cartProduct->quantity,2) == $mx){
+							$sub_price = ($cartProduct->sale_price * $cartProduct->quantity)/2;
+						}else{
+							$sub_price = ($cartProduct->sale_price * $cartProduct->quantity);
+						}
+					}else{
+						$sub_price = ($cartProduct->sale_price * $cartProduct->quantity)/2;
+					}
+				}
+				$cartSubTotal +=$sub_price;
+				$this->coupon_code = 'BHNewPromo';
+			}else{
+				$cartSubTotal +=($cartProduct->sale_price * $cartProduct->quantity);
+                        	//echo "<br/>The new new sale_price is: " . $cartProduct->sale_price;
+			}
+	    	}else{
+			$cartSubTotal +=($cartProduct->sale_price * $cartProduct->quantity);
+			//echo "<br/>The new sale_price is: " . $cartProduct->sale_price;
+	   	 }
+	    }else{
+	    	//echo "<br/> the count is: " .$cartSubTotal;
+            	$cartSubTotal +=($cartProduct->sale_price * $cartProduct->quantity);
+	    	//$cartSubTotal +=$sub_price;
+	    	//echo "<br/> cartSubTotal:".$cartSubTotal." item total:".($cartProduct->sale_price * $cartProduct->quantity);
+	    }
+	}
+        if(isset($this->coupon_code) && $this->coupon_code == 'BHNewPromo'){
+                #echo 'Sub Price: ' .$sub_price;
+                #echo '<br/>Sale * Q: ' . ($cartProduct->sale_price * $cartProduct->quantity) . '<br/> Sale * Q - Sub';
+                #echo (($cartProduct->sale_price * $cartProduct->quantity)) - $sub_price;
+                $this->bh_discount = (($cartProduct->sale_price * $cartProduct->quantity)) - $sub_price;
+                #$this->bh_discount = $sub_price;
+        }    
         $this->sub_total=$cartSubTotal;
         if($debug) 
         {

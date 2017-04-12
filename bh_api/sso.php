@@ -97,14 +97,17 @@ if ($mVerifyRequest==1) //Valid Session
             {
                 if(isset($_GET['sso']))
                 {
+                    Log::write("---->sso.php.[sessionid]<-----");
                     $qry = "select u.id from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE u.email = '". $_GET['email'] ."' and bhs.session_id = '".$_GET['sso']."'";
                 }
                 else if(isset($_GET['password']))
                 {
+                    Log::write("---->sso.php.[password]<-----");
                     $qry = "select * from bh_sso_user WHERE email = '". $_GET['email'] ."' and password = '".$_GET['password']."'";
                 }
                 $expiryDate = date("c",  strtotime("+1 day"));  
                 $date = strtotime($expiryDate);
+                Log::write("---->sso.php.[expiryDate]<-----".$date);
                 Log::write("Sign In - sso.php - IF", "QUERY --".$qry, 'sso', 1);
                 $userResult = dbAbstract::ExecuteObject($qry);
                 Log::write('User Response Array - sso.php', print_r($userResult,true), 'sso', 1);

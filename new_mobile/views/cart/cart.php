@@ -45,14 +45,44 @@ if (isset($_GET['ajax'])) {
     <?php } ?>
 
     <ul style="display:block; list-style-type:none; margin:0; padding:0px 0px 100px 20px; height: 100%; overflow-y: scroll;" class='cart-item__list2 '>
-        <?php  foreach ($cart->products as $index => $cproduct) { ?>
+        <?php
+		include('../../../classes/Product.php');
+		$arr_tmp = array();
+		$myurl = $_SERVER['REQUEST_URI'];
+		$url = explode('/', $myurl);
+		$is_rest_bh_new_promo = product::isRestPartOfNewBHPromo($url[1]);
+		if(isset($is_rest_bh_new_promo) && $is_rest_bh_new_promo->bh_new_promotion == 1){
+			foreach ($cart->products as $index => $cproduct)
+			{
+        			$bh_item_array = product::productIsBH($cproduct->prd_id);
+        			$bh_flag =  (strstr( $bh_item_array->item_type, "B" ) ? 1 : 0 );
+				if($bh_flag){
+                			$arr_tmp[$cproduct->prd_id] = $bh_item_array->retail_price;
+				}
+        		}
+		}
+		$maxprice = max($arr_tmp);
+		$product_key = array_search($maxprice, $arr_tmp);
+		
+	?>
+	<?php  foreach ($cart->products as $index => $cproduct) { ?>
             <li class='cart-item  index_<?= $index ?> '>
                 
                 <input style="width: 46px" class='qnty cart-item__quantity' maxlength="3" id="itemQ_<?= $cproduct->prd_id ?>" value=<?= $cproduct->quantity ?>>
                 <div style="max-width: 39%;padding-left: 5px; padding-right: 0px" class=cart-item__info>
                     <h4 class=cart-item__name><?= $cproduct->item_title ?></h4> 
-                    <span class='cart-item__price' price='<?= number_format($cproduct->sale_price * $cproduct->quantity,2) ?>'><?= $currency . number_format($cproduct->sale_price * $cproduct->quantity,2) ?></span> 
-                </div>
+                    <?php if($cproduct->prd_id == $product_key){
+                        $test_pricing = ($cproduct->sale_price * ($cproduct->quantity - 1)) + (($cproduct->sale_price * ($cproduct->quantity - ($cproduct->quantity - 1)))/2);
+                        $my_new_price = $test_pricing;
+                        echo "(<span style=\"text-decoration: line-through;\">" . $currency . number_format($cproduct->sale_price * $cproduct->quantity,2);
+                        echo "</span> " . $currency . number_format($my_new_price,2)  . ")";
+                     }else{  ?>
+
+                        <span class='cart-item__price' price='<?= number_format($cproduct->sale_price * $cproduct->quantity,2) ?>'>
+                                <?= $currency . number_format($cproduct->sale_price * $cproduct->quantity,2) ?>
+                        </span>
+                    <?php } ?>
+		</div>
                 <i onclick="event.preventDefault();  showPopup(<?php echo $cproduct->prd_id; ?>, <?php echo '1'; ?>, <?php echo '1'; ?>, <?php echo $index; ?>, this)" class="cart-item__edit" id="<?= $cproduct->prd_id ?>" index="<?= $index ?>" style="cursor:pointer"></i>
                 <p class="cart-item__description"><?= $cproduct->requestnote; ?></p>
                

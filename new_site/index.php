@@ -214,6 +214,24 @@
 		<?php
 		} 
 		?>
+		<?php
+			$myurl = $_SERVER['REQUEST_URI'];
+        		$url = explode('/', $myurl);
+        		$is_rest_bh_new_promo = product::isRestPartOfNewBHPromo($url[1]);
+        		if(isset($is_rest_bh_new_promo) && $is_rest_bh_new_promo->bh_new_promotion == 1){
+		?><div>
+			 <p style="font-size: 0.8em; text-align:cente;  padding: 0 0 10px 0; font-weight: lighter;">
+				*Limited time only. 50% discount off any sandwich proudly featuring Boar’s Head meats or cheeses.  Limit one discount per order.  No additional discounts or coupons apply.
+				<br/> Discount taken from the highest priced item containing Boar’s Head meats or cheeses.  Only valid on orders placed online or through the Boar’s Head Deli Guide App.  
+				At participating stores only.
+			</p>
+			<!-- <p style="font-size: 0.8em; text-align:cente;  padding: 0 0 10px 0; font-weight: lighter;">
+                                Limited time only (offer good January 28, 2017 through January 31, 2017). Complimentary Boar's Head<sup>&copy;</sup> Sandwich.<br/> 
+                		*Limit one discount per order.  No additional discounts or coupons apply.
+                                 Only valid on orders placed online or through the Deli Guide App. Discount taken from the highest priced item. At participating stores only.
+                        </p> -->
+		</div>
+		<?php } ?>
 	</div>
 </div><!-- MAIN CONTAINER WITH HEADER -->
 	<script type="text/javascript">

@@ -179,6 +179,7 @@ class Users
 	*/
     public function ssoUserLogin($email, $restaurant_id, $ssoUserId)
     {
+        Log::write("--->Users.ssoUserLogin<----");
         $email    = prepareStringForMySQL($email);
         $user_qry = dbAbstract::Execute("select * from customer_registration where cust_email='$email' and resturant_id= '" . $restaurant_id . "'", 1);
         return $this->login($user_qry, 1, 0, $ssoUserId);
@@ -189,12 +190,14 @@ class Users
 	*/
     private function login($user_qry, $pC_Panel, $loginById = 0, $ssoUserId=0)
     {
+        Log::write("--->Users.login<----");
         if (dbAbstract::returnRowsCount($user_qry) > 1 || dbAbstract::returnRowsCount($user_qry) == 0) {
             return NULL;
         }
         
         $user = dbAbstract::returnObject($user_qry, $pC_Panel, "users");
         if ($loginById == 0) {
+            Log::write("--->Users.loginById equal to 0<----");
             $user->delivery_address_choice = 1;
             $user->getUserCCTokens($ssoUserId);
             $user->loadUserFavorites();

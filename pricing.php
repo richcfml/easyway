@@ -270,10 +270,10 @@
                     <div class="pricing_blue">
                         <h3 class="center" ><strong style="color:#fff !important;">BASIC</strong></h3>
                         <hr/> <br clear="all"/>
-                        <p style="font-weight:normal;"><sup>$</sup>69<sub>mo.</sub></p>
+                        <p style="font-weight:normal;"><sup>$</sup>99<sub>mo.</sub></p>
                     </div>
                     <div class="pricing_triangle">
-                        <p  class="center" ><em>	$179 set up free</em></p>
+                        <p  class="center" ><em>$179 set up fee</em></p>
                     </div>
                     <h5 class="center"><a href="sign_up.php?plan=basic" class="ewo-blue-btn" style="padding: 15px 30px; line-height: 65px;">GET STARTED</a></h5>
                     <hr/>
@@ -289,7 +289,7 @@
                         <p> <strong>E-coupon</strong> creation</p>
                         <p> <strong>Facebook</strong> ordering</p>
                         <p> <strong>Cloud</strong> control panel           </p>
-                        <p>Free Manager's Tablet *</p>
+                        <!--p>Free Manager's Tablet *</p-->
                     </div>
                     <br clear="all"/>
                 </div>
@@ -304,7 +304,7 @@
                         <p style="margin-top:15px; font-weight:normal;"><sup>$</sup>129<sub>mo.</sub></p>
                     </div>
                     <div class="pricing_triangle1">
-                        <p  class="center" style="padding-top: 10px;"><em>	$179 set up free</em></p>
+                        <p  class="center" style="padding-top: 10px;"><em>$179 set up fee</em></p>
                         <br clear="all"/>
                     </div>
                     <h5 class="center"><a href="sign_up.php?plan=premium" class="ewo-blue-btn" style="padding: 15px 30px; line-height: 65px;">GET STARTED</a></h5>
@@ -321,7 +321,7 @@
                         <p> <strong>E-coupon</strong> creation</p>
                         <p> <strong>Facebook</strong> ordering</p>
                         <p> <strong>Cloud</strong> control panel           </p>
-                        <p>Free Manager's Tablet *</p>
+                        <!--p>Free Manager's Tablet *</p-->
                         <p class="bluefont">Online reputation management</p>
                         <p  class="bluefont">Text message ordering</p>
                         <p  class="bluefont">Review boost</p>
@@ -332,7 +332,7 @@
                 <br clear="all"/>
             </div>
             <br clear="all"/>
-            <p style="width: 213px;float: right;"><em>* With one year commitment</em></p>
+            <!--p style="width: 213px;float: right;"><em>* With one year commitment</em></p-->
         </div>
         <br clear="all"/>
     </div>

@@ -166,13 +166,18 @@
 		$del_special_notes=$DeliveryInstructionsFO;
 		$serving_date = date('m-d-Y H:i');
 	}
-		 
+	
+	//print_r($_POST);
+	//print_r($cart);
+	//exit;		 
 	$cart->invoice_number=$invoice_number;
 	$cart->payment_menthod=$_POST['payment_method'];
 	$cart->special_notes = $del_special_notes;
 	
 	$cart->createNewOrder($loggedinuser->id,$address,$serving_date,$asap,$payment_method,$invoice_number,1,$type,$cc,$gateway_token,$transaction_id, $platform_used, $is_guest,$del_special_notes, $CarkTokenOrderTbl);
 	$cart->order_created=1;
+	//print_r($cart);
+	//exit;
 	$cart->save();
 
 	if ($objRestaurant->tokenization == 1) 
@@ -394,6 +399,9 @@
 	}
 	 
 	$common_confimration_email.='<b>TOTAL AMOUNT DUE:</b><br><b>Sub Total: </b>'. $arrSummary['SUBTOTAL']  .'<br>';
+        if($cart->bh_discount > 0){        
+		$common_confimration_email .= '<b>Promotional Discount: ' . $currency . number_format($cart->bh_discount,2) . '</b><br/>';
+        }
 	if($cart->delivery_type==cart::Delivery)
 	{
 		$common_confimration_email.=' <b>Delivery Charges: </b>'.$currency. number_format($cart->delivery_charges(), 2)  .'<br>';
@@ -464,6 +472,12 @@
 	}
 	$confimration_email .= $common_confimration_email .' <a href=\"http://easywayordering.com/ozzies/\">http://www.easywayordering.com/'. $objRestaurant->url .'/</a><br>Phone: '. $objRestaurant->phone .'<br>Fax: '. $objRestaurant->fax .'<br>';
 	
+	$myurl = $_SERVER['REQUEST_URI'];
+        $url = explode('/', $myurl);
+        $is_rest_bh_new_promo = product::isRestPartOfNewBHPromo($url[1]);
+        if(isset($is_rest_bh_new_promo) && $is_rest_bh_new_promo->bh_new_promotion == 1)
+        $confimration_email .= "*Limited time only. 50% discount off any sandwich proudly featuring Boar’s Head meats or cheeses. Limit one discount per order. No additional discounts or coupons apply.<br/> Discount taken from the highest priced item containing Boar’s Head meats or cheeses. Only valid on orders placed online or through the Boar’s Head Deli Guide App. At participating stores only." . '<br>';
+	//$confimration_email .= "Limited time only (offer good January 28, 2017 through January 31, 2017). Complimentary Boar's Head<sup>&copy;</sup> Sandwich.<br> *Limit one discount per order. No additional discounts or coupons apply. Only valid on orders placed online or through the Deli Guide App. Discount taken from the highest priced item. At participating stores only." . "<br>";	
 	include "views/notify_customers.php";
 	if(!isset($repid_payment))
 	{

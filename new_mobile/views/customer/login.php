@@ -38,20 +38,23 @@ if (isset($_POST['login']))
 	
     if($_POST['login']=='sso')
     {
+        Log::write("---->login.php[ssoUserLogin]<-----");
         $user = $loggedinuser->ssoUserLogin($_POST['email'], $objRestaurant->id, $_POST['ssoUserId']);
     }
     else
     {
+        Log::write("---->login.php[loginUser]<-----");
         $user = $loggedinuser->loginUser($_POST['email'], $_POST['password'], $objRestaurant->id);
     }
 
     if (is_null($user)) 
     {   
+        Log::write("---->login.php[user null]<-----");
         $result = false;
     } 
     else 
     {
-
+        Log::write("---->login.php[user not null]<-----");
         $loggedinuser->destroyUserSession();
         $loggedinuser = $user;
         require($mobile_root_path . "../new_site/includes/abandoned_cart_config.php");

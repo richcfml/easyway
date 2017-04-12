@@ -1,5 +1,6 @@
 <?php 
 //isset($_GET['mod']) ? $mod=$_GET['mod'] : $mod='resturants';
+Log::write("---->controller.php<----");
 if($_GET['item']=='menu') unset($_GET['item']);
 
 isset($_GET['item']) ? $mod=$_GET['item'] : $mod='resturants';
@@ -7,8 +8,9 @@ isset($_GET['item']) ? $mod=$_GET['item'] : $mod='resturants';
 	if($objRestaurant->status==0){
 		$include=$mobile_root_path. "views/restaurant/notavailable.php";
 	} else{
-		 
+		 Log::write("---->controller.php[objRestaurant.status not zero]<----".$mobile_root_path);
 	if($mod=='resturants') {
+		Log::write("----->controller.php[mod=resturants]");
 		$include=$mobile_root_path. "views/restaurant/sub_menu.php";
 	}else if($mod=='product') {
 		$include=$mobile_root_path. "views/restaurant/product.php";
@@ -20,10 +22,12 @@ isset($_GET['item']) ? $mod=$_GET['item'] : $mod='resturants';
 	}
 	else if($mod=='login') 
 	{
+		Log::write("---->controller.php views-customer-login.php<----");
 		$include=$mobile_root_path. "views/customer/login.php";
 	}
 	else if($mod=='accountajax') 
 	{
+		Log::write("---->controller.php views-customer-ajax.php<----");
 		$include=$mobile_root_path. "views/customer/ajax.php";
 	}
 	else if($mod=='forgotpassword') {

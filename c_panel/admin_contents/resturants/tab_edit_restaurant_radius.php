@@ -20,6 +20,70 @@
     }
     .hidden{display:none;}
 
+	.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 20px;
+}
+.switch input {display:none;}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider {
+   position: absolute;
+   cursor: pointer;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: #ccc;
+   -webkit-transition: .4s;
+   transition: .4s;
+ }
+
+ .slider:before {
+   position: absolute;
+   content: "";
+   height: 12px;
+   width: 12px;
+   left: 4px;
+   bottom: 4px;
+   background-color: white;
+   -webkit-transition: .4s;
+   transition: .4s;
+ }
+input:checked + .slider {
+   background-color: #2196F3;
+ }
+
+ input:focus + .slider {
+   box-shadow: 0 0 1px #2196F3;
+ }
+
+ input:checked + .slider:before {
+   -webkit-transform: translateX(12px);
+   -ms-transform: translateX(12px);
+   transform: translateX(12px);
+ }
+
+ /* Rounded sliders */
+ .slider.round {
+   border-radius: 20px;
+ }
+
+ .slider.round:before {
+   border-radius: 50%;
+ }
     #outline {margin:20px; border:solid 10px #9FB6CD; -moz-border-radius:20px; width:512px; height:440px;}
     #map_canvas{width:850px; height:540px;float:left;}
     #forehead{text-align:left;font-size:150%;}
@@ -716,6 +780,14 @@ if (isset($_POST['submit'])) {
         }
     }
     
+    if ($_POST["bh_new_promotion"]=="on")
+         {
+                 dbAbstract::Update("UPDATE resturants SET bh_new_promotion = 1 WHERE id=".$catid, 1);
+         }
+         else
+          {
+                  dbAbstract::Update("UPDATE resturants SET bh_new_promotion = 0 WHERE id=".$catid, 1);
+          } 
     $Objrestaurant= $Objrestaurant->getDetailByRestaurantID($mRestaurantIDCP);
     if($Objrestaurant->header_image != '')
     {
@@ -1323,6 +1395,17 @@ else if (isset($_POST["btnRemoveVIPRewardImage"]))
                     <input name="bh_featured" type="radio" value="0" id="bh_featured_no" <?=($Objrestaurant->bh_featured<=0?"checked":"")?>>No
                 </td>
             </tr>
+
+	    <tr align="left" valign="top">
+                <td></td>
+                <td>
+                    <strong>BH Promotion:</strong><br/>
+                    <label class="switch">
+                        <input type="checkbox" name="bh_new_promotion" <?=($Objrestaurant->bh_new_promotion>0?"checked":"") ?> >
+                        <div class="slider round"></div>
+                    </label>
+		</td>
+             </tr>
 <?php
     }
 ?>

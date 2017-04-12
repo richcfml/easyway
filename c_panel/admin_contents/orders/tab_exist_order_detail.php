@@ -459,11 +459,22 @@ function updateOrder(id){
 				 }else{
 				 	$coupon_discount = number_format($Ord_RS["coupon_discount"], 2);
 				 }
+
+				 if($Ord_RS["bh_discount"] == " "){
+                                         $bh_discount = '0.00';
+                                  }else{
+                                         $bh_discount = number_format($Ord_RS["bh_discount"], 2);
+                                  }				 
+
 				 ?>
                 <tr> 
                   <td colspan="3"><strong>Coupon Discount:</strong><?=$currency?><?=$coupon_discount ?></td>
                   <td>&nbsp;</td>
                 </tr>
+		<tr>
+                   <td colspan="3"><strong>Promotional  Discount:</strong><?=$currency?><?=$bh_discount ?></td>
+                   <td>&nbsp;</td>
+                 </tr>
                 <tr> 
                   <td colspan="3"><strong>Delivery:</strong><?=$currency?><? echo number_format($Ord_RS["delivery_chagres"],2);?> </td>
                   <td>&nbsp;</td>
@@ -492,12 +503,26 @@ function updateOrder(id){
                   <td colspan="3" class="style1"><HR width="100%" noShade SIZE=1></td>
                   <td>&nbsp;</td>
                 </tr>
+		<?php if($bh_discount != ' ') { ?>
+                <tr>
+                  <td colspan="3" class="style1">
+                  *Limited time only. 50% discount off any sandwich proudly featuring Boar’s Head meats or cheeses.  Limit one discount per order. No additional discounts or coupons apply. <br/> Discount taken from the highest priced item containing Boar’s Head meats or cheeses.  Only valid on orders placed online or through the Boar’s Head Deli Guide App. At participating stores only.
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="style1"><HR width="100%" noShade SIZE=1></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <?php } ?>
+                <?php if($bh_dicsount == '0.00') { ?>
                 <tr> 
                   <td width="73%" align="right"><!--<input type="button" name="Submit" value="Update Order" onclick="javascript:updateOrder('<? echo $Ord_RS["OrderID"]?>')">&nbsp;&nbsp;--></td>
                   <td><input type="button" name="Submit" value=" Print view " onClick="javascript:showPopReport('<? echo $Ord_RS["OrderID"]?>');"></td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                 </tr>
+		<?php } ?>
               </table>
           </form></td>
         </tr>

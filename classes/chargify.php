@@ -22,7 +22,8 @@ class chargifyMeteredUsage
 			//$return_url= preg_replace("/^http:\/\//", "", $return_url);
 
             $subdomain = substr($return_url, 0, strpos($return_url, '.')-strlen($return_url));
-            $args = array(
+            Log::write('---->SUBDOMAIN<----'.$subdomain);
+		$args = array(
                     "subdomain" => $subdomain
                     ,"chargify_subscription_id" => $chargify_subscription_id
                     ,"component_id" => 0
@@ -58,6 +59,7 @@ class chargifyMeteredUsage
             } 
             else if($payment_method == "Cash") 
             {
+		Log::write('CASH');
                 // cash orders count
                 if($cash_orders_quantity != 0) 
                 {
@@ -93,6 +95,7 @@ class chargifyMeteredUsage
 	
     private function createChargifyMeteredUsage($args) 
     {	
+	Log::write('createChargifyMeteredUsage');
         $url = "https://". $args["subdomain"] .".chargify.com/subscriptions/". $args["chargify_subscription_id"] ."/components/". $args["component_id"] ."/usages.json";
         Log::write('CHARGIFY Post Array - Create Chargify Metered Usage URL', $url, 'chargify', 1);
 
@@ -107,7 +110,7 @@ class chargifyMeteredUsage
                 'Content-Type: application/json',
                 'Accept: application/json'
         ));
-        curl_setopt($ch, CURLOPT_USERPWD, '2aRl08rsgL3H3WiWl5ar:x');
+	curl_setopt($ch, CURLOPT_USERPWD, '2aRl08rsgL3H3WiWl5ar:x');
         curl_setopt($ch, CURLOPT_POST, true);
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args["data"]));

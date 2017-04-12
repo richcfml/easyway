@@ -33,13 +33,16 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 						else if ($mUserID>0) //EWO account associated
 						{
 							$loggedinuser->updateCustomerFacebookID($mUserID, $_GET['fbid']);
+							Log::write("ajax.ssoUserLogin---->");
 							$mUser = $loggedinuser->ssoUserLogin($mEmail, $objRestaurant->id);
+							Log::write("ajax.ssoUserLogin<----");
 							if(is_null($mUser))
 							{
 								echo -2;
 							}
 							else
 							{
+								Log::write("ajax.destroyUserSession---->");
 								$loggedinuser->destroyUserSession();
 								$loggedinuser = $mUser;
 						
@@ -100,6 +103,7 @@ if (isset($_GET['checkfbid'])) //To Check that if a give facebook id is associat
 			}
 			else if ($mUserID>0) //EWO account associated
 			{
+				Log::write("ajax.ssoUserLogin ewo account associated---->");
 				$mUser = $loggedinuser->ssoUserLogin($mEmail, $objRestaurant->id);
 				if(is_null($mUser))
 				{

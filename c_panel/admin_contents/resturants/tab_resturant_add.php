@@ -233,6 +233,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 			} else if($credit) {
 				$payment_method = "credit";	 
 			} else if($cash) {
+				Log::write('CASH');
 				$payment_method = "cash"; 
 			}else{
 				$payment_method = " ";
@@ -258,7 +259,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 			// Get Chargify Product ID Ends Here // -- Gulfam
                         
                          // ***********Create vendesta Account for restaurant*************//
-                            $demoAccountFlag = 'true';
+                            /*$demoAccountFlag = 'true';
                             $parameters='';
                             $mURL2 ='';
                             $check_premium = dbAbstract::ExecuteObject("SELECT premium_account from chargify_products where product_id = $product_details and user_id=".$reselelr."",1);
@@ -267,6 +268,7 @@ function getXMLHTTP() { //fuction to return the xml http object
                             $parameters = "address=".$rest_address."&city=".$rest_city."&companyName=".$catname."&country=".$cntry."&state=".$rest_state."&zip=".$rest_zip."&email=".$chargify_customer_id->email;
                             if($premium == 0)
                             {
+				Log::write('PREMIUM 0');
                                 $parameters = $parameters."&demoAccountFlag=".$demoAccountFlag."&salesPersonEmail=cwilliams@easywayordering.com";
 
                                 $mURL2 = "https://reputation-intelligence-api.vendasta.com/api/v2/account/create/?apiUser=ESWY&apiKey=_Azt|hmKHOyiJY59SDj2qsHje.gxVVlcwEbmZuP1";
@@ -290,6 +292,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 
                             else if($premium == 1)
                             {
+				Log.write('PREMIUM 1');
                                 $demoAccountFlag = "false";
                                 $parameters = $parameters."&workNumber=".$phone."&demoAccountFlag=".$demoAccountFlag."&salesPersonEmail=cwilliams@easywayordering.com";
 
@@ -311,10 +314,10 @@ function getXMLHTTP() { //fuction to return the xml http object
                                 $data = $mResult2->data;
                                 $getSrid = $data->srid;
                             }
-			
+				*/
 
                             //************End Vedesta Account**********************//
-			
+			$getSrid='1111';
 						
                         if(!empty($getSrid))
                         {
@@ -327,6 +330,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 										$check_card_data_Qry = dbAbstract::ExecuteObject("SELECT * from chargify_payment_method where chargify_customer_id = '".$chargify_customer_id->chargify_customer_id."' and card_number='".$credit_card_info->credit_card->masked_card_number."'",1);
 										if(empty($check_card_data_Qry))
 										{
+											Log::write('INSERT into chargify_payment_method');
 											dbAbstract::Insert(
 													"INSERT INTO chargify_payment_method
 													SET user_id= '".addslashes($owner_name)."'
@@ -346,7 +350,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 										$quantity = $quantity+1;
 										$chargify->allocationQuantity($reseller_chargify_id->chargify_subcription_id,$quantity,$check_product_premium->premium_account,'activate');
 	
-		
+					 Log::write('INSERT into RESTAURANTS');
 					 $queryInsertRestaurant = "INSERT INTO resturants
 										SET name= '".prepareStringForMySQL($catname)."'
 												,url_name= '".prepareStringForMySQL($rest_url_name)."'
@@ -370,7 +374,7 @@ function getXMLHTTP() { //fuction to return the xml http object
 												,region='" . prepareStringForMySQL(trim($region)) . "'
 							,srid = '".$getSrid."'";
 					$catid = dbAbstract::Insert($queryInsertRestaurant, 1, 2);
-					
+					Log::write('INSERT INTO RESTAURANTS DONE');
 	
 					if($catid>0)
 					{
@@ -444,12 +448,14 @@ function getXMLHTTP() { //fuction to return the xml http object
 							);
 						}
 					}
+				Log::write('UPADTE RESTAURANTS');
 				//When resturant has been created then the granted license status will become activated.
 				dbAbstract::Update("UPDATE licenses SET status= 'activated',resturant_id=".$catid.", activation_date= '".time()."' where id =".$license_key,1);
 				dbAbstract::Update("UPDATE reseller_client SET reseller_client.firstname=(SELECT firstname FROM users where users.id = ".$owner_name."),reseller_client.lastname=(SELECT lastname FROM users where users.id = ".$owner_name."),reseller_client.restaurant_count=(SELECT count(name) FROM resturants where resturants.owner_id = ".$owner_name.") Where reseller_client.client_id=".$owner_name,1);
 	
 				if($rest_exist) {
 					$rest_url_name = $rest_url_name.$catid;
+					Log::write('REST_URL_NAME'.$rest_url_name);
 					dbAbstract::Update("UPDATE resturants SET url_name= '$rest_url_name' where id =".$catid,1);
 					dbAbstract::Update("UPDATE analytics SET url_name= '$rest_url_name' where resturant_id =".$catid,1);
 				}

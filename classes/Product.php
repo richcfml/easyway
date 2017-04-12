@@ -96,6 +96,15 @@ class Product
         $mSQL = "SELECT HasAttributes,HasAssociates from product where prd_id = ".$product_id;
         return dbAbstract::ExecuteObject($mSQL);
     }
+    
+    public static function isRestPartOfNewBHPromo($url_name){
+	$msql = "select bh_new_promotion from resturants where url_name =\"". $url_name . "\"";
+	return dbAbstract::executeObject($msql);
+    }
+    public static function productIsBH($prd_id){
+	$sql = "Select prd_id, item_type, retail_price from product where prd_id = " . $prd_id;
+	return dbAbstract::executeObject($sql);
+    }
     /**
      * 
      * @param type $id

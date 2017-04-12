@@ -1643,7 +1643,8 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                 {
                     $mRetArray = array(
                         "name" => replaceSpecialChar($rest_url->name),
-                        "slug" => $rest_url->url_name,
+                        "bh_new_promotion" => $rest_url->bh_new_promotion,
+			"slug" => $rest_url->url_name,
                         "email" => $rest_url->email,
                         "address" => replaceSpecialChar($rest_url->rest_address),
                         "latitude" => $getLatLong[0],
@@ -1674,7 +1675,8 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
             {
                 $mRetArray = array(
                         "name" => replaceSpecialChar($rest_url->name),
-                        "slug" => $rest_url->url_name,
+                        "bh_new_promotion" => $rest_url->bh_new_promotion,
+			"slug" => $rest_url->url_name,
                         "email" => $rest_url->email,
                         "address" => replaceSpecialChar($rest_url->rest_address),
                         "latitude" => $getLatLong[0],
@@ -1710,7 +1712,8 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
                 {
                     $mRetArray = array(
                         "name" => replaceSpecialChar($rest_url->name),
-                        "slug" => $rest_url->url_name,
+                        "bh_new_promotion" => $rest_url->bh_new_promotion,
+			"slug" => $rest_url->url_name,
                         "email" => $rest_url->email,
                         "address" => replaceSpecialChar($rest_url->rest_address),
                         "latitude" => $getLatLong[0],
@@ -1742,7 +1745,8 @@ function returnArray($rest_url, $pUserID = 0, $pDeliveryZone = 0)
             {
                 $mRetArray = array(
                         "name" => replaceSpecialChar($rest_url->name),
-                        "slug" => $rest_url->url_name,
+                        "bh_new_promotion" => $rest_url->bh_new_promotion,
+			"slug" => $rest_url->url_name,
                         "email" => $rest_url->email,
                         "address" => replaceSpecialChar($rest_url->rest_address),
                         "latitude" => $getLatLong[0],

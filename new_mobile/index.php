@@ -54,7 +54,13 @@ $cart->restaurant_id=$objRestaurant->id;
 		 }
 
 
-require($mobile_root_path . "includes/controller.php");
+//require($mobile_root_path . "includes/controller.php");
+if(isset($_GET['sso']) && $_GET['sso']!=''){
+    require($mobile_root_path . "includes/bh_controller.php");   
+} else {
+    require($mobile_root_path . "includes/controller.php");
+}
+
 if(isset($_POST['rememberme'])){
 	$expire=time()+60*60*24*30;
 	setcookie("user", $_POST['email'], $expire);
@@ -62,12 +68,14 @@ if(isset($_POST['rememberme'])){
 
 if(isset($_GET['sso']) && $_GET['sso']!='')
 {
+    Log::write("---->[index.php select bh_sso_user]<-----");
     $mSQL = "select u.*, bhs.session_id as session_id, bhs.session_expiry from bh_sso_user u inner join bh_sso_session bhs on u.id = bhs.sso_user_id WHERE bhs.session_id = '".$_GET['sso']."' and bhs.session_expiry > '".time()."'";		
     Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
     $sso_rs = dbAbstract::Execute($mSQL);
     if(dbAbstract::returnRowsCount($sso_rs) > 0)
     {
         $sso_row = dbAbstract::returnObject($sso_rs);	
+        Log::write("---->[index.php select customer_registration]<-----");
         $mSQL = "select * from customer_registration where cust_email='".$sso_row->email."' and resturant_id='".$objRestaurant->id."'";
         Log::write("Sign In - SSO User - IF", "QUERY --".$mSQL, 'sso', 1);
         $cust_rs = dbAbstract::Execute($mSQL);
@@ -75,12 +83,17 @@ if(isset($_GET['sso']) && $_GET['sso']!='')
         // if customer record exist than login
         if(dbAbstract::returnRowsCount($cust_rs) > 0)
         {
+            Log::write("---->[index.customer record exist than login]<-----");
             $cust_row = dbAbstract::returnObject($cust_rs);
             if($cust_row->cust_email != '' && $cust_row->epassword != '')
             {
+                Log::write("---->[index.email and password not null; insert bh_ecommerce returns mECommerceID]<-----");
                 $mECommerceID = dbAbstract::Insert("INSERT INTO bh_ecommerce (SSOUserID, CustomerID) VALUES (".$sso_row->id.", ".$cust_row->id.")", 1, 2);
                 $_SESSION["EcommerceID"] = $mECommerceID;
+                Log::write("---->[index.email and password not null; update general_detail; -->login.php]<-----");
                 dbAbstract::Update("update general_detail set sso_user_id='".$sso_row->id."' where id_2='".$cust_row->id."'");
+                Log::write("---->[index.update general_detail, done; -->login.php]<-----");
+                
 ?>
                 <form method="post" name="sso_login" action="<?= $SiteUrl . $objRestaurant->url ?>/?item=login">
                     <input type="hidden" name="ssoUserId" value="<?=$sso_row->id?>"/>
@@ -100,6 +113,7 @@ if(isset($_GET['sso']) && $_GET['sso']!='')
         else
         {
             // if customer record not exist than register & login
+            Log::write("---->[index.ustomer record not exist than register & login]<-----");
             $loggedinuser->cust_email=  $sso_row->email;
             $mSalt = hash('sha256', mt_rand(10,1000000));    
             $loggedinuser->salt= $mSalt;

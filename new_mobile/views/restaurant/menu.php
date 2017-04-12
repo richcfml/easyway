@@ -8,6 +8,7 @@
         <ul style="width:100%">
             <?php
             if ($menuid > 0) {
+                Log::write("menu.getProductsByCategoryId---->");
                 $products = $product->getProductsByCategoryId($categoryid);
                 foreach ($products as $product) {
                     ?>
